@@ -60,11 +60,21 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
+static void tokenize(uint8_t * buffer);
+
+static void parse(uint8_t * token);
+
 
 /*==================[internal data definition]===============================*/
 
 /** @brief used for delay counter */
 static uint32_t pausems_count;
+
+/** @UART received messages buffer */
+uint8_t UARTBuffer[50];
+
+/** @token buffer */
+uint8_t tokenBuffer[25];
 
 /*==================[external data definition]===============================*/
 
@@ -85,33 +95,14 @@ static void pausems(uint32_t t)
    }
 }
 
-/*==================[external functions definition]==========================*/
-
-void SysTick_Handler(void)
+static void tokenize(uint8_t * buffer)
 {
-   if(pausems_count > 0) pausems_count--;
-}
-
-int main(void)
-{
-   uint8_t UARTBuffer[20]; /* UART received messages buffer */
-   uint8_t UARTRead = 'F'; /* UART RX character */
+   uint8_t UARTRead; /* UART RX character */
    int i = 0;
    int tk_f = 0; /* flag for string being read */
    int nRead; /* number of bytes read */
 
-   initHardware();
-   ciaaUARTInit();
-
-   for (i = 0; i < 20; i++){
-      UARTBuffer[i] = '\0';
-   }
-
-   i = 0;
-
-   pausems(DELAY_S);
-
-   dbgPrint("Tokenizer UART USB:\n\r");
+   dbgPrint(">>> funcion tokenize <<<\n\r\n\r");
 
    while (1){
 
@@ -128,15 +119,51 @@ int main(void)
             dbgPrint("\r\n");
          }
          else if('\r' == UARTRead && 1 == tk_f){
-               dbgPrint("TOKEN: ");
-               uartSend(CIAA_UART_USB, (void *) &UARTBuffer[0], i);
-               dbgPrint("\r\n");
-               i = 0;
-               tk_f = 0;
+            UARTBuffer[i] = '\0';
+            strncpy(tokenBuffer, UARTBuffer, i);
+            tokenBuffer[i] = '\0';
+            parse(tokenBuffer);
+            i = 0;
+            tk_f = 0;
          }
       }
 
    }
+
+}
+
+static void parse(uint8_t * token)
+{
+   dbgPrint("\r\n>>> ABRE funcion parse <<<\r\n");
+   dbgPrint("Token recibido: ");
+   dbgPrint(tokenBuffer);
+   dbgPrint("\r\n>>> CIERRA funcion parse <<<\r\n\r\n");
+   return 0;
+}
+
+
+
+/*==================[external functions definition]==========================*/
+
+void SysTick_Handler(void)
+{
+   if(pausems_count > 0) pausems_count--;
+}
+
+int main(void)
+{
+   int i; /* loop counter */
+
+   initHardware();
+   ciaaUARTInit();
+
+   for (i = 0; i < 20; i++){
+      UARTBuffer[i] = '\0';
+   }
+
+   pausems(DELAY_S);
+
+   tokenize(UARTBuffer);
 
    return 0;
 
