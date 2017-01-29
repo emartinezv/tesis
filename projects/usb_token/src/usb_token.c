@@ -64,6 +64,10 @@ static void tokenize(uint8_t * buffer);
 
 static void parse(uint8_t * token);
 
+static uint8_t commSearch(uint8_t * command);
+
+static void CeluCIAAInit (void);
+
 
 /*==================[internal data definition]===============================*/
 
@@ -75,6 +79,12 @@ uint8_t UARTBuffer[50];
 
 /** @token buffer */
 uint8_t tokenBuffer[25];
+
+/** @vector of extended AT commands */
+uint8_t extComm [5][10];
+
+/** @vector of basic AT commands */
+uint8_t basicComm [5][10];
 
 /*==================[external data definition]===============================*/
 
@@ -109,9 +119,7 @@ static void tokenize(uint8_t * buffer)
       nRead = uartRecv(CIAA_UART_USB, (void *) &UARTRead, 1);
       if (0 != nRead){
 
-      // USO 'l' EN VEZ DE <LF> para poder generarlo desde el teclado
-
-         if('\r' != UARTRead && 'l' != UARTRead) {
+         if('\r' != UARTRead && '\n' != UARTRead) {
             tk_f = 1;
             UARTBuffer[i++] = UARTRead;
             dbgPrint("Caracter leido: ");
@@ -134,14 +142,70 @@ static void tokenize(uint8_t * buffer)
 
 static void parse(uint8_t * token)
 {
+   int i = 0; /* loop counter */
+   uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
+   uint8_t intPos = 0; /* position of the '?' char in the token, if present */
+   uint8_t command[20]; /* command string not considering the 'AT' or "AT+' headers */
+
+   for (i = 0; i < 20; i++){
+      command[i] = 'F';
+   }
+
    dbgPrint("\r\n>>> ABRE funcion parse <<<\r\n");
    dbgPrint("Token recibido: ");
-   dbgPrint(tokenBuffer);
+   dbgPrint(token);
+
+   if(('A' == token[0]) && ('T' == token[1])){
+      if('+' == token[2]){
+
+         dbgPrint("\r\nComando extendido");
+
+         /* Search for '=' and '?' characters to determine type of extended AT command */
+
+         for (i = 3; i < strlen(token); i++){
+            if ('=' == token[i]){
+               equalPos = i;
+               dbgPrint("\r\nEncontre el caracter '='");
+            }
+            else if ('?' == token[i]){
+               intPos = i;
+               dbgPrint("\r\nEncontre el caracter '?'");
+            }
+         }
+
+         if (0 != equalPos){
+            strncpy(command,token[3],(equalPos - 3));
+            //command[equalPos -3] = '\0';
+            dbgPrint("\r\nComando: ");
+            dbgPrint(command);
+            dbgPrint("\r\n");
+         }
+
+      }
+      else {
+         dbgPrint("\r\nComando basico");
+      }
+   }
+   else if(('O' == token[0]) && ('K' == token[1])){
+      dbgPrint("\r\nIndicador de comando exitoso");
+   }
+   else{
+      dbgPrint("\r\nComando o respuesta desconocido");
+   }
+
    dbgPrint("\r\n>>> CIERRA funcion parse <<<\r\n\r\n");
+
    return 0;
 }
 
+static void CeluCIAAInit (void)
+{
+   extComm[0][0] = "CMGF";
+   extComm[1][0] = "CSCS";
+   extComm[2][0] = "CMGS";
 
+   return 0;
+}
 
 /*==================[external functions definition]==========================*/
 
@@ -156,6 +220,7 @@ int main(void)
 
    initHardware();
    ciaaUARTInit();
+   CeluCIAAInit();
 
    for (i = 0; i < 20; i++){
       UARTBuffer[i] = '\0';
