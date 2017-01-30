@@ -174,13 +174,26 @@ static void parse(uint8_t * token)
          }
 
          if (0 != equalPos){
+
             strncpy(command,&token[3],(equalPos - 3));
             command[equalPos -3] = '\0';
-            dbgPrint("\r\nComando: ");
-            dbgPrint(command);
-            dbgPrint("\r\n");
+
+            if((equalPos+1) == intPos){dbgPrint("\r\nExtended Command TEST: ");}
+            else{dbgPrint("\r\nExtended Command WRITE: ");}
+         }
+         else if((strlen(token)-1) == intPos){
+            strncpy(command,&token[3],(intPos - 3));
+            command[intPos -3] = '\0';
+            dbgPrint("\r\nExtended Command READ: ");
+         }
+         else{
+            strncpy(command,&token[3],(strlen(token) - 3));
+            command[strlen(token) -3] = '\0';
+            dbgPrint("\r\nExtended Command EXECUTION: ");
          }
 
+         dbgPrint(command);
+         dbgPrint("\r\n");
       }
       else {
          dbgPrint("\r\nComando basico");
