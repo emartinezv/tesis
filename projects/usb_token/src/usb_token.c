@@ -174,8 +174,8 @@ static void parse(uint8_t * token)
          }
 
          if (0 != equalPos){
-            strncpy(command,token[3],(equalPos - 3));
-            //command[equalPos -3] = '\0';
+            strncpy(command,&token[3],(equalPos - 3));
+            command[equalPos -3] = '\0';
             dbgPrint("\r\nComando: ");
             dbgPrint(command);
             dbgPrint("\r\n");
