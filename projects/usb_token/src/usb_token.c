@@ -112,8 +112,6 @@ static void tokenize(uint8_t * buffer)
    int tk_f = 0; /* flag for string being read */
    int nRead; /* number of bytes read */
 
-   dbgPrint(">>> funcion tokenize <<<\n\r\n\r");
-
    while (1){
 
       nRead = uartRecv(CIAA_UART_USB, (void *) &UARTRead, 1);
@@ -122,9 +120,7 @@ static void tokenize(uint8_t * buffer)
          if('\r' != UARTRead && '\n' != UARTRead) {
             tk_f = 1;
             UARTBuffer[i++] = UARTRead;
-            dbgPrint("Caracter leido: ");
             uartSend(CIAA_UART_USB, (void *) &UARTRead, 1);
-            dbgPrint("\r\n");
          }
          else if('\r' == UARTRead && 1 == tk_f){
             UARTBuffer[i] = '\0';
@@ -145,68 +141,114 @@ static void parse(uint8_t * token)
    int i = 0; /* loop counter */
    uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
    uint8_t intPos = 0; /* position of the '?' char in the token, if present */
-   uint8_t command[20]; /* command string not considering the 'AT' or "AT+' headers */
+   uint8_t command[20]; /* AT command string not considering the 'AT' or "AT+' headers */
+   uint8_t parameter[20]; /* AT command argument string (for WRITE extended commands) */
 
-   for (i = 0; i < 20; i++){
-      command[i] = 'F';
-   }
-
-   dbgPrint("\r\n>>> ABRE funcion parse <<<\r\n");
-   dbgPrint("Token recibido: ");
+   dbgPrint("\r\nToken: ");
    dbgPrint(token);
 
+   /* determine if the token is an AT command, be it extended or basic */
+
    if(('A' == token[0]) && ('T' == token[1])){
+
+      /* extended AT command */
+
       if('+' == token[2]){
 
-         dbgPrint("\r\nComando extendido");
-
-         /* Search for '=' and '?' characters to determine type of extended AT command */
+         /* Search for '=' and '?' characters and store position to determine type
+            of extended AT command */
 
          for (i = 3; i < strlen(token); i++){
-            if ('=' == token[i]){
-               equalPos = i;
-               dbgPrint("\r\nEncontre el caracter '='");
-            }
-            else if ('?' == token[i]){
-               intPos = i;
-               dbgPrint("\r\nEncontre el caracter '?'");
-            }
+            if ('=' == token[i]) {equalPos = i;}
+            else if ('?' == token[i]) {intPos = i;}
          }
+
+         /* Determine the type of extended command (TEST, READ, WRITE or EXECUTION)
+            depending on the position of the '=' and '?' characters. Afterwards,
+            copy the correct part of the token corresponding to the command. */
 
          if (0 != equalPos){
 
-            strncpy(command,&token[3],(equalPos - 3));
+            strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
             command[equalPos -3] = '\0';
 
-            if((equalPos+1) == intPos){dbgPrint("\r\nExtended Command TEST: ");}
-            else{dbgPrint("\r\nExtended Command WRITE: ");}
+            if((equalPos+1) == intPos){dbgPrint("\r\nExtended command TEST: ");}
+            else{
+               strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
+               dbgPrint("\r\nParameter: ");
+               dbgPrint(parameter);
+               dbgPrint("\r\nExtended command WRITE: ");
+            }
          }
          else if((strlen(token)-1) == intPos){
-            strncpy(command,&token[3],(intPos - 3));
+            strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
             command[intPos -3] = '\0';
-            dbgPrint("\r\nExtended Command READ: ");
+            dbgPrint("\r\nExtended command READ: ");
          }
          else{
-            strncpy(command,&token[3],(strlen(token) - 3));
+            strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
             command[strlen(token) -3] = '\0';
-            dbgPrint("\r\nExtended Command EXECUTION: ");
+            dbgPrint("\r\nExtended command EXECUTION: ");
          }
 
          dbgPrint(command);
          dbgPrint("\r\n");
       }
+
+      /* basic AT command */
+
       else {
-         dbgPrint("\r\nComando basico");
+
+         if('&' == token[2]){
+
+            if('\0' != token[3]){
+               command[0] = token[3];
+               command[1] = '\0';
+               dbgPrint("\r\nBasic command: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+
+               if('\0' != token[4]){
+                  strncpy(parameter,&token[4],strlen(token)-4);
+                  dbgPrint("\r\nParameter: ");
+                  dbgPrint(parameter);
+                  dbgPrint("\r\n");
+               }
+            }
+
+            else {dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
+         }
+         else{
+
+            if('\0' != token[2]){
+               command[0] = token[2];
+               command[1] = '\0';
+               dbgPrint("\r\nBasic command: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+
+               if('\0' != token[3]){
+                  strncpy(parameter,&token[3],strlen(token)-3);
+                  dbgPrint("\r\nParameter: ");
+                  dbgPrint(parameter);
+                  dbgPrint("\r\n");
+               }
+            }
+            else{dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
+
+         }
       }
    }
+
    else if(('O' == token[0]) && ('K' == token[1])){
-      dbgPrint("\r\nIndicador de comando exitoso");
-   }
-   else{
-      dbgPrint("\r\nComando o respuesta desconocido");
+      dbgPrint("\r\nSuccessful command indicator");
    }
 
-   dbgPrint("\r\n>>> CIERRA funcion parse <<<\r\n\r\n");
+   else{
+      dbgPrint("\r\nUnknown response or command");
+   }
+
+   dbgPrint("\r\n");
 
    return 0;
 }
