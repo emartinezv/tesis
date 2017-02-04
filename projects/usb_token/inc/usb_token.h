@@ -59,7 +59,9 @@ extern "C" {
 
 /** enum to classify valid AT tokens */
 
-typedef enum {INVALID, COMMAND, RESPONSE} ATToken;
+typedef enum {INVALID, BASIC_COMMAND, EXTENDED_COMMAND_TEST, EXTENDED_COMMAND_WRITE,
+              EXTENDED_COMMAND_READ, EXTENDED_COMMAND_EXECUTION,
+              BASIC_RESPONSE, EXTENDED_RESPONSE} ATToken;
 
 /*==================[external data declaration]==============================*/
 
