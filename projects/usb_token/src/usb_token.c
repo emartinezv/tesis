@@ -62,7 +62,7 @@ static void pausems(uint32_t t);
 
 static void tokenize(uint8_t * buffer);
 
-static void parse(uint8_t * token);
+static ATToken parse(uint8_t * token);
 
 static uint8_t commSearch(uint8_t * command);
 
@@ -111,6 +111,7 @@ static void tokenize(uint8_t * buffer)
    int i = 0;
    int tk_f = 0; /* flag for string being read */
    int nRead; /* number of bytes read */
+   ATToken received; /* classifies the received token*/
 
    while (1){
 
@@ -126,7 +127,20 @@ static void tokenize(uint8_t * buffer)
             UARTBuffer[i] = '\0';
             strncpy(tokenBuffer, UARTBuffer, i); /* this seems to be useless as one could send */
             tokenBuffer[i] = '\0';               /* a pointer to UARTBuffer directly, but in   */
-            parse(tokenBuffer);                  /* the final implementation the UART Read will*/
+            received = parse(tokenBuffer);       /* the final implementation the UART Read will*/
+
+            switch(received){
+               case INVALID:
+                  dbgPrint("Invalid");
+                  break;
+               case COMMAND:
+                  dbgPrint("AT Command");
+                  break;
+               case RESPONSE:
+                  dbgPrint("AT Response");
+                  break;
+            }
+            dbgPrint("\r\n\r\n");
             i = 0;                               /* perhaps interrupt the parsing, so the      */
             tk_f = 0;                            /* buffers need to be different               */
          }
@@ -136,7 +150,7 @@ static void tokenize(uint8_t * buffer)
 
 }
 
-static void parse(uint8_t * token)
+static ATToken parse(uint8_t * token)
 {
    int i = 0; /* loop counter */
    uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
@@ -172,27 +186,40 @@ static void parse(uint8_t * token)
             strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
             command[equalPos -3] = '\0';
 
-            if((equalPos+1) == intPos){dbgPrint("\r\nExtended command TEST: ");}
+            if((equalPos+1) == intPos){
+            dbgPrint("\r\nExtended command TEST: ");
+            dbgPrint(command);
+            dbgPrint("\r\n");
+            return COMMAND;
+            }
+
             else{
                strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
                dbgPrint("\r\nParameter: ");
                dbgPrint(parameter);
                dbgPrint("\r\nExtended command WRITE: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+               return COMMAND;
             }
+
          }
          else if((strlen(token)-1) == intPos){
             strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
             command[intPos -3] = '\0';
             dbgPrint("\r\nExtended command READ: ");
+            dbgPrint(command);
+            dbgPrint("\r\n");
+            return COMMAND;
          }
          else{
             strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
             command[strlen(token) -3] = '\0';
             dbgPrint("\r\nExtended command EXECUTION: ");
+            dbgPrint(command);
+            dbgPrint("\r\n");
+            return COMMAND;
          }
-
-         dbgPrint(command);
-         dbgPrint("\r\n");
       }
 
       /* basic AT command */
@@ -216,6 +243,7 @@ static void parse(uint8_t * token)
                }
 
                dbgPrint("\r\n");
+               return COMMAND;
             }
 
             else {dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
@@ -236,16 +264,28 @@ static void parse(uint8_t * token)
                }
 
                dbgPrint("\r\n");
+               return COMMAND;
             }
-            else{dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
-
+            else{
+               dbgPrint("\r\nUnknown or incomplete AT command\r\n");
+               return INVALID;
+            }
          }
       }
    }
 
+   /* If not an AT command, determine is the token is a known response */
+
+   /* Basic "OK" response, used in many commands */
+
    else if(('O' == token[0]) && ('K' == token[1])){
-      dbgPrint("\r\nSuccessful command indicator");
+      dbgPrint("\r\nSuccessful command indicator\r\n");
+      return RESPONSE;
    }
+
+   /* +<x>:<n> response, where <x> is an AT command and <n> a parameter> */
+
+   //else if('+')
 
    else{
       dbgPrint("\r\nUnknown response or command");
@@ -253,7 +293,7 @@ static void parse(uint8_t * token)
 
    dbgPrint("\r\n");
 
-   return 0;
+   return INVALID;
 }
 
 static void CeluCIAAInit (void)
