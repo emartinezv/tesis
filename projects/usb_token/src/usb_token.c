@@ -155,6 +155,7 @@ static ATToken parse(uint8_t * token)
    int i = 0; /* loop counter */
    uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
    uint8_t intPos = 0; /* position of the '?' char in the token, if present */
+   uint8_t colonPos = 0; /* position of the ':' char in the token, if present */
    uint8_t command[20]; /* AT command string not considering the 'AT' or "AT+' headers */
    uint8_t parameter[20]; /* AT command argument string (for WRITE extended commands) */
 
@@ -276,22 +277,54 @@ static ATToken parse(uint8_t * token)
 
    /* If not an AT command, determine is the token is a known response */
 
-   /* Basic "OK" response, used in many commands */
+   /* Extended syntax response */
 
-   else if(('O' == token[0]) && ('K' == token[1])){
-      dbgPrint("\r\nSuccessful command indicator\r\n");
-      return RESPONSE;
+   if('+' == token[0]){
+
+      /* Search for ':' character and store position if present */
+
+      for (i = 1; i < strlen(token); i++){
+         if (':' == token[i]) {colonPos = i;}
+      }
+
+      /* If no ':' character is present we have a simple extended sintax response */
+
+      if(0 == colonPos){
+         strncpy(command,&token[1],strlen(token)-1);
+         command[strlen(token)-1] = '\0';
+         dbgPrint("\r\nExtended response: ");
+         dbgPrint(command);
+         dbgPrint("\r\n");
+         return RESPONSE;
+      }
+
+      /* If ':' character is present, what follows is a parameter of the response */
+
+      else{
+         strncpy(command,&token[1],colonPos-1);
+         command[colonPos-1] = '\0';
+         dbgPrint("\r\nExtended response: ");
+         dbgPrint(command);
+         strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos);
+         command[strlen(token)-colonPos] = '\0';
+         dbgPrint("\r\nParameter: ");
+         dbgPrint(parameter);
+         dbgPrint("\r\n");
+         return RESPONSE;
+      }
+
    }
 
-   /* +<x>:<n> response, where <x> is an AT command and <n> a parameter> */
-
-   //else if('+')
+   /* Basic response */
 
    else{
-      dbgPrint("\r\nUnknown response or command");
+      strncpy(command,token,strlen(token));
+      command[strlen(token)] = '\0';
+      dbgPrint("\r\nBasic response: ");
+      dbgPrint(command);
+      dbgPrint("\r\n");
+      return RESPONSE;
    }
-
-   dbgPrint("\r\n");
 
    return INVALID;
 }
