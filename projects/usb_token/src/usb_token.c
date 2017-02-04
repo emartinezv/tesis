@@ -124,11 +124,11 @@ static void tokenize(uint8_t * buffer)
          }
          else if('\r' == UARTRead && 1 == tk_f){
             UARTBuffer[i] = '\0';
-            strncpy(tokenBuffer, UARTBuffer, i);
-            tokenBuffer[i] = '\0';
-            parse(tokenBuffer);
-            i = 0;
-            tk_f = 0;
+            strncpy(tokenBuffer, UARTBuffer, i); /* this seems to be useless as one could send */
+            tokenBuffer[i] = '\0';               /* a pointer to UARTBuffer directly, but in   */
+            parse(tokenBuffer);                  /* the final implementation the UART Read will*/
+            i = 0;                               /* perhaps interrupt the parsing, so the      */
+            tk_f = 0;                            /* buffers need to be different               */
          }
       }
 
@@ -206,14 +206,16 @@ static void parse(uint8_t * token)
                command[1] = '\0';
                dbgPrint("\r\nBasic command: ");
                dbgPrint(command);
-               dbgPrint("\r\n");
 
                if('\0' != token[4]){
                   strncpy(parameter,&token[4],strlen(token)-4);
+                  parameter[strlen(token)-4] = '\0';
                   dbgPrint("\r\nParameter: ");
                   dbgPrint(parameter);
-                  dbgPrint("\r\n");
+
                }
+
+               dbgPrint("\r\n");
             }
 
             else {dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
@@ -225,14 +227,15 @@ static void parse(uint8_t * token)
                command[1] = '\0';
                dbgPrint("\r\nBasic command: ");
                dbgPrint(command);
-               dbgPrint("\r\n");
 
                if('\0' != token[3]){
                   strncpy(parameter,&token[3],strlen(token)-3);
+                  parameter[strlen(token)-3] = '\0';
                   dbgPrint("\r\nParameter: ");
                   dbgPrint(parameter);
-                  dbgPrint("\r\n");
                }
+
+               dbgPrint("\r\n");
             }
             else{dbgPrint("\r\nUnknown or incomplete AT command\r\n");}
 
