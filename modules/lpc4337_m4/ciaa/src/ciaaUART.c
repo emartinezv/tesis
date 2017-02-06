@@ -31,13 +31,26 @@
  *
  */
 
+/*
+ * 2017-02-05
+ *
+ * Modified to include tokenizer functionality in the UART Rx IRQ.
+ *
+ * If the received character is <CR>, the character is not stored in the ring buffer
+ * and all prior characters are flushed, considered part of a single token.
+ *
+ * emartinez
+ */
+
 #include "ciaaUART.h"
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];
+uint8_t tknbuf[TKN_BUF_SIZE * TKN_LENGTH];
 
 RINGBUFF_T rrb[3];
 RINGBUFF_T trb[3];
+RINGBUFF_T tokens;
 
 uartData_t uarts[3] =
 {
@@ -102,13 +115,17 @@ void ciaaUARTInit(void)
 
 	RingBuffer_Init(uarts[2].rrb, rxbuf[2], 1, UART_BUF_SIZE);
 	RingBuffer_Init(uarts[2].trb, txbuf[2], 1, UART_BUF_SIZE);
+
+	/* Token buffer */
+
+	RingBuffer_Init(&tokens, &tknbuf, TKN_LENGTH, TKN_BUF_SIZE);
 }
 
 void uart_irq(ciaaUART_e n)
 {
 	uartData_t * u = &(uarts[n]);
 
-	Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
+	Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb, &tokens);
 }
 
 void UART0_IRQHandler(void)
@@ -138,4 +155,12 @@ int uartRecv(ciaaUART_e nUART, void * data, int datalen)
 	uartData_t * u = &(uarts[nUART]);
 
 	return Chip_UART_ReadRB(u->uart, u->rrb, data, datalen);
+}
+
+int tokenRead(void * token){
+   if(1 == RingBuffer_IsEmpty(&tokens)){ return 0;}
+   else{
+      RingBuffer_Pop(&tokens, token);
+      return 1;
+   }
 }

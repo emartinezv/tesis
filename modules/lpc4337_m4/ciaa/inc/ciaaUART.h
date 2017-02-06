@@ -30,7 +30,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
- 
+
+/*
+ * 2017-02-05
+ *
+ * Modified to include tokenizer functionality in the UART Rx IRQ.
+ *
+ * If the received character is <CR>, the character is not stored in the ring buffer
+ * and all prior characters are flushed, considered part of a single token. This is
+ * stored in a token buffer, a matrix composed of token vectors.
+ *
+ * emartinez
+ */
+
 #ifndef CIAAUART_H_
 #define CIAAUART_H_
 
@@ -61,5 +73,6 @@ typedef struct _uartData
 void ciaaUARTInit(void);
 int uartSend(ciaaUART_e nUART, void * data, int datalen);
 int uartRecv(ciaaUART_e nUART, void * data, int datalen);
+int tokenRead(void * token);
 
 #endif /* CIAAUART_H_ */

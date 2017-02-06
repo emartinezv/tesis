@@ -60,8 +60,6 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-static void tokenize(uint8_t * buffer);
-
 static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
 static uint8_t commSearch(uint8_t * command);
@@ -105,93 +103,6 @@ static void pausems(uint32_t t)
    }
 }
 
-static void tokenize(uint8_t * buffer)
-{
-   uint8_t UARTRead; /* UART RX character */
-   uint8_t i = 0;
-   uint8_t tk_f = 0; /* flag for string being read */
-   uint8_t nRead; /* number of bytes read */
-   ATToken received; /* classifies the received token*/
-
-   uint8_t command[20]; /* AT command or responde */
-   uint8_t parameter[20]; /* AT command or response argument */
-
-   while (1){
-
-      nRead = uartRecv(CIAA_UART_USB, (void *) &UARTRead, 1);
-      if (0 != nRead){
-
-         if('\r' != UARTRead && '\n' != UARTRead) {
-            tk_f = 1;
-            UARTBuffer[i++] = UARTRead;
-            uartSend(CIAA_UART_USB, (void *) &UARTRead, 1);
-         }
-         else if('\r' == UARTRead && 1 == tk_f){
-            UARTBuffer[i] = '\0';
-            strncpy(tokenBuffer, UARTBuffer, i); /* this seems to be useless as one could send */
-            tokenBuffer[i] = '\0';               /* a pointer to UARTBuffer directly, but in   */
-            received = parse(tokenBuffer, command, parameter); /* the final implementation the UART Read will*/
-
-            dbgPrint("\r\n\r\n");
-
-            switch(received){
-               case INVALID:
-                  dbgPrint("INVALID TOKEN\r\n");
-                  break;
-               case BASIC_COMMAND:
-                  dbgPrint("BASIC COMMAND: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")\r\n");
-                  break;
-               case EXTENDED_COMMAND_WRITE:
-                  dbgPrint("EXTENDED COMMAND WRITE: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")\r\n");
-                  break;
-               case EXTENDED_COMMAND_READ:
-                  dbgPrint("EXTENDED COMMAND READ: ");
-                  dbgPrint(command);
-                  dbgPrint("\r\n");
-                  break;
-               case EXTENDED_COMMAND_TEST:
-                  dbgPrint("EXTENDED COMMAND TEST: ");
-                  dbgPrint(command);
-                  dbgPrint("\r\n");
-                  break;
-               case EXTENDED_COMMAND_EXECUTION:
-                  dbgPrint("EXTENDED COMMAND EXECUTION: ");
-                  dbgPrint(command);
-                  dbgPrint("\r\n");
-                  break;
-               case BASIC_RESPONSE:
-                  dbgPrint("BASIC RESPONSE: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")");
-                  break;
-               case EXTENDED_RESPONSE:
-                  dbgPrint("EXTENDED RESPONSE: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")");
-                  break;
-            }
-            dbgPrint("\r\n\r\n");
-            i = 0;                               /* perhaps interrupt the parsing, so the      */
-            tk_f = 0;                            /* buffers need to be different               */
-         }
-      }
-
-   }
-
-}
-
 static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter)
 {
    int i = 0; /* loop counter */
@@ -201,9 +112,6 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
 
    command[0] = '\0';
    parameter[0] = '\0';
-
-   //dbgPrint("\r\nToken: ");
-   //dbgPrint(token);
 
    /* determine if the token is an AT command, be it extended or basic */
 
@@ -297,9 +205,7 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
 
       /* Search for ':' character and store position if present */
 
-      for (i = 1; i < strlen(token); i++){
-         if (':' == token[i]) {colonPos = i;}
-      }
+      for (i = 1; i < strlen(token); i++){if (':' == token[i]) {colonPos = i;}}
 
       /* If no ':' character is present we have a simple extended sintax response */
 
@@ -362,7 +268,75 @@ int main(void)
 
    pausems(DELAY_S);
 
-   tokenize(UARTBuffer);
+   ATToken received; /* classifies the received token*/
+
+   uint8_t token[TKN_LENGTH]; /* received token */
+   uint8_t command[TKN_LENGTH]; /* AT command or responde */
+   uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
+
+   while (1){
+
+      if(0 != tokenRead(token)){
+
+         received = parse(token, command, parameter);
+
+         dbgPrint("\r\n\r\n");
+
+         switch(received){
+            case INVALID:
+               dbgPrint("INVALID TOKEN\r\n");
+               break;
+            case BASIC_COMMAND:
+               dbgPrint("BASIC COMMAND: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")\r\n");
+               break;
+            case EXTENDED_COMMAND_WRITE:
+               dbgPrint("EXTENDED COMMAND WRITE: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")\r\n");
+               break;
+            case EXTENDED_COMMAND_READ:
+               dbgPrint("EXTENDED COMMAND READ: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+               break;
+            case EXTENDED_COMMAND_TEST:
+               dbgPrint("EXTENDED COMMAND TEST: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+               break;
+            case EXTENDED_COMMAND_EXECUTION:
+               dbgPrint("EXTENDED COMMAND EXECUTION: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+               break;
+            case BASIC_RESPONSE:
+               dbgPrint("BASIC RESPONSE: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")");
+               break;
+            case EXTENDED_RESPONSE:
+               dbgPrint("EXTENDED RESPONSE: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")");
+               break;
+
+         dbgPrint("\r\n\r\n");
+
+         }
+
+      }
+
+   }
 
    return 0;
 

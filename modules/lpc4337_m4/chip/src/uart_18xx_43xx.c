@@ -29,6 +29,17 @@
  * this code.
  */
 
+/*
+ * 2017-02-05
+ *
+ * Modified to include tokenizer functionality in the UART Rx IRQ.
+ *
+ * If the received character is <CR>, the character is not stored in the ring buffer
+ * and all prior characters are flushed, considered part of a single token.
+ *
+ * emartinez
+ */
+
 #include "chip.h"
 
 /*****************************************************************************
@@ -244,12 +255,22 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 }
 
 /* UART receive-only interrupt handler for ring buffers */
-void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB)
+void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB)
 {
 	/* New data will be ignored if data not popped in time */
 	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
 		uint8_t ch = Chip_UART_ReadByte(pUART);
-		RingBuffer_Insert(pRB, &ch);
+
+		if('\r' != ch){
+		   RingBuffer_Insert(pRB, &ch);
+		}
+		else if(0 == RingBuffer_IsEmpty(pRB)){
+		   uint8_t swap[TKN_LENGTH];
+		   uint8_t length = RingBuffer_GetCount(pRB);
+		   RingBuffer_PopMult(pRB, swap, length); /* read new token */
+		   swap[length] = '\0';
+		   RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
+		}
 	}
 }
 
@@ -302,7 +323,7 @@ int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes)
 }
 
 /* UART receive/transmit interrupt handler for ring buffers */
-void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB)
+void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB)
 {
 	/* Handle transmit interrupt if enabled */
 	if (pUART->IER & UART_IER_THREINT) {
@@ -315,7 +336,7 @@ void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *p
 	}
 
 	/* Handle receive interrupt */
-	Chip_UART_RXIntHandlerRB(pUART, pRXRB);
+	Chip_UART_RXIntHandlerRB(pUART, pRXRB, pTKNB);
 
     /* Handle Autobaud interrupts */
     Chip_UART_ABIntHandler(pUART);
