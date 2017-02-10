@@ -62,7 +62,7 @@ static void pausems(uint32_t t);
 
 static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
-static uint8_t commSearch(ATToken type, uint8_t * command);
+static uint8_t commSearch(ATToken const type, uint8_t const * const command);
 
 static void CeluCIAAInit (void);
 
@@ -218,7 +218,7 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
          strncpy(command,&token[1],colonPos-1);
          command[colonPos-1] = '\0';
          strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos);
-         command[strlen(token)-colonPos] = '\0';
+         parameter[strlen(token)-colonPos] = '\0';
          return EXTENDED_RESPONSE;
       }
 
@@ -235,7 +235,7 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
    return INVALID;
 }
 
-static uint8_t commSearch(ATToken type, uint8_t * command)
+static uint8_t commSearch(ATToken const type, uint8_t const * const command)
 {
    uint8_t  * pCommMat;
 
@@ -260,10 +260,6 @@ static uint8_t commSearch(ATToken type, uint8_t * command)
    uint8_t i;
 
    for(i = 0; i < maxComm; i++){
-      dbgPrint(command);
-      dbgPrint("\r\n");
-      dbgPrint(pCommMat+(i*maxCommLen));
-      dbgPrint("\r\n");
       if(0 == strcmp(command, pCommMat+(i*maxCommLen))){return i;}
    }
 
@@ -273,31 +269,21 @@ static uint8_t commSearch(ATToken type, uint8_t * command)
 
 static void CeluCIAAInit (void)
 {
-   dbgPrint(">>>CeluCIAAInit<<<\r\n");
-
    extComm[0][0] = '\0';
    basicComm[0][0] = '\0';
    basicResp[0][0] = '\0';
 
    strncpy(&extComm[1][0], "CMGF", strlen("CMGF"));
    extComm[1][strlen("CMGF")] = '\0';
-   dbgPrint(extComm[1]);
-   dbgPrint("\r\n");
 
    strncpy(&extComm[2][0], "CSCS", strlen("CSCS"));
    extComm[2][strlen("CSCS")] = '\0';
-   dbgPrint(extComm[2]);
-   dbgPrint("\r\n");
 
    strncpy(&extComm[3][0], "CMGS", strlen("CMGS"));
    extComm[3][strlen("CMGS")] = '\0';
-   dbgPrint(extComm[3]);
-   dbgPrint("\r\n");
 
    strncpy(&basicResp[1][0], "OK", strlen("OK"));
    basicResp[1][strlen("OK")] = '\0';
-   dbgPrint(basicResp[1]);
-   dbgPrint("\r\n");
 
    return;
 }
@@ -315,9 +301,6 @@ int main(void)
 
    initHardware();
    ciaaUARTInit();
-
-   pausems(DELAY_S);
-
    CeluCIAAInit();
 
    ATToken received; /* classifies the received token*/
@@ -327,6 +310,7 @@ int main(void)
    uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
 
    while (1){
+
 
       if(0 != tokenRead(token)){
 
