@@ -47,6 +47,9 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+#define maxCommLen 15 /* maximum length of a command */
+#define maxComm 5 /* maximum ammount of loaded commands */
+
 /** delay in milliseconds */
 #define DELAY_MS 1000
 #define DELAY_S  5000

@@ -62,7 +62,7 @@ static void pausems(uint32_t t);
 
 static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
-static uint8_t commSearch(uint8_t * command);
+static uint8_t commSearch(ATToken type, uint8_t * command);
 
 static void CeluCIAAInit (void);
 
@@ -72,17 +72,14 @@ static void CeluCIAAInit (void);
 /** @brief used for delay counter */
 static uint32_t pausems_count;
 
-/** @UART received messages buffer */
-uint8_t UARTBuffer[50];
-
-/** @token buffer */
-uint8_t tokenBuffer[25];
-
 /** @vector of extended AT commands */
-uint8_t extComm [5][10];
+uint8_t extComm [maxComm][maxCommLen];
 
 /** @vector of basic AT commands */
-uint8_t basicComm [5][10];
+uint8_t basicComm [maxComm][maxCommLen];
+
+/** @vector of basic AT responses */
+uint8_t basicResp [maxComm][maxCommLen];
 
 /*==================[external data definition]===============================*/
 
@@ -238,13 +235,71 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
    return INVALID;
 }
 
-static void CeluCIAAInit (void)
+static uint8_t commSearch(ATToken type, uint8_t * command)
 {
-   extComm[0][0] = "CMGF";
-   extComm[1][0] = "CSCS";
-   extComm[2][0] = "CMGS";
+   uint8_t  * pCommMat;
+
+   switch(type){
+      case BASIC_COMMAND:
+         pCommMat = &basicComm[0][0];
+         break;
+      case EXTENDED_COMMAND_TEST:
+      case EXTENDED_COMMAND_WRITE:
+      case EXTENDED_COMMAND_READ:
+      case EXTENDED_COMMAND_EXECUTION:
+      case EXTENDED_RESPONSE:
+         pCommMat = &extComm[0][0];
+         break;
+      case BASIC_RESPONSE:
+         pCommMat = &basicResp[0][0];
+         break;
+      case INVALID:
+         return 0;
+   }
+
+   uint8_t i;
+
+   for(i = 0; i < maxComm; i++){
+      dbgPrint(command);
+      dbgPrint("\r\n");
+      dbgPrint(pCommMat+(i*maxCommLen));
+      dbgPrint("\r\n");
+      if(0 == strcmp(command, pCommMat+(i*maxCommLen))){return i;}
+   }
 
    return 0;
+}
+
+
+static void CeluCIAAInit (void)
+{
+   dbgPrint(">>>CeluCIAAInit<<<\r\n");
+
+   extComm[0][0] = '\0';
+   basicComm[0][0] = '\0';
+   basicResp[0][0] = '\0';
+
+   strncpy(&extComm[1][0], "CMGF", strlen("CMGF"));
+   extComm[1][strlen("CMGF")] = '\0';
+   dbgPrint(extComm[1]);
+   dbgPrint("\r\n");
+
+   strncpy(&extComm[2][0], "CSCS", strlen("CSCS"));
+   extComm[2][strlen("CSCS")] = '\0';
+   dbgPrint(extComm[2]);
+   dbgPrint("\r\n");
+
+   strncpy(&extComm[3][0], "CMGS", strlen("CMGS"));
+   extComm[3][strlen("CMGS")] = '\0';
+   dbgPrint(extComm[3]);
+   dbgPrint("\r\n");
+
+   strncpy(&basicResp[1][0], "OK", strlen("OK"));
+   basicResp[1][strlen("OK")] = '\0';
+   dbgPrint(basicResp[1]);
+   dbgPrint("\r\n");
+
+   return;
 }
 
 /*==================[external functions definition]==========================*/
@@ -260,13 +315,10 @@ int main(void)
 
    initHardware();
    ciaaUARTInit();
-   CeluCIAAInit();
-
-   for (i = 0; i < 20; i++){
-      UARTBuffer[i] = '\0';
-   }
 
    pausems(DELAY_S);
+
+   CeluCIAAInit();
 
    ATToken received; /* classifies the received token*/
 
@@ -320,19 +372,24 @@ int main(void)
                dbgPrint(command);
                dbgPrint("(");
                dbgPrint(parameter);
-               dbgPrint(")");
+               dbgPrint(")\r\n");
                break;
             case EXTENDED_RESPONSE:
                dbgPrint("EXTENDED RESPONSE: ");
                dbgPrint(command);
                dbgPrint("(");
                dbgPrint(parameter);
-               dbgPrint(")");
+               dbgPrint(")\r\n");
                break;
 
-         dbgPrint("\r\n\r\n");
-
          }
+
+         if(0 != commSearch(received, command)){
+            dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
+         }
+         else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
+
+         dbgPrint("\r\n");
 
       }
 
