@@ -39,6 +39,8 @@
 
 /*==================[inclusions]=============================================*/
 
+#include "lpc_types.h"
+
 /*==================[cplusplus]==============================================*/
 
 #ifdef __cplusplus
@@ -47,8 +49,10 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define maxCommLen 15 /* maximum length of a command */
-#define maxComm 5 /* maximum ammount of loaded commands */
+#define MAX_COMM_LEN 15 /* maximum length of a command */
+#define MAX_COMM 5 /* maximum ammount of loaded commands */
+#define MAX_RESP_LEN 15 /* maximum length of a response */
+#define MAX_RESP 5 /* maximum ammount of loaded responses */
 
 /** delay in milliseconds */
 #define DELAY_MS 1000
@@ -62,9 +66,31 @@ extern "C" {
 
 /** enum to classify valid AT tokens */
 
-typedef enum {INVALID, BASIC_COMMAND, EXTENDED_COMMAND_TEST, EXTENDED_COMMAND_WRITE,
-              EXTENDED_COMMAND_READ, EXTENDED_COMMAND_EXECUTION,
-              BASIC_RESPONSE, EXTENDED_RESPONSE} ATToken;
+typedef enum {SYNC, INVALID, BASIC_COMMAND, EXTENDED_COMMAND_TEST,
+              EXTENDED_COMMAND_WRITE, EXTENDED_COMMAND_READ,
+              EXTENDED_COMMAND_EXECUTION, BASIC_RESPONSE,
+              EXTENDED_RESPONSE} ATToken;
+
+/** typedef for callback function pointer */
+
+typedef int (*ATCallback) (const uint8_t const * parameter);
+
+/** struct for basic AT responses */
+
+typedef struct {
+   uint8_t name[MAX_COMM_LEN];
+   ATCallback execution;
+} ATResp;
+
+/** struct for extended AT commands */
+
+typedef struct {
+   uint8_t name[MAX_COMM_LEN];
+   ATCallback execution;
+   ATCallback write;
+   ATCallback test;
+   ATCallback read;
+} ATComm;
 
 /*==================[external data declaration]==============================*/
 

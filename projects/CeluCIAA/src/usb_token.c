@@ -66,20 +66,19 @@ static uint8_t commSearch(ATToken const type, uint8_t const * const command);
 
 static void CeluCIAAInit (void);
 
+int cbAT (uint8_t const * const parameter);
+
 
 /*==================[internal data definition]===============================*/
 
 /** @brief used for delay counter */
 static uint32_t pausems_count;
 
-/** @vector of extended AT commands */
-uint8_t extComm [maxComm][maxCommLen];
+/** @vector of known AT commands */
+ATComm commands [MAX_COMM];
 
-/** @vector of basic AT commands */
-uint8_t basicComm [maxComm][maxCommLen];
-
-/** @vector of basic AT responses */
-uint8_t basicResp [maxComm][maxCommLen];
+/** @vector of known AT responses */
+ATResp responses [MAX_RESP];
 
 /*==================[external data definition]===============================*/
 
@@ -114,9 +113,16 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
 
    if(('A' == token[0]) && ('T' == token[1])){
 
+      /* autobauding sync sequence */
+
+      if(2 == strlen(token)){
+         strncpy(command,"AT\0",3);
+         return BASIC_COMMAND;
+      }
+
       /* extended AT command */
 
-      if('+' == token[2]){
+      else if('+' == token[2]){
 
          /* Search for '=' and '?' characters and store position to determine type
             of extended AT command */
@@ -237,55 +243,88 @@ static ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * p
 
 static uint8_t commSearch(ATToken const type, uint8_t const * const command)
 {
-   uint8_t  * pCommMat;
+   int i = 0;
 
    switch(type){
       case BASIC_COMMAND:
-         pCommMat = &basicComm[0][0];
-         break;
       case EXTENDED_COMMAND_TEST:
       case EXTENDED_COMMAND_WRITE:
       case EXTENDED_COMMAND_READ:
       case EXTENDED_COMMAND_EXECUTION:
+
+         for(i = 0; i < MAX_COMM; i++){
+            if(0 == strcmp(command, commands[i].name)){return i;}
+         }
+
+         break;
+
       case EXTENDED_RESPONSE:
-         pCommMat = &extComm[0][0];
-         break;
       case BASIC_RESPONSE:
-         pCommMat = &basicResp[0][0];
+
+         for(i = 0; i < MAX_RESP; i++){
+            if(0 == strcmp(command, responses[i].name)){return i;}
+         }
+
          break;
+
       case INVALID:
+
          return 0;
-   }
-
-   uint8_t i;
-
-   for(i = 0; i < maxComm; i++){
-      if(0 == strcmp(command, pCommMat+(i*maxCommLen))){return i;}
    }
 
    return 0;
 }
 
-
 static void CeluCIAAInit (void)
 {
-   extComm[0][0] = '\0';
-   basicComm[0][0] = '\0';
-   basicResp[0][0] = '\0';
+   commands[0].name[0] = '\0';
+   commands[0].execution = 0;
+   commands[0].write = 0;
+   commands[0].test = 0;
+   commands[0].read = 0;
 
-   strncpy(&extComm[1][0], "CMGF", strlen("CMGF"));
-   extComm[1][strlen("CMGF")] = '\0';
+   responses[0].name[0] = '\0';
+   responses[0].execution = 0;
 
-   strncpy(&extComm[2][0], "CSCS", strlen("CSCS"));
-   extComm[2][strlen("CSCS")] = '\0';
+   strncpy(commands[1].name, "AT", strlen("AT"));
+   commands[1].name[strlen("AT")] = '\0';
+   commands[1].execution = &cbAT;
+   commands[1].write = 0;
+   commands[1].test = 0;
+   commands[1].read = 0;
 
-   strncpy(&extComm[3][0], "CMGS", strlen("CMGS"));
-   extComm[3][strlen("CMGS")] = '\0';
+   strncpy(commands[2].name, "CMGF", strlen("CMGF"));
+   commands[2].name[strlen("CMGF")] = '\0';
+   commands[2].execution = 0;
+   commands[2].write = 0;
+   commands[2].test = 0;
+   commands[2].read = 0;
 
-   strncpy(&basicResp[1][0], "OK", strlen("OK"));
-   basicResp[1][strlen("OK")] = '\0';
+   strncpy(commands[3].name, "CSCS", strlen("CSCS"));
+   commands[3].name[strlen("CSCS")] = '\0';
+   commands[3].execution = 0;
+   commands[3].write = 0;
+   commands[3].test = 0;
+   commands[3].read = 0;
+
+   strncpy(commands[4].name, "CMGS", strlen("CMGS"));
+   commands[4].name[strlen("CMGS")] = '\0';
+   commands[4].execution = 0;
+   commands[4].write = 0;
+   commands[4].test = 0;
+   commands[4].read = 0;
+
+   strncpy(responses[1].name, "OK", strlen("OK"));
+   responses[1].name[strlen("OK")] = '\0';
+   responses[1].execution = 0;
 
    return;
+}
+
+int cbAT (uint8_t const * const parameter)
+{
+   dbgPrint("Funcion callback del comando AT\r\n");
+   return 0;
 }
 
 /*==================[external functions definition]==========================*/
@@ -308,6 +347,7 @@ int main(void)
    uint8_t token[TKN_LENGTH]; /* received token */
    uint8_t command[TKN_LENGTH]; /* AT command or responde */
    uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
+   uint8_t index; /* for searching commands or responses in the known command/response vectors */
 
    while (1){
 
@@ -316,65 +356,58 @@ int main(void)
 
          received = parse(token, command, parameter);
 
-         dbgPrint("\r\n\r\n");
-
          switch(received){
-            case INVALID:
-               dbgPrint("INVALID TOKEN\r\n");
-               break;
             case BASIC_COMMAND:
-               dbgPrint("BASIC COMMAND: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-               break;
             case EXTENDED_COMMAND_WRITE:
-               dbgPrint("EXTENDED COMMAND WRITE: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-               break;
             case EXTENDED_COMMAND_READ:
-               dbgPrint("EXTENDED COMMAND READ: ");
-               dbgPrint(command);
-               dbgPrint("\r\n");
-               break;
             case EXTENDED_COMMAND_TEST:
-               dbgPrint("EXTENDED COMMAND TEST: ");
-               dbgPrint(command);
-               dbgPrint("\r\n");
-               break;
             case EXTENDED_COMMAND_EXECUTION:
-               dbgPrint("EXTENDED COMMAND EXECUTION: ");
+
+               /* printout */
+
+               dbgPrint("\r\nCOMMAND: ");
                dbgPrint(command);
-               dbgPrint("\r\n");
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")\r\n");
+
+               /* callback */
+
+               index = commSearch(received, command);
+
+               if(0 != index){
+                  dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
+                  if(0 != commands[index].execution){commands[index].execution(parameter);}
+               }
+               else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
+
                break;
+
             case BASIC_RESPONSE:
-               dbgPrint("BASIC RESPONSE: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-               break;
             case EXTENDED_RESPONSE:
-               dbgPrint("EXTENDED RESPONSE: ");
+
+               /* printout */
+
+               dbgPrint("\r\nRESPONSE: ");
                dbgPrint(command);
                dbgPrint("(");
                dbgPrint(parameter);
                dbgPrint(")\r\n");
+
+               /* callback */
+
+               index = commSearch(received, command);
+
+               if(0 != index){
+                  dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
+                  if(0 != responses[index].execution){responses[index].execution(parameter);}
+               }
+               else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
+
                break;
-
          }
-
-         if(0 != commSearch(received, command)){
-            dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
-         }
-         else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
 
          dbgPrint("\r\n");
-
       }
 
    }
