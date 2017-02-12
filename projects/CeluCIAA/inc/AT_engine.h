@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _USB_TOKEN_H_
-#define _USB_TOKEN_H_
+#ifndef _AT_ENGINE_H_
+#define _AT_ENGINE_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
