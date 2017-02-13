@@ -31,7 +31,7 @@
 
 -include project.mk
 
-PROJECT ?= projects/usb_token
+PROJECT ?= projects/CeluCIAA
 TARGET ?= lpc4337_m4
 BOARD ?= edu_ciaa_nxp
 

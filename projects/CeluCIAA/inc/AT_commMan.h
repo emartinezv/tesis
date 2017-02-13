@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_ENGINE_H_
-#define _AT_ENGINE_H_
+#ifndef _AT_COMMMAN_H_
+#define _AT_COMMMAN_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,6 +40,9 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "AT_parser.h"
+#include "string.h"
+#include "ciaaUART.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -49,24 +52,57 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** delay in milliseconds */
-#define DELAY_MS 1000
-#define DELAY_S  5000
-
-/** led number to toggle */
-#define LED_ROJO 4
-#define LED_VERDE 5
+#define MAX_COMM_LEN 15 /* maximum length of a command */
+#define MAX_COMM 5 /* maximum ammount of loaded commands */
+#define MAX_RESP_LEN 15 /* maximum length of a response */
+#define MAX_RESP 5 /* maximum ammount of loaded responses */
 
 /*==================[typedef]================================================*/
+
+/** typedef for callback function pointer */
+
+typedef int (*ATCallback) (const uint8_t const * parameter);
+
+/** struct for basic AT responses */
+
+typedef struct {
+   uint8_t name[MAX_COMM_LEN];
+   ATCallback execution;
+} ATResp;
+
+/** struct for extended AT commands */
+
+typedef struct {
+   uint8_t name[MAX_COMM_LEN];
+   ATCallback execution;
+   ATCallback write;
+   ATCallback test;
+   ATCallback read;
+} ATComm;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief main function
- * @return main function should never return
+/** @brief commSearch function
+ * @return takes a token type and command, returns position of the command in
+ *  the known command/response vector or 0 if no command/response found
  */
-int main(void);
+
+uint8_t commSearch(ATToken const type, uint8_t const * const command);
+
+/** @brief commInit function
+ * @return loads the command and response vectors with the name and callback
+ *  for each command or response
+ */
+
+void commInit (void);
+
+/** @brief ccAT function
+ * @return callback function for the "AT" command
+ */
+
+int cbAT (uint8_t const * const parameter);
 
 /*==================[cplusplus]==============================================*/
 

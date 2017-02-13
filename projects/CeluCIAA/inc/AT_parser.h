@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_ENGINE_H_
-#define _AT_ENGINE_H_
+#ifndef _AT_PARSER_H_
+#define _AT_PARSER_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,6 +40,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "string.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -49,24 +50,27 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** delay in milliseconds */
-#define DELAY_MS 1000
-#define DELAY_S  5000
 
-/** led number to toggle */
-#define LED_ROJO 4
-#define LED_VERDE 5
 
 /*==================[typedef]================================================*/
+
+/** enum to classify valid AT tokens */
+
+typedef enum {SYNC, INVALID, BASIC_COMMAND, EXTENDED_COMMAND_TEST,
+              EXTENDED_COMMAND_WRITE, EXTENDED_COMMAND_READ,
+              EXTENDED_COMMAND_EXECUTION, BASIC_RESPONSE,
+              EXTENDED_RESPONSE} ATToken;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief main function
- * @return main function should never return
+/** @brief parse function
+ * @return takes a token, returns token type and writes to command and parameter
+ *  buffers
  */
-int main(void);
+
+ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
 /*==================[cplusplus]==============================================*/
 
