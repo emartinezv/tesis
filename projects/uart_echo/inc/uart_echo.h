@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _UART_H_
-#define _UART_H_
+#ifndef _UART_ECHO_H_
+#define _UART_ECHO_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
