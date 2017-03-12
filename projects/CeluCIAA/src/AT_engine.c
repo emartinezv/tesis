@@ -101,6 +101,59 @@ void SysTick_Handler(void)
    if(pausems_count > 0) pausems_count--;
 }
 
+void processToken(void)
+{
+   ATToken received; /* classifies the received token*/
+
+   uint8_t token[TKN_LENGTH]; /* received token */
+   uint8_t command[TKN_LENGTH]; /* AT command or responde */
+   uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
+
+   if(0 != tokenRead(token)){
+
+      received = parse(token, command, parameter); /* parse the received token */
+
+      switch(received){
+
+         case BASIC_COMMAND:
+         case EXTENDED_COMMAND_WRITE:
+         case EXTENDED_COMMAND_READ:
+         case EXTENDED_COMMAND_TEST:
+         case EXTENDED_COMMAND_EXECUTION:
+
+            /* printout */
+
+            dbgPrint("\r\nCOMMAND: ");
+            dbgPrint(command);
+            dbgPrint("(");
+            dbgPrint(parameter);
+            dbgPrint(")\r\n");
+
+         break;
+
+         case BASIC_RESPONSE:
+         case EXTENDED_RESPONSE:
+
+            /* printout */
+
+            dbgPrint("\r\nRESPONSE: ");
+            dbgPrint(command);
+            dbgPrint("(");
+            dbgPrint(parameter);
+            dbgPrint(")\r\n");
+
+         break;
+
+      }
+
+      dbgPrint("\r\n");
+   }
+
+   return;
+
+}
+
+
 int main(void)
 {
    int i; /* loop counter */
@@ -109,78 +162,15 @@ int main(void)
    ciaaUARTInit();
    commInit();
 
-   ATToken received; /* classifies the received token*/
-
-   uint8_t token[TKN_LENGTH]; /* received token */
-   uint8_t command[TKN_LENGTH]; /* AT command or responde */
-   uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
-   uint8_t index; /* for searching commands or responses in the known command/response vectors */
-
    while (1){
 
 
-      if(0 != tokenRead(token)){
 
-         received = parse(token, command, parameter);
-
-         switch(received){
-            case BASIC_COMMAND:
-            case EXTENDED_COMMAND_WRITE:
-            case EXTENDED_COMMAND_READ:
-            case EXTENDED_COMMAND_TEST:
-            case EXTENDED_COMMAND_EXECUTION:
-
-               /* printout */
-
-               dbgPrint("\r\nCOMMAND: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-
-               /* callback */
-
-               index = commSearch(received, command);
-
-               if(0 != index){
-                  dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
-                  if(0 != commands[index].execution){commands[index].execution(parameter);}
-               }
-               else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
-
-               break;
-
-            case BASIC_RESPONSE:
-            case EXTENDED_RESPONSE:
-
-               /* printout */
-
-               dbgPrint("\r\nRESPONSE: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-
-               /* callback */
-
-               index = commSearch(received, command);
-
-               if(0 != index){
-                  dbgPrint("Comando o respuesta RECONOCIDOS\r\n");
-                  if(0 != responses[index].execution){responses[index].execution(parameter);}
-               }
-               else{dbgPrint("Comando o respuesta DESCONOCIDOS\r\n");}
-
-               break;
-         }
-
-         dbgPrint("\r\n");
-      }
+      /* processToken(); */
 
    }
 
    return 0;
-
 }
 
 /** @} doxygen end group definition */

@@ -63,6 +63,11 @@ extern "C" {
 
 /*==================[external functions declaration]=========================*/
 
+/** @brief processToken function
+* @return
+*/
+void processToken(void);
+
 /** @brief main function
  * @return main function should never return
  */

@@ -114,7 +114,7 @@ void commInit (void)
    commands[0].read = 0;
 
    responses[0].name[0] = '\0';
-   responses[0].execution = 0;
+   responses[0].response = 0;
 
    strncpy(commands[1].name, "AT", strlen("AT"));
    commands[1].name[strlen("AT")] = '\0';
@@ -146,7 +146,7 @@ void commInit (void)
 
    strncpy(responses[1].name, "OK", strlen("OK"));
    responses[1].name[strlen("OK")] = '\0';
-   responses[1].execution = 0;
+   responses[1].response = 0;
 
    return;
 }

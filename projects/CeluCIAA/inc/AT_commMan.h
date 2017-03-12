@@ -63,14 +63,7 @@ extern "C" {
 
 typedef int (*ATCallback) (const uint8_t const * parameter);
 
-/** struct for basic AT responses */
-
-typedef struct {
-   uint8_t name[MAX_COMM_LEN];
-   ATCallback execution;
-} ATResp;
-
-/** struct for extended AT commands */
+/** struct for AT commands */
 
 typedef struct {
    uint8_t name[MAX_COMM_LEN];
@@ -79,6 +72,20 @@ typedef struct {
    ATCallback test;
    ATCallback read;
 } ATComm;
+
+/** struct for AT responses */
+
+typedef struct {
+   uint8_t name[MAX_RESP_LEN];
+   ATCallback response;
+} ATResp;
+
+/** struct for URC */
+
+typedef struct {
+   uint8_t name[MAX_RESP_LEN];
+   ATCallback event;
+} ATURC;
 
 /*==================[external data declaration]==============================*/
 
