@@ -31,7 +31,7 @@
 
 -include project.mk
 
-PROJECT ?= projects/CeluCIAA
+PROJECT ?= projects/uart_echo
 TARGET ?= lpc4337_m4
 BOARD ?= edu_ciaa_nxp
 

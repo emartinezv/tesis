@@ -42,7 +42,7 @@
  * emartinez
  */
 
-#include "ciaaUART.h"
+#include "ciaaUART_T.h"
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];

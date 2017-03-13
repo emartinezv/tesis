@@ -39,7 +39,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "uart.h"
+#include "uart_echo.h"
 #include "board.h"
 #include "string.h"
 #include "ciaaUART.h"
@@ -94,46 +94,32 @@ void SysTick_Handler(void)
 
 int main(void)
 {
-   uint8_t ReadBuffer[20]; /* UART received messages buffer */
+   uint8_t Buffer_232[BUF_SIZ]; /* UART 232 received messages buffer */
+   uint8_t Buffer_USB[BUF_SIZ]; /* UART USB received messages buffer */
    int i;
-   bool baudSync = FALSE; /* indicates if the AT-->OK sequence has been accepted */
    int nRead; /* number of bytes read */
 
    initHardware();
    ciaaUARTInit();
 
-   Board_LED_Set(LED_ROJO, TRUE);
-
-   for (i = 0; i < 20; i++){
-      ReadBuffer[i] = '\0';
+   for (i = 0; i < BUF_SIZ; i++){
+      Buffer_232[i] = '\0';
+      Buffer_USB[i] = '\0';
    }
 
-   pausems(DELAY_MS);
+   while (1){
 
-   while (baudSync == FALSE){
+      /* read 232 and print to USB */
 
-      dbgPrint("Intentando sync de autobauding...\n\r");
-      rs232Print("AT\r\n");
-      nRead = uartRecv(CIAA_UART_232, (void *) &ReadBuffer, 10);
-      ReadBuffer[nRead] = '\0'; /* terminate string */
+      nRead = uartRecv(CIAA_UART_232, (void *) &Buffer_232, BUF_SIZ-1);
+      Buffer_232[nRead] = '\0'; /* terminate string */
+      dbgPrint(Buffer_232);
 
-      if (NULL != strstr(&ReadBuffer[0],"OK")) {
-         baudSync = TRUE;
-      }
+      /* read USB and print to 232 */
 
-      for (i = 0; i < 20; i++){
-         ReadBuffer[i] = '\0';
-      }
-
-      pausems(DELAY_MS);
-   }
-
-   Board_LED_Set(LED_ROJO, FALSE);
-   Board_LED_Set(LED_VERDE, TRUE);
-
-   while (1) {
-      dbgPrint("Autobaud exitoso!\n\r");
-      pausems(DELAY_MS);
+      nRead = uartRecv(CIAA_UART_USB, (void *) &Buffer_USB, BUF_SIZ-1);
+      Buffer_USB[nRead] = '\0'; /* terminate string */
+      rs232Print(Buffer_USB);
    }
 }
 

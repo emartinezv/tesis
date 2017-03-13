@@ -43,8 +43,11 @@
  * emartinez
  */
 
-#ifndef CIAAUART_H_
-#define CIAAUART_H_
+#ifndef CIAAUART_T_H_
+#define CIAAUART_T_H_
+
+#ifndef TOKENIZER
+#define TOKENIZER
 
 #include "chip.h"
 #include "string.h"

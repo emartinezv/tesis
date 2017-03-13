@@ -44,7 +44,7 @@
 #include "AT_commMan.h"
 #include "board.h"
 #include "string.h"
-#include "ciaaUART.h"
+#include "ciaaUART_T.h"
 
 /*==================[macros and definitions]=================================*/
 

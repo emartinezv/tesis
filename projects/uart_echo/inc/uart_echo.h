@@ -47,6 +47,10 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** buffer sizes */
+
+#define BUF_SIZ 51
+
 /** delay in milliseconds */
 #define DELAY_MS 10000
 
