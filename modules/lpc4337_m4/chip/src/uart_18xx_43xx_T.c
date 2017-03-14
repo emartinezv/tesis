@@ -254,8 +254,8 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 	return clkin / div;
 }
 
-/* UART receive-only interrupt handler for ring buffers */
-void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB)
+/* UART receive-only interrupt handler for ring buffers with tokenizer */
+void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB)
 {
 	/* New data will be ignored if data not popped in time */
 	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
@@ -272,6 +272,16 @@ void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *p
 		   RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
 		}
 	}
+}
+
+/* UART receive-only interrupt handler for ring buffers */
+void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB)
+{
+   /* New data will be ignored if data not popped in time */
+   while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
+      uint8_t ch = Chip_UART_ReadByte(pUART);
+      RingBuffer_Insert(pRB, &ch);
+   }
 }
 
 /* UART transmit-only interrupt handler for ring buffers */
@@ -322,8 +332,8 @@ int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes)
 	return RingBuffer_PopMult(pRB, (uint8_t *) data, bytes);
 }
 
-/* UART receive/transmit interrupt handler for ring buffers */
-void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB)
+/* UART receive/transmit interrupt handler for ring buffers with tokenizer */
+void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB)
 {
 	/* Handle transmit interrupt if enabled */
 	if (pUART->IER & UART_IER_THREINT) {
@@ -336,7 +346,27 @@ void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *p
 	}
 
 	/* Handle receive interrupt */
-	Chip_UART_RXIntHandlerRB(pUART, pRXRB, pTKNB);
+	Chip_UART_RXIntHandlerRB_T(pUART, pRXRB, pTKNB);
+
+    /* Handle Autobaud interrupts */
+    Chip_UART_ABIntHandler(pUART);
+}
+
+/* UART receive/transmit interrupt handler for ring buffers */
+void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB)
+{
+   /* Handle transmit interrupt if enabled */
+   if (pUART->IER & UART_IER_THREINT) {
+      Chip_UART_TXIntHandlerRB(pUART, pTXRB);
+
+      /* Disable transmit interrupt if the ring buffer is empty */
+      if (RingBuffer_IsEmpty(pTXRB)) {
+         Chip_UART_IntDisable(pUART, UART_IER_THREINT);
+      }
+   }
+
+   /* Handle receive interrupt */
+   Chip_UART_RXIntHandlerRB(pUART, pRXRB);
 
     /* Handle Autobaud interrupts */
     Chip_UART_ABIntHandler(pUART);

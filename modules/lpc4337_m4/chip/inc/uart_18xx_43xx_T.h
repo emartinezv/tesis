@@ -765,7 +765,18 @@ int Chip_UART_ReadBlocking(LPC_USART_T *pUART, void *data, int numBytes);
  *			of data transfer, the UART interrupt should call this
  *			function for a receive based interrupt status.
  */
-void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T * pTKNB);
+void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T * pTKNB);
+
+/**
+ * @brief   UART receive-only interrupt handler for ring buffers with tokenizer
+ * @param   pUART : Pointer to selected UART peripheral
+ * @param   pRB      : Pointer to ring buffer structure to use
+ * @return  Nothing
+ * @note If ring buffer support is desired for the receive side
+ *       of data transfer, the UART interrupt should call this
+ *       function for a receive based interrupt status.
+ */
+void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB);
 
 /**
  * @brief	UART transmit-only interrupt handler for ring buffers
@@ -815,7 +826,19 @@ int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes)
  *			handler for support of a ring buffer implementation for
  *			transmit and receive.
  */
-void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB);
+void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB);
+
+/**
+ * @brief   UART receive/transmit interrupt handler for ring buffers with tokenizer
+ * @param   pUART : Pointer to selected UART peripheral
+ * @param   pRXRB : Pointer to transmit ring buffer
+ * @param   pTXRB : Pointer to receive ring buffer
+ * @return  Nothing
+ * @note This provides a basic implementation of the UART IRQ
+ *       handler for support of a ring buffer implementation for
+ *       transmit and receive.
+ */
+void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB);
 
 /**
  * @brief	Returns the Auto Baud status

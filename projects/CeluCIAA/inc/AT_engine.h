@@ -34,6 +34,8 @@
 #ifndef _AT_ENGINE_H_
 #define _AT_ENGINE_H_
 
+#define TOKENIZER /* use tokenizer UART drivers */
+
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
 

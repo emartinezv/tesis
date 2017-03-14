@@ -116,8 +116,6 @@ void ciaaUARTInit(void)
 	RingBuffer_Init(uarts[2].rrb, rxbuf[2], 1, UART_BUF_SIZE);
 	RingBuffer_Init(uarts[2].trb, txbuf[2], 1, UART_BUF_SIZE);
 
-	/* Token buffer */
-
 	RingBuffer_Init(&tokens, &tknbuf, TKN_LENGTH, TKN_BUF_SIZE);
 }
 
@@ -125,7 +123,11 @@ void uart_irq(ciaaUART_e n)
 {
 	uartData_t * u = &(uarts[n]);
 
-	Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb, &tokens);
+   if(CIAA_UART_232 == n)
+	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens);
+   else
+	   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
+
 }
 
 void UART0_IRQHandler(void)
@@ -157,6 +159,7 @@ int uartRecv(ciaaUART_e nUART, void * data, int datalen)
 	return Chip_UART_ReadRB(u->uart, u->rrb, data, datalen);
 }
 
+#ifdef TOKENIZER
 int tokenRead(void * token){
    if(1 == RingBuffer_IsEmpty(&tokens)){ return 0;}
    else{
@@ -164,3 +167,4 @@ int tokenRead(void * token){
       return 1;
    }
 }
+#endif

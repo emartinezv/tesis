@@ -34,6 +34,8 @@
 #ifndef CIAAUART_H_
 #define CIAAUART_H_
 
+#undef TOKENIZER /* make sure that we are using the non-tokenizer UART */
+
 #include "chip.h"
 #include "string.h"
 
