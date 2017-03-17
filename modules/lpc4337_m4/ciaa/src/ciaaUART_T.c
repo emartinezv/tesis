@@ -46,7 +46,7 @@
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];
-uint8_t tknbuf[TKN_BUF_SIZE * TKN_LENGTH];
+uint8_t tknbuf[TKN_BUF_SIZE * TKN_LEN];
 
 RINGBUFF_T rrb[3];
 RINGBUFF_T trb[3];
@@ -116,7 +116,7 @@ void ciaaUARTInit(void)
 	RingBuffer_Init(uarts[2].rrb, rxbuf[2], 1, UART_BUF_SIZE);
 	RingBuffer_Init(uarts[2].trb, txbuf[2], 1, UART_BUF_SIZE);
 
-	RingBuffer_Init(&tokens, &tknbuf, TKN_LENGTH, TKN_BUF_SIZE);
+	RingBuffer_Init(&tokens, &tknbuf, TKN_LEN, TKN_BUF_SIZE);
 }
 
 void uart_irq(ciaaUART_e n)

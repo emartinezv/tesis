@@ -34,8 +34,6 @@
 #ifndef _AT_ENGINE_H_
 #define _AT_ENGINE_H_
 
-#define TOKENIZER /* use tokenizer UART drivers */
-
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
 
@@ -51,6 +49,19 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+typedef enum _GSMstates
+{
+   IDLE = 0,
+   CMD_SENT = 1,
+   CMD_ACK = 2,
+   RSP_REC = 3
+} GSMstates;
+
+typedef struct _GSMflags
+{
+   uint8_t orphanResponse : 1;
+} GSMflags;
+
 /** delay in milliseconds */
 #define DELAY_MS 1000
 #define DELAY_S  5000
@@ -64,11 +75,6 @@ extern "C" {
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
-
-/** @brief processToken function
-* @return
-*/
-void processToken(void);
 
 /** @brief main function
  * @return main function should never return

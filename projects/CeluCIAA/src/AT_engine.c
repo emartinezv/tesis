@@ -48,6 +48,10 @@
 
 /*==================[macros and definitions]=================================*/
 
+/*==================[global data]============================================*/
+
+
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
@@ -56,6 +60,18 @@
  * @return none
  */
 static void initHardware(void);
+
+/** @brief processToken function
+* @return
+*/
+void processToken(void);
+
+/** @brief updateFSM function
+* @return
+*/
+int updateFSM (uint8_t const * const received,
+               uint8_t const * const command,
+               uint8_t const * const parameter);
 
 /** @brief delay function
  * @param t desired milliseconds to wait
@@ -74,8 +90,6 @@ extern ATComm commands [MAX_COMM];
 
 /** @vector of known AT responses*/
 extern ATResp responses [MAX_RESP];
-
-
 
 /*==================[internal functions definition]==========================*/
 
@@ -113,13 +127,14 @@ void processToken(void)
 
       received = parse(token, command, parameter); /* parse the received token */
 
+      #ifdef DEBUG
       switch(received){
 
-         case BASIC_COMMAND:
-         case EXTENDED_COMMAND_WRITE:
-         case EXTENDED_COMMAND_READ:
-         case EXTENDED_COMMAND_TEST:
-         case EXTENDED_COMMAND_EXECUTION:
+         case BASIC_CMD:
+         case EXT_CMD_WRITE:
+         case EXT_CMD_READ:
+         case EXT_CMD_TEST:
+         case EXT_CMD_EXEC:
 
             /* printout */
 
@@ -131,8 +146,8 @@ void processToken(void)
 
          break;
 
-         case BASIC_RESPONSE:
-         case EXTENDED_RESPONSE:
+         case BASIC_RSP:
+         case EXT_RSP:
 
             /* printout */
 
@@ -147,12 +162,69 @@ void processToken(void)
       }
 
       dbgPrint("\r\n");
+      #endif
+
+      updateFSM(received, command, parameter);
+
+
    }
 
    return;
 
 }
 
+int updateFSM (uint8_t const * const received,
+               uint8_t const * const command,
+               uint8_t const * const parameter)
+{
+   static GSMstates state = IDLE;
+   static uint8_t currCMD[TKN_LEN];
+   static uint8_t currPAR[TKN_LEN];
+
+   switch(state){
+
+      case IDLE:
+
+         if (SENT == received){
+            strncpy(currCMD,command,strlen(command));
+            command[strlen(command)] = '\0';
+            strncpy(currPAR,parameter,strlen(parameter));
+            parameter[strlen(parameter)] = '\0';
+            state = CMD_SENT
+            dbgprint("COMANDO ENVIADO")
+            return 1;
+         }
+         else
+            return 0;
+
+         break;
+
+      case CMD_SENT:
+
+         if ((received >= BASIC_CMD) && (received <= EXT_CMD_EXEC)){
+
+            uint8_t eqCMD = 1;
+            uint8_t eqPAR = 1;
+            eqCMD = strncmp(command, currCMD, strlen(currCMD));
+            eqPAR = strncmp(parameter, currPAR, strlen(currPAR));
+
+            if ((0 == eqCMD) && (0 == eqPAR))
+               state = CMD_ACK;
+               return 1;
+            else
+               return 2;
+         }
+         else
+            return 2;
+
+         break;
+
+      case CMD_ACK:
+
+         if ((received))
+   }
+
+}
 
 int main(void)
 {
@@ -164,6 +236,7 @@ int main(void)
 
    while (1){
 
+      rs232print("AT\r\n");
 
 
       /* processToken(); */

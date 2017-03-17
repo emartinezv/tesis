@@ -78,7 +78,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       if(2 == strlen(token)){
          strncpy(command,"AT\0",3);
-         return BASIC_COMMAND;
+         return BASIC_CMD;
       }
 
       /* extended AT command */
@@ -102,23 +102,23 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
             command[equalPos -3] = '\0';
 
-            if((equalPos+1) == intPos){return EXTENDED_COMMAND_TEST;}
+            if((equalPos+1) == intPos){return EXT_CMD_TEST;}
 
             else{
                strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
-               return EXTENDED_COMMAND_WRITE;
+               return EXT_CMD_WRITE;
             }
 
          }
          else if((strlen(token)-1) == intPos){
             strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
             command[intPos -3] = '\0';
-            return EXTENDED_COMMAND_READ;
+            return EXT_CMD_READ;
          }
          else{
             strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
             command[strlen(token) -3] = '\0';
-            return EXTENDED_COMMAND_EXECUTION;
+            return EXT_CMD_EXEC;
          }
       }
 
@@ -138,7 +138,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
                }
 
-               return BASIC_COMMAND;
+               return BASIC_CMD;
             }
 
             else {return INVALID;}
@@ -154,7 +154,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                   parameter[strlen(token)-3] = '\0';
                }
 
-               return BASIC_COMMAND;
+               return BASIC_CMD;
             }
             else{return INVALID;}
          }
@@ -176,7 +176,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       if(0 == colonPos){
          strncpy(command,&token[1],strlen(token)-1);
          command[strlen(token)-1] = '\0';
-         return EXTENDED_RESPONSE;
+         return EXT_RSP;
       }
 
       /* If ':' character is present, what follows is a parameter of the response */
@@ -186,7 +186,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          command[colonPos-1] = '\0';
          strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos);
          parameter[strlen(token)-colonPos] = '\0';
-         return EXTENDED_RESPONSE;
+         return EXT_RSP;
       }
 
    }
@@ -196,7 +196,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    else{
       strncpy(command,token,strlen(token));
       command[strlen(token)] = '\0';
-      return BASIC_RESPONSE;
+      return BASIC_RSP;
    }
 
    return INVALID;

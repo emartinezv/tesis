@@ -62,6 +62,8 @@ typedef enum _ciaaUarts_e
 
 #define UART_BUF_SIZE	512
 #define UART_RX_FIFO_SIZE 16
+#define TKN_BUF_SIZE 10
+#define TKN_LEN 150
 
 typedef struct _uartData
 {
