@@ -265,7 +265,7 @@ void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T 
 		   RingBuffer_Insert(pRB, &ch);
 		}
 		else if(0 == RingBuffer_IsEmpty(pRB)){
-		   uint8_t swap[TKN_LENGTH];
+		   uint8_t swap[TKN_LEN];
 		   uint8_t length = RingBuffer_GetCount(pRB);
 		   RingBuffer_PopMult(pRB, swap, length); /* read new token */
 		   swap[length] = '\0';

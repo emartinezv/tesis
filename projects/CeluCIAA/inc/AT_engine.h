@@ -62,9 +62,11 @@ typedef struct _GSMflags
    uint8_t orphanResponse : 1;
 } GSMflags;
 
-/** delay in milliseconds */
-#define DELAY_MS 1000
-#define DELAY_S  5000
+/* delay in ms for repeated calls to processToken function */
+#define DELAY_PROTKN 1000
+
+/* delay in ms for repated calls to sendAT function */
+#define DELAY_SENDAT 5000
 
 /** led number to toggle */
 #define LED_ROJO 4

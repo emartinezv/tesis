@@ -71,11 +71,11 @@ uint8_t commSearch(ATToken const type, uint8_t const * const command)
    int i = 0;
 
    switch(type){
-      case BASIC_COMMAND:
-      case EXTENDED_COMMAND_TEST:
-      case EXTENDED_COMMAND_WRITE:
-      case EXTENDED_COMMAND_READ:
-      case EXTENDED_COMMAND_EXECUTION:
+      case BASIC_CMD:
+      case EXT_CMD_WRITE:
+      case EXT_CMD_READ:
+      case EXT_CMD_TEST:
+      case EXT_CMD_EXEC:
 
          for(i = 0; i < MAX_COMM; i++){
             if(0 == strcmp(command, commands[i].name)){return i;}
@@ -83,8 +83,8 @@ uint8_t commSearch(ATToken const type, uint8_t const * const command)
 
          break;
 
-      case EXTENDED_RESPONSE:
-      case BASIC_RESPONSE:
+      case EXT_RSP:
+      case BASIC_RSP:
 
          for(i = 0; i < MAX_RESP; i++){
             if(0 == strcmp(command, responses[i].name)){return i;}

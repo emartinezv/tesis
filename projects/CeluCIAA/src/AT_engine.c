@@ -48,9 +48,9 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG;
+
 /*==================[global data]============================================*/
-
-
 
 /*==================[internal data declaration]==============================*/
 
@@ -66,10 +66,15 @@ static void initHardware(void);
 */
 void processToken(void);
 
+/** @brief sendAT function
+* @return
+*/
+void sendAT(void);
+
 /** @brief updateFSM function
 * @return
 */
-int updateFSM (uint8_t const * const received,
+int updateFSM (ATToken const * const received,
                uint8_t const * const command,
                uint8_t const * const parameter);
 
@@ -79,6 +84,12 @@ int updateFSM (uint8_t const * const received,
 static void pausems(uint32_t t);
 
 /*==================[internal data definition]===============================*/
+
+/** @brief used for processToken function scheduling with SysTick */
+static uint32_t processToken_count = DELAY_PROTKN;
+
+/** @brief used for sendAT function scheduling with SysTick */
+static uint32_t sendAT_count = DELAY_SENDAT;
 
 /** @brief used for delay counter */
 static uint32_t pausems_count;
@@ -108,15 +119,10 @@ static void pausems(uint32_t t)
    }
 }
 
-/*==================[external functions definition]==========================*/
-
-void SysTick_Handler(void)
-{
-   if(pausems_count > 0) pausems_count--;
-}
-
 void processToken(void)
 {
+   processToken_count = DELAY_PROTKN;
+
    ATToken received; /* classifies the received token*/
 
    uint8_t token[TKN_LENGTH]; /* received token */
@@ -166,14 +172,24 @@ void processToken(void)
 
       updateFSM(received, command, parameter);
 
-
    }
 
    return;
 
 }
 
-int updateFSM (uint8_t const * const received,
+void sendAT(void)
+{
+   sendAT_count = DELAY_SENDAT;
+
+   rs232print("AT\r");
+   dbgPrint("AT enviado\r\n");
+   updateFSM(SENT,"AT","");
+
+   return;
+}
+
+int updateFSM (ATToken const * const received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
@@ -187,11 +203,11 @@ int updateFSM (uint8_t const * const received,
 
          if (SENT == received){
             strncpy(currCMD,command,strlen(command));
-            command[strlen(command)] = '\0';
+            currCMD[strlen(command)] = '\0';
             strncpy(currPAR,parameter,strlen(parameter));
-            parameter[strlen(parameter)] = '\0';
+            currPAR[strlen(parameter)] = '\0';
             state = CMD_SENT
-            dbgprint("COMANDO ENVIADO")
+            dbgprint("COMMAND SENT")
             return 1;
          }
          else
@@ -210,6 +226,7 @@ int updateFSM (uint8_t const * const received,
 
             if ((0 == eqCMD) && (0 == eqPAR))
                state = CMD_ACK;
+               dbgprint("COMMAND ACK");
                return 1;
             else
                return 2;
@@ -221,25 +238,42 @@ int updateFSM (uint8_t const * const received,
 
       case CMD_ACK:
 
-         if ((received))
+         if ((received >= BASIC_RSP) && (received <= EXT_RSP))
+            dbgprint("RESPONSE RECEIVED");
+         else
+            return 2;
+
+         break;
+
+      case default:
+
+         dbgprint("ERROR: SWITCH OUT OF RANGE");
+
+         break;
    }
 
 }
 
+/*==================[external functions definition]==========================*/
+
+void SysTick_Handler(void)
+{
+   if(pausems_count > 0) pausems_count--;
+   if(processToken_count > 0) processToken_count--;
+   if(sendAT_count > 0) sendAT_count--;
+}
+
 int main(void)
 {
-   int i; /* loop counter */
-
    initHardware();
    ciaaUARTInit();
-   commInit();
 
    while (1){
 
-      rs232print("AT\r\n");
-
-
-      /* processToken(); */
+      if(processToken_count = 0)
+         processToken();
+      if(sentAT_count = 0)
+         sendAT();
 
    }
 

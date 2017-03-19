@@ -311,11 +311,11 @@ typedef struct {					/*!< USARTn Structure       */
 #define UART_SYNCCTRL_CCCLR            (1 << 6)			/*!< stop continuous clock*/
 
 /**
- * @brief Token buffer size and token length defines for tokenizer functionality
+ * @brief Macro defines for tokenizer functionality
  */
 
-#define TKN_LENGTH 50
-#define TKN_BUF_SIZE 5
+#define TKN_BUF_SIZE 10
+#define TKN_LEN 150
 
 /**
  * @brief	Enable transmission on UART TxD pin
