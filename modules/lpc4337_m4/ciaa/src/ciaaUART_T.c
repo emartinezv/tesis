@@ -44,13 +44,19 @@
 
 #include "ciaaUART_T.h"
 
+/* define data buffers and ring buffer structures */
+
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];
-uint8_t tknbuf[TKN_BUF_SIZE * TKN_LEN];
 
 RINGBUFF_T rrb[3];
 RINGBUFF_T trb[3];
+
+#ifdef TOKENIZER
+uint8_t tknbuf[TKN_BUF_SIZE * TKN_LEN];
+
 RINGBUFF_T tokens;
+#endif
 
 uartData_t uarts[3] =
 {
@@ -116,18 +122,25 @@ void ciaaUARTInit(void)
 	RingBuffer_Init(uarts[2].rrb, rxbuf[2], 1, UART_BUF_SIZE);
 	RingBuffer_Init(uarts[2].trb, txbuf[2], 1, UART_BUF_SIZE);
 
+   #ifdef TOKENIZER
 	RingBuffer_Init(&tokens, &tknbuf, TKN_LEN, TKN_BUF_SIZE);
+   #endif
 }
 
 void uart_irq(ciaaUART_e n)
 {
 	uartData_t * u = &(uarts[n]);
 
+   #ifdef TOKENIZER
    if(CIAA_UART_232 == n)
 	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens);
    else
 	   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
+   #endif
 
+   #ifndef TOKENIZER
+   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
+   #endif
 }
 
 void UART0_IRQHandler(void)

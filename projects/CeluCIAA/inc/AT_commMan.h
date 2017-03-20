@@ -42,7 +42,7 @@
 #include "lpc_types.h"
 #include "AT_parser.h"
 #include "string.h"
-#include "ciaaUART.h"
+#include "ciaaUART_T.h"
 
 /*==================[cplusplus]==============================================*/
 

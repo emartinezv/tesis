@@ -48,7 +48,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG;
+#define PRINTOUT ;
 
 /*==================[global data]============================================*/
 
@@ -74,7 +74,7 @@ void sendAT(void);
 /** @brief updateFSM function
 * @return
 */
-int updateFSM (ATToken const * const received,
+int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter);
 
@@ -125,15 +125,15 @@ void processToken(void)
 
    ATToken received; /* classifies the received token*/
 
-   uint8_t token[TKN_LENGTH]; /* received token */
-   uint8_t command[TKN_LENGTH]; /* AT command or responde */
-   uint8_t parameter[TKN_LENGTH]; /* AT command or response argument */
+   uint8_t token[TKN_LEN]; /* received token */
+   uint8_t command[TKN_LEN]; /* AT command or responde */
+   uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
    if(0 != tokenRead(token)){
 
       received = parse(token, command, parameter); /* parse the received token */
 
-      #ifdef DEBUG
+      #ifdef PRINTOUT
       switch(received){
 
          case BASIC_CMD:
@@ -182,14 +182,14 @@ void sendAT(void)
 {
    sendAT_count = DELAY_SENDAT;
 
-   rs232print("AT\r");
+   rs232Print("AT\r");
    dbgPrint("AT enviado\r\n");
    updateFSM(SENT,"AT","");
 
    return;
 }
 
-int updateFSM (ATToken const * const received,
+int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
@@ -206,8 +206,8 @@ int updateFSM (ATToken const * const received,
             currCMD[strlen(command)] = '\0';
             strncpy(currPAR,parameter,strlen(parameter));
             currPAR[strlen(parameter)] = '\0';
-            state = CMD_SENT
-            dbgprint("COMMAND SENT")
+            state = CMD_SENT;
+            dbgPrint("COMMAND SENT");
             return 1;
          }
          else
@@ -224,10 +224,11 @@ int updateFSM (ATToken const * const received,
             eqCMD = strncmp(command, currCMD, strlen(currCMD));
             eqPAR = strncmp(parameter, currPAR, strlen(currPAR));
 
-            if ((0 == eqCMD) && (0 == eqPAR))
+            if ((0 == eqCMD) && (0 == eqPAR)){
                state = CMD_ACK;
-               dbgprint("COMMAND ACK");
+               dbgPrint("COMMAND ACK");
                return 1;
+            }
             else
                return 2;
          }
@@ -239,15 +240,15 @@ int updateFSM (ATToken const * const received,
       case CMD_ACK:
 
          if ((received >= BASIC_RSP) && (received <= EXT_RSP))
-            dbgprint("RESPONSE RECEIVED");
+            dbgPrint("RESPONSE RECEIVED");
          else
             return 2;
 
          break;
 
-      case default:
+      default:
 
-         dbgprint("ERROR: SWITCH OUT OF RANGE");
+         dbgPrint("ERROR: SWITCH OUT OF RANGE");
 
          break;
    }
@@ -270,9 +271,9 @@ int main(void)
 
    while (1){
 
-      if(processToken_count = 0)
+      if(0 == processToken_count)
          processToken();
-      if(sentAT_count = 0)
+      if(0 == sendAT_count)
          sendAT();
 
    }

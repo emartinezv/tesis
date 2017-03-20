@@ -46,6 +46,8 @@
 #ifndef CIAAUART_T_H_
 #define CIAAUART_T_H_
 
+#define TOKENIZER ; /* erase if not using tokenizer function */
+
 #include "chip.h"
 #include "string.h"
 
@@ -73,6 +75,8 @@ typedef struct _uartData
 void ciaaUARTInit(void);
 int uartSend(ciaaUART_e nUART, void * data, int datalen);
 int uartRecv(ciaaUART_e nUART, void * data, int datalen);
+#ifdef TOKENIZER
 int tokenRead(void * token);
+#endif
 
 #endif /* CIAAUART_H_ */
