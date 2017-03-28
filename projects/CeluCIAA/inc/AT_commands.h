@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_COMMMAN_H_
-#define _AT_COMMMAN_H_
+#ifndef _AT_COMMANDS_H_
+#define _AT_COMMANDS_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,10 +40,6 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
-#include "AT_parser.h"
-#include "string.h"
-#include "ciaaUART_T.h"
-#include "AT_commands.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -53,39 +49,20 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define MAX_COMM 2 /* maximum ammount of loaded commands */
-#define MAX_TKN 5 /* maximum ammount of response tokens per command */
-
 /*==================[typedef]================================================*/
-
-/** struct for AT commands */
-
-typedef struct {
-   uint8_t * name;       /* pointer to string with the name of the command */
-   uint8_t respTokens;   /* number of response tokens to process */
-   uint8_t * responses[MAX_TKN];  /* vector of pointers to string for
-                                     valid responses to the command */
-} ATComm;
 
 /*==================[external data declaration]==============================*/
 
+extern const uint8_t commAT_name[];
+extern const uint8_t commAT_tokens;
+extern const uint8_t commAT_response0[];
 
+extern const uint8_t commATI_name[];
+extern const uint8_t commATI_tokens;
+extern const uint8_t * commATI_responses0;
+extern const uint8_t commATI_responses1[];
 
 /*==================[external functions declaration]=========================*/
-
-/** @brief commSearch function
- * @return takes a token type and command, returns position of the command in
- *  the known command/response vector or 0 if no command/response found
- */
-
-uint8_t commSearch(uint8_t const * const command);
-
-/** @brief commInit function
- * @return loads the command and response vectors with the name and callback
- *  for each command or response
- */
-
-void commInit (void);
 
 /*==================[cplusplus]==============================================*/
 

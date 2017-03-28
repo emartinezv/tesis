@@ -48,7 +48,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define PRINTOUT ;
+//#define PRINTOUT ;
 
 /*==================[global data]============================================*/
 
@@ -99,9 +99,6 @@ static uint32_t pausems_count;
 /** @vector of known AT commands*/
 extern ATComm commands [MAX_COMM];
 
-/** @vector of known AT responses*/
-extern ATResp responses [MAX_RESP];
-
 /*==================[internal functions definition]==========================*/
 
 static void initHardware(void)
@@ -131,7 +128,8 @@ void processToken(void)
 
    if(0 != tokenRead(token)){
 
-      received = parse(token, command, parameter); /* parse the received token */
+      received = parse(token, command, parameter); /* parse the token */
+      updateFSM(received, command, parameter);     /* update FSM */
 
       #ifdef PRINTOUT
       switch(received){
@@ -170,8 +168,6 @@ void processToken(void)
       dbgPrint("\r\n");
       #endif
 
-      updateFSM(received, command, parameter);
-
    }
 
    return;
@@ -193,22 +189,50 @@ int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
-   static GSMstates state = IDLE;
-   static uint8_t currCMD[TKN_LEN];
-   static uint8_t currPAR[TKN_LEN];
+   static GSMstates state = IDLE;   /* FSM state variable */
+   static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
+   static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
+   static uint8_t respTokens;       /* number of tokens the current command
+                                       receives as a response */
+   uint8_t i;                       /* command indexing variable */
+   static uint8_t j = 0;            /* token indexing variable */
 
    switch(state){
 
-      case IDLE:
+      case IDLE: /* initial state */
 
-         if (SENT == received){
-            strncpy(currCMD,command,strlen(command));
-            currCMD[strlen(command)] = '\0';
-            strncpy(currPAR,parameter,strlen(parameter));
-            currPAR[strlen(parameter)] = '\0';
-            state = CMD_SENT;
-            dbgPrint("COMMAND SENT");
-            return 1;
+         j = 0;
+
+         if (SENT == received){ /* command sent by serial port */
+
+            i = commSearch(command); /* search for command */
+
+            if(255 != i){
+
+               /* if the command is valid, copy command and parameter into
+                  currCMD and currPAR; this is the command now being
+                  executed by the FSM  */
+
+               strncpy(currCMD,command,strlen(command));
+               currCMD[strlen(command)] = '\0';
+               strncpy(currPAR,parameter,strlen(parameter));
+               currPAR[strlen(parameter)] = '\0';
+               respTokens = commands[i].respTokens;
+
+               state = CMD_SENT;
+
+               dbgPrint("COMMAND SENT: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")\r\n");
+               return 1;
+
+            }
+
+            else
+               dbgPrint("UNKNOWN COMMAND\r\n");
+
          }
          else
             return 0;
@@ -216,6 +240,9 @@ int updateFSM (ATToken received,
          break;
 
       case CMD_SENT:
+
+         /* now that the command has been sent, we check the echo from the
+            modem and verify that it agrees with the sent command */
 
          if ((received >= BASIC_CMD) && (received <= EXT_CMD_EXEC)){
 
@@ -226,29 +253,76 @@ int updateFSM (ATToken received,
 
             if ((0 == eqCMD) && (0 == eqPAR)){
                state = CMD_ACK;
-               dbgPrint("COMMAND ACK");
+               j = 0;
+               dbgPrint("COMMAND ACK\r\n");
                return 1;
             }
             else
-               return 2;
+               return 0;
          }
          else
-            return 2;
+            return 0;
 
          break;
 
       case CMD_ACK:
 
-         if ((received >= BASIC_RSP) && (received <= EXT_RSP))
-            dbgPrint("RESPONSE RECEIVED");
-         else
-            return 2;
+         /* process a number of tokens depending on the command, checking for
+            valid */
+
+         for(; j < respTokens;){
+
+            if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
+
+               /* if the responses string pointer is null it means that
+                  the response will be variable data, just print that */
+
+               if(0 == commands[i].responses[j]){
+                  dbgPrint("DATA: ");
+                  dbgPrint(command);
+                  dbgPrint("\r\n");
+                  j++;
+                  return 1;
+               }
+
+               else{
+
+                  if(0 != strstr(commands[i].responses[j],command)){
+                     dbgPrint("VALID RESPONSE RECEIVED: ");
+                     dbgPrint(command);
+                     dbgPrint("(");
+                     dbgPrint(parameter);
+                     dbgPrint(")\r\n");
+                     j++;
+                     return 1;
+                  }
+
+                  else{
+                     dbgPrint("INVALID RESPONSE RECEIVED: ");
+                     dbgPrint(command);
+                     dbgPrint("(");
+                     dbgPrint(parameter);
+                     dbgPrint(")\r\n");
+                     j++;
+                     return 0;
+                  }
+
+               }
+            }
+
+            else
+               return 0;
+
+         }
+
+         state = IDLE;
 
          break;
 
       default:
 
          dbgPrint("ERROR: SWITCH OUT OF RANGE");
+         state = IDLE;
 
          break;
    }
@@ -268,6 +342,7 @@ int main(void)
 {
    initHardware();
    ciaaUARTInit();
+   commInit();
 
    while (1){
 

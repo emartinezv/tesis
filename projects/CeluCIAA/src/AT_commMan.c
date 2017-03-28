@@ -52,10 +52,7 @@
 /*==================[external data definition]===============================*/
 
 /** @vector of known AT commands*/
-ATComm commands [MAX_COMM];
-
-/** @vector of known AT responses*/
-ATResp responses [MAX_RESP];
+ATComm commands[MAX_COMM];
 
 /*==================[internal functions definition]==========================*/
 
@@ -66,99 +63,34 @@ ATResp responses [MAX_RESP];
  *  the known command/response vector or 0 if no command/response found
  */
 
-uint8_t commSearch(ATToken const type, uint8_t const * const command)
+uint8_t commSearch(uint8_t const * const command)
 {
    int i = 0;
 
-   switch(type){
-      case BASIC_CMD:
-      case EXT_CMD_WRITE:
-      case EXT_CMD_READ:
-      case EXT_CMD_TEST:
-      case EXT_CMD_EXEC:
-
-         for(i = 0; i < MAX_COMM; i++){
-            if(0 == strcmp(command, commands[i].name)){return i;}
-         }
-
-         break;
-
-      case EXT_RSP:
-      case BASIC_RSP:
-
-         for(i = 0; i < MAX_RESP; i++){
-            if(0 == strcmp(command, responses[i].name)){return i;}
-         }
-
-         break;
-
-      case INVALID:
-
-         return 0;
+   for(i = 0; i < MAX_COMM; i++){
+      if(0 == strcmp(command, commands[i].name)){return i;}
    }
 
-   return 0;
+   return 255;
 }
 
 /** @brief commInit function
- * @return loads the command and response vectors with the name and callback
- *  for each command or response
+ * @return loads the command structs with name, number of response tokens
+ * and valid responses for each token
  */
 
 void commInit (void)
 {
-   commands[0].name[0] = '\0';
-   commands[0].execution = 0;
-   commands[0].write = 0;
-   commands[0].test = 0;
-   commands[0].read = 0;
+   commands[0].name = commAT_name;
+   commands[0].respTokens = commAT_tokens;
+   commands[0].responses[0] = commAT_response0;
 
-   responses[0].name[0] = '\0';
-   responses[0].response = 0;
-
-   strncpy(commands[1].name, "AT", strlen("AT"));
-   commands[1].name[strlen("AT")] = '\0';
-   commands[1].execution = &cbAT;
-   commands[1].write = 0;
-   commands[1].test = 0;
-   commands[1].read = 0;
-
-   strncpy(commands[2].name, "CMGF", strlen("CMGF"));
-   commands[2].name[strlen("CMGF")] = '\0';
-   commands[2].execution = 0;
-   commands[2].write = 0;
-   commands[2].test = 0;
-   commands[2].read = 0;
-
-   strncpy(commands[3].name, "CSCS", strlen("CSCS"));
-   commands[3].name[strlen("CSCS")] = '\0';
-   commands[3].execution = 0;
-   commands[3].write = 0;
-   commands[3].test = 0;
-   commands[3].read = 0;
-
-   strncpy(commands[4].name, "CMGS", strlen("CMGS"));
-   commands[4].name[strlen("CMGS")] = '\0';
-   commands[4].execution = 0;
-   commands[4].write = 0;
-   commands[4].test = 0;
-   commands[4].read = 0;
-
-   strncpy(responses[1].name, "OK", strlen("OK"));
-   responses[1].name[strlen("OK")] = '\0';
-   responses[1].response = 0;
+   commands[1].name = commATI_name;
+   commands[1].respTokens = commATI_tokens;
+   commands[1].responses[0] = commATI_responses0;
+   commands[1].responses[1] = commATI_responses1;
 
    return;
-}
-
-/** @brief ccAT function
- * @return callback function for the "AT" command
- */
-
-int cbAT (uint8_t const * const parameter)
-{
-   dbgPrint("Funcion callback del comando AT\r\n");
-   return 0;
 }
 
 /** @} doxygen end group definition */
