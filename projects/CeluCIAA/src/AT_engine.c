@@ -194,6 +194,7 @@ int updateFSM (ATToken received,
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t respTokens;       /* number of tokens the current command
                                        receives as a response */
+   uint8_t result;                  /* result code */
    uint8_t i;                       /* command indexing variable */
    static uint8_t j = 0;            /* token indexing variable */
 
@@ -282,7 +283,7 @@ int updateFSM (ATToken received,
                   dbgPrint(command);
                   dbgPrint("\r\n");
                   j++;
-                  return 1;
+                  result = 1;
                }
 
                else{
@@ -294,7 +295,7 @@ int updateFSM (ATToken received,
                      dbgPrint(parameter);
                      dbgPrint(")\r\n");
                      j++;
-                     return 1;
+                     result = 0;
                   }
 
                   else{
@@ -304,18 +305,20 @@ int updateFSM (ATToken received,
                      dbgPrint(parameter);
                      dbgPrint(")\r\n");
                      j++;
-                     return 0;
+                     result = 0;
                   }
 
                }
             }
 
             else
-               return 0;
+               result = 0;
 
          }
 
          state = IDLE;
+
+         return result;
 
          break;
 
