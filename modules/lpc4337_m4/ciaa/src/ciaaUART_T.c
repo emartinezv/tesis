@@ -109,7 +109,7 @@ void ciaaUARTInit(void)
 
 	/* UART3 (RS232) */
 	Chip_UART_Init(LPC_USART3);
-	Chip_UART_SetBaud(LPC_USART3, 115200);
+	Chip_UART_SetBaud(LPC_USART3, 9600);
 
 	Chip_UART_TXEnable(LPC_USART3);
 

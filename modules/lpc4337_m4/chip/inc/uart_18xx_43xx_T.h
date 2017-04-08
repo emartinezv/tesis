@@ -314,8 +314,8 @@ typedef struct {					/*!< USARTn Structure       */
  * @brief Macro defines for tokenizer functionality
  */
 
-#define TKN_BUF_SIZE 10
-#define TKN_LEN 150
+#define TKN_BUF_SIZE 8
+#define TKN_LEN 128
 
 /**
  * @brief	Enable transmission on UART TxD pin

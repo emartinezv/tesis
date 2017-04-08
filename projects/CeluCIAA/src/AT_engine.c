@@ -48,7 +48,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define PRINTOUT ;
+#define PRINTOUT ;
 
 /*==================[global data]============================================*/
 
@@ -71,6 +71,11 @@ void processToken(void);
 */
 void sendAT(void);
 
+/** @brief sendATI function
+* @return
+*/
+void sendATI(void);
+
 /** @brief updateFSM function
 * @return
 */
@@ -90,6 +95,9 @@ static uint32_t processToken_count = DELAY_PROTKN;
 
 /** @brief used for sendAT function scheduling with SysTick */
 static uint32_t sendAT_count = DELAY_SENDAT;
+
+/** @brief used for sendATI function scheduling with SysTick */
+static uint32_t sendATI_count = DELAY_SENDATI;
 
 /** @brief used for delay counter */
 static uint32_t pausems_count;
@@ -123,7 +131,7 @@ void processToken(void)
    ATToken received; /* classifies the received token*/
 
    uint8_t token[TKN_LEN]; /* received token */
-   uint8_t command[TKN_LEN]; /* AT command or responde */
+   uint8_t command[TKN_LEN]; /* AT command or responsae */
    uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
    if(0 != tokenRead(token)){
@@ -163,11 +171,23 @@ void processToken(void)
 
          break;
 
+         case INVALID:
+
+            /* printout */
+
+            dbgPrint("\r\nINVALIDO\r\n");
+
+         break;
+
       }
 
       dbgPrint("\r\n");
       #endif
 
+   }
+
+   else{
+      //dbgPrint("\r\nNO TOKEN\r\n");
    }
 
    return;
@@ -185,24 +205,33 @@ void sendAT(void)
    return;
 }
 
+void sendATI(void)
+{
+   sendATI_count = DELAY_SENDATI;
+
+   rs232Print("ATI\r");
+   dbgPrint("ATI enviado\r\n");
+   updateFSM(SENT,"I","");
+
+   return;
+}
+
 int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
-   static GSMstates state = IDLE;   /* FSM state variable */
+   static GSMstates state = WAITING;/* FSM state variable */
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t respTokens;       /* number of tokens the current command
                                        receives as a response */
    uint8_t result;                  /* result code */
-   uint8_t i;                       /* command indexing variable */
+   static uint8_t i = 255;          /* command indexing variable */
    static uint8_t j = 0;            /* token indexing variable */
 
    switch(state){
 
-      case IDLE: /* initial state */
-
-         j = 0;
+      case WAITING: /* initial state */
 
          if (SENT == received){ /* command sent by serial port */
 
@@ -316,7 +345,7 @@ int updateFSM (ATToken received,
 
          }
 
-         state = IDLE;
+         state = WAITING;
 
          return result;
 
@@ -325,7 +354,7 @@ int updateFSM (ATToken received,
       default:
 
          dbgPrint("ERROR: SWITCH OUT OF RANGE");
-         state = IDLE;
+         state = WAITING;
 
          break;
    }
@@ -339,6 +368,7 @@ void SysTick_Handler(void)
    if(pausems_count > 0) pausems_count--;
    if(processToken_count > 0) processToken_count--;
    if(sendAT_count > 0) sendAT_count--;
+   if(sendATI_count > 0) sendATI_count--;
 }
 
 int main(void)
@@ -347,12 +377,17 @@ int main(void)
    ciaaUARTInit();
    commInit();
 
+   pausems(DELAY_AT);
+   sendAT();
+
    while (1){
 
       if(0 == processToken_count)
          processToken();
-      if(0 == sendAT_count)
-         sendAT();
+      if(0 == sendATI_count)
+         sendATI();
+      //if(0 == sendAT_count)
+         //sendAT();
 
    }
 

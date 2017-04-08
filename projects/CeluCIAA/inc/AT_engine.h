@@ -51,7 +51,7 @@ extern "C" {
 
 typedef enum _GSMstates
 {
-   IDLE = 0,
+   WAITING = 0,
    CMD_SENT = 1,
    CMD_ACK = 2,
    RSP_REC = 3
@@ -62,11 +62,17 @@ typedef struct _GSMflags
    uint8_t orphanResponse : 1;
 } GSMflags;
 
+/* initial delay before sending autobauding sequence*/
+#define DELAY_AT 5000
+
 /* delay in ms for repeated calls to processToken function */
 #define DELAY_PROTKN 1000
 
 /* delay in ms for repated calls to sendAT function */
 #define DELAY_SENDAT 5000
+
+/* delay in ms for repated calls to sendATI function */
+#define DELAY_SENDATI 10000
 
 /** led number to toggle */
 #define LED_ROJO 4

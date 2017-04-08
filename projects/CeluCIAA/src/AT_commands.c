@@ -55,10 +55,10 @@ const uint8_t commAT_name[] = "AT";
 const uint8_t commAT_tokens = 1;
 const uint8_t commAT_response0[] = "ERROR,OK";
 
-const uint8_t commATI_name[] = "ATI";
+const uint8_t commATI_name[] = "I";
 const uint8_t commATI_tokens = 2;
 const uint8_t * commATI_responses0 = 0;
-const uint8_t commATI_responses1[] = "OK ERROR";
+const uint8_t commATI_responses1[] = "ERROR,OK";
 
 /*==================[internal functions definition]==========================*/
 
