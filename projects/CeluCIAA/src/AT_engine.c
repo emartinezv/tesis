@@ -48,7 +48,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define PRINTOUT ;
+//#define PRINTOUT ;
 
 /*==================[global data]============================================*/
 
@@ -225,9 +225,11 @@ int updateFSM (ATToken received,
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t respTokens;       /* number of tokens the current command
                                        receives as a response */
+   static uint8_t currTKN;          /* number of current token being
+                                       processed */
+
    uint8_t result;                  /* result code */
    static uint8_t i = 255;          /* command indexing variable */
-   static uint8_t j = 0;            /* token indexing variable */
 
    switch(state){
 
@@ -283,7 +285,7 @@ int updateFSM (ATToken received,
 
             if ((0 == eqCMD) && (0 == eqPAR)){
                state = CMD_ACK;
-               j = 0;
+               currTKN = 0;
                dbgPrint("COMMAND ACK\r\n");
                return 1;
             }
@@ -298,58 +300,63 @@ int updateFSM (ATToken received,
       case CMD_ACK:
 
          /* process a number of tokens depending on the command, checking for
-            valid */
+            valid responses */
 
-         for(; j < respTokens;){
+         ;
 
-            if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
+         uint8_t result;
 
-               /* if the responses string pointer is null it means that
-                  the response will be variable data, just print that */
+         if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 
-               if(0 == commands[i].responses[j]){
-                  dbgPrint("DATA: ");
+            /* if the responses string pointer is null it means that
+               the response will be variable data, just print that */
+
+            if(0 == commands[i].responses[currTKN]){
+               dbgPrint("DATA: ");
+               dbgPrint(command);
+               dbgPrint("\r\n");
+               result = 1;
+            }
+
+            else{
+
+               if(0 != strstr(commands[i].responses[currTKN],command)){
+                  dbgPrint("VALID RESPONSE RECEIVED: ");
                   dbgPrint(command);
-                  dbgPrint("\r\n");
-                  j++;
-                  result = 1;
+                  dbgPrint("(");
+                  dbgPrint(parameter);
+                  dbgPrint(")\r\n");
+                  result = 0;
                }
 
                else{
-
-                  if(0 != strstr(commands[i].responses[j],command)){
-                     dbgPrint("VALID RESPONSE RECEIVED: ");
-                     dbgPrint(command);
-                     dbgPrint("(");
-                     dbgPrint(parameter);
-                     dbgPrint(")\r\n");
-                     j++;
-                     result = 0;
-                  }
-
-                  else{
-                     dbgPrint("INVALID RESPONSE RECEIVED: ");
-                     dbgPrint(command);
-                     dbgPrint("(");
-                     dbgPrint(parameter);
-                     dbgPrint(")\r\n");
-                     j++;
-                     result = 0;
-                  }
-
+                  dbgPrint("INVALID RESPONSE RECEIVED: ");
+                  dbgPrint(command);
+                  dbgPrint("(");
+                  dbgPrint(parameter);
+                  dbgPrint(")\r\n");
+                  result = 0;
                }
+
             }
-
-            else
-               result = 0;
-
          }
 
-         state = WAITING;
+         else{
+            dbgPrint("INVALID TOKEN");
+            dbgPrint(command);
+            dbgPrint("(");
+            dbgPrint(parameter);
+            dbgPrint(")\r\n");
+            result = 0;
+         }
+
+         /* if this is the last token reset the state for
+            the next iteration of the state machine */
+
+         if(++currTKN == respTokens)
+            state = WAITING;
 
          return result;
-
-         break;
 
       default:
 
