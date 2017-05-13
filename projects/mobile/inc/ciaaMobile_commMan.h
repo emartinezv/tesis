@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_COMMMAN_H_
-#define _AT_COMMMAN_H_
+#ifndef _CIAAMOBILE_COMMMAN_H_
+#define _CIAAMOBILE_COMMMAN_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,10 +40,9 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
-#include "AT_parser.h"
 #include "string.h"
 #include "ciaaUART_T.h"
-#include "AT_commands.h"
+#include "ciaaMobile_commands.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -53,7 +52,7 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define MAX_COMM 2 /* maximum ammount of loaded commands */
+#define MAX_COMM 2 /* maximum number of known commands */
 #define MAX_TKN 5 /* maximum ammount of response tokens per command */
 
 /*==================[typedef]================================================*/

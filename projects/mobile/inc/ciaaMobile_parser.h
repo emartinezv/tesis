@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_ENGINE_H_
-#define _AT_ENGINE_H_
+#ifndef _CIAAMOBILE_PARSER_H_
+#define _CIAAMOBILE_PARSER_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,6 +40,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "string.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -49,45 +50,26 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-typedef enum _GSMstates
-{
-   WAITING = 0,
-   CMD_SENT = 1,
-   CMD_ACK = 2,
-   RSP_REC = 3
-} GSMstates;
 
-typedef struct _GSMflags
-{
-   uint8_t orphanResponse : 1;
-} GSMflags;
-
-/* initial delay before sending autobauding sequence*/
-#define DELAY_AT 5000
-
-/* delay in ms for repeated calls to processToken function */
-#define DELAY_PROTKN 1000
-
-/* delay in ms for repated calls to sendAT function */
-#define DELAY_SENDAT 5000
-
-/* delay in ms for repated calls to sendATI function */
-#define DELAY_SENDATI 10000
-
-/** led number to toggle */
-#define LED_ROJO 4
-#define LED_VERDE 5
 
 /*==================[typedef]================================================*/
+
+/** enum to classify valid AT tokens */
+
+typedef enum {SENT, INVALID, BASIC_CMD, EXT_CMD_TEST, EXT_CMD_WRITE,
+              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, EXT_RSP, URC}
+              ATToken;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief main function
- * @return main function should never return
+/** @brief parse function
+ * @return takes a token, returns token type and writes to command and parameter
+ *  buffers
  */
-int main(void);
+
+ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
 /*==================[cplusplus]==============================================*/
 

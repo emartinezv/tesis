@@ -39,9 +39,9 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "AT_engine.h"
-#include "AT_parser.h"
-#include "AT_commMan.h"
+#include "ciaaMobile_engine.h"
+#include "ciaaMobile_parser.h"
+#include "ciaaMobile_commMan.h"
 #include "board.h"
 #include "string.h"
 #include "ciaaUART_T.h"

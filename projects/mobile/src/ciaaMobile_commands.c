@@ -39,7 +39,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "AT_commands.h"
+#include "ciaaMobile_commands.h"
 
 /*==================[macros and definitions]=================================*/
 

@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _AT_PARSER_H_
-#define _AT_PARSER_H_
+#ifndef _CIAAMOBILE_COMMANDS_H_
+#define _CIAAMOBILE_COMMANDS_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,7 +40,6 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
-#include "string.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -50,25 +49,20 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-
-
 /*==================[typedef]================================================*/
-
-/** enum to classify valid AT tokens */
-
-typedef enum {SENT, INVALID, BASIC_CMD, EXT_CMD_TEST, EXT_CMD_WRITE,
-              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, EXT_RSP, URC} ATToken;
 
 /*==================[external data declaration]==============================*/
 
+extern const uint8_t commAT_name[];
+extern const uint8_t commAT_tokens;
+extern const uint8_t commAT_response0[];
+
+extern const uint8_t commATI_name[];
+extern const uint8_t commATI_tokens;
+extern const uint8_t * commATI_responses0;
+extern const uint8_t commATI_responses1[];
+
 /*==================[external functions declaration]=========================*/
-
-/** @brief parse function
- * @return takes a token, returns token type and writes to command and parameter
- *  buffers
- */
-
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
 /*==================[cplusplus]==============================================*/
 
