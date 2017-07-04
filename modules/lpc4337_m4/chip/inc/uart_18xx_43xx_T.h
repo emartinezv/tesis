@@ -45,6 +45,7 @@
 #define __UART_18XX_43XX_H_
 
 #include "ring_buffer.h"
+#include <ctype.h> /* used in tokenizer functions */
 
 #ifdef __cplusplus
 extern "C" {

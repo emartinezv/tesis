@@ -70,6 +70,49 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    command[0] = '\0';
    parameter[0] = '\0';
 
+   /* determine if the token is a response or an echo */
+
+   if(('\r' == token[0]) && ('n' == token[1])){ /* token is a response */
+
+      /* Extended syntax response */
+
+      if('+' == token[2]){
+
+         /* Search for ':' character and store position if present */
+
+         for (i = 3; i < (strlen(token)-2); i++){if (':' == token[i]) {colonPos = i;}}
+
+         /* If no ':' character is present we have a simple extended sintax response */
+
+         if(0 == colonPos){
+            strncpy(command,&token[3],strlen(token)-5);
+            command[strlen(token)-5] = '\0';
+            return EXT_RSP;
+         }
+
+         /* If ':' character is present, what follows is a parameter of the response */
+
+         else{
+            strncpy(command,&token[3],colonPos-3);
+            command[colonPos-3] = '\0';
+            strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-2);
+            parameter[strlen(token)-colonPos-2] = '\0';
+            return EXT_RSP;
+         }
+
+      }
+
+      /* Basic response */
+
+      else{
+         strncpy(command,token,strlen(token));
+         command[strlen(token)] = '\0';
+         return BASIC_RSP;
+      }
+   }
+
+   else /* token is an echo */
+
    /* determine if the token is an AT command, be it extended or basic */
 
    if(('A' == token[0]) && ('T' == token[1])){
@@ -161,43 +204,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   /* If not an AT command, determine is the token is a known response */
 
-   /* Extended syntax response */
-
-   if('+' == token[0]){
-
-      /* Search for ':' character and store position if present */
-
-      for (i = 1; i < strlen(token); i++){if (':' == token[i]) {colonPos = i;}}
-
-      /* If no ':' character is present we have a simple extended sintax response */
-
-      if(0 == colonPos){
-         strncpy(command,&token[1],strlen(token)-1);
-         command[strlen(token)-1] = '\0';
-         return EXT_RSP;
-      }
-
-      /* If ':' character is present, what follows is a parameter of the response */
-
-      else{
-         strncpy(command,&token[1],colonPos-1);
-         command[colonPos-1] = '\0';
-         strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos);
-         parameter[strlen(token)-colonPos] = '\0';
-         return EXT_RSP;
-      }
-
-   }
-
-   /* Basic response */
-
-   else{
-      strncpy(command,token,strlen(token));
-      command[strlen(token)] = '\0';
-      return BASIC_RSP;
-   }
 
    return INVALID;
 }

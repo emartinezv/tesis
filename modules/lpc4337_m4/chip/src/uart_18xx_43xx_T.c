@@ -257,20 +257,33 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 /* UART receive-only interrupt handler for ring buffers with tokenizer */
 void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB)
 {
-	/* New data will be ignored if data not popped in time */
-	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
-		uint8_t ch = Chip_UART_ReadByte(pUART);
+	static uint8_t pch = 0x00; /* store previous char */
+	static uint8_t crlf = 0;   /* initial <CR><LF> sequence detected */
+	static uint8_t empty = 1;  /* non-control characters received */
 
-		if(('\r' != ch) && ('\n' != ch)){
-		   RingBuffer_Insert(pRB, &ch);
-		}
-		else if(('\r' == ch) && 0 == RingBuffer_IsEmpty(pRB)){
-		   uint8_t swap[TKN_LEN];
-		   uint8_t length = RingBuffer_GetCount(pRB);
-		   RingBuffer_PopMult(pRB, swap, length); /* read new token */
-		   swap[length] = '\0';
-		   RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
-		}
+   /* New data will be ignored if data not popped in time */
+	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
+	   uint8_t ch = Chip_UART_ReadByte(pUART);
+	   RingBuffer_Insert(pRB, &ch);
+	   if(!iscntrl(ch)){empty = 0;}
+
+	   if(('\r' == ch) && !crlf && !empty ||
+	      ('\r' == pch) && ('\n' == ch) && crlf ||
+	      ('>' == pch) && (' ' == ch) && crlf ||
+	      (0x1A == ch)){
+
+	      crlf = 0;
+	      empty = 1;
+         uint8_t swap[TKN_LEN];
+         uint8_t length = RingBuffer_GetCount(pRB);
+         RingBuffer_PopMult(pRB, swap, length); /* read new token */
+         swap[length] = '\0';
+         RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
+
+	   }
+	   else if(('\r' == pch) && ('\n' == ch) && !crlf){crlf = 1;}
+
+	   pch = ch;
 	}
 }
 
