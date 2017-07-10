@@ -267,10 +267,10 @@ void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T 
 	   RingBuffer_Insert(pRB, &ch);
 	   if(!iscntrl(ch)){empty = 0;}
 
-	   if(('\r' == ch) && !crlf && !empty ||
-	      ('\r' == pch) && ('\n' == ch) && crlf ||
-	      ('>' == pch) && (' ' == ch) && crlf ||
-	      (0x1A == ch)){
+	   if((('\r' == ch) && !crlf && !empty) ||        /* command */
+	      (('\r' == pch) && ('\n' == ch) && crlf) ||  /* response */
+	      (('>' == pch) && (' ' == ch) && crlf) ||    /* SMS input query */
+	      (0x1A == ch)){                              /* SMS confirmation */
 
 	      crlf = 0;
 	      empty = 1;

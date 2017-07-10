@@ -72,7 +72,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
    /* determine if the token is a response or an echo */
 
-   if(('\r' == token[0]) && ('n' == token[1])){ /* token is a response */
+   if(('\r' == token[0]) && ('\n' == token[1])){ /* token is a response */
 
       /* Extended syntax response */
 
@@ -105,7 +105,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       /* Basic response */
 
       else{
-         strncpy(command,token,strlen(token));
+         strncpy(command,&token[2],strlen(token)-4);
          command[strlen(token)] = '\0';
          return BASIC_RSP;
       }
@@ -119,7 +119,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       /* autobauding sync sequence */
 
-      if(2 == strlen(token)){
+      if(3 == strlen(token)){
          strncpy(command,"AT\0",3);
          return BASIC_CMD;
       }
