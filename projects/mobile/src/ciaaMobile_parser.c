@@ -106,7 +106,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       else{
          strncpy(command,&token[2],strlen(token)-4);
-         command[strlen(token)] = '\0';
+         command[strlen(token)-4] = '\0';
          return BASIC_RSP;
       }
    }
