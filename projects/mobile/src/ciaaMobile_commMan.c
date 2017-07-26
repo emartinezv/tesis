@@ -82,13 +82,13 @@ uint8_t commSearch(uint8_t const * const command)
 void commInit (void)
 {
    commands[0].name = commAT_name;
-   commands[0].respTokens = commAT_tokens;
-   commands[0].responses[0] = commAT_response0;
+   commands[0].endresp = commAT_endresp;
 
    commands[1].name = commATI_name;
-   commands[1].respTokens = commATI_tokens;
-   commands[1].responses[0] = commATI_responses0;
-   commands[1].responses[1] = commATI_responses1;
+   commands[1].endresp = commATI_endresp;
+
+   commands[2].name = commATpCMGL_name;
+   commands[2].endresp = commATpCMGL_endresp;
 
    return;
 }

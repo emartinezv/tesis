@@ -52,8 +52,7 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define MAX_COMM 2 /* maximum number of known commands */
-#define MAX_TKN 5 /* maximum ammount of response tokens per command */
+#define MAX_COMM 3 /* maximum number of known commands */
 
 /*==================[typedef]================================================*/
 
@@ -61,9 +60,8 @@ extern "C" {
 
 typedef struct {
    uint8_t * name;       /* pointer to string with the name of the command */
-   uint8_t respTokens;   /* number of response tokens to process */
-   uint8_t * responses[MAX_TKN];  /* vector of pointers to string for
-                                     valid responses to the command */
+   uint8_t * endresp;    /* pointers to string for valid end responses
+                            to the command */
 } ATComm;
 
 /*==================[external data declaration]==============================*/

@@ -316,7 +316,7 @@ typedef struct {					/*!< USARTn Structure       */
  */
 
 #define TKN_BUF_SIZE 8
-#define TKN_LEN 128
+#define TKN_LEN 256
 
 /**
  * @brief	Enable transmission on UART TxD pin

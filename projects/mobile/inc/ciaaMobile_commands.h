@@ -54,13 +54,13 @@ extern "C" {
 /*==================[external data declaration]==============================*/
 
 extern const uint8_t commAT_name[];
-extern const uint8_t commAT_tokens;
-extern const uint8_t commAT_response0[];
+extern const uint8_t commAT_endresp[];
 
 extern const uint8_t commATI_name[];
-extern const uint8_t commATI_tokens;
-extern const uint8_t * commATI_responses0;
-extern const uint8_t commATI_responses1[];
+extern const uint8_t commATI_endresp[];
+
+extern const uint8_t commATpCMGL_name[];
+extern const uint8_t commATpCMGL_endresp[];
 
 /*==================[external functions declaration]=========================*/
 

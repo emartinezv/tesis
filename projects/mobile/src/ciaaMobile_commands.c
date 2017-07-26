@@ -52,13 +52,13 @@
 /*==================[external data definition]===============================*/
 
 const uint8_t commAT_name[] = "AT";
-const uint8_t commAT_tokens = 1;
-const uint8_t commAT_response0[] = "ERROR,OK";
+const uint8_t commAT_endresp[] = "ERROR,OK";
 
 const uint8_t commATI_name[] = "I";
-const uint8_t commATI_tokens = 2;
-const uint8_t * commATI_responses0 = 0;
-const uint8_t commATI_responses1[] = "ERROR,OK";
+const uint8_t commATI_endresp[] = "ERROR,OK";
+
+const uint8_t commATpCMGL_name[] = "CMGL";
+const uint8_t commATpCMGL_endresp[] = "ERROR,OK";
 
 /*==================[internal functions definition]==========================*/
 

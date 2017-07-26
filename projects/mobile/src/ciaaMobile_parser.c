@@ -111,65 +111,65 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   else /* token is an echo */
+   else{ /* token is an echo */
 
-   /* determine if the token is an AT command, be it extended or basic */
+      /* determine if the token is an AT command, be it extended or basic */
 
-   if(('A' == token[0]) && ('T' == token[1])){
+      if(('A' == token[0]) && ('T' == token[1])){
 
-      /* autobauding sync sequence */
+         /* autobauding sync sequence */
 
-      if(3 == strlen(token)){
-         strncpy(command,"AT\0",3);
-         return BASIC_CMD;
-      }
-
-      /* extended AT command */
-
-      else if('+' == token[2]){
-
-         /* Search for '=' and '?' characters and store position to determine type
-            of extended AT command */
-
-         for (i = 3; i < strlen(token); i++){
-            if ('=' == token[i]) {equalPos = i;}
-            else if ('?' == token[i]) {intPos = i;}
+         if('\r' == token[2]){
+            strncpy(command,"AT\0",3);
+            return BASIC_CMD;
          }
 
-         /* Determine the type of extended command (TEST, READ, WRITE or EXECUTION)
-            depending on the position of the '=' and '?' characters. Afterwards,
-            copy the correct part of the token corresponding to the command. */
+         /* extended AT command */
 
-         if (0 != equalPos){
+         else if('+' == token[2]){
 
-            strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
-            command[equalPos -3] = '\0';
+            /* Search for '=' and '?' characters and store position to determine type
+               of extended AT command */
 
-            if((equalPos+1) == intPos){return EXT_CMD_TEST;}
-
-            else{
-               strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
-               return EXT_CMD_WRITE;
+            for (i = 3; i < strlen(token); i++){
+               if ('=' == token[i]) {equalPos = i;}
+               else if ('?' == token[i]) {intPos = i;}
             }
 
-         }
-         else if((strlen(token)-1) == intPos){
-            strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
-            command[intPos -3] = '\0';
-            return EXT_CMD_READ;
-         }
-         else{
-            strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
-            command[strlen(token) -3] = '\0';
-            return EXT_CMD_EXEC;
-         }
-      }
+            /* Determine the type of extended command (TEST, READ, WRITE or EXECUTION)
+               depending on the position of the '=' and '?' characters. Afterwards,
+               copy the correct part of the token corresponding to the command. */
 
-      /* basic AT command */
+            if (0 != equalPos){
 
-      else {
+               strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
+               command[equalPos -3] = '\0';
 
-         if('&' == token[2]){
+               if((equalPos+1) == intPos){return EXT_CMD_TEST;}
+
+               else{
+                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
+                  return EXT_CMD_WRITE;
+               }
+
+            }
+
+            else if((strlen(token)-1) == intPos){
+               strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
+               command[intPos -3] = '\0';
+               return EXT_CMD_READ;
+            }
+
+            else{
+               strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
+               command[strlen(token) -3] = '\0';
+               return EXT_CMD_EXEC;
+            }
+         }
+
+         /* basic AT command with ampersand */
+
+         else if('&' == token[2]){
 
             if('\0' != token[3]){
                command[0] = token[3];
@@ -178,35 +178,41 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                if('\0' != token[4]){
                   strncpy(parameter,&token[4],strlen(token)-4);
                   parameter[strlen(token)-4] = '\0';
-
                }
 
                return BASIC_CMD;
+
             }
 
             else {return INVALID;}
+
          }
-         else{
 
-            if('\0' != token[2]){
-               command[0] = token[2];
-               command[1] = '\0';
+         /* basic AT command */
 
-               if('\0' != token[3]){
-                  strncpy(parameter,&token[3],strlen(token)-3);
-                  parameter[strlen(token)-3] = '\0';
-               }
+         else if('\0' != token[2]){
+            command[0] = token[2];
+            command[1] = '\0';
 
-               return BASIC_CMD;
+            if('\0' != token[3]){
+               strncpy(parameter,&token[3],strlen(token)-3);
+               parameter[strlen(token)-3] = '\0';
             }
-            else{return INVALID;}
+
+            return BASIC_CMD;
+
          }
+
+         else{return INVALID;}
+
+      }
+
+      else{
+
+         return INVALID;
+
       }
    }
-
-
-
-   return INVALID;
 }
 
 /** @} doxygen end group definition */

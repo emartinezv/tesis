@@ -65,14 +65,17 @@ typedef struct _GSMflags
 /* initial delay before sending autobauding sequence*/
 #define DELAY_AT 5000
 
-/* delay in ms for repeated calls to processToken function */
+/* delay in ms for calls to processToken function */
 #define DELAY_PROTKN 1000
 
-/* delay in ms for repated calls to sendAT function */
+/* delay in ms for calls to sendAT function */
 #define DELAY_SENDAT 5000
 
-/* delay in ms for repated calls to sendATI function */
+/* delay in ms for calls to sendATI function */
 #define DELAY_SENDATI 10000
+
+/* delay in ms for calls to sendATpCMGL function */
+#define DELAY_SENDATPCMGL 10000
 
 /** led number to toggle */
 #define LED_ROJO 4

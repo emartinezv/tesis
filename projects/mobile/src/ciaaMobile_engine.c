@@ -76,6 +76,11 @@ void sendAT(void);
 */
 void sendATI(void);
 
+/** @brief sendATpCMGL function
+ * @return
+ */
+void sendATpCMGL(void);
+
 /** @brief updateFSM function
 * @return
 */
@@ -90,6 +95,8 @@ static void pausems(uint32_t t);
 
 /*==================[internal data definition]===============================*/
 
+/* TIMING COUNTERS */
+
 /** @brief used for processToken function scheduling with SysTick */
 static uint32_t processToken_count = DELAY_PROTKN;
 
@@ -99,8 +106,16 @@ static uint32_t sendAT_count = DELAY_SENDAT;
 /** @brief used for sendATI function scheduling with SysTick */
 static uint32_t sendATI_count = DELAY_SENDATI;
 
+/** @brief used for sendATpCMGL function scheduling with SysTick */
+static uint32_t sendATpCMGL_count = DELAY_SENDATPCMGL;
+
 /** @brief used for delay counter */
 static uint32_t pausems_count;
+
+/* GSM ENGINE */
+
+/** @brief stores responses to the active command */
+static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[external data definition]===============================*/
 
@@ -131,7 +146,7 @@ void processToken(void)
    ATToken received; /* classifies the received token*/
 
    uint8_t token[TKN_LEN]; /* received token */
-   uint8_t command[TKN_LEN]; /* AT command or responsae */
+   uint8_t command[TKN_LEN]; /* AT command or response */
    uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
    if(0 != tokenRead(token)){
@@ -216,6 +231,17 @@ void sendATI(void)
    return;
 }
 
+void sendATpCMGL(void)
+{
+   sendATpCMGL_count = DELAY_SENDATPCMGL;
+
+   rs232Print("AT+CMGL=\"REC UNREAD\"\r");
+   dbgPrint("AT+CMGL enviado\r\n");
+   updateFSM(SENT,"AT+CMGL","REC UNREAD");
+
+   return;
+}
+
 int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
@@ -223,12 +249,10 @@ int updateFSM (ATToken received,
    static GSMstates state = WAITING;/* FSM state variable */
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
-   static uint8_t respTokens;       /* number of tokens the current command
-                                       receives as a response */
-   static uint8_t currTKN;          /* number of current token being
+   static uint8_t currTKN;          /* number of response token being
                                        processed */
+   static result = 0;               /* final result of the command's run */
 
-   uint8_t result;                  /* result code */
    static uint8_t i = 255;          /* command indexing variable */
 
    switch(state){
@@ -249,7 +273,6 @@ int updateFSM (ATToken received,
                currCMD[strlen(command)] = '\0';
                strncpy(currPAR,parameter,strlen(parameter));
                currPAR[strlen(parameter)] = '\0';
-               respTokens = commands[i].respTokens;
 
                state = CMD_SENT;
 
@@ -264,9 +287,11 @@ int updateFSM (ATToken received,
 
             else
                dbgPrint("UNKNOWN COMMAND\r\n");
+               return 0;
 
          }
          else
+            dbgPrint("RESPONSE OUT OF ORDER\r\n");
             return 0;
 
          break;
@@ -289,74 +314,70 @@ int updateFSM (ATToken received,
                dbgPrint("COMMAND ACK\r\n");
                return 1;
             }
-            else
+            else{
+               state = WAITING;
+               dbgPrint("COMMAND ECHO ERROR\r\n");
                return 0;
+            }
          }
-         else
+         else{
+            state = WAITING;
+            dbgPrint("COMMAND ECHO MISSING\r\n");
             return 0;
+         }
 
          break;
 
       case CMD_ACK:
 
          /* process a number of tokens depending on the command, checking for
-            valid responses */
+            end responses each time */
 
          ;
 
-         uint8_t result;
-
          if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 
-            /* if the responses string pointer is null it means that
-               the response will be variable data, just print that */
+            /* store the response in the active command response vector and
+               check if it is an end response */
 
-            if(0 == commands[i].responses[currTKN]){
-               dbgPrint("DATA: ");
-               dbgPrint(command);
-               dbgPrint("\r\n");
-               result = 1;
-            }
+            strncpy(respVector[currTKN],command,strlen(command));
+            respVector[currTKN][strlen(command)] = '\0';
+            strncat(respVector[currTKN],parameter,strlen(parameter));
 
-            else{
+            currTKN++;
 
-               if(0 != strstr(commands[i].responses[currTKN],command)){
-                  dbgPrint("VALID RESPONSE RECEIVED: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")\r\n");
-                  result = 0;
+            uint8_t * place;
+
+            place = strstr(commands[i].endresp,&respVector[currTKN-1][0]);
+
+            if(NULL != place){
+
+               uint8_t j = 0;
+
+               /* print out all responses for the command */
+
+               for (j = 0; j < currTKN; j++){
+                  dbgPrint("RESP: ");
+                  dbgPrint(respVector[j]);
+                  dbgPrint("\r\n");
                }
 
-               else{
-                  dbgPrint("INVALID RESPONSE RECEIVED: ");
-                  dbgPrint(command);
-                  dbgPrint("(");
-                  dbgPrint(parameter);
-                  dbgPrint(")\r\n");
-                  result = 0;
-               }
-
+               state = WAITING;
+               return 2;
             }
+
          }
 
          else{
-            dbgPrint("INVALID TOKEN");
-            dbgPrint(command);
-            dbgPrint("(");
-            dbgPrint(parameter);
-            dbgPrint(")\r\n");
-            result = 0;
+               dbgPrint("INVALID TOKEN RECEIVED: ");
+               dbgPrint(command);
+               dbgPrint("(");
+               dbgPrint(parameter);
+               dbgPrint(")\r\n");
+               result = 0;
          }
 
-         /* if this is the last token reset the state for
-            the next iteration of the state machine */
-
-         if(++currTKN == respTokens)
-            state = WAITING;
-
-         return result;
+         break;
 
       default:
 
@@ -376,6 +397,7 @@ void SysTick_Handler(void)
    if(processToken_count > 0) processToken_count--;
    if(sendAT_count > 0) sendAT_count--;
    if(sendATI_count > 0) sendATI_count--;
+   if(sendATpCMGL_count > 0) sendATpCMGL_count--;
 }
 
 int main(void)
@@ -391,10 +413,10 @@ int main(void)
 
       if(0 == processToken_count)
          processToken();
-      if(0 == sendATI_count)
-         sendATI();
-      //if(0 == sendAT_count)
-         //sendAT();
+      //if(0 == sendATI_count)
+      //   sendATI();
+      if(0 == sendATpCMGL_count)
+         sendATpCMGL();
 
    }
 
