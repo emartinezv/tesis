@@ -237,7 +237,7 @@ void sendATpCMGL(void)
 
    rs232Print("AT+CMGL=\"REC UNREAD\"\r");
    dbgPrint("AT+CMGL enviado\r\n");
-   updateFSM(SENT,"AT+CMGL","REC UNREAD");
+   updateFSM(SENT,"CMGL","\"REC UNREAD\"");
 
    return;
 }

@@ -148,7 +148,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                if((equalPos+1) == intPos){return EXT_CMD_TEST;}
 
                else{
-                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos);
+                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos-1);
                   return EXT_CMD_WRITE;
                }
 
