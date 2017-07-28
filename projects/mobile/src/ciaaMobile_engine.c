@@ -76,6 +76,11 @@ void sendAT(void);
 */
 void sendATI(void);
 
+/** @brief sendATpCMGF function
+ * @return
+ */
+void sendATpCMGF(void);
+
 /** @brief sendATpCMGL function
  * @return
  */
@@ -105,6 +110,9 @@ static uint32_t sendAT_count = DELAY_SENDAT;
 
 /** @brief used for sendATI function scheduling with SysTick */
 static uint32_t sendATI_count = DELAY_SENDATI;
+
+/** @brief used for sendATpCMGF function scheduling with SysTick */
+static uint32_t sendATpCMGF_count = DELAY_SENDATPCMGF;
 
 /** @brief used for sendATpCMGL function scheduling with SysTick */
 static uint32_t sendATpCMGL_count = DELAY_SENDATPCMGL;
@@ -231,13 +239,24 @@ void sendATI(void)
    return;
 }
 
+void sendATpCMGF(void)
+{
+   sendATpCMGF_count = DELAY_SENDATPCMGF;
+
+   rs232Print("AT+CMGF=1\r");
+   dbgPrint("AT+CMGF=1 enviado\r\n");
+   updateFSM(SENT,"CMGF","1");
+
+   return;
+}
+
 void sendATpCMGL(void)
 {
    sendATpCMGL_count = DELAY_SENDATPCMGL;
 
-   rs232Print("AT+CMGL=\"REC UNREAD\"\r");
+   rs232Print("AT+CMGL=\"ALL\"\r");
    dbgPrint("AT+CMGL enviado\r\n");
-   updateFSM(SENT,"CMGL","\"REC UNREAD\"");
+   updateFSM(SENT,"CMGL","\"ALL\"");
 
    return;
 }
@@ -408,6 +427,9 @@ int main(void)
 
    pausems(DELAY_AT);
    sendAT();
+
+   pausems(DELAY_SENDATPCMGF);
+   sendATpCMGF();
 
    while (1){
 

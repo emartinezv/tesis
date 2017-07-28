@@ -74,6 +74,9 @@ typedef struct _GSMflags
 /* delay in ms for calls to sendATI function */
 #define DELAY_SENDATI 10000
 
+/* delay in ms for calls to sendATpCMGF function */
+#define DELAY_SENDATPCMGF 5000
+
 /* delay in ms for calls to sendATpCMGL function */
 #define DELAY_SENDATPCMGL 10000
 

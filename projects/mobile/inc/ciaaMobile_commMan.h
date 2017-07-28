@@ -52,7 +52,7 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-#define MAX_COMM 3 /* maximum number of known commands */
+#define MAX_COMM 4 /* maximum number of known commands */
 
 /*==================[typedef]================================================*/
 

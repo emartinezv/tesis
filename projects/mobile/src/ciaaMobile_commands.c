@@ -60,6 +60,9 @@ const uint8_t commATI_endresp[] = "ERROR,OK";
 const uint8_t commATpCMGL_name[] = "CMGL";
 const uint8_t commATpCMGL_endresp[] = "ERROR,OK";
 
+const uint8_t commATpCMGF_name[] = "CMGF";
+const uint8_t commATpCMGF_endresp[] = "ERROR,OK";
+
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
