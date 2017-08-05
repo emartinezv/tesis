@@ -103,22 +103,22 @@ static void pausems(uint32_t t);
 /* TIMING COUNTERS */
 
 /** @brief used for processToken function scheduling with SysTick */
-static uint32_t processToken_count = DELAY_PROTKN;
+static int32_t processToken_count = DELAY_PROTKN;
 
 /** @brief used for sendAT function scheduling with SysTick */
-static uint32_t sendAT_count = DELAY_SENDAT;
+static int32_t sendAT_count = DELAY_SENDAT;
 
 /** @brief used for sendATI function scheduling with SysTick */
-static uint32_t sendATI_count = DELAY_SENDATI;
+static int32_t sendATI_count = DELAY_SENDATI;
 
 /** @brief used for sendATpCMGF function scheduling with SysTick */
-static uint32_t sendATpCMGF_count = DELAY_SENDATPCMGF;
+static int32_t sendATpCMGF_count = DELAY_SENDATPCMGF;
 
 /** @brief used for sendATpCMGL function scheduling with SysTick */
-static uint32_t sendATpCMGL_count = DELAY_SENDATPCMGL;
+static int32_t sendATpCMGL_count = DELAY_SENDATPCMGL;
 
 /** @brief used for delay counter */
-static uint32_t pausems_count;
+static int32_t pausems_count;
 
 /* GSM ENGINE */
 
@@ -219,7 +219,7 @@ void processToken(void)
 
 void sendAT(void)
 {
-   sendAT_count = DELAY_SENDAT;
+   sendAT_count = -1; /* only sent once */
 
    rs232Print("AT\r");
    dbgPrint("AT enviado\r\n");
@@ -241,7 +241,7 @@ void sendATI(void)
 
 void sendATpCMGF(void)
 {
-   sendATpCMGF_count = DELAY_SENDATPCMGF;
+   sendATpCMGF_count = -1; /* only sent once */
 
    rs232Print("AT+CMGF=1\r");
    dbgPrint("AT+CMGF=1 enviado\r\n");
@@ -416,6 +416,7 @@ void SysTick_Handler(void)
    if(processToken_count > 0) processToken_count--;
    if(sendAT_count > 0) sendAT_count--;
    if(sendATI_count > 0) sendATI_count--;
+   if(sendATpCMGF_count > 0) sendATpCMGF_count--;
    if(sendATpCMGL_count > 0) sendATpCMGL_count--;
 }
 
@@ -425,18 +426,14 @@ int main(void)
    ciaaUARTInit();
    commInit();
 
-   pausems(DELAY_AT);
-   sendAT();
-
-   pausems(DELAY_SENDATPCMGF);
-   sendATpCMGF();
-
    while (1){
 
       if(0 == processToken_count)
          processToken();
-      //if(0 == sendATI_count)
-      //   sendATI();
+      if(0 == sendAT_count)
+         sendAT();
+      if(0 == sendATpCMGF_count)
+         sendATpCMGF();
       if(0 == sendATpCMGL_count)
          sendATpCMGL();
 

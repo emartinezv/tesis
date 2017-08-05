@@ -75,10 +75,10 @@ typedef struct _GSMflags
 #define DELAY_SENDATI 10000
 
 /* delay in ms for calls to sendATpCMGF function */
-#define DELAY_SENDATPCMGF 5000
+#define DELAY_SENDATPCMGF 10000
 
 /* delay in ms for calls to sendATpCMGL function */
-#define DELAY_SENDATPCMGL 10000
+#define DELAY_SENDATPCMGL 15000
 
 /** led number to toggle */
 #define LED_ROJO 4
