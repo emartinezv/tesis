@@ -264,26 +264,47 @@ void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T 
    /* New data will be ignored if data not popped in time */
 	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
 	   uint8_t ch = Chip_UART_ReadByte(pUART);
-	   RingBuffer_Insert(pRB, &ch);
 	   if(!iscntrl(ch)){empty = 0;}
 
-	   if((('\r' == ch) && !crlf && !empty) ||        /* command */
-	      (('\r' == pch) && ('\n' == ch) && crlf) ||  /* response */
-	      (('>' == pch) && (' ' == ch) && crlf) ||    /* SMS input query */
-	      (0x1A == ch)){                              /* SMS confirmation */
+	   if(('\r' == pch) && ('\n' != ch) && !crlf && !empty){ /* cmd echo */
 
-	      crlf = 0;
-	      empty = 1;
+         crlf = 0;
+         empty = 1;
          uint8_t swap[TKN_LEN];
          uint8_t length = RingBuffer_GetCount(pRB);
          RingBuffer_PopMult(pRB, swap, length); /* read new token */
          swap[length] = '\0';
          RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
 
-	   }
-	   else if(('\r' == pch) && ('\n' == ch) && !crlf){crlf = 1;}
+         RingBuffer_Insert(pRB, &ch);
 
-	   pch = ch;
+      }
+
+      else if((('\r' == pch) && ('\n' == ch) && crlf) ||  /* response */
+         (('\r' == pch) && ('\n' == ch) && !crlf && !empty) ||  /* <data> block */
+         (('>' == pch) && (' ' == ch) && crlf) ||    /* SMS input query */
+         (0x1A == ch)){                              /* SMS confirmation */
+
+         RingBuffer_Insert(pRB, &ch);
+
+         crlf = 0;
+         empty = 1;
+         uint8_t swap[TKN_LEN];
+         uint8_t length = RingBuffer_GetCount(pRB);
+         RingBuffer_PopMult(pRB, swap, length); /* read new token */
+         swap[length] = '\0';
+         RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
+
+      }
+      else if(('\r' == pch) && ('\n' == ch) && !crlf && empty){
+         RingBuffer_Insert(pRB, &ch);
+         crlf = 1;
+      }
+      else{
+         RingBuffer_Insert(pRB, &ch);
+      }
+
+      pch = ch;
 	}
 }
 

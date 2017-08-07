@@ -57,7 +57,7 @@ extern "C" {
 /** enum to classify valid AT tokens */
 
 typedef enum {SENT, INVALID, BASIC_CMD, EXT_CMD_TEST, EXT_CMD_WRITE,
-              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, EXT_RSP, URC}
+              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, DATA, EXT_RSP, URC}
               ATToken;
 
 /*==================[external data declaration]==============================*/

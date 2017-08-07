@@ -116,7 +116,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   else{ /* token is an echo */
+   else if('\r' == token[strlen(token)-1]){ /* token is an echo */
 
       /* determine if the token is an AT command, be it extended or basic */
 
@@ -226,6 +226,14 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          return INVALID;
 
       }
+   }
+
+   else if(('\r' == token[strlen(token)-2]) && ('\n' == token[strlen(token)-1])){ /* token is a <data> block */
+
+      strncpy(parameter,token,strlen(token)-2);
+      parameter[strlen(token)-2] = '\0';
+
+      return DATA;
    }
 }
 
