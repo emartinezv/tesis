@@ -80,7 +80,12 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
          /* Search for ':' character and store position if present */
 
-         for (i = 3; i < (strlen(token)-2); i++){if (':' == token[i]) {colonPos = i;}}
+         for(i = 3; i < (strlen(token)-2); i++){
+            if(':' == token[i]){
+               colonPos = i;
+               break;
+            }
+         }
 
          /* If no ':' character is present we have a simple extended sintax response */
 
@@ -95,7 +100,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          else{
             strncpy(command,&token[3],colonPos-3);
             command[colonPos-3] = '\0';
-            strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-2);
+            strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-3);
             parameter[strlen(token)-colonPos-2] = '\0';
             return EXT_RSP;
          }
@@ -132,8 +137,17 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                of extended AT command */
 
             for (i = 3; i < strlen(token); i++){
-               if ('=' == token[i]) {equalPos = i;}
-               else if ('?' == token[i]) {intPos = i;}
+               if ('=' == token[i]){
+                  equalPos = i;
+                  break;
+               }
+            }
+
+            for (i = 3; i < strlen(token); i++){
+               if ('?' == token[i]){
+                  intPos = i;
+                  break;
+               }
             }
 
             /* Determine the type of extended command (TEST, READ, WRITE or EXECUTION)

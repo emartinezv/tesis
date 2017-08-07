@@ -363,6 +363,10 @@ int updateFSM (ATToken received,
             respVector[currTKN][strlen(command)] = '\0';
             strncat(respVector[currTKN],parameter,strlen(parameter));
 
+            dbgPrint("RESP: ");
+            dbgPrint(respVector[currTKN]);
+            dbgPrint("\r\n");
+
             currTKN++;
 
             uint8_t * place;
@@ -371,16 +375,7 @@ int updateFSM (ATToken received,
 
             if(NULL != place){
 
-               uint8_t j = 0;
-
-               /* print out all responses for the command */
-
-               for (j = 0; j < currTKN; j++){
-                  dbgPrint("RESP: ");
-                  dbgPrint(respVector[j]);
-                  dbgPrint("\r\n");
-               }
-
+               dbgPrint("COMMAND CLOSED\r\n");
                state = WAITING;
                return 2;
             }
