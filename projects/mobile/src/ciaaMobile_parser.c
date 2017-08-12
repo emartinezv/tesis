@@ -116,6 +116,10 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
+   else if( '>' == token[0] && ' ' == token[1] && '\r' == token[2]){
+      return SMS_PROMPT;
+   }
+
    else if('\r' == token[strlen(token)-1]){ /* token is an echo */
 
       /* determine if the token is an AT command, be it extended or basic */
@@ -226,6 +230,14 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          return INVALID;
 
       }
+   }
+
+   else if(0x1A == token[strlen(token)-1]){ /* token is SMS Body */
+
+      strncpy(command,"SMS_BODY\0",9);
+      strncpy(parameter,&token[0],strlen(token)-2);
+      parameter[strlen(token)-2] = '\0';
+      return SMS_BODY;
    }
 
    else if(('\r' == token[strlen(token)-2]) && ('\n' == token[strlen(token)-1])){ /* token is a <data> block */

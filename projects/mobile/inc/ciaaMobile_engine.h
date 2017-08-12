@@ -51,34 +51,27 @@ extern "C" {
 
 typedef enum _GSMstates
 {
-   WAITING = 0,
-   CMD_SENT = 1,
-   CMD_ACK = 2,
-   RSP_REC = 3
+   WAITING = 0,  /* waiting for a command */
+   CMD_SENT = 1, /* cmd sent through serial port */
+   CMD_ACK = 2,  /* cmd echo confirmed */
+   WAIT_SMS = 3  /* waiting for SMS message body */
 } GSMstates;
 
-typedef struct _GSMflags
-{
-   uint8_t orphanResponse : 1;
-} GSMflags;
+typedef enum { AUTOBAUD, BASIC_STD, BASIC_AMP, EXT_TEST, EXT_WRITE, EXT_READ,
+               EXT_EXEC, SMS } ATcmdType;
 
-/* initial delay before sending autobauding sequence*/
-#define DELAY_AT 5000
+typedef struct _ATcmd
+{
+   uint8_t * cmd;
+   uint8_t * par;
+   ATcmdType type;
+} ATcmd;
 
 /* delay in ms for calls to processToken function */
 #define DELAY_PROTKN 1000
 
 /* delay in ms for calls to sendAT function */
-#define DELAY_SENDAT 5000
-
-/* delay in ms for calls to sendATI function */
-#define DELAY_SENDATI 10000
-
-/* delay in ms for calls to sendATpCMGF function */
-#define DELAY_SENDATPCMGF 10000
-
-/* delay in ms for calls to sendATpCMGL function */
-#define DELAY_SENDATPCMGL 15000
+#define DELAY_SENDAT 10000
 
 /** led number to toggle */
 #define LED_ROJO 4

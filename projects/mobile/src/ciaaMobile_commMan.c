@@ -93,6 +93,12 @@ void commInit (void)
    commands[3].name = commATpCMGF_name;
    commands[3].endresp = commATpCMGF_endresp;
 
+   commands[4].name = commATpCMGS_name;
+   commands[4].endresp = commATpCMGS_endresp;
+
+   commands[5].name = commATpCSCS_name;
+   commands[5].endresp = commATpCSCS_endresp;
+
    return;
 }
 

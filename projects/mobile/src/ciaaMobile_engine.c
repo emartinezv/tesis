@@ -66,29 +66,15 @@ static void initHardware(void);
 */
 void processToken(void);
 
-/** @brief sendAT function
+/** @brief sendATcmd function
 * @return
 */
-void sendAT(void);
+void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType);
 
 /** @brief sendATI function
 * @return
 */
-void sendATI(void);
 
-/** @brief sendATpCMGF function
- * @return
- */
-void sendATpCMGF(void);
-
-/** @brief sendATpCMGL function
- * @return
- */
-void sendATpCMGL(void);
-
-/** @brief updateFSM function
-* @return
-*/
 int updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter);
@@ -107,15 +93,6 @@ static int32_t processToken_count = DELAY_PROTKN;
 
 /** @brief used for sendAT function scheduling with SysTick */
 static int32_t sendAT_count = DELAY_SENDAT;
-
-/** @brief used for sendATI function scheduling with SysTick */
-static int32_t sendATI_count = DELAY_SENDATI;
-
-/** @brief used for sendATpCMGF function scheduling with SysTick */
-static int32_t sendATpCMGF_count = DELAY_SENDATPCMGF;
-
-/** @brief used for sendATpCMGL function scheduling with SysTick */
-static int32_t sendATpCMGL_count = DELAY_SENDATPCMGL;
 
 /** @brief used for delay counter */
 static int32_t pausems_count;
@@ -217,46 +194,131 @@ void processToken(void)
 
 }
 
-void sendAT(void)
+void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 {
-   sendAT_count = -1; /* only sent once */
+   sendAT_count = DELAY_SENDAT;
 
-   rs232Print("AT\r");
-   dbgPrint("AT enviado\r\n");
-   updateFSM(SENT,"AT","");
+   switch(type){
 
-   return;
-}
+      case AUTOBAUD:
 
-void sendATI(void)
-{
-   sendATI_count = DELAY_SENDATI;
+         rs232Print("AT\r");
 
-   rs232Print("ATI\r");
-   dbgPrint("ATI enviado\r\n");
-   updateFSM(SENT,"I","");
+         dbgPrint("AT enviado\r\n");
 
-   return;
-}
+         updateFSM(SENT,"AT","");
 
-void sendATpCMGF(void)
-{
-   sendATpCMGF_count = -1; /* only sent once */
+         break;
 
-   rs232Print("AT+CMGF=1\r");
-   dbgPrint("AT+CMGF=1 enviado\r\n");
-   updateFSM(SENT,"CMGF","1");
+      case BASIC_STD:
 
-   return;
-}
+         rs232Print("AT");
+         rs232Print(cmd);
+         if(par != 0) {rs232Print(par);}
+         rs232Print("\r");
 
-void sendATpCMGL(void)
-{
-   sendATpCMGL_count = DELAY_SENDATPCMGL;
+         dbgPrint("AT");
+         dbgPrint(cmd);
+         if(par != 0) {dbgPrint(par);}
+         dbgPrint(" enviado\r\n");
 
-   rs232Print("AT+CMGL=\"ALL\"\r");
-   dbgPrint("AT+CMGL enviado\r\n");
-   updateFSM(SENT,"CMGL","\"ALL\"");
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case BASIC_AMP:
+
+         rs232Print("AT&");
+         rs232Print(cmd);
+         if(par != 0) {rs232Print(par);}
+         rs232Print("\r");
+
+         dbgPrint("AT&");
+         dbgPrint(cmd);
+         if(par != 0) {dbgPrint(par);}
+         dbgPrint(" enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case EXT_TEST:
+
+         rs232Print("AT+");
+         rs232Print(cmd);
+         rs232Print("=?\r");
+
+         dbgPrint("AT+");
+         dbgPrint(cmd);
+         dbgPrint("=? enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case EXT_WRITE:
+
+         rs232Print("AT+");
+         rs232Print(cmd);
+         rs232Print("=");
+         rs232Print(par);
+         rs232Print("\r");
+
+         dbgPrint("AT+");
+         dbgPrint(cmd);
+         dbgPrint("=");
+         dbgPrint(par);
+         dbgPrint(" enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case EXT_READ:
+
+         rs232Print("AT+");
+         rs232Print(cmd);
+         rs232Print("?\r");
+
+         dbgPrint("AT+");
+         dbgPrint(cmd);
+         dbgPrint("? enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case EXT_EXEC:
+
+         rs232Print("AT+");
+         rs232Print(cmd);
+         rs232Print("\r");
+
+         dbgPrint("AT+");
+         dbgPrint(cmd);
+         dbgPrint(" enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      case SMS:
+
+         rs232Print(par);
+         rs232Print("\x1A");
+
+         dbgPrint("Cuerpo de SMS enviado\r\n");
+
+         updateFSM(SENT,cmd,par);
+
+         break;
+
+      default:
+
+         dbgPrint("Tipo de comando no reconocido\r\n");
+         break;
+
+   }
 
    return;
 }
@@ -347,12 +409,37 @@ int updateFSM (ATToken received,
 
          break;
 
+      case WAIT_SMS:
+
+         if (SMS_BODY == received){
+            dbgPrint(command);
+            dbgPrint("(");
+            dbgPrint(parameter);
+            dbgPrint(")\r\n");
+            state = CMD_ACK;
+         }
+         else{
+            dbgPrint("INVALID TOKEN RECEIVED: ");
+            dbgPrint(command);
+            dbgPrint("(");
+            dbgPrint(parameter);
+            dbgPrint(")\r\n");
+            result = 0;
+         }
+
+
+         break;
+
       case CMD_ACK:
 
          /* process a number of tokens depending on the command, checking for
             end responses each time */
 
          ;
+
+         if ( SMS_PROMPT == received ){
+            state = WAIT_SMS;
+         }
 
          if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 
@@ -361,7 +448,9 @@ int updateFSM (ATToken received,
 
             strncpy(respVector[currTKN],command,strlen(command));
             respVector[currTKN][strlen(command)] = '\0';
+            strncat(respVector[currTKN],"(",1);
             strncat(respVector[currTKN],parameter,strlen(parameter));
+            strncat(respVector[currTKN],")",1);
 
             dbgPrint("RESP: ");
             dbgPrint(respVector[currTKN]);
@@ -371,7 +460,7 @@ int updateFSM (ATToken received,
 
             uint8_t * place;
 
-            place = strstr(commands[i].endresp,&respVector[currTKN-1][0]);
+            place = strstr(commands[i].endresp,command);
 
             if(NULL != place){
 
@@ -410,9 +499,6 @@ void SysTick_Handler(void)
    if(pausems_count > 0) pausems_count--;
    if(processToken_count > 0) processToken_count--;
    if(sendAT_count > 0) sendAT_count--;
-   if(sendATI_count > 0) sendATI_count--;
-   if(sendATpCMGF_count > 0) sendATpCMGF_count--;
-   if(sendATpCMGL_count > 0) sendATpCMGL_count--;
 }
 
 int main(void)
@@ -421,17 +507,29 @@ int main(void)
    ciaaUARTInit();
    commInit();
 
+   const ATcmd cmdList [5] = {
+         {0,0,AUTOBAUD},
+         {"CMGF","1",EXT_WRITE},
+         {"CSCS","\"GSM\"",EXT_WRITE},
+         {"CMGS","\"1551751809\"",EXT_WRITE},
+         {"SMS_BODY","Mensaje de prueba",SMS}
+   };
+
+   uint8_t cmdNum = 0;
+
    while (1){
 
-      if(0 == processToken_count)
+      if (0 == processToken_count)
          processToken();
-      if(0 == sendAT_count)
-         sendAT();
-      if(0 == sendATpCMGF_count)
-         sendATpCMGF();
-      if(0 == sendATpCMGL_count)
-         sendATpCMGL();
 
+      if (0 == sendAT_count){
+
+         if (cmdNum < 5){
+            sendATcmd(cmdList[cmdNum].cmd, cmdList[cmdNum].par, cmdList[cmdNum].type);
+            cmdNum++;
+         }
+
+      }
    }
 
    return 0;
