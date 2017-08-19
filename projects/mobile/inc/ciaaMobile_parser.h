@@ -41,6 +41,7 @@
 
 #include "lpc_types.h"
 #include "string.h"
+#include "ciaaUART_T.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -56,9 +57,9 @@ extern "C" {
 
 /** enum to classify valid AT tokens */
 
-typedef enum {SENT, INVALID, BASIC_CMD, EXT_CMD_TEST, EXT_CMD_WRITE,
-              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, DATA, EXT_RSP, SMS_PROMPT,
-              SMS_BODY, URC}
+typedef enum {SENT, INVALID, BASIC_CMD, SMS_BODY, EXT_CMD_TEST, EXT_CMD_WRITE,
+              EXT_CMD_READ, EXT_CMD_EXEC, BASIC_RSP, DATA, SMS_PROMPT, EXT_RSP,
+              URC}
               ATToken;
 
 /*==================[external data declaration]==============================*/

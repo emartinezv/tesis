@@ -71,6 +71,9 @@ extern const uint8_t commATpCMGS_endresp[];
 extern const uint8_t commATpCSCS_name[];
 extern const uint8_t commATpCSCS_endresp[];
 
+extern const uint8_t commSMS_BODY_name[];
+extern const uint8_t commSMS_BODY_endresp[];
+
 /*==================[external functions declaration]=========================*/
 
 /*==================[cplusplus]==============================================*/

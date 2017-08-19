@@ -355,7 +355,14 @@ int updateFSM (ATToken received,
                strncpy(currPAR,parameter,strlen(parameter));
                currPAR[strlen(parameter)] = '\0';
 
-               state = CMD_SENT;
+               if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
+                  state = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
+                                   /* messages is not echoed, so ack is not */
+                                   /* viable                                */
+               }
+               else{
+                  state = CMD_SENT;
+               }
 
                dbgPrint("COMMAND SENT: ");
                dbgPrint(command);
@@ -409,37 +416,12 @@ int updateFSM (ATToken received,
 
          break;
 
-      case WAIT_SMS:
-
-         if (SMS_BODY == received){
-            dbgPrint(command);
-            dbgPrint("(");
-            dbgPrint(parameter);
-            dbgPrint(")\r\n");
-            state = CMD_ACK;
-         }
-         else{
-            dbgPrint("INVALID TOKEN RECEIVED: ");
-            dbgPrint(command);
-            dbgPrint("(");
-            dbgPrint(parameter);
-            dbgPrint(")\r\n");
-            result = 0;
-         }
-
-
-         break;
-
       case CMD_ACK:
 
          /* process a number of tokens depending on the command, checking for
             end responses each time */
 
          ;
-
-         if ( SMS_PROMPT == received ){
-            state = WAIT_SMS;
-         }
 
          if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 

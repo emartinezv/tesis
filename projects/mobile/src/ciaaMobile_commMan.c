@@ -99,6 +99,9 @@ void commInit (void)
    commands[5].name = commATpCSCS_name;
    commands[5].endresp = commATpCSCS_endresp;
 
+   commands[6].name = commSMS_BODY_name;
+   commands[6].endresp = commSMS_BODY_endresp;
+
    return;
 }
 

@@ -109,15 +109,16 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       /* Basic response */
 
+      else if( '>' == token[2] && ' ' == token[3]){
+         strncpy(command,"> \0",11);
+         return SMS_PROMPT;
+      }
+
       else{
          strncpy(command,&token[2],strlen(token)-4);
          command[strlen(token)-4] = '\0';
          return BASIC_RSP;
       }
-   }
-
-   else if( '>' == token[0] && ' ' == token[1] && '\r' == token[2]){
-      return SMS_PROMPT;
    }
 
    else if('\r' == token[strlen(token)-1]){ /* token is an echo */
@@ -235,6 +236,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    else if(0x1A == token[strlen(token)-1]){ /* token is SMS Body */
 
       strncpy(command,"SMS_BODY\0",9);
+      dbgPrint("Condicion SMS_BODY");
       strncpy(parameter,&token[0],strlen(token)-2);
       parameter[strlen(token)-2] = '\0';
       return SMS_BODY;
