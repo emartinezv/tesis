@@ -257,51 +257,46 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 /* UART receive-only interrupt handler for ring buffers with tokenizer */
 void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB)
 {
-	static uint8_t pch = 0x00; /* store previous char */
+	typedef enum {NONE, ECHO, RESP, DATA, SMSIn, SMSBod} tokenType;
+
+	tokenType token = NONE;
+
+   static uint8_t pch = 0x00; /* store previous char */
 	static uint8_t crlf = 0;   /* initial <CR><LF> sequence detected */
 	static uint8_t empty = 1;  /* non-control characters received */
+	static uint8_t smsin = 0;  /* SMS promp token just received */
 
    /* New data will be ignored if data not popped in time */
 	while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
 	   uint8_t ch = Chip_UART_ReadByte(pUART);
 	   if(!iscntrl(ch)){empty = 0;}
+	   RingBuffer_Insert(pRB, &ch);
 
-	   if(('\r' == pch) && ('\n' != ch) && !crlf && !empty){ /* cmd echo */
+	   if(('\r' == pch) && ('\n' != ch) && !crlf && !empty) { token = ECHO; smsin = 0; } /* cmd echo */
+	   else if(('\r' == pch) && ('\n' == ch) && crlf) { token = RESP; smsin = 0; } /* response */
+	   else if(('\r' == pch) && ('\n' == ch) && !crlf && !empty && !smsin) { token = DATA; smsin = 0; } /* <data> block */
+	   else if(('\r' == pch) && ('\n' == ch) && !crlf && !empty && smsin) {
+	      token = SMSBod; smsin = 0; crlf = 1;
+	   } /* SMS Body */
+	   else if(('>' == pch) && (' ' == ch) && crlf) {
+	      token = SMSIn; smsin = 1;
+	   } /* SMS input query */
+	   else { token = NONE; }
 
-         crlf = 0;
+	   if(NONE != token){
+
+         if(SMSBod != token){ crlf = 0; }
          empty = 1;
          uint8_t swap[TKN_LEN];
-         uint8_t length = RingBuffer_GetCount(pRB);
-         RingBuffer_PopMult(pRB, swap, length); /* read new token */
-         swap[length] = '\0';
-         RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
-
-         RingBuffer_Insert(pRB, &ch);
-
-      }
-
-      else if((('\r' == pch) && ('\n' == ch) && crlf) ||  /* response */
-         (('\r' == pch) && ('\n' == ch) && !crlf && !empty) ||  /* <data> block */
-         (('>' == pch) && (' ' == ch) && crlf) ||    /* SMS input query */
-         (0x1A == ch)){                              /* SMS confirmation */
-
-         RingBuffer_Insert(pRB, &ch);
-
-         crlf = 0;
-         empty = 1;
-         uint8_t swap[TKN_LEN];
-         uint8_t length = RingBuffer_GetCount(pRB);
+         uint8_t length = RingBuffer_GetCount(pRB) - (ECHO == token) - (SMSBod == token)*2;
          RingBuffer_PopMult(pRB, swap, length); /* read new token */
          swap[length] = '\0';
          RingBuffer_Insert(pTKNB, swap); /* insert new token into ring buffer */
 
       }
-      else if(('\r' == pch) && ('\n' == ch) && !crlf && empty){
-         RingBuffer_Insert(pRB, &ch);
+
+	   else if(('\r' == pch) && ('\n' == ch) && !crlf && empty){
          crlf = 1;
-      }
-      else{
-         RingBuffer_Insert(pRB, &ch);
       }
 
       pch = ch;

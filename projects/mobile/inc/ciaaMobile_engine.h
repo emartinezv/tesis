@@ -68,10 +68,10 @@ typedef struct _ATcmd
 } ATcmd;
 
 /* delay in ms for calls to processToken function */
-#define DELAY_PROTKN 1000
+#define DELAY_PROTKN 250
 
 /* delay in ms for calls to sendAT function */
-#define DELAY_SENDAT 10000
+#define DELAY_SENDAT 5000
 
 /** led number to toggle */
 #define LED_ROJO 4

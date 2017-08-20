@@ -101,7 +101,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             strncpy(command,&token[3],colonPos-3);
             command[colonPos-3] = '\0';
             strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-3);
-            parameter[strlen(token)-colonPos-2] = '\0';
+            parameter[strlen(token)-colonPos-3] = '\0';
             return EXT_RSP;
          }
 
@@ -233,21 +233,22 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   else if(0x1A == token[strlen(token)-1]){ /* token is SMS Body */
-
-      strncpy(command,"SMS_BODY\0",9);
-      dbgPrint("Condicion SMS_BODY");
-      strncpy(parameter,&token[0],strlen(token)-2);
-      parameter[strlen(token)-2] = '\0';
-      return SMS_BODY;
-   }
-
    else if(('\r' == token[strlen(token)-2]) && ('\n' == token[strlen(token)-1])){ /* token is a <data> block */
 
       strncpy(parameter,token,strlen(token)-2);
       parameter[strlen(token)-2] = '\0';
 
       return DATA;
+   }
+
+   else{ /* token is SMS Body */
+
+      strncpy(command,"SMS_BODY\0",9);
+      dbgPrint("Condicion SMS_BODY");
+      strncpy(parameter,&token[0],strlen(token));
+      parameter[strlen(token)] = '\0';
+      return SMS_BODY;
+
    }
 }
 

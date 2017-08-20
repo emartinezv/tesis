@@ -307,8 +307,6 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          rs232Print(par);
          rs232Print("\x1A");
 
-         dbgPrint("Cuerpo de SMS enviado\r\n");
-
          updateFSM(SENT,cmd,par);
 
          break;
