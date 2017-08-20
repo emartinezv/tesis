@@ -40,6 +40,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "string.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -51,30 +52,28 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+/** struct for AT commands */
+
+typedef struct {
+   uint8_t const * const name;       /* pointer to string with the name of the command */
+   uint8_t const * const endresp;    /* pointers to string for valid end responses
+                            to the command */
+} ATComm;
+
 /*==================[external data declaration]==============================*/
 
-extern const uint8_t commAT_name[];
-extern const uint8_t commAT_endresp[];
+/** @vector of known AT commands*/
 
-extern const uint8_t commATI_name[];
-extern const uint8_t commATI_endresp[];
-
-extern const uint8_t commATpCMGL_name[];
-extern const uint8_t commATpCMGL_endresp[];
-
-extern const uint8_t commATpCMGF_name[];
-extern const uint8_t commATpCMGF_endresp[];
-
-extern const uint8_t commATpCMGS_name[];
-extern const uint8_t commATpCMGS_endresp[];
-
-extern const uint8_t commATpCSCS_name[];
-extern const uint8_t commATpCSCS_endresp[];
-
-extern const uint8_t commSMS_BODY_name[];
-extern const uint8_t commSMS_BODY_endresp[];
+extern ATComm const commands [];
 
 /*==================[external functions declaration]=========================*/
+
+/** @brief commSearch function
+ * @return takes a token type and command, returns position of the command in
+ *  the known command/response vector or 0 if no command/response found
+ */
+
+uint8_t commSearch(uint8_t const * const command);
 
 /*==================[cplusplus]==============================================*/
 

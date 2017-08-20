@@ -41,7 +41,7 @@
 
 #include "ciaaMobile_engine.h"
 #include "ciaaMobile_parser.h"
-#include "ciaaMobile_commMan.h"
+#include "ciaaMobile_commands.h"
 #include "board.h"
 #include "string.h"
 #include "ciaaUART_T.h"
@@ -104,9 +104,6 @@ static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[external data definition]===============================*/
 
-/** @vector of known AT commands*/
-extern ATComm commands [MAX_COMM];
-
 /*==================[internal functions definition]==========================*/
 
 static void initHardware(void)
@@ -139,55 +136,6 @@ void processToken(void)
       received = parse(token, command, parameter); /* parse the token */
       updateFSM(received, command, parameter);     /* update FSM */
 
-      #ifdef PRINTOUT
-      switch(received){
-
-         case BASIC_CMD:
-         case EXT_CMD_WRITE:
-         case EXT_CMD_READ:
-         case EXT_CMD_TEST:
-         case EXT_CMD_EXEC:
-
-            /* printout */
-
-            dbgPrint("\r\nCOMMAND: ");
-            dbgPrint(command);
-            dbgPrint("(");
-            dbgPrint(parameter);
-            dbgPrint(")\r\n");
-
-         break;
-
-         case BASIC_RSP:
-         case EXT_RSP:
-
-            /* printout */
-
-            dbgPrint("\r\nRESPONSE: ");
-            dbgPrint(command);
-            dbgPrint("(");
-            dbgPrint(parameter);
-            dbgPrint(")\r\n");
-
-         break;
-
-         case INVALID:
-
-            /* printout */
-
-            dbgPrint("\r\nINVALIDO\r\n");
-
-         break;
-
-      }
-
-      dbgPrint("\r\n");
-      #endif
-
-   }
-
-   else{
-      //dbgPrint("\r\nNO TOKEN\r\n");
    }
 
    return;
@@ -485,7 +433,6 @@ int main(void)
 {
    initHardware();
    ciaaUARTInit();
-   commInit();
 
    const ATcmd cmdList [5] = {
          {0,0,AUTOBAUD},

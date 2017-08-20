@@ -51,29 +51,37 @@
 
 /*==================[external data definition]===============================*/
 
-const uint8_t commAT_name[] = "AT";
-const uint8_t commAT_endresp[] = "ERROR,OK";
+/** @vector of known AT commands*/
 
-const uint8_t commATI_name[] = "I";
-const uint8_t commATI_endresp[] = "ERROR,OK";
-
-const uint8_t commATpCMGL_name[] = "CMGL";
-const uint8_t commATpCMGL_endresp[] = "ERROR,OK";
-
-const uint8_t commATpCMGF_name[] = "CMGF";
-const uint8_t commATpCMGF_endresp[] = "ERROR,OK";
-
-const uint8_t commATpCMGS_name[] = "CMGS";
-const uint8_t commATpCMGS_endresp[] = "> , ERROR";
-
-const uint8_t commATpCSCS_name[] = "CSCS";
-const uint8_t commATpCSCS_endresp[] = "ERROR, OK";
-
-const uint8_t commSMS_BODY_name[] = "SMS_BODY";
-const uint8_t commSMS_BODY_endresp[] = "ERROR, OK";
+ATComm const commands [] = {
+      {"AT" , "ERROR,OK"},
+      {"I" , "ERROR,OK"},
+      {"CMGL" , "ERROR,OK"},
+      {"CMGF" , "ERROR,OK"},
+      {"CMGS" , "> ,ERROR"},
+      {"CSCS" , "ERROR,OK"},
+      {"SMS_BODY" , "ERROR,OK"},
+      {0 , 0},
+};
 
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
+
+/** @brief commSearch function
+ * @return takes a token type and command, returns position of the command in
+ *  the known command/response vector or 0 if no command/response found
+ */
+
+uint8_t commSearch(uint8_t const * const command)
+{
+   int i = 0;
+
+   for(i = 0; 0 != commands[i].name; i++){
+      if(0 == strcmp(command, commands[i].name)){return i;}
+   }
+
+   return 255;
+}
 
 /*==================[end of file]============================================*/

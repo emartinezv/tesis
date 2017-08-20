@@ -244,7 +244,6 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    else{ /* token is SMS Body */
 
       strncpy(command,"SMS_BODY\0",9);
-      dbgPrint("Condicion SMS_BODY");
       strncpy(parameter,&token[0],strlen(token));
       parameter[strlen(token)] = '\0';
       return SMS_BODY;
