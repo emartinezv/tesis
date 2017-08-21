@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _CIAAMOBILE_ENGINE_H_
-#define _CIAAMOBILE_ENGINE_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -40,10 +40,10 @@
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "board.h"
 #include "string.h"
 #include "ciaaUART_T.h"
-#include "ciaaMobile_parser.h"
-#include "ciaaMobile_commands.h"
+#include "ciaaMobile_engine.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -53,23 +53,15 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-typedef enum _GSMstates
-{
-   WAITING = 0,  /* waiting for a command */
-   CMD_SENT = 1, /* cmd sent through serial port */
-   CMD_ACK = 2,  /* cmd echo confirmed */
-   WAIT_SMS = 3  /* waiting for SMS message body */
-} GSMstates;
+/* delay in ms for calls to processToken function */
+#define DELAY_PROTKN 250
 
-typedef enum { AUTOBAUD, BASIC_STD, BASIC_AMP, EXT_TEST, EXT_WRITE, EXT_READ,
-               EXT_EXEC, SMS } ATcmdType;
+/* delay in ms for calls to sendAT function */
+#define DELAY_SENDAT 5000
 
-typedef struct _ATcmd
-{
-   uint8_t * cmd;
-   uint8_t * par;
-   ATcmdType type;
-} ATcmd;
+/** led number to toggle */
+#define LED_ROJO 4
+#define LED_VERDE 5
 
 /*==================[typedef]================================================*/
 
@@ -77,23 +69,10 @@ typedef struct _ATcmd
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief processToken function
-* @return
-*/
-void processToken(void);
-
-/** @brief sendATcmd function
-* @return
-*/
-void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType);
-
-/** @brief sendATI function
-* @return
-*/
-
-int updateFSM (ATToken received,
-               uint8_t const * const command,
-               uint8_t const * const parameter);
+/** @brief main function
+ * @return main function should never return
+ */
+int main(void);
 
 /*==================[cplusplus]==============================================*/
 

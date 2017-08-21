@@ -40,15 +40,8 @@
 /*==================[inclusions]=============================================*/
 
 #include "ciaaMobile_engine.h"
-#include "ciaaMobile_parser.h"
-#include "ciaaMobile_commands.h"
-#include "board.h"
-#include "string.h"
-#include "ciaaUART_T.h"
 
 /*==================[macros and definitions]=================================*/
-
-//#define PRINTOUT ;
 
 /*==================[global data]============================================*/
 
@@ -56,46 +49,7 @@
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief hardware initialization function
- * @return none
- */
-static void initHardware(void);
-
-/** @brief processToken function
-* @return
-*/
-void processToken(void);
-
-/** @brief sendATcmd function
-* @return
-*/
-void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType);
-
-/** @brief sendATI function
-* @return
-*/
-
-int updateFSM (ATToken received,
-               uint8_t const * const command,
-               uint8_t const * const parameter);
-
-/** @brief delay function
- * @param t desired milliseconds to wait
- */
-static void pausems(uint32_t t);
-
 /*==================[internal data definition]===============================*/
-
-/* TIMING COUNTERS */
-
-/** @brief used for processToken function scheduling with SysTick */
-static int32_t processToken_count = DELAY_PROTKN;
-
-/** @brief used for sendAT function scheduling with SysTick */
-static int32_t sendAT_count = DELAY_SENDAT;
-
-/** @brief used for delay counter */
-static int32_t pausems_count;
 
 /* GSM ENGINE */
 
@@ -106,25 +60,10 @@ static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[internal functions definition]==========================*/
 
-static void initHardware(void)
-{
-   Board_Init();
-   SystemCoreClockUpdate();
-   SysTick_Config(SystemCoreClock / 1000);
-}
-
-static void pausems(uint32_t t)
-{
-   pausems_count = t;
-   while (pausems_count != 0) {
-      __WFI();
-   }
-}
+/*==================[external functions definition]==========================*/
 
 void processToken(void)
 {
-   processToken_count = DELAY_PROTKN;
-
    ATToken received; /* classifies the received token*/
 
    uint8_t token[TKN_LEN]; /* received token */
@@ -144,8 +83,6 @@ void processToken(void)
 
 void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 {
-   sendAT_count = DELAY_SENDAT;
-
    switch(type){
 
       case AUTOBAUD:
@@ -418,48 +355,6 @@ int updateFSM (ATToken received,
          break;
    }
 
-}
-
-/*==================[external functions definition]==========================*/
-
-void SysTick_Handler(void)
-{
-   if(pausems_count > 0) pausems_count--;
-   if(processToken_count > 0) processToken_count--;
-   if(sendAT_count > 0) sendAT_count--;
-}
-
-int main(void)
-{
-   initHardware();
-   ciaaUARTInit();
-
-   const ATcmd cmdList [5] = {
-         {0,0,AUTOBAUD},
-         {"CMGF","1",EXT_WRITE},
-         {"CSCS","\"GSM\"",EXT_WRITE},
-         {"CMGS","\"1551751809\"",EXT_WRITE},
-         {"SMS_BODY","Mensaje de prueba",SMS}
-   };
-
-   uint8_t cmdNum = 0;
-
-   while (1){
-
-      if (0 == processToken_count)
-         processToken();
-
-      if (0 == sendAT_count){
-
-         if (cmdNum < 5){
-            sendATcmd(cmdList[cmdNum].cmd, cmdList[cmdNum].par, cmdList[cmdNum].type);
-            cmdNum++;
-         }
-
-      }
-   }
-
-   return 0;
 }
 
 /** @} doxygen end group definition */
