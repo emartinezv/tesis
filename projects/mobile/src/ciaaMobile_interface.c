@@ -64,8 +64,8 @@ void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
    static frmStatus frmState = INIT;
    static uint8_t runState = 0;
 
-   uint8_t dest[20];
-   uint8_t text[150];
+   static uint8_t dest[20];
+   static uint8_t text[150];
 
    switch(frmState) {
 
