@@ -43,7 +43,7 @@
 #include "board.h"
 #include "string.h"
 #include "ciaaUART_T.h"
-#include "ciaaMobile_engine.h"
+#include "ciaaMobile_interface.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -53,11 +53,11 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/* delay in ms for calls to processToken function */
-#define DELAY_PROTKN 250
+/* delay in ms for calls to ciaaMobile_sysUpdate function */
+#define DELAY_MBLSYSUP 1000
 
-/* delay in ms for calls to sendAT function */
-#define DELAY_SENDAT 5000
+/* delay in ms before program starts GSM part */
+#define DELAY_INIT 5000
 
 /** led number to toggle */
 #define LED_ROJO 4

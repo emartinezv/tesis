@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _CIAAMOBILE_ENGINE_H_
-#define _CIAAMOBILE_ENGINE_H_
+#ifndef _CIAAMOBILE_INTERFACE_H_
+#define _CIAAMOBILE_INTERFACE_H_
 
 /** \addtogroup uart Bare-metal uart example
  ** @{ */
@@ -41,9 +41,9 @@
 
 #include "lpc_types.h"
 #include "string.h"
+#include "stdio.h"
 #include "ciaaUART_T.h"
-#include "ciaaMobile_parser.h"
-#include "ciaaMobile_commands.h"
+#include "ciaaMobile_engine.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -53,54 +53,40 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-typedef enum _GSMstates
-{
-   WAITING = 0,  /* waiting for a command */
-   CMD_SENT = 1, /* cmd sent through serial port */
-   CMD_ACK = 2,  /* cmd echo confirmed */
-} GSMstate;
-
-typedef enum _cmdState
-{
-   cmdWait = 0,   /* waiting for command */
-   cmdProc = 1,   /* command being processed */
-   cmdClosed = 2, /* command closed succesfully */
-   cmdError = 3,  /* command closed due to error */
-} cmdState;
-
-typedef enum { AUTOBAUD, BASIC_STD, BASIC_AMP, EXT_TEST, EXT_WRITE, EXT_READ,
-               EXT_EXEC, SMS } ATcmdType;
-
-typedef struct _ATcmd
-{
-   uint8_t * cmd;
-   uint8_t * par;
-   ATcmdType type;
-} ATcmd;
-
 /*==================[typedef]================================================*/
+
+typedef enum {
+   INIT = 0,
+   RUNNING = 1,
+   FINISHED = 2
+} frmStatus;
+
+typedef struct {
+   uint8_t * dest;
+   uint8_t * text;
+} SMS_send;
+
+typedef struct {
+   uint8_t cmgl;
+   uint8_t result;
+} SMS_send_ret;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief processToken function
-* @return
-*/
-cmdState processToken(void);
-
-/** @brief sendATcmd function
-* @return
-*/
-void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType);
-
-/** @brief updateFSM function
+/** @brief ciaaMobile_sendSMS function
 * @return
 */
 
-cmdState updateFSM (ATToken received,
-                    uint8_t const * const command,
-                    uint8_t const * const parameter);
+void ciaaMobile_sendSMS (void * msg, void (*cback) (void *));
+
+/** @brief ciaaMobile_sysUpdate function
+* @return
+*/
+
+void ciaaMobile_sysUpdate (void);
+
 
 /*==================[cplusplus]==============================================*/
 
@@ -110,4 +96,4 @@ cmdState updateFSM (ATToken received,
 
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _MAIN_H_ */
+#endif /* #ifndef _CIAAMOBILE_INTERFACE_H_ */

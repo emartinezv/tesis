@@ -45,6 +45,8 @@
 
 /*==================[global data]============================================*/
 
+static GSMstate GSMstatus = WAITING;
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
@@ -62,9 +64,10 @@ static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[external functions definition]==========================*/
 
-void processToken(void)
+cmdState processToken(void)
 {
    ATToken received; /* classifies the received token*/
+   cmdState currCmd = cmdWait; /* state of current cmd after token is processed*/
 
    uint8_t token[TKN_LEN]; /* received token */
    uint8_t command[TKN_LEN]; /* AT command or response */
@@ -73,11 +76,11 @@ void processToken(void)
    if(0 != tokenRead(token)){
 
       received = parse(token, command, parameter); /* parse the token */
-      updateFSM(received, command, parameter);     /* update FSM */
+      currCmd = updateFSM(received, command, parameter);     /* update FSM */
 
    }
 
-   return;
+   return currCmd;
 
 }
 
@@ -206,20 +209,18 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
    return;
 }
 
-int updateFSM (ATToken received,
+cmdState updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
-   static GSMstates state = WAITING;/* FSM state variable */
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t currTKN;          /* number of response token being
                                        processed */
-   static result = 0;               /* final result of the command's run */
 
    static uint8_t i = 255;          /* command indexing variable */
 
-   switch(state){
+   switch(GSMstatus){
 
       case WAITING: /* initial state */
 
@@ -239,12 +240,12 @@ int updateFSM (ATToken received,
                currPAR[strlen(parameter)] = '\0';
 
                if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
-                  state = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
+                  GSMstatus = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
                                    /* messages is not echoed, so ack is not */
                                    /* viable                                */
                }
                else{
-                  state = CMD_SENT;
+                  GSMstatus = CMD_SENT;
                }
 
                dbgPrint("COMMAND SENT: ");
@@ -252,18 +253,18 @@ int updateFSM (ATToken received,
                dbgPrint("(");
                dbgPrint(parameter);
                dbgPrint(")\r\n");
-               return 1;
+               return cmdProc;
 
             }
 
             else
                dbgPrint("UNKNOWN COMMAND\r\n");
-               return 0;
+               return cmdError;
 
          }
          else
             dbgPrint("RESPONSE OUT OF ORDER\r\n");
-            return 0;
+            return cmdError;
 
          break;
 
@@ -280,21 +281,21 @@ int updateFSM (ATToken received,
             eqPAR = strncmp(parameter, currPAR, strlen(currPAR));
 
             if ((0 == eqCMD) && (0 == eqPAR)){
-               state = CMD_ACK;
+               GSMstatus = CMD_ACK;
                currTKN = 0;
                dbgPrint("COMMAND ACK\r\n");
-               return 1;
+               return cmdProc;
             }
             else{
-               state = WAITING;
+               GSMstatus = WAITING;
                dbgPrint("COMMAND ECHO ERROR\r\n");
-               return 0;
+               return cmdError;
             }
          }
          else{
-            state = WAITING;
+            GSMstatus = WAITING;
             dbgPrint("COMMAND ECHO MISSING\r\n");
-            return 0;
+            return cmdError;
          }
 
          break;
@@ -330,8 +331,11 @@ int updateFSM (ATToken received,
             if(NULL != place){
 
                dbgPrint("COMMAND CLOSED\r\n");
-               state = WAITING;
-               return 2;
+               GSMstatus = WAITING;
+               return cmdClosed;
+            }
+            else{
+               return cmdProc;
             }
 
          }
@@ -342,7 +346,7 @@ int updateFSM (ATToken received,
                dbgPrint("(");
                dbgPrint(parameter);
                dbgPrint(")\r\n");
-               result = 0;
+               return cmdError;
          }
 
          break;
@@ -350,7 +354,8 @@ int updateFSM (ATToken received,
       default:
 
          dbgPrint("ERROR: SWITCH OUT OF RANGE");
-         state = WAITING;
+         GSMstatus = WAITING;
+         return cmdError;
 
          break;
    }

@@ -39,7 +39,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "main.h"
+#include "ciaaMobile_interface.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -49,71 +49,134 @@
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief hardware initialization function
- * @return none
- */
-static void initHardware(void);
-
-/** @brief delay function
- * @param t desired milliseconds to wait
- */
-static void pausems(uint32_t t);
+void cb1 (void * input);
 
 /*==================[internal data definition]===============================*/
-
-/* TIMING COUNTERS */
-
-/** @brief used for processToken function scheduling with SysTick */
-static int32_t mblSysUp_count = DELAY_MBLSYSUP;
-
-/** @brief used for delay counter */
-static uint32_t pausems_count = DELAY_INIT;
 
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
 
-static void initHardware(void)
-{
-   Board_Init();
-   SystemCoreClockUpdate();
-   SysTick_Config(SystemCoreClock / 1000);
-}
-
-static void pausems(uint32_t t)
-{
-   pausems_count = t;
-   while (pausems_count != 0) {
-      __WFI();
-   }
-}
-
 /*==================[external functions definition]==========================*/
 
-void SysTick_Handler(void)
+void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
 {
-   if(mblSysUp_count > 0) mblSysUp_count--;
-   if(pausems_count > 0) pausems_count--;
-}
+   static frmStatus frmState = INIT;
+   static uint8_t runState = 0;
 
-int main(void)
-{
-   initHardware();
-   ciaaUARTInit();
+   uint8_t dest[20];
+   uint8_t text[150];
 
-   pausems(DELAY_INIT);
+   switch(frmState) {
 
-   while (1){
+      case INIT:
 
-      if (0 == mblSysUp_count){
+         /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
+         dest[0] = '"';
+         dest[1] = '\0';
+         strncat(dest, ((SMS_send *)msg)->dest,strlen(((SMS_send *)msg)->dest));
+         strncat(dest, "\"", 1);
 
-         mblSysUp_count = DELAY_MBLSYSUP;
-         ciaaMobile_sysUpdate();
+         strncpy(text, ((SMS_send *)msg)->text, strlen(((SMS_send *)msg)->text));
+         text[strlen(((SMS_send *)msg)->text)] = '\0';
 
-      }
+         frmState = RUNNING;
+
+         dbgPrint("Destino: ");
+         dbgPrint(dest);
+         dbgPrint("\r\nMensaje: ");
+         dbgPrint(text);
+         dbgPrint("\r\n");
+
+         break;
+
+      case RUNNING:
+
+         switch(runState){
+
+            case 0:
+
+               sendATcmd(0,0,AUTOBAUD);
+               runState = 1;
+               break;
+
+            case 1:
+
+               if(cmdClosed == processToken()){runState = 2;}
+               break;
+
+            case 2:
+
+               sendATcmd("CMGF","1",EXT_WRITE);
+               runState = 3;
+               break;
+
+            case 3:
+
+               if(cmdClosed == processToken()){runState = 4;}
+               break;
+
+            case 4:
+
+               sendATcmd("CSCS","\"GSM\"",EXT_WRITE);
+               runState = 5;
+               break;
+
+            case 5:
+
+               if(cmdClosed == processToken()){runState = 6;}
+               break;
+
+            case 6:
+
+               sendATcmd("CMGS",dest,EXT_WRITE);
+               runState = 7;
+               break;
+
+            case 7:
+
+               if(cmdClosed == processToken()){runState = 8;}
+               break;
+
+            case 8:
+
+               sendATcmd("SMS_BODY",text,SMS);
+               runState = 9;
+               break;
+
+            case 9:
+
+               if(cmdClosed == processToken()){runState = 0; frmState = FINISHED;}
+               break;
+
+         }
+
+         break;
+
+      case FINISHED:
+
+         cb1("input");
+         break;
    }
 
-   return 0;
+   return;
+
+}
+
+void cb1 (void * input){
+
+   SMS_send_ret result = {1,1};
+
+   dbgPrint("CB1 EXECUTED\r\n");
+
+   return;
+}
+
+void ciaaMobile_sysUpdate (void)
+{
+   static SMS_send mensaje = {"1151751809","Hola mundo!"};
+
+   ciaaMobile_sendSMS(&mensaje, &cb1);
 }
 
 /** @} doxygen end group definition */
