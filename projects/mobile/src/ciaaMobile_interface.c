@@ -45,11 +45,15 @@
 
 /*==================[global data]============================================*/
 
+frmStatus frmState = IDLE;
+void (*frm) (void);
+void * frmInput;
+void * frmOutput;
+void (*frmCback) (void);
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
-
-void cb1 (void * input);
 
 /*==================[internal data definition]===============================*/
 
@@ -57,11 +61,8 @@ void cb1 (void * input);
 
 /*==================[internal functions definition]==========================*/
 
-/*==================[external functions definition]==========================*/
-
-void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
+void ciaaMobile_sendSMS_f (void)
 {
-   static frmStatus frmState = INIT;
    static uint8_t runState = 0;
 
    static uint8_t dest[20];
@@ -74,13 +75,13 @@ void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
          /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
          dest[0] = '"';
          dest[1] = '\0';
-         strncat(dest, ((SMS_send *)msg)->dest,strlen(((SMS_send *)msg)->dest));
+         strncat(dest, ((SMS_send *)frmInput)->dest,strlen(((SMS_send *)frmInput)->dest));
          strncat(dest, "\"", 1);
 
-         strncpy(text, ((SMS_send *)msg)->text, strlen(((SMS_send *)msg)->text));
-         text[strlen(((SMS_send *)msg)->text)] = '\0';
+         strncpy(text, ((SMS_send *)frmInput)->text, strlen(((SMS_send *)frmInput)->text));
+         text[strlen(((SMS_send *)frmInput)->text)] = '\0';
 
-         frmState = RUNNING;
+         frmState = PROC;
 
          dbgPrint("Destino: ");
          dbgPrint(dest);
@@ -90,7 +91,7 @@ void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
 
          break;
 
-      case RUNNING:
+      case PROC:
 
          switch(runState){
 
@@ -146,16 +147,17 @@ void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
 
             case 9:
 
-               if(cmdClosed == processToken()){runState = 0; frmState = FINISHED;}
+               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
                break;
 
          }
 
          break;
 
-      case FINISHED:
+      case WRAP:
 
-         cb1("input");
+         frmCback();
+         frmState = IDLE;
          break;
    }
 
@@ -163,20 +165,22 @@ void ciaaMobile_sendSMS (void * msg, void (*cback) (void *))
 
 }
 
-void cb1 (void * input){
+/*==================[external functions definition]==========================*/
 
-   SMS_send_ret result = {1,1};
-
-   dbgPrint("CB1 EXECUTED\r\n");
-
-   return;
+void ciaaMobile_sendSMS (void * msg, void (*cback) (void))
+{
+   frm = ciaaMobile_sendSMS_f;
+   frmInput = msg;
+   frmCback = cback;
+   frmState = INIT;
 }
 
 void ciaaMobile_sysUpdate (void)
 {
-   static SMS_send mensaje = {"1151751809","Hola mundo!"};
+   if (IDLE == frmState){return;}
+   else {frm();}
 
-   ciaaMobile_sendSMS(&mensaje, &cb1);
+   return;
 }
 
 /** @} doxygen end group definition */

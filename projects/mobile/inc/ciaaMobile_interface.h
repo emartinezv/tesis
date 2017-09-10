@@ -56,9 +56,10 @@ extern "C" {
 /*==================[typedef]================================================*/
 
 typedef enum {
-   INIT = 0,
-   RUNNING = 1,
-   FINISHED = 2
+   IDLE = 0,
+   INIT = 1,
+   PROC = 2,
+   WRAP = 3,
 } frmStatus;
 
 typedef struct {
@@ -79,7 +80,7 @@ typedef struct {
 * @return
 */
 
-void ciaaMobile_sendSMS (void * msg, void (*cback) (void *));
+void ciaaMobile_sendSMS (void * msg, void (*cback) (void));
 
 /** @brief ciaaMobile_sysUpdate function
 * @return

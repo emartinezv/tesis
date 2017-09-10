@@ -59,6 +59,8 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
+void cb (void);
+
 /*==================[internal data definition]===============================*/
 
 /* TIMING COUNTERS */
@@ -88,6 +90,13 @@ static void pausems(uint32_t t)
    }
 }
 
+void cb (void)
+{
+   dbgPrint("CB EXECUTED\r\n");
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
@@ -102,6 +111,10 @@ int main(void)
    ciaaUARTInit();
 
    pausems(DELAY_INIT);
+
+   SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
+
+   ciaaMobile_sendSMS(&msg, cb);
 
    while (1){
 
