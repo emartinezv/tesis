@@ -315,7 +315,7 @@ typedef struct {					/*!< USARTn Structure       */
  * @brief Macro defines for tokenizer functionality
  */
 
-#define TKN_BUF_SIZE 8
+#define TKN_BUF_SIZE 16
 #define TKN_LEN 256
 
 /**

@@ -235,9 +235,9 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
    else if(('\r' == token[strlen(token)-2]) && ('\n' == token[strlen(token)-1])){ /* token is a <data> block */
 
+      strncpy(command,"DATA\0",5);
       strncpy(parameter,token,strlen(token)-2);
       parameter[strlen(token)-2] = '\0';
-
       return DATA;
    }
 

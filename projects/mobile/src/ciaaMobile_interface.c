@@ -49,7 +49,7 @@ frmStatus frmState = IDLE;
 void (*frm) (void);
 void * frmInput;
 void * frmOutput;
-void (*frmCback) (void);
+void * (*frmCback) (void *);
 
 /*==================[internal data declaration]==============================*/
 
@@ -156,7 +156,87 @@ void ciaaMobile_sendSMS_f (void)
 
       case WRAP:
 
-         frmCback();
+         frmCback(0);
+         frmState = IDLE;
+         break;
+   }
+
+   return;
+
+}
+
+void ciaaMobile_listRecSMS_f (void)
+{
+   static uint8_t runState = 0;
+
+   switch(frmState) {
+
+      case INIT:
+
+         frmState = PROC;
+
+         dbgPrint("Leyendo lista de mensajes...\r\n");
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case 0:
+
+               sendATcmd(0,0,AUTOBAUD);
+               runState = 1;
+               break;
+
+            case 1:
+
+               if(cmdClosed == processToken()){runState = 2;}
+               break;
+
+            case 2:
+
+               sendATcmd("CMGF","1",EXT_WRITE);
+               runState = 3;
+               break;
+
+            case 3:
+
+               if(cmdClosed == processToken()){runState = 4;}
+               break;
+
+            case 4:
+
+               sendATcmd("CMGL","\"ALL\"",EXT_WRITE);
+               runState = 5;
+               break;
+
+            case 5:
+
+               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         ;
+         uint8_t i;
+         uint8_t * resp;
+         SMS_rec * target = (SMS_rec *)frmOutput;
+
+         for(i = 0; ((resp = getCmdResp(i)) != 0) & (i < 10) ; i++){
+            strncpy((target+i)->text, resp, 149);
+            (target+i)->text[149] = '\0';
+            //dbgPrint(resp);
+            //dbgPrint("\r\n");
+         }
+
+         (target+i+1)->text[0] = '\0';
+
+         frmCback(frmOutput);
          frmState = IDLE;
          break;
    }
@@ -167,10 +247,18 @@ void ciaaMobile_sendSMS_f (void)
 
 /*==================[external functions definition]==========================*/
 
-void ciaaMobile_sendSMS (void * msg, void (*cback) (void))
+void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *))
 {
    frm = ciaaMobile_sendSMS_f;
    frmInput = msg;
+   frmCback = cback;
+   frmState = INIT;
+}
+
+void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
+{
+   frm = ciaaMobile_listRecSMS_f;
+   frmOutput = list;
    frmCback = cback;
    frmState = INIT;
 }

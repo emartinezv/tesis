@@ -59,7 +59,7 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-void cb (void);
+void * cb (void *);
 
 /*==================[internal data definition]===============================*/
 
@@ -90,9 +90,17 @@ static void pausems(uint32_t t)
    }
 }
 
-void cb (void)
+void * cb (void * input)
 {
    dbgPrint("CB EXECUTED\r\n");
+
+   uint8_t i;
+   SMS_rec * target = (SMS_rec *)input;
+
+   for(i = 0; (target+i)->text[0] != '\0' & (i < 10) ; i++){
+      dbgPrint((target+i)->text);
+      dbgPrint("\r\n");
+   }
 
    return;
 }
@@ -110,11 +118,15 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
+   SMS_rec list[20];
+
    pausems(DELAY_INIT);
 
    SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
 
-   ciaaMobile_sendSMS(&msg, cb);
+   //ciaaMobile_sendSMS(&msg, cb);
+
+   ciaaMobile_listRecSMS(list, cb);
 
    while (1){
 

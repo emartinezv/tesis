@@ -72,6 +72,10 @@ typedef struct {
    uint8_t result;
 } SMS_send_ret;
 
+typedef struct {
+   uint8_t text[150];
+} SMS_rec;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
@@ -80,7 +84,13 @@ typedef struct {
 * @return
 */
 
-void ciaaMobile_sendSMS (void * msg, void (*cback) (void));
+void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *));
+
+/** @brief ciaaMobile_listRecSMS function
+* @return
+*/
+
+void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *));
 
 /** @brief ciaaMobile_sysUpdate function
 * @return

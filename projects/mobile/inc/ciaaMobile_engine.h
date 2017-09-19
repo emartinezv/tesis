@@ -94,13 +94,15 @@ cmdState processToken(void);
 */
 void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType);
 
-/** @brief updateFSM function
+/** @brief getCmdResp function
 * @return
 */
+uint8_t * getCmdResp (uint8_t index);
 
-cmdState updateFSM (ATToken received,
-                    uint8_t const * const command,
-                    uint8_t const * const parameter);
+/** @brief getNoCmdResp function
+* @return
+*/
+uint8_t getNoCmdResp (void);
 
 /*==================[cplusplus]==============================================*/
 
