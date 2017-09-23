@@ -175,8 +175,6 @@ void ciaaMobile_listRecSMS_f (void)
 
          frmState = PROC;
 
-         dbgPrint("Leyendo lista de mensajes...\r\n");
-
          break;
 
       case PROC:
@@ -207,7 +205,7 @@ void ciaaMobile_listRecSMS_f (void)
 
             case 4:
 
-               sendATcmd("CMGL","\"ALL\"",EXT_WRITE);
+               sendATcmd("CMGL","\"REC UNREAD\"",EXT_WRITE);
                runState = 5;
                break;
 
@@ -223,18 +221,32 @@ void ciaaMobile_listRecSMS_f (void)
       case WRAP:
 
          ;
-         uint8_t i;
+         uint8_t i = 0;
+         uint8_t respNo; /* MISSING: a check to see if the list can
+                            accomodate all reponses */
          uint8_t * resp;
          SMS_rec * target = (SMS_rec *)frmOutput;
 
-         for(i = 0; ((resp = getCmdResp(i)) != 0) & (i < 10) ; i++){
-            strncpy((target+i)->text, resp, 149);
-            (target+i)->text[149] = '\0';
-            //dbgPrint(resp);
-            //dbgPrint("\r\n");
+         respNo = getNoCmdResp();
+
+         if(1 == respNo){dbgPrint("No hay SMSs\r\n");}
+
+         else {
+
+            for(i = 0; i < (respNo-1)/2; i++){
+
+               resp = getCmdResp(2*i);
+               strncpy((target+i)->meta, resp, 149);
+               (target+i)->meta[149] = '\0';
+
+               resp = getCmdResp((2*i)+1);
+               strncpy((target+i)->text, resp, 149);
+               (target+i)->text[149] = '\0';
+            }
+
          }
 
-         (target+i+1)->text[0] = '\0';
+         (target+i)->meta[0] = '\0';
 
          frmCback(frmOutput);
          frmState = IDLE;

@@ -92,15 +92,25 @@ static void pausems(uint32_t t)
 
 void * cb (void * input)
 {
-   dbgPrint("CB EXECUTED\r\n");
+   dbgPrint("Leyendo SMSs...\r\n");
 
-   uint8_t i;
+   uint8_t i = 0;
    SMS_rec * target = (SMS_rec *)input;
 
-   for(i = 0; (target+i)->text[0] != '\0' & (i < 10) ; i++){
-      dbgPrint((target+i)->text);
-      dbgPrint("\r\n");
+   for(i = 0; (target+i)->meta[0] != '\0'; i++){
+
+      if(0 != strstr((target+i)->text,"ledon")){
+         Board_LED_Set(0,1);
+         dbgPrint("Enciendo LED...\r\n");
+      }
+      if(0 != strstr((target+i)->text,"ledoff")){
+         Board_LED_Set(0,0);
+         dbgPrint("Apago LED...\r\n");
+      }
+
    }
+
+   dbgPrint("Lectura concluida\r\n");
 
    return;
 }
@@ -118,7 +128,7 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
-   SMS_rec list[20];
+   SMS_rec list[10];
 
    pausems(DELAY_INIT);
 

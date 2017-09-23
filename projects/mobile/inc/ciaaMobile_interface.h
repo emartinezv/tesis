@@ -73,6 +73,7 @@ typedef struct {
 } SMS_send_ret;
 
 typedef struct {
+   uint8_t meta[150];
    uint8_t text[150];
 } SMS_rec;
 
