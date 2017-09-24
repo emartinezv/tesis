@@ -71,6 +71,9 @@ static int32_t mblSysUp_count = DELAY_MBLSYSUP;
 /** @brief used for delay counter */
 static uint32_t pausems_count = DELAY_INIT;
 
+/** @brief used for delay counter */
+static uint32_t readsms_count = DELAY_READSMS;
+
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
@@ -92,25 +95,23 @@ static void pausems(uint32_t t)
 
 void * cb (void * input)
 {
-   dbgPrint("Leyendo SMSs...\r\n");
+   dbgPrint("Actualizando LEDs...\r\n");
 
    uint8_t i = 0;
    SMS_rec * target = (SMS_rec *)input;
 
    for(i = 0; (target+i)->meta[0] != '\0'; i++){
 
-      if(0 != strstr((target+i)->text,"ledon")){
-         Board_LED_Set(0,1);
+      if(0 != strstr((target+i)->text,"ledverdeon")){
+         Board_LED_Set(LED_VERDE,1);
          dbgPrint("Enciendo LED...\r\n");
       }
-      if(0 != strstr((target+i)->text,"ledoff")){
-         Board_LED_Set(0,0);
+      if(0 != strstr((target+i)->text,"ledverdeoff")){
+         Board_LED_Set(LED_VERDE,0);
          dbgPrint("Apago LED...\r\n");
       }
 
    }
-
-   dbgPrint("Lectura concluida\r\n");
 
    return;
 }
@@ -121,6 +122,7 @@ void SysTick_Handler(void)
 {
    if(mblSysUp_count > 0) mblSysUp_count--;
    if(pausems_count > 0) pausems_count--;
+   if(readsms_count > 0) readsms_count--;
 }
 
 int main(void)
@@ -130,13 +132,11 @@ int main(void)
 
    SMS_rec list[10];
 
+   //SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
+
    pausems(DELAY_INIT);
 
-   SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
-
-   //ciaaMobile_sendSMS(&msg, cb);
-
-   ciaaMobile_listRecSMS(list, cb);
+   ciaaMobile_startUp();
 
    while (1){
 
@@ -144,6 +144,13 @@ int main(void)
 
          mblSysUp_count = DELAY_MBLSYSUP;
          ciaaMobile_sysUpdate();
+
+      }
+
+      if (0 == readsms_count){
+
+         readsms_count = DELAY_READSMS;
+         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, cb);}
 
       }
    }

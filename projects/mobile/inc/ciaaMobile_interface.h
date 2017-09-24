@@ -93,12 +93,23 @@ void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *));
 
 void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *));
 
+/** @brief ciaaMobile_startUp function
+* @return
+*/
+
+void ciaaMobile_startUp (void);
+
+/** @brief ciaaMobile_isIdle function
+* @return
+*/
+
+uint8_t ciaaMobile_isIdle (void);
+
 /** @brief ciaaMobile_sysUpdate function
 * @return
 */
 
 void ciaaMobile_sysUpdate (void);
-
 
 /*==================[cplusplus]==============================================*/
 

@@ -173,6 +173,8 @@ void ciaaMobile_listRecSMS_f (void)
 
       case INIT:
 
+         dbgPrint("Leyendo SMS\r\n");
+
          frmState = PROC;
 
          break;
@@ -249,12 +251,76 @@ void ciaaMobile_listRecSMS_f (void)
          (target+i)->meta[0] = '\0';
 
          frmCback(frmOutput);
+
+         dbgPrint("Lectura de SMS concluida\r\n");
+
          frmState = IDLE;
          break;
    }
 
    return;
 
+}
+
+void ciaaMobile_startUp_f (void)
+{
+   static uint8_t runState = 0;
+
+   switch(frmState) {
+
+      case INIT:
+
+         dbgPrint("Inicializando ciaaMobile...\r\n");
+
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case 0:
+
+               sendATcmd(0,0,AUTOBAUD);
+               runState = 1;
+               break;
+
+            case 1:
+
+               if(cmdClosed == processToken()){runState = 2;}
+               break;
+
+            case 2:
+
+               sendATcmd("CNMI","0,0",EXT_WRITE);
+               runState = 3;
+               break;
+
+            case 3:
+
+               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         dbgPrint("ciaaMobile inicializado!\r\n");
+
+         frmState = IDLE;
+         break;
+   }
+
+   return;
+
+}
+
+uint8_t ciaaMobile_isIdle (void)
+{
+   return(frmState == IDLE);
 }
 
 /*==================[external functions definition]==========================*/
@@ -265,6 +331,8 @@ void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *))
    frmInput = msg;
    frmCback = cback;
    frmState = INIT;
+
+   return;
 }
 
 void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
@@ -273,6 +341,16 @@ void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
    frmOutput = list;
    frmCback = cback;
    frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_startUp (void)
+{
+   frm = ciaaMobile_startUp_f;
+   frmState = INIT;
+
+   return;
 }
 
 void ciaaMobile_sysUpdate (void)

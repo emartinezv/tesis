@@ -54,10 +54,13 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /* delay in ms for calls to ciaaMobile_sysUpdate function */
-#define DELAY_MBLSYSUP 1000
+#define DELAY_MBLSYSUP 100
 
 /* delay in ms before program starts GSM part */
 #define DELAY_INIT 5000
+
+/* delay in ms between reads of the SMS list */
+#define DELAY_READSMS 10000
 
 /** led number to toggle */
 #define LED_ROJO 4

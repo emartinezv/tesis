@@ -43,6 +43,8 @@
 
 /*==================[macros and definitions]=================================*/
 
+//#define DEBUGGSM // debug mode
+
 /*==================[global data]============================================*/
 
 static GSMstate GSMstatus = WAITING;
@@ -113,22 +115,33 @@ cmdState updateFSM (ATToken received,
                   GSMstatus = CMD_SENT;
                }
 
+               #ifdef DEBUGGSM
                dbgPrint("COMMAND SENT: ");
                dbgPrint(command);
                dbgPrint("(");
                dbgPrint(parameter);
                dbgPrint(")\r\n");
+               #endif
+
                return cmdProc;
 
             }
 
             else
+
+               #ifdef DEBUGGSM
                dbgPrint("UNKNOWN COMMAND\r\n");
+               #endif
+
                return cmdError;
 
          }
          else
+
+            #ifdef DEBUGGSM
             dbgPrint("RESPONSE OUT OF ORDER\r\n");
+            #endif
+
             return cmdError;
 
          break;
@@ -148,18 +161,30 @@ cmdState updateFSM (ATToken received,
             if ((0 == eqCMD) && (0 == eqPAR)){
                GSMstatus = CMD_ACK;
                currTKN = 0;
+
+               #ifdef DEBUGGSM
                dbgPrint("COMMAND ACK\r\n");
+               #endif
+
                return cmdProc;
             }
             else{
                GSMstatus = WAITING;
+
+               #ifdef DEBUGGSM
                dbgPrint("COMMAND ECHO ERROR\r\n");
+               #endif
+
                return cmdError;
             }
          }
          else{
             GSMstatus = WAITING;
+
+            #ifdef DEBUGGSM
             dbgPrint("COMMAND ECHO MISSING\r\n");
+            #endif
+
             return cmdError;
          }
 
@@ -183,9 +208,11 @@ cmdState updateFSM (ATToken received,
             strncat(respVector[currTKN],parameter,strlen(parameter));
             strncat(respVector[currTKN],")",1);
 
+            #ifdef DEBUGGSM
             dbgPrint("RESP: ");
             dbgPrint(respVector[currTKN]);
             dbgPrint("\r\n");
+            #endif
 
             lastResp++;
             currTKN++;
@@ -196,7 +223,10 @@ cmdState updateFSM (ATToken received,
 
             if(NULL != place){
 
+               #ifdef DEBUGGSM
                dbgPrint("COMMAND CLOSED\r\n");
+               #endif
+
                GSMstatus = WAITING;
                return cmdClosed;
             }
@@ -207,11 +237,15 @@ cmdState updateFSM (ATToken received,
          }
 
          else{
+
+               #ifdef DEBUGGSM
                dbgPrint("INVALID TOKEN RECEIVED: ");
                dbgPrint(command);
                dbgPrint("(");
                dbgPrint(parameter);
                dbgPrint(")\r\n");
+               #endif
+
                return cmdError;
          }
 
@@ -219,7 +253,10 @@ cmdState updateFSM (ATToken received,
 
       default:
 
+         #ifdef DEBUGGSM
          dbgPrint("ERROR: SWITCH OUT OF RANGE");
+         #endif
+
          GSMstatus = WAITING;
          return cmdError;
 
@@ -258,7 +295,9 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 
          rs232Print("AT\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT enviado\r\n");
+         #endif
 
          updateFSM(SENT,"AT","");
 
@@ -271,10 +310,12 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          if(par != 0) {rs232Print(par);}
          rs232Print("\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT");
          dbgPrint(cmd);
          if(par != 0) {dbgPrint(par);}
          dbgPrint(" enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
@@ -287,10 +328,12 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          if(par != 0) {rs232Print(par);}
          rs232Print("\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT&");
          dbgPrint(cmd);
          if(par != 0) {dbgPrint(par);}
          dbgPrint(" enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
@@ -302,9 +345,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          rs232Print(cmd);
          rs232Print("=?\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT+");
          dbgPrint(cmd);
          dbgPrint("=? enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
@@ -318,11 +363,13 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          rs232Print(par);
          rs232Print("\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT+");
          dbgPrint(cmd);
          dbgPrint("=");
          dbgPrint(par);
          dbgPrint(" enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
@@ -334,9 +381,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          rs232Print(cmd);
          rs232Print("?\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT+");
          dbgPrint(cmd);
          dbgPrint("? enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
@@ -348,9 +397,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          rs232Print(cmd);
          rs232Print("\r");
 
+         #ifdef DEBUGGSM
          dbgPrint("AT+");
          dbgPrint(cmd);
          dbgPrint(" enviado\r\n");
+         #endif
 
          updateFSM(SENT,cmd,par);
 
