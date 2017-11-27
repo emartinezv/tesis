@@ -108,11 +108,11 @@ cmdState updateFSM (ATToken received,
 
                if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
                   GSMstatus = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
-                                   /* messages is not echoed, so ack is not */
-                                   /* viable                                */
+                                       /* messages is not echoed, so ack is not */
+                                       /* viable                                */
                }
                else{
-                  GSMstatus = CMD_SENT;
+                  GSMstatus = CMD_SENT; /* ack received, command has been sent */
                }
 
                #ifdef DEBUGGSM
@@ -289,7 +289,8 @@ cmdState processToken(void)
 
 void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 {
-   switch(type){
+   switch(type){ /* modify format depending on the AT command type, send
+                    through serial port and call updateFSM function */
 
       case AUTOBAUD:
 
@@ -428,12 +429,17 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 
 uint8_t * getCmdResp (uint8_t index)
 {
+   /* fetches the next command response; returns 0 if there are no more
+      response left */
+
    if(index > lastResp | index < 0){return 0;}
    else {return respVector[index];}
 }
 
 uint8_t getNoCmdResp (void)
 {
+   /* returns number of total command responses for the last command */
+
    return (lastResp+1);
 }
 

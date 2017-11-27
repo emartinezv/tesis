@@ -53,12 +53,16 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** enum to indicate the state of the GSM engine */
+
 typedef enum _GSMstates
 {
    WAITING = 0,  /* waiting for a command */
    CMD_SENT = 1, /* cmd sent through serial port */
    CMD_ACK = 2,  /* cmd echo confirmed */
 } GSMstate;
+
+/** enum to indicate the state of a particular command */
 
 typedef enum _cmdState
 {
@@ -67,6 +71,8 @@ typedef enum _cmdState
    cmdClosed = 2, /* command closed succesfully */
    cmdError = 3,  /* command closed due to error */
 } cmdState;
+
+/** enum to indicate types of commands */
 
 typedef enum { AUTOBAUD, BASIC_STD, BASIC_AMP, EXT_TEST, EXT_WRITE, EXT_READ,
                EXT_EXEC, SMS } ATcmdType;

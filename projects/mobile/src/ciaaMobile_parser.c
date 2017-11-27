@@ -67,6 +67,9 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    uint8_t intPos = 0; /* position of the '?' char in the token, if present */
    uint8_t colonPos = 0; /* position of the ':' char in the token, if present */
 
+   /* In all cases we determine which sort of token we have and we copy the
+    * appropiate parts of the token into the command and parameter buffers */
+
    command[0] = '\0';
    parameter[0] = '\0';
 

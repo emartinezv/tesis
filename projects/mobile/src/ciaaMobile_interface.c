@@ -97,7 +97,7 @@ void ciaaMobile_sendSMS_f (void)
 
             case 0:
 
-               sendATcmd(0,0,AUTOBAUD);
+               sendATcmd("CMGS",dest,EXT_WRITE);
                runState = 1;
                break;
 
@@ -108,44 +108,11 @@ void ciaaMobile_sendSMS_f (void)
 
             case 2:
 
-               sendATcmd("CMGF","1",EXT_WRITE);
+               sendATcmd("SMS_BODY",text,SMS);
                runState = 3;
                break;
 
             case 3:
-
-               if(cmdClosed == processToken()){runState = 4;}
-               break;
-
-            case 4:
-
-               sendATcmd("CSCS","\"GSM\"",EXT_WRITE);
-               runState = 5;
-               break;
-
-            case 5:
-
-               if(cmdClosed == processToken()){runState = 6;}
-               break;
-
-            case 6:
-
-               sendATcmd("CMGS",dest,EXT_WRITE);
-               runState = 7;
-               break;
-
-            case 7:
-
-               if(cmdClosed == processToken()){runState = 8;}
-               break;
-
-            case 8:
-
-               sendATcmd("SMS_BODY",text,SMS);
-               runState = 9;
-               break;
-
-            case 9:
 
                if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
                break;
@@ -185,33 +152,11 @@ void ciaaMobile_listRecSMS_f (void)
 
             case 0:
 
-               sendATcmd(0,0,AUTOBAUD);
+               sendATcmd("CMGL","\"REC UNREAD\"",EXT_WRITE);
                runState = 1;
                break;
 
             case 1:
-
-               if(cmdClosed == processToken()){runState = 2;}
-               break;
-
-            case 2:
-
-               sendATcmd("CMGF","1",EXT_WRITE);
-               runState = 3;
-               break;
-
-            case 3:
-
-               if(cmdClosed == processToken()){runState = 4;}
-               break;
-
-            case 4:
-
-               sendATcmd("CMGL","\"REC UNREAD\"",EXT_WRITE);
-               runState = 5;
-               break;
-
-            case 5:
 
                if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
                break;
@@ -293,11 +238,33 @@ void ciaaMobile_startUp_f (void)
 
             case 2:
 
-               sendATcmd("CNMI","0,0",EXT_WRITE);
+               sendATcmd("CMGF","1",EXT_WRITE);
                runState = 3;
                break;
 
             case 3:
+
+               if(cmdClosed == processToken()){runState = 4;}
+               break;
+
+            case 4:
+
+               sendATcmd("CSCS","\"GSM\"",EXT_WRITE);
+               runState = 5;
+               break;
+
+            case 5:
+
+               if(cmdClosed == processToken()){runState = 6;}
+               break;
+
+            case 6:
+
+               sendATcmd("CNMI","0,0",EXT_WRITE);
+               runState = 7;
+               break;
+
+            case 7:
 
                if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
                break;
