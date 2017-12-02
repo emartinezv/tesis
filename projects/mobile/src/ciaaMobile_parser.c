@@ -31,10 +31,10 @@
  *
  */
 
-/** @brief This is a simple UART example
+/** @brief This module handles AT token parsing
  */
 
-/** \addtogroup uart Bare-metal example
+/** \addtogroup ciaaMobile
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -55,9 +55,9 @@
 
 /*==================[external functions definition]==========================*/
 
-/** @brief parse function
- * @return takes a token, returns token type and writes to command and parameter
- *  buffers
+/** The parse function takes a pointer to token and two buffers (command and
+ *  parameter)and returns the token type plus the corresponding parts in
+ *  each buffer. These results are later used to feed the command FSM.
  */
 
 ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter)

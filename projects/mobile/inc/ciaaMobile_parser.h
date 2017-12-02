@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_PARSER_H_
 #define _CIAAMOBILE_PARSER_H_
 
-/** \addtogroup uart Bare-metal uart example
+/** \addtogroup ciaaMobile
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -55,20 +55,37 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
-/** enum to classify valid AT tokens */
+/** @brief Type of AT token as per the parse function; used to feed the cmd FSM
+ */
 
-typedef enum {SENT, INVALID, BASIC_CMD, EXT_CMD_TEST, EXT_CMD_WRITE, EXT_CMD_READ,
-              EXT_CMD_EXEC, BASIC_RSP, SMS_BODY, DATA, SMS_PROMPT, EXT_RSP, URC}
-              ATToken;
+typedef enum {SENT,           /**< token just sent to FSM (dummy value) */
+              INVALID,        /**< token is invalid*/
+              BASIC_CMD,      /**< token is a basic command */
+              EXT_CMD_TEST,   /**< token is a extended test command */
+              EXT_CMD_WRITE,  /**< token is a extended test command */
+              EXT_CMD_READ,   /**< token is a extended test command */
+              EXT_CMD_EXEC,   /**< token is a extended test command */
+              BASIC_RSP,      /**< token is a basic response */
+              SMS_BODY,       /**< token is the body of an SMS */
+              DATA,           /**< token is a DATA block from a response */
+              SMS_PROMPT,     /**< token is the SMS prompt */
+              EXT_RSP,        /**< token is an extended response */
+              URC,            /**< token is an unrequested response code */
+              }ATToken;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief parse function
- * @return takes a token, returns token type and writes to command and parameter
- *  buffers
- */
+/** @brief AT token parser
+*
+*  @param token pointer to AT token fetched from the serial port tokenizer
+*  @param command AT command buffer
+*  @param parameter AT parameter buffer
+*
+*  @return Returns the type of AT token in an ATToken enum, as well as the
+*          command and parameter parts in their corresponding buffers
+*/
 
 ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
 
