@@ -45,15 +45,21 @@
 
 /*==================[global data]============================================*/
 
-frmStatus frmState = IDLE;
-void (*frm) (void);
-void * frmInput;
-void * frmOutput;
-void * (*frmCback) (void *);
-
 /*==================[internal data declaration]==============================*/
 
+static frmStatus frmState = IDLE;
+static void (*frm) (void);
+static void * frmInput;
+static void * frmOutput;
+static void * (*frmCback) (void *);
+
 /*==================[internal functions declaration]=========================*/
+
+static void ciaaMobile_sendSMS_f (void);
+
+static void ciaaMobile_listRecSMS_f (void);
+
+static void ciaaMobile_startUp_f (void)
 
 /*==================[internal data definition]===============================*/
 
@@ -61,7 +67,7 @@ void * (*frmCback) (void *);
 
 /*==================[internal functions definition]==========================*/
 
-void ciaaMobile_sendSMS_f (void)
+static void ciaaMobile_sendSMS_f (void)
 {
    static uint8_t runState = 0;
 
@@ -132,7 +138,7 @@ void ciaaMobile_sendSMS_f (void)
 
 }
 
-void ciaaMobile_listRecSMS_f (void)
+static void ciaaMobile_listRecSMS_f (void)
 {
    static uint8_t runState = 0;
 
@@ -207,7 +213,7 @@ void ciaaMobile_listRecSMS_f (void)
 
 }
 
-void ciaaMobile_startUp_f (void)
+static void ciaaMobile_startUp_f (void)
 {
    static uint8_t runState = 0;
 
@@ -285,11 +291,6 @@ void ciaaMobile_startUp_f (void)
 
 }
 
-uint8_t ciaaMobile_isIdle (void)
-{
-   return(frmState == IDLE);
-}
-
 /*==================[external functions definition]==========================*/
 
 void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *))
@@ -326,6 +327,11 @@ void ciaaMobile_sysUpdate (void)
    else {frm();}
 
    return;
+}
+
+uint8_t ciaaMobile_isIdle (void)
+{
+   return(frmState == IDLE);
 }
 
 /** @} doxygen end group definition */

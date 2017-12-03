@@ -31,7 +31,7 @@
  *
  */
 
-/** @brief This module handles the internal engine of the GSM module
+/** @brief This module handles the internal engine of the library
  */
 
 /** \addtogroup engine
@@ -47,13 +47,15 @@
 
 /*==================[global data]============================================*/
 
-/* SEE IF WE CAN AVOID THIS UGLYNESS... */
+/*==================[internal data declaration]==============================*/
+
+/** @brief Current state of the GSM engine */
 
 static GSMstate GSMstatus = WAITING;
-static int8_t lastResp = -1; /* number of response tokens in the last
-                                successful command executed */
 
-/*==================[internal data declaration]==============================*/
+/** @brief Number of response tokens in the last command executed */
+
+static int8_t lastResp = -1;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -66,7 +68,7 @@ static int8_t lastResp = -1; /* number of response tokens in the last
 *  @return Returns the state of the current command
 */
 
-cmdState updateFSM (ATToken received,
+static cmdState updateFSM (ATToken received,
                     uint8_t const * const command,
                     uint8_t const * const parameter);
 
@@ -86,7 +88,7 @@ static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
  *  of the current command after the function call is the output.
  */
 
-cmdState updateFSM (ATToken received,
+static cmdState updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
