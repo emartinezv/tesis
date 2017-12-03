@@ -34,7 +34,7 @@
 /** @brief This module handles AT token parsing
  */
 
-/** \addtogroup ciaaMobile
+/** \addtogroup parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/

@@ -31,10 +31,10 @@
  *
  */
 
-/** @brief This is a simple UART example
+/** @brief This module handles the internal engine of the GSM module
  */
 
-/** \addtogroup uart Bare-metal example
+/** \addtogroup engine
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -47,6 +47,8 @@
 
 /*==================[global data]============================================*/
 
+/* SEE IF WE CAN AVOID THIS UGLYNESS... */
+
 static GSMstate GSMstatus = WAITING;
 static int8_t lastResp = -1; /* number of response tokens in the last
                                 successful command executed */
@@ -55,8 +57,13 @@ static int8_t lastResp = -1; /* number of response tokens in the last
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief updateFSM function
-* @return
+/** @brief Updates the AT command FSM with the latest received token
+*
+*  @input received  Type of AT token as per the parse function
+*  @input command   Main part of the AT token used as input
+*  @input parameter Parameter part of the AT token used as input
+*
+*  @return Returns the state of the current command
 */
 
 cmdState updateFSM (ATToken received,
@@ -65,14 +72,19 @@ cmdState updateFSM (ATToken received,
 
 /*==================[internal data definition]===============================*/
 
-/* GSM ENGINE */
+/** @brief Stores the responses to the active command */
 
-/** @brief stores responses to the active command */
 static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
+
+/** The updateFSM function updates the internal FSM which preserves the state
+ *  of the  current command execution. The latest token received from the GSM
+ *  engine (as processed by the parse function) is the input, and the state
+ *  of the current command after the function call is the output.
+ */
 
 cmdState updateFSM (ATToken received,
                uint8_t const * const command,
@@ -267,6 +279,13 @@ cmdState updateFSM (ATToken received,
 
 /*==================[external functions definition]==========================*/
 
+/** The processToken function checks is there are unread tokens in the token
+ *  ring buffer. If so, it reads the oldest token, parses the token through the
+ *  parse function and calls upon the updateFSM function with the result. It
+ *  returns the state of the current command as reported by the updateFSM
+ *  function.
+ */
+
 cmdState processToken(void)
 {
    ATToken received; /* classifies the received token*/
@@ -286,6 +305,9 @@ cmdState processToken(void)
    return currCmd;
 
 }
+
+/** The sendATcmd function sends an AT command to the GSM engine.
+ */
 
 void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
 {

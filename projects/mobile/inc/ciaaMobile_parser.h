@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_PARSER_H_
 #define _CIAAMOBILE_PARSER_H_
 
-/** \addtogroup ciaaMobile
+/** \addtogroup parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -79,7 +79,7 @@ typedef enum {SENT,           /**< token just sent to FSM (dummy value) */
 
 /** @brief AT token parser
 *
-*  @param token pointer to AT token fetched from the serial port tokenizer
+*  @param token Pointer to AT token fetched from the serial port tokenizer
 *  @param command AT command buffer
 *  @param parameter AT parameter buffer
 *
