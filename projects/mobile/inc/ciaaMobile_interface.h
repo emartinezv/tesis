@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_INTERFACE_H_
 #define _CIAAMOBILE_INTERFACE_H_
 
-/** \addtogroup uart Bare-metal uart example
+/** \addtogroup interface interface
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -55,39 +55,55 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
+/** @brief State of the current formula being run */
+
 typedef enum {
-   IDLE = 0,
-   INIT = 1,
-   PROC = 2,
-   WRAP = 3,
+   IDLE = 0, /**< no formula currently running*/
+   INIT = 1, /**< initializing formula */
+   PROC = 2, /**< running commands */
+   WRAP = 3, /**< wrapping up formula and callback */
 } frmStatus;
 
+/** @brief Type for SMS message */
+
 typedef struct {
-   uint8_t * dest;
-   uint8_t * text;
+   uint8_t * dest; /**< destination number as a str */
+   uint8_t * text; /**< text of the sms message */
 } SMS_send;
 
-typedef struct {
-   uint8_t cmgl;
-   uint8_t result;
-} SMS_send_ret;
+/** @brief Type for SMS send return */
 
 typedef struct {
-   uint8_t meta[150];
-   uint8_t text[150];
+   uint8_t cmgl;   /**< CMGL code returned */
+   uint8_t result; /**< result of the send attempt */
+} SMS_send_ret;
+
+/** @brief Type for SMS read return */
+
+typedef struct {
+   uint8_t meta[150]; /**< metadata */
+   uint8_t text[150]; /**< text of the SMS message */
 } SMS_rec;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief ciaaMobile_sendSMS function
+/** @brief Sends an SMS
+*
+* @param msg SMS message to be sent
+* @param cback Function pointer to callback function
+*
 * @return
 */
 
 void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *));
 
-/** @brief ciaaMobile_listRecSMS function
+/** @brief Lists received SMSs in a vector
+*
+* @param list Storage vector for SMSs to be read
+* @param cback Function pointer to callback function
+*
 * @return
 */
 
@@ -97,16 +113,21 @@ void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *));
 * @return
 */
 
+/** @brief Starts up the GSM engine
+
+*/
+
 void ciaaMobile_startUp (void);
 
-/** @brief ciaaMobile_isIdle function
-* @return
+/** @brief Indicates if the GSM engine is currently idle
+ *
+ * @return Returns 1 if no formula is being run, 0 otherwise
 */
 
 uint8_t ciaaMobile_isIdle (void);
 
-/** @brief ciaaMobile_sysUpdate function
-* @return
+/** @brief Updates the GSM engine
+*
 */
 
 void ciaaMobile_sysUpdate (void);

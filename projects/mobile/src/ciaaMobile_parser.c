@@ -34,7 +34,7 @@
 /** @brief This module handles AT token parsing
  */
 
-/** \addtogroup parser
+/** \addtogroup parser parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/

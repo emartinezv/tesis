@@ -1,4 +1,5 @@
 /* Copyright 2016, Ezequiel Martinez Vazquez
+ *
  * All rights reserved.
  *
  * This file is part of Workspace.
@@ -31,11 +32,7 @@
  *
  */
 
-/** @brief This is a simple UART example
- */
 
-/** \addtogroup uart Bare-metal example
- ** @{ */
 
 /*==================[inclusions]=============================================*/
 

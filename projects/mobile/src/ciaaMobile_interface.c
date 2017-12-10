@@ -31,10 +31,10 @@
  *
  */
 
-/** @brief This is a simple UART example
+/** @brief This module handles the user interface
  */
 
-/** \addtogroup uart Bare-metal example
+/** \addtogroup interface interface
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -47,19 +47,47 @@
 
 /*==================[internal data declaration]==============================*/
 
+/** @brief State of the current formula being run
+ */
+
 static frmStatus frmState = IDLE;
+
+/** @brief Function pointer to formula function for the current formula
+ */
+
 static void (*frm) (void);
+
+/** @brief Pointer to inputs for the current formula being run
+ */
+
 static void * frmInput;
+
+/** @brief Pointer to outputs for the current formula being run
+ */
+
 static void * frmOutput;
+
+/** @brief Function pointer to callback for the current formula being run
+ */
+
 static void * (*frmCback) (void *);
 
 /*==================[internal functions declaration]=========================*/
 
+/** @brief Formula to send an SMS
+ */
+
 static void ciaaMobile_sendSMS_f (void);
+
+/** @brief Formula to list received SMSs
+ */
 
 static void ciaaMobile_listRecSMS_f (void);
 
-static void ciaaMobile_startUp_f (void)
+/** @brief Formula to start up the GSM engine
+ */
+
+static void ciaaMobile_startUp_f (void);
 
 /*==================[internal data definition]===============================*/
 
@@ -320,6 +348,10 @@ void ciaaMobile_startUp (void)
 
    return;
 }
+
+/** This function needs to be called periodically to process commands and
+ *  their responses.
+ */
 
 void ciaaMobile_sysUpdate (void)
 {

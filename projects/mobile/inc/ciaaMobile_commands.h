@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_COMMANDS_H_
 #define _CIAAMOBILE_COMMANDS_H_
 
-/** \addtogroup uart Bare-metal uart example
+/** \addtogroup commands commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -52,25 +52,25 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
-/** struct for AT commands */
+/** @brief Used for the internal catalog of AT commands; stores the name and
+ *         valid end responses */
 
 typedef struct {
-   uint8_t const * const name;       /* pointer to string with the name of the command */
-   uint8_t const * const endresp;    /* pointers to string for valid end responses
-                            to the command */
+   uint8_t const * const name;     /**< pointer to str with command name */                                       the command */
+   uint8_t const * const endresp;  /**< pointer to str with end responses */
 } ATComm;
 
 /*==================[external data declaration]==============================*/
-
-/** @vector of known AT commands*/
 
 extern ATComm const commands [];
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief commSearch function
- * @return takes a token type and command, returns position of the command in
- *  the known command/response vector or 0 if no command/response found
+/** @brief Searches for a cmd and returns it's position in the commands vector
+ *
+ *  @param command Pointer to str with the name of the command to search
+ *
+ *  @return Position of the cmd in the commands vector (0 if unknown)
  */
 
 uint8_t commSearch(uint8_t const * const command);

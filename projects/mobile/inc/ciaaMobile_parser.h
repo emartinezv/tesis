@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_PARSER_H_
 #define _CIAAMOBILE_PARSER_H_
 
-/** \addtogroup parser
+/** \addtogroup parser parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/

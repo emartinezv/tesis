@@ -34,7 +34,7 @@
 /** @brief This module handles the internal engine of the library
  */
 
-/** \addtogroup engine
+/** \addtogroup engine engine
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -61,9 +61,9 @@ static int8_t lastResp = -1;
 
 /** @brief Updates the AT command FSM with the latest received token
 *
-*  @input received  Type of AT token as per the parse function
-*  @input command   Main part of the AT token used as input
-*  @input parameter Parameter part of the AT token used as input
+*  @param received  Type of AT token as per the parse function
+*  @param command   Main part of the AT token used as input
+*  @param parameter Parameter part of the AT token used as input
 *
 *  @return Returns the state of the current command
 */

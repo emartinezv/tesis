@@ -34,7 +34,7 @@
 #ifndef _CIAAMOBILE_ENGINE_H_
 #define _CIAAMOBILE_ENGINE_H_
 
-/** \addtogroup engine
+/** \addtogroup engine engine
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -106,16 +106,16 @@ cmdState processToken(void);
 
 /** @brief Sends an AT command to the GSM module
 *
-*  @input cmd  AT command beint sent
-*  @input par  Parameters of the AT command being sent
-*  @input type Type of AT command being sent
+*  @param cmd  AT command beint sent
+*  @param par  Parameters of the AT command being sent
+*  @param type Type of AT command being sent
 */
 
 void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type);
 
 /** @brief Gets a pointer to the next valid command response
 *
-*  @input index Index of the required response in respVector
+*  @param index Index of the required response in respVector
 *
 *  @return Returns a pointer to the required response (0 if no such response)
 */

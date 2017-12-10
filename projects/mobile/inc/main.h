@@ -34,9 +34,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-/** \addtogroup uart Bare-metal uart example
- ** @{ */
-
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"

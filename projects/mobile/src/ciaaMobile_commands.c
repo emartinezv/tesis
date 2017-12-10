@@ -31,10 +31,10 @@
  *
  */
 
-/** @brief This is a simple UART example
+/** @brief This module handles the internal AT cmd catalog storage and search
  */
 
-/** \addtogroup uart Bare-metal example
+/** \addtogroup commands commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -51,7 +51,7 @@
 
 /*==================[external data definition]===============================*/
 
-/** @vector of known AT commands*/
+/** @brief Vector of known AT commands, including their end response options */
 
 ATComm const commands [] = {
       {"AT" , "ERROR,OK"},
@@ -68,11 +68,6 @@ ATComm const commands [] = {
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
-
-/** @brief commSearch function
- * @return takes a token type and command, returns position of the command in
- *  the known command/response vector or 0 if no command/response found
- */
 
 uint8_t commSearch(uint8_t const * const command)
 {
