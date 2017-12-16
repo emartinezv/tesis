@@ -60,6 +60,10 @@ static void pausems(uint32_t t);
 
 void * cb (void *);
 
+void * cbempty (void *);
+
+void * cbprint (void *);
+
 /*==================[internal data definition]===============================*/
 
 /* TIMING COUNTERS */
@@ -90,6 +94,11 @@ static void pausems(uint32_t t)
    while (pausems_count != 0) {
       __WFI();
    }
+}
+
+void * cbempty (void * input)
+{
+   return 0;
 }
 
 void * cbled (void * input)
@@ -167,7 +176,7 @@ int main(void)
          deleteall = 0;
          borrar.index = 1;
          borrar.mode = 4;
-         if(ciaaMobile_isIdle()){ciaaMobile_delSMS(&borrar, cbprint);}
+         if(ciaaMobile_isIdle()){ciaaMobile_delSMS(&borrar, cbempty);}
       }
 
       if (0 == mblSysUp_count){
