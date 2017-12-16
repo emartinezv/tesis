@@ -84,6 +84,11 @@ static void ciaaMobile_sendSMS_f (void);
 
 static void ciaaMobile_listRecSMS_f (void);
 
+/** @brief Formula to delete an SMS from memory
+ */
+
+static void ciaaMobile_delSMS_f (void);
+
 /** @brief Formula to start up the GSM engine
  */
 
@@ -186,7 +191,7 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case 0:
 
-               sendATcmd("CMGL","\"REC UNREAD\"",EXT_WRITE);
+               sendATcmd("CMGL","\"ALL\"",EXT_WRITE);
                runState = 1;
                break;
 
@@ -239,6 +244,60 @@ static void ciaaMobile_listRecSMS_f (void)
 
    return;
 
+}
+
+static void ciaaMobile_delSMS_f (void)
+{
+   static uint8_t runState = 0;
+
+   static uint8_t index[4]; /* holds the str expression of the index number */
+   static uint8_t mode[2];  /* holds the str expression of the delete mode */
+   static uint8_t indexmode[6];  /* holds the full str of index and mode */
+
+   switch(frmState) {
+
+      case INIT:
+
+         itoa(((SMS_del *)frmInput)->index, index, 10);
+         index[strlen(index)] = '\0';
+         itoa(((SMS_del *)frmInput)->mode, mode, 10);
+         mode[strlen(mode)] = '\0';
+
+         strncat(indexmode, index, strlen(index));
+         strncat(indexmode, ",", 1);
+         strncat(indexmode, mode, strlen(mode));
+
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case 0:
+
+               sendATcmd("CMGD",indexmode,EXT_WRITE);
+               runState = 1;
+               break;
+
+            case 1:
+
+               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         frmCback(0);
+         frmState = IDLE;
+         break;
+   }
+
+   return;
 }
 
 static void ciaaMobile_startUp_f (void)
@@ -335,6 +394,16 @@ void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
 {
    frm = ciaaMobile_listRecSMS_f;
    frmOutput = list;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_delSMS (void * msgdel, void * (*cback) (void *))
+{
+   frm = ciaaMobile_delSMS_f;
+   frmInput = msgdel;
    frmCback = cback;
    frmState = INIT;
 

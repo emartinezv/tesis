@@ -61,6 +61,7 @@ ATComm const commands [] = {
       {"CMGS" , "> ,ERROR"},
       {"CSCS" , "ERROR,OK"},
       {"CNMI" , "ERROR,OK"},
+      {"CMGD" , "ERROR,OK"},
       {"SMS_BODY" , "ERROR,OK"},
       {0 , 0},
 };

@@ -44,6 +44,8 @@
 
 /*==================[internal data declaration]==============================*/
 
+static uint8_t deleteall = 0;
+
 /*==================[internal functions declaration]=========================*/
 
 /** @brief hardware initialization function
@@ -90,7 +92,7 @@ static void pausems(uint32_t t)
    }
 }
 
-void * cb (void * input)
+void * cbled (void * input)
 {
    dbgPrint("Actualizando LEDs...\r\n");
 
@@ -113,6 +115,29 @@ void * cb (void * input)
    return;
 }
 
+void * cbprint (void * input)
+{
+   dbgPrint("Imprimiendo SMS...\r\n\r\n");
+
+   uint8_t i = 0;
+   SMS_rec * target = (SMS_rec *)input;
+
+   for(i = 0; (target+i)->meta[0] != '\0'; i++){
+
+      dbgPrint((target+i)->text);
+      dbgPrint("\r\n");
+
+      if(0 != strstr((target+i)->text,"borrar")){
+         deleteall = 1;
+      }
+
+   }
+
+   dbgPrint("\r\nFin de los mensajes\r\n");
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
@@ -128,6 +153,7 @@ int main(void)
    ciaaUARTInit();
 
    SMS_rec list[10];
+   SMS_del borrar;
 
    //SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
 
@@ -136,6 +162,13 @@ int main(void)
    ciaaMobile_startUp();
 
    while (1){
+
+      if (1 == deleteall){
+         deleteall = 0;
+         borrar.index = 1;
+         borrar.mode = 4;
+         if(ciaaMobile_isIdle()){ciaaMobile_delSMS(&borrar, cbprint);}
+      }
 
       if (0 == mblSysUp_count){
 
@@ -147,7 +180,7 @@ int main(void)
       if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, cb);}
+         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, cbprint);}
 
       }
    }

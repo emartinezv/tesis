@@ -56,7 +56,7 @@ extern "C" {
  *         valid end responses */
 
 typedef struct {
-   uint8_t const * const name;     /**< pointer to str with command name */                                       the command */
+   uint8_t const * const name;     /**< pointer to str with command name */
    uint8_t const * const endresp;  /**< pointer to str with end responses */
 } ATComm;
 

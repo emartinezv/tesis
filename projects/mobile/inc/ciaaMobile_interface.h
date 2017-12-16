@@ -85,6 +85,19 @@ typedef struct {
    uint8_t text[150]; /**< text of the SMS message */
 } SMS_rec;
 
+/** @brief Type for SMS deletion command */
+
+typedef struct {
+   uint8_t index; /**< index of the message in memory */
+   uint8_t mode;  /**< deletion mode
+                   *   0 del the message indicated by index
+                   *   1 del all read messages (ignores index)
+                   *   2 del all read and sent messages (ignores index)
+                   *   3 del all read, sent and unsent messages (ignores index)
+                   *   4 del all messages (ignores index)
+                   */
+} SMS_del;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
@@ -108,6 +121,16 @@ void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *));
 */
 
 void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *));
+
+/** @brief Deletes a single SMS from memory
+*
+* @param msgdel Index and mode for the SMS deletion command
+* @param cback  Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_delSMS (void * msgdel, void * (*cback) (void *));
 
 /** @brief ciaaMobile_startUp function
 * @return
