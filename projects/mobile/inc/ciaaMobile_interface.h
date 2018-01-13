@@ -104,33 +104,33 @@ typedef struct {
 
 /** @brief Sends an SMS
 *
-* @param msg SMS message to be sent
+* @param msg Pointer to SMS message to be sent
 * @param cback Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *));
+void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *));
 
 /** @brief Lists received SMSs in a vector
 *
-* @param list Storage vector for SMSs to be read
+* @param list Pointer to storage vector for SMSs to be read
 * @param cback Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *));
+void ciaaMobile_listRecSMS (SMS_rec * list, void * (*cback) (void *));
 
 /** @brief Deletes a single SMS from memory
 *
-* @param msgdel Index and mode for the SMS deletion command
+* @param msgdel Pointer to index and mode for the SMS deletion command
 * @param cback  Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_delSMS (void * msgdel, void * (*cback) (void *));
+void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (void *));
 
 /** @brief ciaaMobile_startUp function
 * @return

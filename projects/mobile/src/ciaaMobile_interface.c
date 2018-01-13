@@ -380,7 +380,7 @@ static void ciaaMobile_startUp_f (void)
 
 /*==================[external functions definition]==========================*/
 
-void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *))
+void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *))
 {
    frm = ciaaMobile_sendSMS_f;
    frmInput = msg;
@@ -390,7 +390,7 @@ void ciaaMobile_sendSMS (void * msg, void * (*cback) (void *))
    return;
 }
 
-void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
+void ciaaMobile_listRecSMS (SMS_rec * list, void * (*cback) (void *))
 {
    frm = ciaaMobile_listRecSMS_f;
    frmOutput = list;
@@ -400,7 +400,7 @@ void ciaaMobile_listRecSMS (void * list, void * (*cback) (void *))
    return;
 }
 
-void ciaaMobile_delSMS (void * msgdel, void * (*cback) (void *))
+void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (void *))
 {
    frm = ciaaMobile_delSMS_f;
    frmInput = msgdel;
