@@ -54,15 +54,15 @@
 /** @brief Vector of known AT commands, including their end response options */
 
 ATComm const commands [] = {
-      {"AT" , "ERROR,OK"},
-      {"I" , "ERROR,OK"},
-      {"CMGL" , "ERROR,OK"},
-      {"CMGF" , "ERROR,OK"},
-      {"CMGS" , "> ,ERROR"},
-      {"CSCS" , "ERROR,OK"},
-      {"CNMI" , "ERROR,OK"},
-      {"CMGD" , "ERROR,OK"},
-      {"SMS_BODY" , "ERROR,OK"},
+      {"AT" , "ERROR,OK" , TOUT_DEF},
+      {"I" , "ERROR,OK" , TOUT_DEF},
+      {"CMGL" , "ERROR,OK", 20000},
+      {"CMGF" , "ERROR,OK", TOUT_DEF},
+      {"CMGS" , "> ,ERROR" , 60000},
+      {"CSCS" , "ERROR,OK" , TOUT_DEF},
+      {"CNMI" , "ERROR,OK" , TOUT_DEF},
+      {"CMGD" , "ERROR,OK" , 25000},
+      {"SMS_BODY" , "ERROR,OK" , 60000},
       {0 , 0},
 };
 
@@ -70,7 +70,7 @@ ATComm const commands [] = {
 
 /*==================[external functions definition]==========================*/
 
-uint8_t commSearch(uint8_t const * const command)
+uint16_t commSearch(uint8_t const * const command)
 {
    int i = 0;
 
@@ -78,7 +78,7 @@ uint8_t commSearch(uint8_t const * const command)
       if(0 == strcmp(command, commands[i].name)){return i;}
    }
 
-   return 255;
+   return 65535;
 }
 
 /*==================[end of file]============================================*/

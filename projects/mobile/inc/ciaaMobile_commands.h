@@ -50,6 +50,10 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+ /** @brief Default timeout for AT commands in ms */
+
+#define TOUT_DEF 20
+
 /*==================[typedef]================================================*/
 
 /** @brief Used for the internal catalog of AT commands; stores the name and
@@ -58,6 +62,7 @@ extern "C" {
 typedef struct {
    uint8_t const * const name;     /**< pointer to str with command name */
    uint8_t const * const endresp;  /**< pointer to str with end responses */
+   uint8_t timeout;                /**< command timeout in ms */
 } ATComm;
 
 /*==================[external data declaration]==============================*/
@@ -70,10 +75,10 @@ extern ATComm const commands [];
  *
  *  @param command Pointer to str with the name of the command to search
  *
- *  @return Position of the cmd in the commands vector (0 if unknown)
+ *  @return Position of the cmd in the commands vector (65535 if unknown)
  */
 
-uint8_t commSearch(uint8_t const * const command);
+uint16_t commSearch(uint8_t const * const command);
 
 /*==================[cplusplus]==============================================*/
 

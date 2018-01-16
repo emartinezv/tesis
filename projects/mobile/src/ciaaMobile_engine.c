@@ -109,7 +109,7 @@ static cmdState updateFSM (ATToken received,
 
             i = commSearch(command); /* search for command */
 
-            if(255 != i){
+            if(65535 != i){
 
                /* if the command is valid, copy command and parameter into
                   currCMD and currPAR; this is the command now being
