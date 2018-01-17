@@ -63,8 +63,9 @@
 ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter)
 {
    int i = 0; /* loop counter */
+
    uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
-   uint8_t intPos = 0; /* position of the '?' char in the token, if present */
+   uint8_t intPos = 0;   /* position of the '?' char in the token, if present */
    uint8_t colonPos = 0; /* position of the ':' char in the token, if present */
 
    /* In all cases we determine which sort of token we have and we copy the
@@ -110,12 +111,14 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       }
 
-      /* Basic response */
+      /* SMS Prompt */
 
       else if( '>' == token[2] && ' ' == token[3]){
-         strncpy(command,"> \0",11);
+         strncpy(command,"> \0",3);
          return SMS_PROMPT;
       }
+
+      /* Basic response */
 
       else{
          strncpy(command,&token[2],strlen(token)-4);
@@ -193,11 +196,11 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
          else if('&' == token[2]){
 
-            if('\0' != token[3]){
+            if('\r' != token[3]){
                command[0] = token[3];
                command[1] = '\0';
 
-               if('\0' != token[4]){
+               if('\r' != token[4]){
                   strncpy(parameter,&token[4],strlen(token)-4);
                   parameter[strlen(token)-4] = '\0';
                }
@@ -212,11 +215,11 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
          /* basic AT command */
 
-         else if('\0' != token[2]){
+         else {
             command[0] = token[2];
             command[1] = '\0';
 
-            if('\0' != token[3]){
+            if('\r' != token[3]){
                strncpy(parameter,&token[3],strlen(token)-3);
                parameter[strlen(token)-3] = '\0';
             }
@@ -224,8 +227,6 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             return BASIC_CMD;
 
          }
-
-         else{return INVALID;}
 
       }
 
@@ -244,7 +245,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       return DATA;
    }
 
-   else{ /* token is SMS Body */
+   else{ /* token is SMS Body echo or error */
 
       strncpy(command,"SMS_BODY\0",9);
       strncpy(parameter,&token[0],strlen(token));

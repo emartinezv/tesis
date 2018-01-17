@@ -63,7 +63,7 @@ ATComm const commands [] = {
       {"CNMI" , "ERROR,OK" , TOUT_DEF},
       {"CMGD" , "ERROR,OK" , 25000},
       {"SMS_BODY" , "ERROR,OK" , 60000},
-      {0 , 0},
+      {0 , 0 , 0},
 };
 
 /*==================[internal functions definition]==========================*/

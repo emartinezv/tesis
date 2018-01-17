@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUGGSM // debug mode
+#define DEBUGGSM // debug mode
 
 /*==================[global data]============================================*/
 
@@ -97,7 +97,7 @@ static cmdState updateFSM (ATToken received,
    static uint8_t currTKN;          /* number of response token being
                                        processed */
 
-   static uint8_t i = 255;          /* command indexing variable */
+   static uint8_t i = 65535;        /* command indexing variable */
 
    switch(GSMstatus){
 
