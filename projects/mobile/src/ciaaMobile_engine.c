@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUGGSM // debug mode
+// #define DEBUGGSM // debug mode
 
 /*==================[global data]============================================*/
 
