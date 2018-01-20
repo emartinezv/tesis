@@ -208,26 +208,47 @@ static void ciaaMobile_listRecSMS_f (void)
 
          ;
          uint8_t i = 0;
-         uint8_t respNo; /* MISSING: a check to see if the list can
-                            accomodate all reponses */
+         uint8_t respNo;
+         uint8_t auxtext[4]; // ERASE LATER, FOR DEBUG ONLY
+
          uint8_t * resp;
          SMS_rec * target = (SMS_rec *)frmOutput;
-
          respNo = getNoCmdResp();
 
-         if(1 == respNo){dbgPrint("No hay SMSs\r\n");}
+         // DEBUG ERASE LATER
+
+         dbgPrint("Tamaño del vector: ");
+         itoa(target->meta[0], auxtext, 10);
+         dbgPrint(auxtext);
+         dbgPrint("\r\n");
+         dbgPrint("Cantidad de SMS: ");
+         itoa((respNo-1)/2, auxtext, 10);
+         dbgPrint(auxtext);
+         dbgPrint("\r\n");
+
+         // DEBUG ERASE LATER
+
+         if(target->meta[0] < ((respNo-1)/2)){
+            dbgPrint("No hay suficiente espacio para los mensajes \r\n");
+         }
 
          else {
 
-            for(i = 0; i < (respNo-1)/2; i++){
+            if(1 == respNo){dbgPrint("No hay SMSs\r\n");}
 
-               resp = getCmdResp(2*i);
-               strncpy((target+i)->meta, resp, 149);
-               (target+i)->meta[149] = '\0';
+            else{
 
-               resp = getCmdResp((2*i)+1);
-               strncpy((target+i)->text, resp, 149);
-               (target+i)->text[149] = '\0';
+               for(i = 0; i < (respNo-1)/2; i++){
+
+                  resp = getCmdResp(2*i);
+                  strncpy((target+i)->meta, resp, 149);
+                  (target+i)->meta[149] = '\0';
+
+                  resp = getCmdResp((2*i)+1);
+                  strncpy((target+i)->text, resp, 149);
+                  (target+i)->text[149] = '\0';
+               }
+
             }
 
          }
@@ -390,9 +411,10 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *))
    return;
 }
 
-void ciaaMobile_listRecSMS (SMS_rec * list, void * (*cback) (void *))
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void *))
 {
    frm = ciaaMobile_listRecSMS_f;
+   list->meta[0] = noMsg; /* we hide the noMsg integer inside the list vector */
    frmOutput = list;
    frmCback = cback;
    frmState = INIT;

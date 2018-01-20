@@ -161,7 +161,7 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
-   SMS_rec list[10];
+   SMS_rec list[4];
    SMS_del borrar;
 
    //SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
@@ -189,7 +189,7 @@ int main(void)
       if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, cbprint);}
+         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 4, cbprint);}
 
       }
    }

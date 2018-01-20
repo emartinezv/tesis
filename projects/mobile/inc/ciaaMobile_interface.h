@@ -114,13 +114,14 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *));
 
 /** @brief Lists received SMSs in a vector
 *
-* @param list Pointer to storage vector for SMSs to be read
+* @param list  Pointer to storage vector for SMSs to be read
+* @param noMsg Number of messages to read (must be <= the size of list)
 * @param cback Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_listRecSMS (SMS_rec * list, void * (*cback) (void *));
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void *));
 
 /** @brief Deletes a single SMS from memory
 *
