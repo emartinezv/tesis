@@ -137,7 +137,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
          if('\r' == token[2]){
             strncpy(command,"AT\0",3);
-            return BASIC_CMD;
+            return AUTOBAUD;
          }
 
          /* extended AT command */
@@ -173,7 +173,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                if((equalPos+1) == intPos){return EXT_CMD_TEST;}
 
                else{
-                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos-1);
+                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos-2);
+                  parameter[strlen(token)-equalPos-2] = '\0';
                   return EXT_CMD_WRITE;
                }
 
@@ -205,7 +206,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                   parameter[strlen(token)-4] = '\0';
                }
 
-               return BASIC_CMD;
+               return BASIC_CMD_AMP;
 
             }
 

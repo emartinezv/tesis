@@ -58,15 +58,16 @@ extern "C" {
 /** @brief Type of AT token as per the parse function; used to feed the cmd FSM
  */
 
-typedef enum {SENT,           /**< token just sent to FSM (dummy value) */
-              INVALID,        /**< token is invalid*/
+typedef enum {INVALID,        /**< token is invalid */
+              AUTOBAUD,       /**< token is the autobauding sequence */
               BASIC_CMD,      /**< token is a basic command */
+              BASIC_CMD_AMP,  /**< token is a basic command with ampersand */
               EXT_CMD_TEST,   /**< token is a extended test command */
               EXT_CMD_WRITE,  /**< token is a extended test command */
               EXT_CMD_READ,   /**< token is a extended test command */
               EXT_CMD_EXEC,   /**< token is a extended test command */
-              BASIC_RSP,      /**< token is a basic response */
               SMS_BODY,       /**< token is the body of an SMS */
+              BASIC_RSP,      /**< token is a basic response */
               DATA,           /**< token is a DATA block from a response */
               SMS_PROMPT,     /**< token is the SMS prompt */
               EXT_RSP,        /**< token is an extended response */

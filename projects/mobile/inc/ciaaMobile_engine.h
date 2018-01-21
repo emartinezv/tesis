@@ -72,18 +72,6 @@ typedef enum _cmdState
    cmdError = 3,  /**< command closed due to error */
 } cmdState;
 
-/** @brief Types of commands */
-
-typedef enum { AUTOBAUD,  /**< autobaud sequence (AT) */
-               BASIC_STD, /**< basic command */
-               BASIC_AMP, /**< basic command with ampersand*/
-               EXT_TEST,  /**< extended test command */
-               EXT_WRITE, /**< extended write command */
-               EXT_READ,  /**< extended read command */
-               EXT_EXEC,  /**< extended exec command */
-               SMS        /**< sms command */
-              }ATcmdType;
-
 /*typedef struct _ATcmd CHECK AND REMOVE IF UNUSED
 {
    uint8_t * cmd;
@@ -106,12 +94,12 @@ cmdState processToken(void);
 
 /** @brief Sends an AT command to the GSM module
 *
-*  @param cmd  AT command beint sent
-*  @param par  Parameters of the AT command being sent
-*  @param type Type of AT command being sent
+*  @return Returns the state of the current command being sent
+*
+*  @param cmdstr AT command string including parameters
 */
 
-void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type);
+cmdState sendATcmd (const uint8_t * cmdstr);
 
 /** @brief Gets a pointer to the next valid command response
 *

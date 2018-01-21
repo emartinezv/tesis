@@ -104,28 +104,30 @@ static void ciaaMobile_sendSMS_f (void)
 {
    static uint8_t runState = 0;
 
-   static uint8_t dest[20];
-   static uint8_t text[150];
+   static uint8_t smsCmd[30];
+   static uint8_t smsText[150];
+
+   smsCmd[0] = '\0';
+   smsText[0] = '\0';
 
    switch(frmState) {
 
       case INIT:
 
          /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
-         dest[0] = '"';
-         dest[1] = '\0';
-         strncat(dest, ((SMS_send *)frmInput)->dest,strlen(((SMS_send *)frmInput)->dest));
-         strncat(dest, "\"", 1);
+         strncat(smsCmd, "AT+CMGS=\"", 9);
+         strncat(smsCmd, ((SMS_send *)frmInput)->dest,strlen(((SMS_send *)frmInput)->dest));
+         strncat(smsCmd, "\"\r", 1);
 
-         strncpy(text, ((SMS_send *)frmInput)->text, strlen(((SMS_send *)frmInput)->text));
-         text[strlen(((SMS_send *)frmInput)->text)] = '\0';
+         strncpy(smsText, ((SMS_send *)frmInput)->text, strlen(((SMS_send *)frmInput)->text));
+         smsText[strlen(((SMS_send *)frmInput)->text)] = '\0';
 
          frmState = PROC;
 
          dbgPrint("Destino: ");
-         dbgPrint(dest);
+         dbgPrint(((SMS_send *)frmInput)->dest);
          dbgPrint("\r\nMensaje: ");
-         dbgPrint(text);
+         dbgPrint(((SMS_send *)frmInput)->text);
          dbgPrint("\r\n");
 
          break;
@@ -136,7 +138,7 @@ static void ciaaMobile_sendSMS_f (void)
 
             case 0:
 
-               sendATcmd("CMGS",dest,EXT_WRITE);
+               sendATcmd(smsCmd);
                runState = 1;
                break;
 
@@ -147,7 +149,7 @@ static void ciaaMobile_sendSMS_f (void)
 
             case 2:
 
-               sendATcmd("SMS_BODY",text,SMS);
+               sendATcmd(smsText);
                runState = 3;
                break;
 
@@ -191,7 +193,7 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case 0:
 
-               sendATcmd("CMGL","\"ALL\"",EXT_WRITE);
+               sendATcmd("AT+CMGL=\"ALL\"\r");
                runState = 1;
                break;
 
@@ -271,22 +273,23 @@ static void ciaaMobile_delSMS_f (void)
 {
    static uint8_t runState = 0;
 
-   static uint8_t index[4]; /* holds the str expression of the index number */
-   static uint8_t mode[2];  /* holds the str expression of the delete mode */
-   static uint8_t indexmode[6];  /* holds the full str of index and mode */
+   static uint8_t aux[5]; /* aux buffer */
+   static uint8_t smsdel[20];  /* holds the str of the sms del cmd including paramenters */
+
+   aux[0] = '\0';
+   smsdel[0] = '\0';
 
    switch(frmState) {
 
       case INIT:
 
-         itoa(((SMS_del *)frmInput)->index, index, 10);
-         index[strlen(index)] = '\0';
-         itoa(((SMS_del *)frmInput)->mode, mode, 10);
-         mode[strlen(mode)] = '\0';
-
-         strncat(indexmode, index, strlen(index));
-         strncat(indexmode, ",", 1);
-         strncat(indexmode, mode, strlen(mode));
+         strncat(smsdel, "AT+CMGD=", 8);
+         itoa(((SMS_del *)frmInput)->index, aux, 10);
+         strncat(smsdel, aux, strlen(aux));
+         strncat(smsdel, ",", 1);
+         itoa(((SMS_del *)frmInput)->mode, aux, 10);
+         strncat(smsdel, aux, strlen(aux));
+         strncat(smsdel, "\r", 1);
 
          frmState = PROC;
 
@@ -298,7 +301,7 @@ static void ciaaMobile_delSMS_f (void)
 
             case 0:
 
-               sendATcmd("CMGD",indexmode,EXT_WRITE);
+               sendATcmd(smsdel);
                runState = 1;
                break;
 
@@ -341,7 +344,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 0:
 
-               sendATcmd(0,0,AUTOBAUD);
+               sendATcmd("AT\r");
                runState = 1;
                break;
 
@@ -352,7 +355,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 2:
 
-               sendATcmd("CMGF","1",EXT_WRITE);
+               sendATcmd("AT+CMGF=1\r");
                runState = 3;
                break;
 
@@ -363,7 +366,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 4:
 
-               sendATcmd("CSCS","\"GSM\"",EXT_WRITE);
+               sendATcmd("AT+CSCS=\"GSM\"\r");
                runState = 5;
                break;
 
@@ -374,7 +377,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 6:
 
-               sendATcmd("CNMI","0,0",EXT_WRITE);
+               sendATcmd("AT+CNMI=0,0\r");
                runState = 7;
                break;
 

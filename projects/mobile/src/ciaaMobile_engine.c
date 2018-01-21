@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-// #define DEBUGGSM // debug mode
+#define DEBUGGSM // debug mode
 
 /*==================[global data]============================================*/
 
@@ -105,7 +105,7 @@ static cmdState updateFSM (ATToken received,
 
          lastResp = -1;
 
-         if (SENT == received){ /* command sent by serial port */
+         if ((received >= AUTOBAUD) && (received <= SMS_BODY)){ /* command sent by serial port */
 
             i = commSearch(command); /* search for command */
 
@@ -165,7 +165,7 @@ static cmdState updateFSM (ATToken received,
          /* now that the command has been sent, we check the echo from the
             modem and verify that it agrees with the sent command */
 
-         if ((received >= BASIC_CMD) && (received <= EXT_CMD_EXEC)){
+         if ((received >= AUTOBAUD) && (received <= EXT_CMD_EXEC)){
 
             uint8_t eqCMD = 1;
             uint8_t eqPAR = 1;
@@ -311,9 +311,24 @@ cmdState processToken(void)
 /** The sendATcmd function sends an AT command to the GSM engine.
  */
 
-void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
+cmdState sendATcmd (const uint8_t * cmdstr)
 {
-   switch(type){ /* modify format depending on the AT command type, send
+   ATToken sending; /* classifies the command being sent */
+   cmdState result; /* result of the attempt to send the current command*/
+
+   uint8_t cmd[TKN_LEN];   /* AT command  */
+   uint8_t par[TKN_LEN]; /* AT command arguments */
+
+   sending = parse(cmdstr, cmd, par);
+
+   dbgPrint("COMANDO: ");
+   dbgPrint(cmd);
+   dbgPrint("\r\n");
+   dbgPrint("PARAMETRO: ");
+   dbgPrint(par);
+   dbgPrint("\r\n");
+
+   switch(sending){ /* modify format depending on the AT command type, send
                     through serial port and call updateFSM function */
 
       case AUTOBAUD:
@@ -324,11 +339,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint("AT enviado\r\n");
          #endif
 
-         updateFSM(SENT,"AT","");
+         result = updateFSM(sending,"AT","");
 
          break;
 
-      case BASIC_STD:
+      case BASIC_CMD:
 
          rs232Print("AT");
          rs232Print(cmd);
@@ -342,11 +357,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint(" enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case BASIC_AMP:
+      case BASIC_CMD_AMP:
 
          rs232Print("AT&");
          rs232Print(cmd);
@@ -360,11 +375,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint(" enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case EXT_TEST:
+      case EXT_CMD_TEST:
 
          rs232Print("AT+");
          rs232Print(cmd);
@@ -376,11 +391,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint("=? enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case EXT_WRITE:
+      case EXT_CMD_WRITE:
 
          rs232Print("AT+");
          rs232Print(cmd);
@@ -396,11 +411,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint(" enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case EXT_READ:
+      case EXT_CMD_READ:
 
          rs232Print("AT+");
          rs232Print(cmd);
@@ -412,11 +427,11 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint("? enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case EXT_EXEC:
+      case EXT_CMD_EXEC:
 
          rs232Print("AT+");
          rs232Print(cmd);
@@ -428,27 +443,30 @@ void sendATcmd (const uint8_t * cmd, const uint8_t * par, const ATcmdType type)
          dbgPrint(" enviado\r\n");
          #endif
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
-      case SMS:
+      case SMS_BODY:
 
          rs232Print(par);
          rs232Print("\x1A");
 
-         updateFSM(SENT,cmd,par);
+         result = updateFSM(sending,cmd,par);
 
          break;
 
       default:
 
          dbgPrint("Tipo de comando no reconocido\r\n");
+
+         result = cmdError;
+
          break;
 
    }
 
-   return;
+   return result;
 }
 
 uint8_t * getCmdResp (uint8_t index)
