@@ -107,28 +107,30 @@ static void ciaaMobile_sendSMS_f (void)
    static uint8_t smsCmd[30];
    static uint8_t smsText[150];
 
-   smsCmd[0] = '\0';
-   smsText[0] = '\0';
-
    switch(frmState) {
 
       case INIT:
 
+         smsCmd[0] = '\0';
+         smsText[0] = '\0';
+
          /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
          strncat(smsCmd, "AT+CMGS=\"", 9);
          strncat(smsCmd, ((SMS_send *)frmInput)->dest,strlen(((SMS_send *)frmInput)->dest));
-         strncat(smsCmd, "\"\r", 1);
+         strncat(smsCmd, "\"\r", 2);
 
          strncpy(smsText, ((SMS_send *)frmInput)->text, strlen(((SMS_send *)frmInput)->text));
          smsText[strlen(((SMS_send *)frmInput)->text)] = '\0';
 
          frmState = PROC;
 
-         dbgPrint("Destino: ");
-         dbgPrint(((SMS_send *)frmInput)->dest);
-         dbgPrint("\r\nMensaje: ");
-         dbgPrint(((SMS_send *)frmInput)->text);
+         //#ifdef DEBUGGSM
+         dbgPrint("\r\nsmsCmd: ");
+         dbgPrint(smsCmd);
+         dbgPrint("\nsmsText: ");
+         dbgPrint(smsText);
          dbgPrint("\r\n");
+         //#endif
 
          break;
 
@@ -274,22 +276,22 @@ static void ciaaMobile_delSMS_f (void)
    static uint8_t runState = 0;
 
    static uint8_t aux[5]; /* aux buffer */
-   static uint8_t smsdel[20];  /* holds the str of the sms del cmd including paramenters */
-
-   aux[0] = '\0';
-   smsdel[0] = '\0';
+   static uint8_t smsDel[20];  /* holds the str of the sms del cmd including paramenters */
 
    switch(frmState) {
 
       case INIT:
 
-         strncat(smsdel, "AT+CMGD=", 8);
+         aux[0] = '\0';
+         smsDel[0] = '\0';
+
+         strncat(smsDel, "AT+CMGD=", 8);
          itoa(((SMS_del *)frmInput)->index, aux, 10);
-         strncat(smsdel, aux, strlen(aux));
-         strncat(smsdel, ",", 1);
+         strncat(smsDel, aux, strlen(aux));
+         strncat(smsDel, ",", 1);
          itoa(((SMS_del *)frmInput)->mode, aux, 10);
-         strncat(smsdel, aux, strlen(aux));
-         strncat(smsdel, "\r", 1);
+         strncat(smsDel, aux, strlen(aux));
+         strncat(smsDel, "\r", 1);
 
          frmState = PROC;
 
@@ -301,7 +303,7 @@ static void ciaaMobile_delSMS_f (void)
 
             case 0:
 
-               sendATcmd(smsdel);
+               sendATcmd(smsDel);
                runState = 1;
                break;
 

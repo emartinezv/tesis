@@ -321,12 +321,13 @@ cmdState sendATcmd (const uint8_t * cmdstr)
 
    sending = parse(cmdstr, cmd, par);
 
-   dbgPrint("COMANDO: ");
+   #ifdef DEBUGGSM
+   dbgPrint("\r\n cmd: ");
    dbgPrint(cmd);
-   dbgPrint("\r\n");
-   dbgPrint("PARAMETRO: ");
+   dbgPrint("\r\n par: ");
    dbgPrint(par);
    dbgPrint("\r\n");
+   #endif
 
    switch(sending){ /* modify format depending on the AT command type, send
                     through serial port and call updateFSM function */

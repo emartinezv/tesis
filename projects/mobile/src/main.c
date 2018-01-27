@@ -77,6 +77,9 @@ static uint32_t pausems_count = DELAY_INIT;
 /** @brief used for delay counter */
 static uint32_t readsms_count = DELAY_READSMS;
 
+/** @brief used for delay counter */
+static uint32_t sendsms_count = DELAY_SENDSMS;
+
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
@@ -154,6 +157,7 @@ void SysTick_Handler(void)
    if(mblSysUp_count > 0) mblSysUp_count--;
    if(pausems_count > 0) pausems_count--;
    if(readsms_count > 0) readsms_count--;
+   if(sendsms_count > 0) sendsms_count--;
 }
 
 int main(void)
@@ -161,10 +165,10 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
-   SMS_rec list[4];
+   SMS_rec list[10];
    SMS_del borrar;
 
-   //SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
+   SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
 
    pausems(DELAY_INIT);
 
@@ -186,10 +190,18 @@ int main(void)
 
       }
 
+
+      /*if (0 == sendsms_count){
+
+         sendsms_count = DELAY_SENDSMS;
+         if(ciaaMobile_isIdle()){ciaaMobile_sendSMS(&msg, cbempty);}
+
+      }*/
+
       if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 4, cbprint);}
+         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
 
       }
    }
