@@ -53,6 +53,18 @@
 
 static GSMstate GSMstatus = WAITING;
 
+/** @brief Stores URC events */
+
+static URCevent URCeventVector [URC_VECTOR_SIZE];
+
+/** @brief Number of URC events stored */
+
+static uint8_t URCevents = 0;
+
+/** @brief Stores the responses to the active command */
+
+static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
+
 /** @brief Number of response tokens in the last command executed */
 
 static int8_t lastResp = -1;
@@ -72,11 +84,18 @@ static cmdState updateFSM (ATToken received,
                     uint8_t const * const command,
                     uint8_t const * const parameter);
 
+/** @brief Records a new URC event in the URC event vector
+*
+*  @param command   Main part of the URC
+*  @param parameter Parameter part of the URC
+*
+*  @return Returns 1 if successful or 0 if vector is full
+*/
+
+static uint8_t recordURC (uint8_t const * const command,
+                    uint8_t const * const parameter);
+
 /*==================[internal data definition]===============================*/
-
-/** @brief Stores the responses to the active command */
-
-static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
 
 /*==================[external data definition]===============================*/
 
@@ -150,7 +169,26 @@ static cmdState updateFSM (ATToken received,
                return cmdError;
 
          }
-         else
+
+         else if ((received = BASIC_RSP) || (received = EXT_RSP)){ /* possible URC */
+
+            if(1 == URCSearch(command)){
+               recordURC (command, parameter);
+               dbgPrint("URC recorded\r\n");
+
+               return cmdWait;
+            }
+            else{
+               #ifdef DEBUGGSM
+               dbgPrint("RESPONSE OUT OF ORDER\r\n");
+               #endif
+
+               return cmdError;
+            }
+
+         }
+
+         else{
 
             #ifdef DEBUGGSM
             dbgPrint("RESPONSE OUT OF ORDER\r\n");
@@ -159,6 +197,8 @@ static cmdState updateFSM (ATToken received,
             return cmdError;
 
          break;
+
+         }
 
       case CMD_SENT:
 
@@ -192,6 +232,24 @@ static cmdState updateFSM (ATToken received,
                return cmdError;
             }
          }
+
+         else if ((received = BASIC_RSP) || (received = EXT_RSP)){ /* possible URC */
+
+            if(1 == URCSearch(command)){
+               recordURC (command, parameter);
+
+               return cmdProc;
+            }
+            else{
+               #ifdef DEBUGGSM
+               dbgPrint("COMMAND ECHO MISSING\r\n");
+               #endif
+
+               return cmdError;
+            }
+
+         }
+
          else{
             GSMstatus = WAITING;
 
@@ -213,39 +271,49 @@ static cmdState updateFSM (ATToken received,
 
          if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 
-            /* store the response in the active command response vector and
-               check if it is an end response */
+            if(1 == URCSearch(command)){
+               recordURC (command, parameter);
 
-            strncpy(respVector[currTKN],command,strlen(command));
-            respVector[currTKN][strlen(command)] = '\0';
-            strncat(respVector[currTKN],"(",1);
-            strncat(respVector[currTKN],parameter,strlen(parameter));
-            strncat(respVector[currTKN],")",1);
+               return cmdProc;
+            }
 
-            #ifdef DEBUGGSM
-            dbgPrint("RESP: ");
-            dbgPrint(respVector[currTKN]);
-            dbgPrint("\r\n");
-            #endif
+            else{
 
-            lastResp++;
-            currTKN++;
 
-            uint8_t * place;
+               /* store the response in the active command response vector and
+                  check if it is an end response */
 
-            place = strstr(commands[i].endresp,command);
-
-            if(NULL != place){
+               strncpy(respVector[currTKN],command,strlen(command));
+               respVector[currTKN][strlen(command)] = '\0';
+               strncat(respVector[currTKN],"(",1);
+               strncat(respVector[currTKN],parameter,strlen(parameter));
+               strncat(respVector[currTKN],")",1);
 
                #ifdef DEBUGGSM
-               dbgPrint("COMMAND CLOSED\r\n");
+               dbgPrint("RESP: ");
+               dbgPrint(respVector[currTKN]);
+               dbgPrint("\r\n");
                #endif
 
-               GSMstatus = WAITING;
-               return cmdClosed;
-            }
-            else{
-               return cmdProc;
+               lastResp++;
+               currTKN++;
+
+               uint8_t * place;
+
+               place = strstr(commands[i].endresp,command);
+
+               if(NULL != place){
+
+                  #ifdef DEBUGGSM
+                  dbgPrint("COMMAND CLOSED\r\n");
+                  #endif
+
+                  GSMstatus = WAITING;
+                  return cmdClosed;
+               }
+               else{
+                  return cmdProc;
+               }
             }
 
          }
@@ -277,6 +345,22 @@ static cmdState updateFSM (ATToken received,
          break;
    }
 
+}
+
+static uint8_t recordURC (uint8_t const * const command,
+                    uint8_t const * const parameter)
+{
+   if((URCevents < 0) || (URCevents >= URC_VECTOR_SIZE)){
+      return 0;
+   }
+   else{
+      strncpy(URCeventVector[URCevents].command, command, strlen(command));
+      URCeventVector[URCevents].command[strlen(command)] = '\0';
+      strncpy(URCeventVector[URCevents].parameter, parameter, strlen(parameter));
+      URCeventVector[URCevents].parameter[strlen(parameter)] = '\0';
+      URCevents ++;
+      return 1;
+   }
 }
 
 /*==================[external functions definition]==========================*/
@@ -484,6 +568,22 @@ uint8_t getNoCmdResp (void)
    /* returns number of total command responses for the last command */
 
    return (lastResp+1);
+}
+
+uint8_t readURC (uint8_t * const command,
+                    uint8_t * const parameter)
+{
+   if((URCevents <= 0) || (URCevents > URC_VECTOR_SIZE)){
+      return 0;
+   }
+   else{
+      strncpy(command, URCeventVector[URCevents - 1].command, strlen(URCeventVector[URCevents - 1].command));
+      command[strlen(URCeventVector[URCevents - 1].command)] = '\0';
+      strncpy(parameter, URCeventVector[URCevents - 1].parameter, strlen(URCeventVector[URCevents - 1].parameter));
+      parameter[strlen(URCeventVector[URCevents -1].parameter)] = '\0';
+      URCevents --;
+      return 1;
+   }
 }
 
 /** @} doxygen end group definition */

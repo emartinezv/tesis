@@ -374,17 +374,6 @@ static void ciaaMobile_startUp_f (void)
 
             case 5:
 
-               if(cmdClosed == processToken()){runState = 6;}
-               break;
-
-            case 6:
-
-               sendATcmd("AT+CNMI=0,0\r");
-               runState = 7;
-               break;
-
-            case 7:
-
                if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
                break;
 
@@ -451,7 +440,10 @@ void ciaaMobile_startUp (void)
 
 void ciaaMobile_sysUpdate (void)
 {
-   if (IDLE == frmState){return;}
+   if (IDLE == frmState){
+      processToken();
+      return;
+   }
    else {frm();}
 
    return;

@@ -69,6 +69,8 @@ typedef struct {
 
 extern ATComm const commands [];
 
+extern uint8_t const * const URCs [];
+
 /*==================[external functions declaration]=========================*/
 
 /** @brief Searches for a cmd and returns it's position in the commands vector
@@ -79,6 +81,15 @@ extern ATComm const commands [];
  */
 
 uint16_t commSearch(uint8_t const * const command);
+
+/** @brief Searches for an URC and returns 1 if recognized, 0 if absent
+ *
+ *  @param  urc Pointer to str with the name of the URC to search
+ *
+ *  @return 1 if URC recognized, 0 if absent
+ */
+
+uint8_t URCSearch(uint8_t const * const urc);
 
 /*==================[cplusplus]==============================================*/
 

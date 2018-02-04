@@ -106,6 +106,12 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             command[colonPos-3] = '\0';
             strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-3);
             parameter[strlen(token)-colonPos-3] = '\0';
+            // BORRAR DESPUES, PARA TESTING DE URCS
+            dbgPrint("CMD: ");
+            dbgPrint(command);
+            dbgPrint("\r\nPAR: ");
+            dbgPrint(parameter);
+            dbgPrint("\r\n");
             return EXT_RSP;
          }
 

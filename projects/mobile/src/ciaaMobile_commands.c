@@ -66,6 +66,13 @@ ATComm const commands [] = {
       {0 , 0 , 0},
 };
 
+/** @brief Vector of known Unrequested Result Codes */
+
+uint8_t const * const URCs [] = {
+      "CMTI",
+      0
+};
+
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
@@ -79,6 +86,17 @@ uint16_t commSearch(uint8_t const * const command)
    }
 
    return 65535;
+}
+
+uint8_t URCSearch(uint8_t const * const urc)
+{
+   int i = 0;
+
+   for(i = 0; 0 != URCs[i]; i++){
+      if(0 == strcmp(urc, URCs[i])){return 1;}
+   }
+
+   return 0;
 }
 
 /*==================[end of file]============================================*/

@@ -53,6 +53,9 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** @brief Size of the URC events vector */
+#define URC_VECTOR_SIZE 10
+
 /** @brief State of the GSM engine */
 
 typedef enum _GSMstates
@@ -72,12 +75,11 @@ typedef enum _cmdState
    cmdError = 3,  /**< command closed due to error */
 } cmdState;
 
-/*typedef struct _ATcmd CHECK AND REMOVE IF UNUSED
+typedef struct _URCevent
 {
-   uint8_t * cmd;
-   uint8_t * par;
-   ATcmdType type;
-} ATcmd;*/
+   uint8_t command[150];
+   uint8_t parameter[150];
+} URCevent;
 
 /*==================[typedef]================================================*/
 
@@ -116,6 +118,16 @@ uint8_t * getCmdResp (uint8_t index);
 */
 
 uint8_t getNoCmdResp (void);
+
+/** @brief Reads the oldest URC event in the URC event vector
+*
+*  @param command   Main part of the read URC
+*  @param parameter Parameter part of the read URC
+*
+*  @return Returns 1 if successful or 0 if vector is empty
+*/
+
+uint8_t readURC (uint8_t * const command, uint8_t * const parameter);
 
 /*==================[cplusplus]==============================================*/
 

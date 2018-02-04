@@ -62,6 +62,9 @@ extern "C" {
 /* delay in ms between sending SMS */
 #define DELAY_SENDSMS 10000
 
+/* delay in ms between reading URCs */
+#define DELAY_READURC 5000
+
 /** led number to toggle */
 #define LED_ROJO 4
 #define LED_VERDE 5
