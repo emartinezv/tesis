@@ -106,12 +106,6 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             command[colonPos-3] = '\0';
             strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-3);
             parameter[strlen(token)-colonPos-3] = '\0';
-            // BORRAR DESPUES, PARA TESTING DE URCS
-            dbgPrint("CMD: ");
-            dbgPrint(command);
-            dbgPrint("\r\nPAR: ");
-            dbgPrint(parameter);
-            dbgPrint("\r\n");
             return EXT_RSP;
          }
 
@@ -121,6 +115,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
       else if( '>' == token[2] && ' ' == token[3]){
          strncpy(command,"> \0",3);
+         dbgPrint("SMS Prompt recibido! \r\n");
          return SMS_PROMPT;
       }
 
@@ -257,6 +252,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       strncpy(command,"SMS_BODY\0",9);
       strncpy(parameter,&token[0],strlen(token));
       parameter[strlen(token)] = '\0';
+      dbgPrint("SMS Body recibido! \r\n");
       return SMS_BODY;
 
    }

@@ -77,10 +77,10 @@ static int8_t lastResp = -1;
 *  @param command   Main part of the AT token used as input
 *  @param parameter Parameter part of the AT token used as input
 *
-*  @return Returns the state of the current command
+*  @return Returns the result of the latest updateFSM invocation
 */
 
-static cmdState updateFSM (ATToken received,
+static FSMresult updateFSM (ATToken received,
                     uint8_t const * const command,
                     uint8_t const * const parameter);
 
@@ -107,7 +107,7 @@ static uint8_t recordURC (uint8_t const * const command,
  *  of the current command after the function call is the output.
  */
 
-static cmdState updateFSM (ATToken received,
+static FSMresult updateFSM (ATToken received,
                uint8_t const * const command,
                uint8_t const * const parameter)
 {
@@ -139,14 +139,16 @@ static cmdState updateFSM (ATToken received,
                strncpy(currPAR,parameter,strlen(parameter));
                currPAR[strlen(parameter)] = '\0';
 
-               if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
-                  GSMstatus = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
-                                       /* messages is not echoed, so ack is not */
-                                       /* viable                                */
-               }
-               else{
-                  GSMstatus = CMD_SENT; /* ack received, command has been sent */
-               }
+               //if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
+               //   GSMstatus = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
+               //                        /* messages is not echoed, so ack is not */
+               //                        /* viable                                */
+               //}
+               //else{
+               //   GSMstatus = CMD_SENT; /* ack received, command has been sent */
+               //} AHORA SMS_BODY SI TIENE ECO, BORRAR ESTO MAS TARDE
+
+               GSMstatus = CMD_SENT;
 
                #ifdef DEBUGGSM
                dbgPrint("COMMAND SENT: ");
@@ -156,7 +158,7 @@ static cmdState updateFSM (ATToken received,
                dbgPrint(")\r\n");
                #endif
 
-               return cmdProc;
+               return OK_CMD_SENT;
 
             }
 
@@ -166,7 +168,7 @@ static cmdState updateFSM (ATToken received,
                dbgPrint("UNKNOWN COMMAND\r\n");
                #endif
 
-               return cmdError;
+               return ERR_CMD_UKN;
 
          }
 
@@ -176,14 +178,14 @@ static cmdState updateFSM (ATToken received,
                recordURC (command, parameter);
                dbgPrint("URC recorded\r\n");
 
-               return cmdWait;
+               return OK_URC;
             }
             else{
                #ifdef DEBUGGSM
                dbgPrint("RESPONSE OUT OF ORDER\r\n");
                #endif
 
-               return cmdError;
+               return ERR_OOO;
             }
 
          }
@@ -191,10 +193,10 @@ static cmdState updateFSM (ATToken received,
          else{
 
             #ifdef DEBUGGSM
-            dbgPrint("RESPONSE OUT OF ORDER\r\n");
+            dbgPrint("INVALID TOKEN\r\n");
             #endif
 
-            return cmdError;
+            return ERR_TKN_INV;
 
          break;
 
@@ -205,7 +207,7 @@ static cmdState updateFSM (ATToken received,
          /* now that the command has been sent, we check the echo from the
             modem and verify that it agrees with the sent command */
 
-         if ((received >= AUTOBAUD) && (received <= EXT_CMD_EXEC)){
+         if ((received >= AUTOBAUD) && (received <= SMS_BODY)){
 
             uint8_t eqCMD = 1;
             uint8_t eqPAR = 1;
@@ -220,7 +222,7 @@ static cmdState updateFSM (ATToken received,
                dbgPrint("COMMAND ACK\r\n");
                #endif
 
-               return cmdProc;
+               return OK_CMD_ACK;
             }
             else{
                GSMstatus = WAITING;
@@ -229,7 +231,7 @@ static cmdState updateFSM (ATToken received,
                dbgPrint("COMMAND ECHO ERROR\r\n");
                #endif
 
-               return cmdError;
+               return ERR_CMD_ECHO;
             }
          }
 
@@ -238,14 +240,16 @@ static cmdState updateFSM (ATToken received,
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
 
-               return cmdProc;
+               return OK_URC;
             }
             else{
+               GSMstatus = WAITING;
+
                #ifdef DEBUGGSM
                dbgPrint("COMMAND ECHO MISSING\r\n");
                #endif
 
-               return cmdError;
+               return ERR_CMD_ECHO;
             }
 
          }
@@ -257,7 +261,7 @@ static cmdState updateFSM (ATToken received,
             dbgPrint("COMMAND ECHO MISSING\r\n");
             #endif
 
-            return cmdError;
+            return ERR_CMD_ECHO;
          }
 
          break;
@@ -274,7 +278,7 @@ static cmdState updateFSM (ATToken received,
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
 
-               return cmdProc;
+               return OK_URC;
             }
 
             else{
@@ -309,10 +313,10 @@ static cmdState updateFSM (ATToken received,
                   #endif
 
                   GSMstatus = WAITING;
-                  return cmdClosed;
+                  return OK_CLOSE;
                }
                else{
-                  return cmdProc;
+                  return OK_RESP;
                }
             }
 
@@ -328,7 +332,7 @@ static cmdState updateFSM (ATToken received,
                dbgPrint(")\r\n");
                #endif
 
-               return cmdError;
+               return ERR_TKN_INV;
          }
 
          break;
@@ -340,7 +344,7 @@ static cmdState updateFSM (ATToken received,
          #endif
 
          GSMstatus = WAITING;
-         return cmdError;
+         return ERR_FSM_OOR;
 
          break;
    }
@@ -368,14 +372,13 @@ static uint8_t recordURC (uint8_t const * const command,
 /** The processToken function checks is there are unread tokens in the token
  *  ring buffer. If so, it reads the oldest token, parses the token through the
  *  parse function and calls upon the updateFSM function with the result. It
- *  returns the state of the current command as reported by the updateFSM
- *  function.
+ *  returns the result of the updateFSM invocation
  */
 
-cmdState processToken(void)
+FSMresult processToken(void)
 {
    ATToken received; /* classifies the received token*/
-   cmdState currCmd = cmdWait; /* state of current cmd after token is processed*/
+   FSMresult currCmd; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
    uint8_t command[TKN_LEN]; /* AT command or response */
@@ -395,10 +398,10 @@ cmdState processToken(void)
 /** The sendATcmd function sends an AT command to the GSM engine.
  */
 
-cmdState sendATcmd (const uint8_t * cmdstr)
+FSMresult sendATcmd (const uint8_t * cmdstr)
 {
    ATToken sending; /* classifies the command being sent */
-   cmdState result; /* result of the attempt to send the current command*/
+   FSMresult result; /* result of the updateFSM invocation */
 
    uint8_t cmd[TKN_LEN];   /* AT command  */
    uint8_t par[TKN_LEN]; /* AT command arguments */
@@ -545,7 +548,7 @@ cmdState sendATcmd (const uint8_t * cmdstr)
 
          dbgPrint("Tipo de comando no reconocido\r\n");
 
-         result = cmdError;
+         result = ERR_CMD_UKN;
 
          break;
 

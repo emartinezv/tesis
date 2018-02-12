@@ -146,7 +146,7 @@ static void ciaaMobile_sendSMS_f (void)
 
             case 1:
 
-               if(cmdClosed == processToken()){runState = 2;}
+               if(OK_CLOSE == processToken()){runState = 2;}
                break;
 
             case 2:
@@ -157,7 +157,7 @@ static void ciaaMobile_sendSMS_f (void)
 
             case 3:
 
-               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
                break;
 
          }
@@ -201,7 +201,7 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case 1:
 
-               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
                break;
 
          }
@@ -309,7 +309,7 @@ static void ciaaMobile_delSMS_f (void)
 
             case 1:
 
-               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
                break;
 
          }
@@ -352,7 +352,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 1:
 
-               if(cmdClosed == processToken()){runState = 2;}
+               if(OK_CLOSE == processToken()){runState = 2;}
                break;
 
             case 2:
@@ -363,7 +363,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 3:
 
-               if(cmdClosed == processToken()){runState = 4;}
+               if(OK_CLOSE == processToken()){runState = 4;}
                break;
 
             case 4:
@@ -374,7 +374,7 @@ static void ciaaMobile_startUp_f (void)
 
             case 5:
 
-               if(cmdClosed == processToken()){runState = 0; frmState = WRAP;}
+               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
                break;
 
          }

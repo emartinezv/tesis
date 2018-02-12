@@ -71,7 +71,6 @@ typedef enum {INVALID,        /**< token is invalid */
               DATA,           /**< token is a DATA block from a response */
               SMS_PROMPT,     /**< token is the SMS prompt */
               EXT_RSP,        /**< token is an extended response */
-              URC,            /**< token is an unrequested response code */
               }ATToken;
 
 /*==================[external data declaration]==============================*/

@@ -172,10 +172,10 @@ int main(void)
    uint8_t command [150];
    uint8_t parameter [150];
 
-   //SMS_rec list[10];
+   SMS_rec list[10];
    SMS_del borrar;
 
-   //SMS_send msg = {"1151751809","Hola mundo de nuevo!"};
+   SMS_send msg = {"1151751809","Hola mundo!"};
 
    pausems(DELAY_INIT);
 
@@ -204,14 +204,14 @@ int main(void)
 
       }*/
 
-      /*if (0 == readsms_count){
+      if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
 
-      }*/
+      }
 
-      if (0 == readURC_count){
+      /*if (0 == readURC_count){
 
          readURC_count = DELAY_READURC;
          dbgPrint("Leyendo URCs...\r\n");
@@ -224,7 +224,7 @@ int main(void)
             dbgPrint("\r\n");
 
          }
-      }
+      }*/
    }
 
    return 0;

@@ -67,13 +67,19 @@ typedef enum _GSMstates
 
 /** @brief State of the current command */
 
-typedef enum _cmdState
+typedef enum _FSMresult
 {
-   cmdWait = 0,   /**< waiting for command */
-   cmdProc = 1,   /**< command being processed */
-   cmdClosed = 2, /**< command closed succesfully */
-   cmdError = 3,  /**< command closed due to error */
-} cmdState;
+   OK_CMD_SENT = 1,      /**< command sent */
+   OK_CMD_ACK = 2,       /**< command acknowledged */
+   OK_RESP = 3,          /**< non-closing responde received */
+   OK_CLOSE = 4,         /**< closing response received */
+   OK_URC = 5,           /**< URC proccessed */
+   ERR_CMD_UKN = 5,      /**< unknown command sent */
+   ERR_CMD_ECHO = 6,     /**< cmd echo erroneous or missing */
+   ERR_OOO = 7,          /**< out of order response received */
+   ERR_TKN_INV = 8,       /**< toke invalid */
+   ERR_FSM_OOR = 9        /**< FSM out of range */
+} FSMresult;
 
 typedef struct _URCevent
 {
@@ -89,19 +95,19 @@ typedef struct _URCevent
 
 /** @brief Processes a single token
 *
-*  @return Returns the state of the current command being executed
+*  @return Returns the result of the latest updateFSM invocation
 */
 
-cmdState processToken(void);
+FSMresult processToken(void);
 
 /** @brief Sends an AT command to the GSM module
 *
-*  @return Returns the state of the current command being sent
+*  @return Returns the result of the updateFSM invocation
 *
 *  @param cmdstr AT command string including parameters
 */
 
-cmdState sendATcmd (const uint8_t * cmdstr);
+FSMresult sendATcmd (const uint8_t * cmdstr);
 
 /** @brief Gets a pointer to the next valid command response
 *

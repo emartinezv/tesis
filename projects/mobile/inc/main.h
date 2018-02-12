@@ -51,7 +51,7 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /* delay in ms for calls to ciaaMobile_sysUpdate function */
-#define DELAY_MBLSYSUP 100
+#define DELAY_MBLSYSUP 25
 
 /* delay in ms before program starts GSM part */
 #define DELAY_INIT 5000
