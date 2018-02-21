@@ -58,11 +58,11 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-void * cb (void *);
+void * cb (error_frm, void *);
 
-void * cbempty (void *);
+void * cbempty (error_frm, void *);
 
-void * cbprint (void *);
+void * cbprint (error_frm, void *);
 
 /*==================[internal data definition]===============================*/
 
@@ -102,12 +102,18 @@ static void pausems(uint32_t t)
    }
 }
 
-void * cbempty (void * input)
+void * cbempty (error_frm frmError, void * input)
 {
+   dbgPrint("Funcion cbempty ejecutada\r\n");
+
+   if(OK != frmError){
+      dbgPrint("Error en inicializacion\r\n");
+   }
+
    return 0;
 }
 
-void * cbled (void * input)
+void * cbled (error_frm frmError, void * input)
 {
    dbgPrint("Actualizando LEDs...\r\n");
 
@@ -130,7 +136,7 @@ void * cbled (void * input)
    return;
 }
 
-void * cbprint (void * input)
+void * cbprint (error_frm frmError, void * input)
 {
    dbgPrint("Imprimiendo SMS...\r\n\r\n");
 
@@ -179,7 +185,7 @@ int main(void)
 
    pausems(DELAY_INIT);
 
-   ciaaMobile_startUp();
+   ciaaMobile_startUp(cbempty);
 
    while (1){
 

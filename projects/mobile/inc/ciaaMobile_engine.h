@@ -69,16 +69,17 @@ typedef enum _GSMstates
 
 typedef enum _FSMresult
 {
-   OK_CMD_SENT = 1,      /**< command sent */
-   OK_CMD_ACK = 2,       /**< command acknowledged */
-   OK_RESP = 3,          /**< non-closing responde received */
-   OK_CLOSE = 4,         /**< closing response received */
-   OK_URC = 5,           /**< URC proccessed */
-   ERR_CMD_UKN = 5,      /**< unknown command sent */
-   ERR_CMD_ECHO = 6,     /**< cmd echo erroneous or missing */
-   ERR_OOO = 7,          /**< out of order response received */
-   ERR_TKN_INV = 8,       /**< toke invalid */
-   ERR_FSM_OOR = 9        /**< FSM out of range */
+   NO_UPDATE,         /**< no change to FSM */
+   OK_CMD_SENT,       /**< command sent */
+   OK_CMD_ACK,        /**< command acknowledged */
+   OK_RESP,           /**< non-closing responde received */
+   OK_URC,            /**< URC proccessed */
+   OK_CLOSE,          /**< closing response received */
+   ERR_CMD_UKN,       /**< unknown command sent */
+   ERR_CMD_ECHO,      /**< cmd echo erroneous or missing */
+   ERR_OOO,           /**< out of order response received */
+   ERR_TKN_INV,       /**< toke invalid */
+   ERR_FSM_OOR        /**< FSM out of range */
 } FSMresult;
 
 typedef struct _URCevent

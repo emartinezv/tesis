@@ -43,7 +43,12 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUGGSM // debug mode
+#define DEBUG_ENGINE // debug mode
+#ifdef DEBUG_ENGINE
+   #define debug(msg) dbgPrint(msg)
+#else
+   #define debug(msg)
+#endif
 
 /*==================[global data]============================================*/
 
@@ -150,13 +155,11 @@ static FSMresult updateFSM (ATToken received,
 
                GSMstatus = CMD_SENT;
 
-               #ifdef DEBUGGSM
-               dbgPrint("COMMAND SENT: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-               #endif
+               debug(">>>engine<<<   COMMAND SENT: ");
+               debug(command);
+               debug("(");
+               debug(parameter);
+               debug(")\r\n");
 
                return OK_CMD_SENT;
 
@@ -164,9 +167,7 @@ static FSMresult updateFSM (ATToken received,
 
             else
 
-               #ifdef DEBUGGSM
-               dbgPrint("UNKNOWN COMMAND\r\n");
-               #endif
+               debug(">>>engine<<<   UNKNOWN COMMAND\r\n");
 
                return ERR_CMD_UKN;
 
@@ -176,14 +177,12 @@ static FSMresult updateFSM (ATToken received,
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
-               dbgPrint("URC recorded\r\n");
+               debug(">>>engine<<<   URC detected\r\n");
 
                return OK_URC;
             }
             else{
-               #ifdef DEBUGGSM
-               dbgPrint("RESPONSE OUT OF ORDER\r\n");
-               #endif
+               debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND EXPECTED\r\n");
 
                return ERR_OOO;
             }
@@ -191,16 +190,12 @@ static FSMresult updateFSM (ATToken received,
          }
 
          else{
-
-            #ifdef DEBUGGSM
-            dbgPrint("INVALID TOKEN\r\n");
-            #endif
+            debug(">>>engine<<<   INVALID TOKEN\r\n");
 
             return ERR_TKN_INV;
 
-         break;
-
          }
+         break;
 
       case CMD_SENT:
 
@@ -218,18 +213,14 @@ static FSMresult updateFSM (ATToken received,
                GSMstatus = CMD_ACK;
                currTKN = 0;
 
-               #ifdef DEBUGGSM
-               dbgPrint("COMMAND ACK\r\n");
-               #endif
+               debug(">>>engine<<<   COMMAND ACK\r\n");
 
                return OK_CMD_ACK;
             }
             else{
                GSMstatus = WAITING;
 
-               #ifdef DEBUGGSM
-               dbgPrint("COMMAND ECHO ERROR\r\n");
-               #endif
+               debug(">>>engine<<<   COMMAND ECHO ERROR\r\n");
 
                return ERR_CMD_ECHO;
             }
@@ -239,15 +230,14 @@ static FSMresult updateFSM (ATToken received,
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
+               debug(">>>engine<<<   URC detected\r\n");
 
                return OK_URC;
             }
             else{
                GSMstatus = WAITING;
 
-               #ifdef DEBUGGSM
-               dbgPrint("COMMAND ECHO MISSING\r\n");
-               #endif
+               debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND ECHO EXPECTED\r\n");
 
                return ERR_CMD_ECHO;
             }
@@ -257,11 +247,9 @@ static FSMresult updateFSM (ATToken received,
          else{
             GSMstatus = WAITING;
 
-            #ifdef DEBUGGSM
-            dbgPrint("COMMAND ECHO MISSING\r\n");
-            #endif
+            debug(">>>engine<<<   INVALID TOKEN\r\n");
 
-            return ERR_CMD_ECHO;
+            return ERR_TKN_INV;
          }
 
          break;
@@ -270,19 +258,18 @@ static FSMresult updateFSM (ATToken received,
 
          /* process a number of tokens depending on the command, checking for
             end responses each time */
-
          ;
 
          if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
+               debug(">>>engine<<<   URC detected\r\n");
 
                return OK_URC;
             }
 
             else{
-
 
                /* store the response in the active command response vector and
                   check if it is an end response */
@@ -293,11 +280,9 @@ static FSMresult updateFSM (ATToken received,
                strncat(respVector[currTKN],parameter,strlen(parameter));
                strncat(respVector[currTKN],")",1);
 
-               #ifdef DEBUGGSM
-               dbgPrint("RESP: ");
-               dbgPrint(respVector[currTKN]);
-               dbgPrint("\r\n");
-               #endif
+               debug(">>>engine<<<   RESP: ");
+               debug(respVector[currTKN]);
+               debug("\r\n");
 
                lastResp++;
                currTKN++;
@@ -308,9 +293,7 @@ static FSMresult updateFSM (ATToken received,
 
                if(NULL != place){
 
-                  #ifdef DEBUGGSM
-                  dbgPrint("COMMAND CLOSED\r\n");
-                  #endif
+                  debug(">>>engine<<<   COMMAND CLOSED\r\n");
 
                   GSMstatus = WAITING;
                   return OK_CLOSE;
@@ -322,26 +305,30 @@ static FSMresult updateFSM (ATToken received,
 
          }
 
+         else if ((received >= AUTOBAUD) && (received <= SMS_BODY)){
+            GSMstatus = WAITING;
+
+            debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
+
+            return ERR_OOO;
+         }
+
          else{
 
-               #ifdef DEBUGGSM
-               dbgPrint("INVALID TOKEN RECEIVED: ");
-               dbgPrint(command);
-               dbgPrint("(");
-               dbgPrint(parameter);
-               dbgPrint(")\r\n");
-               #endif
+            debug(">>>engine<<<   INVALID TOKEN RECEIVED: ");
+            debug(command);
+            debug("(");
+            debug(parameter);
+            debug(")\r\n");
 
-               return ERR_TKN_INV;
+            return ERR_TKN_INV;
          }
 
          break;
 
       default:
 
-         #ifdef DEBUGGSM
-         dbgPrint("ERROR: SWITCH OUT OF RANGE");
-         #endif
+         debug(">>>engine<<<   ERROR: SWITCH OUT OF RANGE");
 
          GSMstatus = WAITING;
          return ERR_FSM_OOR;
@@ -363,6 +350,13 @@ static uint8_t recordURC (uint8_t const * const command,
       strncpy(URCeventVector[URCevents].parameter, parameter, strlen(parameter));
       URCeventVector[URCevents].parameter[strlen(parameter)] = '\0';
       URCevents ++;
+
+      debug(">>>engine<<<   URC RECORDED: ");
+      debug(command);
+      debug("(");
+      debug(parameter);
+      debug(")\r\n");
+
       return 1;
    }
 }
@@ -378,7 +372,7 @@ static uint8_t recordURC (uint8_t const * const command,
 FSMresult processToken(void)
 {
    ATToken received; /* classifies the received token*/
-   FSMresult currCmd; /* result of the updateFSM invocation */
+   FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
    uint8_t command[TKN_LEN]; /* AT command or response */
@@ -408,24 +402,12 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
    sending = parse(cmdstr, cmd, par);
 
-   #ifdef DEBUGGSM
-   dbgPrint("\r\n cmd: ");
-   dbgPrint(cmd);
-   dbgPrint("\r\n par: ");
-   dbgPrint(par);
-   dbgPrint("\r\n");
-   #endif
-
    switch(sending){ /* modify format depending on the AT command type, send
                     through serial port and call updateFSM function */
 
       case AUTOBAUD:
 
          rs232Print("AT\r");
-
-         #ifdef DEBUGGSM
-         dbgPrint("AT enviado\r\n");
-         #endif
 
          result = updateFSM(sending,"AT","");
 
@@ -438,13 +420,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          if(par != 0) {rs232Print(par);}
          rs232Print("\r");
 
-         #ifdef DEBUGGSM
-         dbgPrint("AT");
-         dbgPrint(cmd);
-         if(par != 0) {dbgPrint(par);}
-         dbgPrint(" enviado\r\n");
-         #endif
-
          result = updateFSM(sending,cmd,par);
 
          break;
@@ -456,13 +431,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          if(par != 0) {rs232Print(par);}
          rs232Print("\r");
 
-         #ifdef DEBUGGSM
-         dbgPrint("AT&");
-         dbgPrint(cmd);
-         if(par != 0) {dbgPrint(par);}
-         dbgPrint(" enviado\r\n");
-         #endif
-
          result = updateFSM(sending,cmd,par);
 
          break;
@@ -472,12 +440,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          rs232Print("AT+");
          rs232Print(cmd);
          rs232Print("=?\r");
-
-         #ifdef DEBUGGSM
-         dbgPrint("AT+");
-         dbgPrint(cmd);
-         dbgPrint("=? enviado\r\n");
-         #endif
 
          result = updateFSM(sending,cmd,par);
 
@@ -491,14 +453,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          rs232Print(par);
          rs232Print("\r");
 
-         #ifdef DEBUGGSM
-         dbgPrint("AT+");
-         dbgPrint(cmd);
-         dbgPrint("=");
-         dbgPrint(par);
-         dbgPrint(" enviado\r\n");
-         #endif
-
          result = updateFSM(sending,cmd,par);
 
          break;
@@ -509,12 +463,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          rs232Print(cmd);
          rs232Print("?\r");
 
-         #ifdef DEBUGGSM
-         dbgPrint("AT+");
-         dbgPrint(cmd);
-         dbgPrint("? enviado\r\n");
-         #endif
-
          result = updateFSM(sending,cmd,par);
 
          break;
@@ -524,12 +472,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
          rs232Print("AT+");
          rs232Print(cmd);
          rs232Print("\r");
-
-         #ifdef DEBUGGSM
-         dbgPrint("AT+");
-         dbgPrint(cmd);
-         dbgPrint(" enviado\r\n");
-         #endif
 
          result = updateFSM(sending,cmd,par);
 
@@ -546,7 +488,7 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
       default:
 
-         dbgPrint("Tipo de comando no reconocido\r\n");
+         debug(">>>engine<<<   Se intento enviar un tipo de comando desconocido\r\n");
 
          result = ERR_CMD_UKN;
 
@@ -585,6 +527,13 @@ uint8_t readURC (uint8_t * const command,
       strncpy(parameter, URCeventVector[URCevents - 1].parameter, strlen(URCeventVector[URCevents - 1].parameter));
       parameter[strlen(URCeventVector[URCevents -1].parameter)] = '\0';
       URCevents --;
+
+      debug(">>>engine<<<   URC READ: ");
+      debug(command);
+      debug("(");
+      debug(parameter);
+      debug(")\r\n");
+
       return 1;
    }
 }

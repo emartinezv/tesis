@@ -43,6 +43,13 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG_INTERF // debug mode
+#ifdef DEBUG_INTERF
+   #define debug(msg) dbgPrint(msg)
+#else
+   #define debug(msg)
+#endif
+
 /*==================[global data]============================================*/
 
 /*==================[internal data declaration]==============================*/
@@ -70,7 +77,7 @@ static void * frmOutput;
 /** @brief Function pointer to callback for the current formula being run
  */
 
-static void * (*frmCback) (void *);
+static void * (*frmCback) (error_frm, void *);
 
 /*==================[internal functions declaration]=========================*/
 
@@ -103,9 +110,12 @@ static void ciaaMobile_startUp_f (void);
 static void ciaaMobile_sendSMS_f (void)
 {
    static uint8_t runState = 0;
+   static error_frm frmError = OK;
 
    static uint8_t smsCmd[30];
    static uint8_t smsText[150];
+
+   FSMresult result;
 
    switch(frmState) {
 
@@ -113,6 +123,9 @@ static void ciaaMobile_sendSMS_f (void)
 
          smsCmd[0] = '\0';
          smsText[0] = '\0';
+
+         runState = 0;
+         frmError = OK;
 
          /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
          strncat(smsCmd, "AT+CMGS=\"", 9);
@@ -124,13 +137,11 @@ static void ciaaMobile_sendSMS_f (void)
 
          frmState = PROC;
 
-         //#ifdef DEBUGGSM
-         dbgPrint("\r\nsmsCmd: ");
-         dbgPrint(smsCmd);
-         dbgPrint("\nsmsText: ");
-         dbgPrint(smsText);
-         dbgPrint("\r\n");
-         //#endif
+         debug(">>>interf<<<   COMANDO ENVIO SMS: ");
+         debug(smsCmd);
+         debug("\r\n>>>interf<<<   TEXTO SMS: ");
+         debug(smsText);
+         debug("\r\n");
 
          break;
 
@@ -140,24 +151,36 @@ static void ciaaMobile_sendSMS_f (void)
 
             case 0:
 
-               sendATcmd(smsCmd);
-               runState = 1;
+               result = sendATcmd(smsCmd);
+               if(OK_CMD_SENT == result){runState = 1;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 1:
 
-               if(OK_CLOSE == processToken()){runState = 2;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){runState = 2;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
             case 2:
 
-               sendATcmd(smsText);
-               runState = 3;
+               result = sendATcmd(smsText);
+               if(OK_CMD_SENT == result){runState = 3;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 3:
 
-               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
          }
@@ -166,7 +189,7 @@ static void ciaaMobile_sendSMS_f (void)
 
       case WRAP:
 
-         frmCback(0);
+         frmCback(frmError, 0);
          frmState = IDLE;
          break;
    }
@@ -178,12 +201,18 @@ static void ciaaMobile_sendSMS_f (void)
 static void ciaaMobile_listRecSMS_f (void)
 {
    static uint8_t runState = 0;
+   static error_frm frmError = OK;
+
+   FSMresult result;
 
    switch(frmState) {
 
       case INIT:
 
-         dbgPrint("Leyendo SMS\r\n");
+         runState = 0;
+         frmError = OK;
+
+         debug(">>>interf<<<   Leyendo SMS...\r\n");
 
          frmState = PROC;
 
@@ -195,13 +224,19 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case 0:
 
-               sendATcmd("AT+CMGL=\"ALL\"\r");
-               runState = 1;
+               result = sendATcmd("AT+CMGL=\"ALL\"\r");
+               if(OK_CMD_SENT == result){runState = 1;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 1:
 
-               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
          }
@@ -221,24 +256,25 @@ static void ciaaMobile_listRecSMS_f (void)
 
          // DEBUG ERASE LATER
 
-         dbgPrint("Tamaño del vector: ");
+         debug(">>>interf<<<   TAMAÑO DEL VECTOR: ");
          itoa(target->meta[0], auxtext, 10);
-         dbgPrint(auxtext);
-         dbgPrint("\r\n");
-         dbgPrint("Cantidad de SMS: ");
+         debug(auxtext);
+         debug("\r\n");
+         debug(">>>interf<<<   CANTIDAD DE SMS: ");
          itoa((respNo-1)/2, auxtext, 10);
-         dbgPrint(auxtext);
-         dbgPrint("\r\n");
+         debug(auxtext);
+         debug("\r\n");
 
          // DEBUG ERASE LATER
 
          if(target->meta[0] < ((respNo-1)/2)){
-            dbgPrint("No hay suficiente espacio para los mensajes \r\n");
+            frmError = ERR_WRAP;
+            debug(">>>interf<<<   No hay suficiente espacio para los mensajes!\r\n");
          }
 
          else {
 
-            if(1 == respNo){dbgPrint("No hay SMSs\r\n");}
+            if(1 == respNo){debug(">>>interf<<<   No hay SMSs!\r\n");}
 
             else{
 
@@ -259,9 +295,9 @@ static void ciaaMobile_listRecSMS_f (void)
 
          (target+i)->meta[0] = '\0';
 
-         frmCback(frmOutput);
+         frmCback(frmError, frmOutput);
 
-         dbgPrint("Lectura de SMS concluida\r\n");
+         debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
 
          frmState = IDLE;
          break;
@@ -274,9 +310,12 @@ static void ciaaMobile_listRecSMS_f (void)
 static void ciaaMobile_delSMS_f (void)
 {
    static uint8_t runState = 0;
+   static error_frm frmError = OK;
 
    static uint8_t aux[5]; /* aux buffer */
    static uint8_t smsDel[20];  /* holds the str of the sms del cmd including paramenters */
+
+   FSMresult result;
 
    switch(frmState) {
 
@@ -284,6 +323,9 @@ static void ciaaMobile_delSMS_f (void)
 
          aux[0] = '\0';
          smsDel[0] = '\0';
+
+         runState = 0;
+         frmError = OK;
 
          strncat(smsDel, "AT+CMGD=", 8);
          itoa(((SMS_del *)frmInput)->index, aux, 10);
@@ -303,13 +345,19 @@ static void ciaaMobile_delSMS_f (void)
 
             case 0:
 
-               sendATcmd(smsDel);
-               runState = 1;
+               result = sendATcmd(smsDel);
+               if(OK_CMD_SENT == result){runState = 1;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 1:
 
-               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
          }
@@ -318,7 +366,7 @@ static void ciaaMobile_delSMS_f (void)
 
       case WRAP:
 
-         frmCback(0);
+         frmCback(frmError, 0);
          frmState = IDLE;
          break;
    }
@@ -329,12 +377,18 @@ static void ciaaMobile_delSMS_f (void)
 static void ciaaMobile_startUp_f (void)
 {
    static uint8_t runState = 0;
+   static error_frm frmError = OK;
+
+   FSMresult result;
 
    switch(frmState) {
 
       case INIT:
 
-         dbgPrint("Inicializando ciaaMobile...\r\n");
+         runState = 0;
+         frmError = OK;
+
+         debug(">>>interf<<<   Inicializando ciaaMobile...\r\n");
 
          frmState = PROC;
 
@@ -346,35 +400,53 @@ static void ciaaMobile_startUp_f (void)
 
             case 0:
 
-               sendATcmd("AT\r");
-               runState = 1;
+               result = sendATcmd("AT\r");
+               if(OK_CMD_SENT == result){runState = 1;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 1:
 
-               if(OK_CLOSE == processToken()){runState = 2;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){runState = 2;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
             case 2:
 
-               sendATcmd("AT+CMGF=1\r");
-               runState = 3;
+               result = sendATcmd("AT+CMGF=1\r");
+               if(OK_CMD_SENT == result){runState = 3;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 3:
 
-               if(OK_CLOSE == processToken()){runState = 4;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){runState = 4;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
             case 4:
 
-               sendATcmd("AT+CSCS=\"GSM\"\r");
-               runState = 5;
+               result = sendATcmd("AT+CSCS=\"GSM\"\r");
+               if(OK_CMD_SENT == result){runState = 5;}
+               else{frmError = ERR_PROC; frmState = WRAP;}
                break;
 
             case 5:
 
-               if(OK_CLOSE == processToken()){runState = 0; frmState = WRAP;}
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else{frmError = ERR_PROC; frmState = WRAP;}
+               }
                break;
 
          }
@@ -383,7 +455,9 @@ static void ciaaMobile_startUp_f (void)
 
       case WRAP:
 
-         dbgPrint("ciaaMobile inicializado!\r\n");
+         frmCback(frmError, 0);
+
+         debug(">>>interf<<<   ciaaMobile inicializado!\r\n");
 
          frmState = IDLE;
          break;
@@ -395,7 +469,7 @@ static void ciaaMobile_startUp_f (void)
 
 /*==================[external functions definition]==========================*/
 
-void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *))
+void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_frm, void *))
 {
    frm = ciaaMobile_sendSMS_f;
    frmInput = msg;
@@ -405,7 +479,7 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *))
    return;
 }
 
-void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void *))
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_frm, void *))
 {
    frm = ciaaMobile_listRecSMS_f;
    list->meta[0] = noMsg; /* we hide the noMsg integer inside the list vector */
@@ -416,7 +490,7 @@ void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void
    return;
 }
 
-void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (void *))
+void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_frm, void *))
 {
    frm = ciaaMobile_delSMS_f;
    frmInput = msgdel;
@@ -426,9 +500,10 @@ void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (void *))
    return;
 }
 
-void ciaaMobile_startUp (void)
+void ciaaMobile_startUp (void * (*cback) (error_frm, void *))
 {
    frm = ciaaMobile_startUp_f;
+   frmCback = cback;
    frmState = INIT;
 
    return;

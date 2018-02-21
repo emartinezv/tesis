@@ -61,8 +61,21 @@ typedef enum {
    IDLE = 0, /**< no formula currently running*/
    INIT = 1, /**< initializing formula */
    PROC = 2, /**< running commands */
-   WRAP = 3, /**< wrapping up formula and callback */
+   WRAP = 3 /**< wrapping up formula and callback */
 } frmStatus;
+
+/** @brief Type for formula error code return */
+
+typedef enum {
+   OK = 0,         /**< no errors */
+   ERR_INIT = 1,   /**< error during initialization */
+   ERR_PROC = 2,   /**< error during command processing */
+   ERR_WRAP = 3    /**< error during wrap process */
+} error_frm;
+
+/*---------------------------------------------------------------------------*/
+/*            Data structures for the ciaaMobile_sendSMS function            */
+/*---------------------------------------------------------------------------*/
 
 /** @brief Type for SMS message */
 
@@ -78,12 +91,20 @@ typedef struct {
    uint8_t result; /**< result of the send attempt */
 } SMS_send_ret;
 
+/*---------------------------------------------------------------------------*/
+/*           Data structures for the ciaaMobile_listRecSMS function          */
+/*---------------------------------------------------------------------------*/
+
 /** @brief Type for SMS read return */
 
 typedef struct {
    uint8_t meta[150]; /**< metadata */
    uint8_t text[150]; /**< text of the SMS message */
 } SMS_rec;
+
+/*---------------------------------------------------------------------------*/
+/*             Data structures for the ciaaMobile_delSMS function            */
+/*---------------------------------------------------------------------------*/
 
 /** @brief Type for SMS deletion command */
 
@@ -110,7 +131,7 @@ typedef struct {
 * @return
 */
 
-void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *));
+void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_frm, void *));
 
 /** @brief Lists received SMSs in a vector
 *
@@ -121,7 +142,7 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (void *));
 * @return
 */
 
-void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void *));
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_frm, void *));
 
 /** @brief Deletes a single SMS from memory
 *
@@ -131,17 +152,16 @@ void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (void
 * @return
 */
 
-void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (void *));
+void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_frm, void *));
 
 /** @brief ciaaMobile_startUp function
+*
+* @param cback  Function pointer to callback function
+*
 * @return
 */
 
-/** @brief Starts up the GSM engine
-
-*/
-
-void ciaaMobile_startUp (void);
+void ciaaMobile_startUp (void * (*cback) (error_frm, void *));
 
 /** @brief Indicates if the GSM engine is currently idle
  *
