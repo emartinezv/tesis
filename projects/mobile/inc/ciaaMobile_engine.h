@@ -53,6 +53,9 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** @brief Size of the respVector vector (number of tokens) */
+#define RESPVECTOR_SIZE 10
+
 /** @brief Size of the URC events vector */
 #define URC_VECTOR_SIZE 10
 
@@ -74,11 +77,12 @@ typedef enum _FSMresult
    OK_CMD_ACK,        /**< command acknowledged */
    OK_RESP,           /**< non-closing responde received */
    OK_URC,            /**< URC proccessed */
-   OK_CLOSE,          /**< closing response received */
+   OK_CLOSE,          /**< successful closing response received */
    ERR_CMD_UKN,       /**< unknown command sent */
    ERR_CMD_ECHO,      /**< cmd echo erroneous or missing */
    ERR_OOO,           /**< out of order response received */
-   ERR_TKN_INV,       /**< toke invalid */
+   ERR_TKN_INV,       /**< token invalid */
+   ERR_MSG_CLOSE,     /**< error message from modem received */
    ERR_FSM_OOR        /**< FSM out of range */
 } FSMresult;
 

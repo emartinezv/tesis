@@ -73,6 +73,20 @@ typedef enum {
    ERR_WRAP = 3    /**< error during wrap process */
 } error_frm;
 
+/** @brief Type for command error code return */
+
+typedef struct {
+   uint8_t command[TKN_LEN];     /**< error command */
+   uint8_t parameter[TKN_LEN];  /**< error parameter */
+} error_cmd;
+
+/** @brief Type for user error reporting*/
+
+typedef struct {
+   error_frm error_formula;     /**< formula level error */
+   error_cmd error_command;     /**< command level error */
+} error_user;
+
 /*---------------------------------------------------------------------------*/
 /*            Data structures for the ciaaMobile_sendSMS function            */
 /*---------------------------------------------------------------------------*/
@@ -131,7 +145,7 @@ typedef struct {
 * @return
 */
 
-void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_frm, void *));
+void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_user, void *));
 
 /** @brief Lists received SMSs in a vector
 *
@@ -142,7 +156,7 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_frm, void *));
 * @return
 */
 
-void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_frm, void *));
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_user, void *));
 
 /** @brief Deletes a single SMS from memory
 *
@@ -152,7 +166,7 @@ void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (erro
 * @return
 */
 
-void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_frm, void *));
+void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *
@@ -161,7 +175,7 @@ void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_frm, void *));
 * @return
 */
 
-void ciaaMobile_startUp (void * (*cback) (error_frm, void *));
+void ciaaMobile_startUp (void * (*cback) (error_user, void *));
 
 /** @brief Indicates if the GSM engine is currently idle
  *

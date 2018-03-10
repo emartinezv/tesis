@@ -68,7 +68,7 @@ static uint8_t URCevents = 0;
 
 /** @brief Stores the responses to the active command */
 
-static uint8_t respVector[TKN_BUF_SIZE][TKN_LEN];
+static uint8_t respVector[RESPVECTOR_SIZE][TKN_LEN];
 
 /** @brief Number of response tokens in the last command executed */
 
@@ -81,13 +81,15 @@ static int8_t lastResp = -1;
 *  @param received  Type of AT token as per the parse function
 *  @param command   Main part of the AT token used as input
 *  @param parameter Parameter part of the AT token used as input
+*  @param index     Index of the AT command (for sending only)
 *
 *  @return Returns the result of the latest updateFSM invocation
 */
 
 static FSMresult updateFSM (ATToken received,
                     uint8_t const * const command,
-                    uint8_t const * const parameter);
+                    uint8_t const * const parameter,
+                    uint8_t const index);
 
 /** @brief Records a new URC event in the URC event vector
 *
@@ -112,16 +114,13 @@ static uint8_t recordURC (uint8_t const * const command,
  *  of the current command after the function call is the output.
  */
 
-static FSMresult updateFSM (ATToken received,
-               uint8_t const * const command,
-               uint8_t const * const parameter)
+static FSMresult updateFSM (ATToken received, uint8_t const * const command,
+                            uint8_t const * const parameter, uint8_t index)
 {
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t currTKN;          /* number of response token being
                                        processed */
-
-   static uint8_t i = 65535;        /* command indexing variable */
 
    switch(GSMstatus){
 
@@ -131,45 +130,20 @@ static FSMresult updateFSM (ATToken received,
 
          if ((received >= AUTOBAUD) && (received <= SMS_BODY)){ /* command sent by serial port */
 
-            i = commSearch(command); /* search for command */
+            strncpy(currCMD,command,strlen(command));
+            currCMD[strlen(command)] = '\0';
+            strncpy(currPAR,parameter,strlen(parameter));
+            currPAR[strlen(parameter)] = '\0';
 
-            if(65535 != i){
+            GSMstatus = CMD_SENT;
 
-               /* if the command is valid, copy command and parameter into
-                  currCMD and currPAR; this is the command now being
-                  executed by the FSM  */
+            debug(">>>engine<<<   COMMAND SENT: ");
+            debug(command);
+            debug("(");
+            debug(parameter);
+            debug(")\r\n");
 
-               strncpy(currCMD,command,strlen(command));
-               currCMD[strlen(command)] = '\0';
-               strncpy(currPAR,parameter,strlen(parameter));
-               currPAR[strlen(parameter)] = '\0';
-
-               //if (0 == strncmp(command, "SMS_BODY", strlen(currCMD))){
-               //   GSMstatus = CMD_ACK; /* The Ctrl-Z char that closes SMS body  */
-               //                        /* messages is not echoed, so ack is not */
-               //                        /* viable                                */
-               //}
-               //else{
-               //   GSMstatus = CMD_SENT; /* ack received, command has been sent */
-               //} AHORA SMS_BODY SI TIENE ECO, BORRAR ESTO MAS TARDE
-
-               GSMstatus = CMD_SENT;
-
-               debug(">>>engine<<<   COMMAND SENT: ");
-               debug(command);
-               debug("(");
-               debug(parameter);
-               debug(")\r\n");
-
-               return OK_CMD_SENT;
-
-            }
-
-            else
-
-               debug(">>>engine<<<   UNKNOWN COMMAND\r\n");
-
-               return ERR_CMD_UKN;
+            return OK_CMD_SENT;
 
          }
 
@@ -195,6 +169,7 @@ static FSMresult updateFSM (ATToken received,
             return ERR_TKN_INV;
 
          }
+
          break;
 
       case CMD_SENT:
@@ -271,8 +246,13 @@ static FSMresult updateFSM (ATToken received,
 
             else{
 
-               /* store the response in the active command response vector and
-                  check if it is an end response */
+               /* store the response in the active command response vector */
+
+               /*if(currTKN >= RESPVECTOR_SIZE){
+
+               }  ERROR SI ME QUEDA GRANDE LA RESPUESTA EN RESPVECTOR...
+
+               else*/
 
                strncpy(respVector[currTKN],command,strlen(command));
                respVector[currTKN][strlen(command)] = '\0';
@@ -287,17 +267,32 @@ static FSMresult updateFSM (ATToken received,
                lastResp++;
                currTKN++;
 
-               uint8_t * place;
+               /* Compare current response with the string of valid          */
+               /* successful end responses for the current command. If a     */
+               /* match is detected, close command and report OK_CLOSE.      */
 
-               place = strstr(commands[i].endresp,command);
+               if(NULL != strstr(commands[index].sucResp,command)){
 
-               if(NULL != place){
-
-                  debug(">>>engine<<<   COMMAND CLOSED\r\n");
+                  debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
                   GSMstatus = WAITING;
                   return OK_CLOSE;
                }
+
+               /* Compare current response with the string of valid error    */
+               /* end responses for the current command. If a match is       */
+               /* detected, close command and report ERR_MSG_CLOSE           */
+
+               else if(NULL != strstr(commands[index].errResp,command)){
+
+                  debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
+
+                  GSMstatus = WAITING;
+                  return ERR_MSG_CLOSE;
+               }
+
+               /* if the response is not an end response, just report OK_RESP */
+
                else{
                   return OK_RESP;
                }
@@ -380,8 +375,8 @@ FSMresult processToken(void)
 
    if(0 != tokenRead(token)){
 
-      received = parse(token, command, parameter); /* parse the token */
-      currCmd = updateFSM(received, command, parameter);     /* update FSM */
+      received = parse(token, command, parameter);              /* parse the token */
+      currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 
    }
 
@@ -394,109 +389,118 @@ FSMresult processToken(void)
 
 FSMresult sendATcmd (const uint8_t * cmdstr)
 {
-   ATToken sending; /* classifies the command being sent */
-   FSMresult result; /* result of the updateFSM invocation */
+   ATToken sending;   /* classifies the command being sent */
+   FSMresult result;  /* result of the updateFSM invocation */
+   uint16_t idx;     /* index of the command to be sent in the command list */
 
    uint8_t cmd[TKN_LEN];   /* AT command  */
-   uint8_t par[TKN_LEN]; /* AT command arguments */
+   uint8_t par[TKN_LEN];   /* AT command arguments */
 
    sending = parse(cmdstr, cmd, par);
+   idx = commSearch(cmd); /* search for command */
 
-   switch(sending){ /* modify format depending on the AT command type, send
-                    through serial port and call updateFSM function */
+   if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY))){
 
-      case AUTOBAUD:
+      switch(sending){ /* modify format depending on the AT command type, send
+                       through serial port and call updateFSM function */
 
-         rs232Print("AT\r");
+         case AUTOBAUD:
 
-         result = updateFSM(sending,"AT","");
+            rs232Print("AT\r");
 
-         break;
+            result = updateFSM(sending,"AT","",idx);
 
-      case BASIC_CMD:
+            break;
 
-         rs232Print("AT");
-         rs232Print(cmd);
-         if(par != 0) {rs232Print(par);}
-         rs232Print("\r");
+         case BASIC_CMD:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT");
+            rs232Print(cmd);
+            if(par != 0) {rs232Print(par);}
+            rs232Print("\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case BASIC_CMD_AMP:
+            break;
 
-         rs232Print("AT&");
-         rs232Print(cmd);
-         if(par != 0) {rs232Print(par);}
-         rs232Print("\r");
+         case BASIC_CMD_AMP:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT&");
+            rs232Print(cmd);
+            if(par != 0) {rs232Print(par);}
+            rs232Print("\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case EXT_CMD_TEST:
+            break;
 
-         rs232Print("AT+");
-         rs232Print(cmd);
-         rs232Print("=?\r");
+         case EXT_CMD_TEST:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT+");
+            rs232Print(cmd);
+            rs232Print("=?\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case EXT_CMD_WRITE:
+            break;
 
-         rs232Print("AT+");
-         rs232Print(cmd);
-         rs232Print("=");
-         rs232Print(par);
-         rs232Print("\r");
+         case EXT_CMD_WRITE:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT+");
+            rs232Print(cmd);
+            rs232Print("=");
+            rs232Print(par);
+            rs232Print("\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case EXT_CMD_READ:
+            break;
 
-         rs232Print("AT+");
-         rs232Print(cmd);
-         rs232Print("?\r");
+         case EXT_CMD_READ:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT+");
+            rs232Print(cmd);
+            rs232Print("?\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case EXT_CMD_EXEC:
+            break;
 
-         rs232Print("AT+");
-         rs232Print(cmd);
-         rs232Print("\r");
+         case EXT_CMD_EXEC:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print("AT+");
+            rs232Print(cmd);
+            rs232Print("\r");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      case SMS_BODY:
+            break;
 
-         rs232Print(par);
-         rs232Print("\x1A");
+         case SMS_BODY:
 
-         result = updateFSM(sending,cmd,par);
+            rs232Print(par);
+            rs232Print("\x1A");
 
-         break;
+            result = updateFSM(sending,cmd,par,idx);
 
-      default:
+            break;
 
-         debug(">>>engine<<<   Se intento enviar un tipo de comando desconocido\r\n");
+      }
 
-         result = ERR_CMD_UKN;
-
-         break;
+      return result;
 
    }
 
-   return result;
+   else{
+
+      debug(">>>engine<<<   TRIED TO SEND UKNOWN COMMAND\r\n");
+
+      result = ERR_CMD_UKN;
+
+      return result;
+
+   }
+
 }
 
 uint8_t * getCmdResp (uint8_t index)

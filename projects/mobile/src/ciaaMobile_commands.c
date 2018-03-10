@@ -54,15 +54,15 @@
 /** @brief Vector of known AT commands, including their end response options */
 
 ATComm const commands [] = {
-      {"AT" , "ERROR,OK" , TOUT_DEF},
-      {"I" , "ERROR,OK" , TOUT_DEF},
-      {"CMGL" , "ERROR,OK", 20000},
-      {"CMGF" , "ERROR,OK", TOUT_DEF},
-      {"CMGS" , "> ,ERROR" , 60000},
-      {"CSCS" , "ERROR,OK" , TOUT_DEF},
-      {"CNMI" , "ERROR,OK" , TOUT_DEF},
-      {"CMGD" , "ERROR,OK" , 25000},
-      {"SMS_BODY" , "ERROR,OK" , 60000},
+      {"AT"         , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
+      {"I"          , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
+      {"CMGL"       , "OK" , "ERROR, +CME ERROR, +CMG ERROR"  , 20000},
+      {"CMGF"       , "OK" , "ERROR, +CME ERROR, +CMG ERROR"  , TOUT_DEF},
+      {"CMGS"       , "> " , "ERROR, +CME ERROR, +CMG ERROR"  , 60000},
+      {"CSCS"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
+      {"CNMI"       , "OK" , "ERROR"                          , TOUT_DEF},
+      {"CMGD"       , "OK" , "ERROR"                          , 25000},
+      {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
       {0 , 0 , 0},
 };
 

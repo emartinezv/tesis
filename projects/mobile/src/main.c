@@ -58,11 +58,11 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-void * cb (error_frm, void *);
+void * cb (error_user, void *);
 
-void * cbempty (error_frm, void *);
+void * cbempty (error_user, void *);
 
-void * cbprint (error_frm, void *);
+void * cbprint (error_user, void *);
 
 /*==================[internal data definition]===============================*/
 
@@ -102,18 +102,18 @@ static void pausems(uint32_t t)
    }
 }
 
-void * cbempty (error_frm frmError, void * input)
+void * cbempty (error_user error_in, void * input)
 {
    dbgPrint("Funcion cbempty ejecutada\r\n");
 
-   if(OK != frmError){
+   if(OK != error_in.error_formula){
       dbgPrint("Error en inicializacion\r\n");
    }
 
    return 0;
 }
 
-void * cbled (error_frm frmError, void * input)
+void * cbled (error_user error_in, void * input)
 {
    dbgPrint("Actualizando LEDs...\r\n");
 
@@ -136,25 +136,33 @@ void * cbled (error_frm frmError, void * input)
    return;
 }
 
-void * cbprint (error_frm frmError, void * input)
+void * cbprint (error_user error_in, void * input)
 {
    dbgPrint("Imprimiendo SMS...\r\n\r\n");
 
-   uint8_t i = 0;
-   SMS_rec * target = (SMS_rec *)input;
-
-   for(i = 0; (target+i)->meta[0] != '\0'; i++){
-
-      dbgPrint((target+i)->text);
-      dbgPrint("\r\n");
-
-      if(0 != strstr((target+i)->text,"borrar")){
-         deleteall = 1;
-      }
-
+   if(OK != error_in.error_formula){
+      dbgPrint("Error en la lectura de SMS!\r\n");
    }
 
-   dbgPrint("\r\nFin de los mensajes\r\n");
+   else{
+
+      uint8_t i = 0;
+      SMS_rec * target = (SMS_rec *)input;
+
+      for(i = 0; (target+i)->meta[0] != '\0'; i++){
+
+         dbgPrint((target+i)->text);
+         dbgPrint("\r\n");
+
+         if(0 != strstr((target+i)->text,"borrar")){
+            deleteall = 1;
+         }
+
+      }
+
+      dbgPrint("\r\nFin de los mensajes\r\n");
+
+   }
 
    return;
 }

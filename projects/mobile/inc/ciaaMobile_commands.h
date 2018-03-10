@@ -61,7 +61,8 @@ extern "C" {
 
 typedef struct {
    uint8_t const * const name;     /**< pointer to str with command name */
-   uint8_t const * const endresp;  /**< pointer to str with end responses */
+   uint8_t const * const sucResp;  /**< pointer to str with successful end responses */
+   uint8_t const * const errResp;  /**< pointer to str with error end responses */
    uint8_t timeout;                /**< command timeout in ms */
 } ATComm;
 
