@@ -54,12 +54,12 @@
 /** @brief Vector of known AT commands, including their end response options */
 
 ATComm const commands [] = {
-      {"AT"         , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"I"          , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
+      {"AT"         , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
+      {"I"          , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
       {"CMEE"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CMGL"       , "OK" , "ERROR, +CME ERROR, +CMG ERROR"  , 20000},
-      {"CMGF"       , "OK" , "ERROR, +CME ERROR, +CMG ERROR"  , TOUT_DEF},
-      {"CMGS"       , "> " , "ERROR, +CME ERROR, +CMG ERROR"  , 60000},
+      {"CMGL"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , 20000},
+      {"CMGF"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , TOUT_DEF},
+      {"CMGS"       , "> " , "ERROR, +CME ERROR, +CMS ERROR"  , 60000},
       {"CSCS"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"CNMI"       , "OK" , "ERROR"                          , TOUT_DEF},
       {"CMGD"       , "OK" , "ERROR"                          , 25000},

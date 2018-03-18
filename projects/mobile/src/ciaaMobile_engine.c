@@ -121,11 +121,13 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
    static uint8_t currTKN;          /* number of response token being
                                        processed */
+   static uint8_t idx;              /* index of the command in the list */
 
    switch(GSMstatus){
 
       case WAITING: /* initial state */
 
+         idx = index;
          lastResp = -1;
 
          if ((received >= AUTOBAUD) && (received <= SMS_BODY)){ /* command sent by serial port */
@@ -272,7 +274,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               if(NULL != strstr(commands[index].sucResp,command)){
+               if(NULL != strstr(commands[idx].sucResp,command)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -284,7 +286,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               else if(NULL != strstr(commands[index].errResp,command)){
+               else if(NULL != strstr(commands[idx].errResp,command)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
