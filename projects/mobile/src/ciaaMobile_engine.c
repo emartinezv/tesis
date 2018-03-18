@@ -68,7 +68,7 @@ static uint8_t URCevents = 0;
 
 /** @brief Stores the responses to the active command */
 
-static uint8_t respVector[RESPVECTOR_SIZE][TKN_LEN];
+static ATresp respVector[RESPVECTOR_SIZE];
 
 /** @brief Number of response tokens in the last command executed */
 
@@ -254,15 +254,16 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
                else*/
 
-               strncpy(respVector[currTKN],command,strlen(command));
-               respVector[currTKN][strlen(command)] = '\0';
-               strncat(respVector[currTKN],"(",1);
-               strncat(respVector[currTKN],parameter,strlen(parameter));
-               strncat(respVector[currTKN],")",1);
+               strncpy(respVector[currTKN].cmd,command,strlen(command));
+               respVector[currTKN].cmd[strlen(command)] = '\0';
+               strncpy(respVector[currTKN].param,parameter,strlen(parameter));
+               respVector[currTKN].param[strlen(parameter)] = '\0';
 
                debug(">>>engine<<<   RESP: ");
-               debug(respVector[currTKN]);
-               debug("\r\n");
+               debug(respVector[currTKN].cmd);
+               debug("(");
+               debug(respVector[currTKN].param);
+               debug(")\r\n");
 
                lastResp++;
                currTKN++;
@@ -503,12 +504,17 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
 }
 
-uint8_t * getCmdResp (uint8_t index)
+ATresp getCmdResp (uint8_t index)
 {
    /* fetches the next command response; returns 0 if there are no more
       response left */
 
-   if(index > lastResp | index < 0){return 0;}
+   ATresp dummy;
+
+   dummy.cmd[0] = '\0';
+   dummy.param[0] = '\0';
+
+   if(index > lastResp | index < 0){return dummy;}
    else {return respVector[index];}
 }
 

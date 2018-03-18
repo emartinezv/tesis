@@ -107,7 +107,46 @@ void * cbempty (error_user error_in, void * input)
    dbgPrint("Funcion cbempty ejecutada\r\n");
 
    if(OK != error_in.error_formula){
-      dbgPrint("Error en inicializacion\r\n");
+      dbgPrint("Error en la ejecucion de formula: ");
+
+      switch(error_in.error_formula){
+
+         case ERR_INIT:
+
+            dbgPrint("Error en inicializacion\r\n");
+
+            break;
+
+         case ERR_PROC:
+
+            dbgPrint("Error en proceso\r\n");
+
+            break;
+
+         case ERR_GSM:
+
+            dbgPrint("Error del engine GSM --- ");
+            dbgPrint(error_in.error_command.command);
+            dbgPrint("(");
+            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(") ---\r\n");
+
+            break;
+
+         case ERR_WRAP:
+
+            dbgPrint("Error en cierre\r\n");
+
+            break;
+
+         default:
+
+            dbgPrint("Error no reconocido\r\n");
+
+            break;
+
+      }
+
    }
 
    return 0;
@@ -115,6 +154,49 @@ void * cbempty (error_user error_in, void * input)
 
 void * cbled (error_user error_in, void * input)
 {
+   if(OK != error_in.error_formula){
+      dbgPrint("Error en la ejecucion de formula: ");
+
+      switch(error_in.error_formula){
+
+         case ERR_INIT:
+
+            dbgPrint("Error en inicializacion\r\n");
+
+            break;
+
+         case ERR_PROC:
+
+            dbgPrint("Error en proceso\r\n");
+
+            break;
+
+         case ERR_GSM:
+
+            dbgPrint("Error del engine GSM --- ");
+            dbgPrint(error_in.error_command.command);
+            dbgPrint("(");
+            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(") ---\r\n");
+
+            break;
+
+         case ERR_WRAP:
+
+            dbgPrint("Error en cierre\r\n");
+
+            break;
+
+         default:
+
+            dbgPrint("Error no reconocido\r\n");
+
+            break;
+
+      }
+
+   }
+
    dbgPrint("Actualizando LEDs...\r\n");
 
    uint8_t i = 0;
@@ -138,10 +220,57 @@ void * cbled (error_user error_in, void * input)
 
 void * cbprint (error_user error_in, void * input)
 {
+   if(OK != error_in.error_formula){
+      dbgPrint("Error en la ejecucion de formula: ");
+
+      switch(error_in.error_formula){
+
+         case ERR_INIT:
+
+            dbgPrint("Error en inicializacion\r\n");
+
+            break;
+
+         case ERR_PROC:
+
+            dbgPrint("Error en proceso\r\n");
+
+            break;
+
+         case ERR_GSM:
+
+            dbgPrint("Error del engine GSM --- ");
+            dbgPrint(error_in.error_command.command);
+            dbgPrint("(");
+            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(") ---\r\n");
+
+            break;
+
+         case ERR_WRAP:
+
+            dbgPrint("Error en cierre\r\n");
+
+            break;
+
+         default:
+
+            dbgPrint("Error no reconocido\r\n");
+
+            break;
+
+      }
+
+   }
+
    dbgPrint("Imprimiendo SMS...\r\n\r\n");
 
    if(OK != error_in.error_formula){
       dbgPrint("Error en la lectura de SMS!\r\n");
+      dbgPrint(error_in.error_command.command);
+      dbgPrint("(");
+      dbgPrint(error_in.error_command.parameter);
+      dbgPrint(")\r\n");
    }
 
    else{
@@ -211,19 +340,19 @@ int main(void)
 
       }
 
-      /*if (0 == sendsms_count){
+      if (0 == sendsms_count){
 
          sendsms_count = DELAY_SENDSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_sendSMS(&msg, cbempty);}
 
-      }*/
+      }
 
-      if (0 == readsms_count){
+      /*if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
 
-      }
+      }*/
 
       /*if (0 == readURC_count){
 

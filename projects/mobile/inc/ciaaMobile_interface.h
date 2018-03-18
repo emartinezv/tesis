@@ -64,20 +64,47 @@ typedef enum {
    WRAP = 3 /**< wrapping up formula and callback */
 } frmStatus;
 
+/** @brief Number of command in the PROC section being executed */
+
+typedef enum {
+   NOCMD,
+   ATCMD1,
+   ATCMD1RESP,
+   ATCMD2,
+   ATCMD2RESP,
+   ATCMD3,
+   ATCMD3RESP,
+   ATCMD4,
+   ATCMD4RESP,
+   ATCMD5,
+   ATCMD5RESP,
+   ATCMD6,
+   ATCMD6RESP,
+   ATCMD7,
+   ATCMD7RESP,
+   ATCMD8,
+   ATCMD8RESP,
+   ATCMD9,
+   ATCMD9RESP,
+   ATCMD10,
+   ATCMD10RESP
+} runStatus;
+
 /** @brief Type for formula error code return */
 
 typedef enum {
-   OK = 0,         /**< no errors */
-   ERR_INIT = 1,   /**< error during initialization */
-   ERR_PROC = 2,   /**< error during command processing */
-   ERR_WRAP = 3    /**< error during wrap process */
+   OK,         /**< no errors */
+   ERR_INIT,   /**< error during initialization */
+   ERR_PROC,   /**< error during command processing */
+   ERR_GSM,    /**< error from the GSM engine */
+   ERR_WRAP    /**< error during wrap process */
 } error_frm;
 
 /** @brief Type for command error code return */
 
 typedef struct {
-   uint8_t command[TKN_LEN];     /**< error command */
-   uint8_t parameter[TKN_LEN];  /**< error parameter */
+   uint8_t command[20];     /**< error command */
+   uint8_t parameter[150];  /**< error parameter */
 } error_cmd;
 
 /** @brief Type for user error reporting*/

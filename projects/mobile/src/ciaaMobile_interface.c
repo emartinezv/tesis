@@ -109,11 +109,19 @@ static void ciaaMobile_startUp_f (void);
 
 static void ciaaMobile_sendSMS_f (void)
 {
-   static uint8_t runState = 0;
+   static runStatus runState = NOCMD;
    static error_user error_out;
 
-   static uint8_t smsCmd[30];
-   static uint8_t smsText[150];
+   /* smsCmd is "AT+CMGS="XXX"\r" where XXX is the phone number. Maximum phone
+    * number length under the ITU-T standard E.164 is 15 digits plus the "+"
+      symbol if present. */
+
+   static uint8_t smsCmd[9+16+3];
+
+   /* Maximum SMS size according to 3GPP standard TS 23.038 is 160 chars using
+    * GSM 7-bit alphabet */
+
+   static uint8_t smsText[160+1];
 
    FSMresult result;
 
@@ -124,10 +132,12 @@ static void ciaaMobile_sendSMS_f (void)
          smsCmd[0] = '\0';
          smsText[0] = '\0';
 
-         runState = 0;
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
+
+         /* VERIFICAR SI EL NUMERO TIENE ALGO MAS QUE + Y DIGITOS*/
+         /* VERIFICAR SI EL CUERPO TIENE LF, CR O ALGO QUE PUEDA JODER */
 
          /*sprintf(dest, "\"%s\"", ((SMS_send *)msg)->dest);   VER SI SE PUEDE INCORPORAR MAS ADELANTE */
          strncat(smsCmd, "AT+CMGS=\"", 9);
@@ -137,6 +147,7 @@ static void ciaaMobile_sendSMS_f (void)
          strncpy(smsText, ((SMS_send *)frmInput)->text, strlen(((SMS_send *)frmInput)->text));
          smsText[strlen(((SMS_send *)frmInput)->text)] = '\0';
 
+         runState = ATCMD1;
          frmState = PROC;
 
          debug(">>>interf<<<   COMANDO ENVIO SMS: ");
@@ -151,36 +162,38 @@ static void ciaaMobile_sendSMS_f (void)
 
          switch(runState){
 
-            case 0:
+            case ATCMD1:
 
                result = sendATcmd(smsCmd);
-               if(OK_CMD_SENT == result){runState = 1;}
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 1:
+            case ATCMD1RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){runState = 2;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
 
-            case 2:
+            case ATCMD2:
 
                result = sendATcmd(smsText);
-               if(OK_CMD_SENT == result){runState = 3;}
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 3:
+            case ATCMD2RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
@@ -190,6 +203,18 @@ static void ciaaMobile_sendSMS_f (void)
          break;
 
       case WRAP:
+
+         if(ERR_GSM == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
 
          frmCback(error_out, 0);
          frmState = IDLE;
@@ -202,7 +227,7 @@ static void ciaaMobile_sendSMS_f (void)
 
 static void ciaaMobile_listRecSMS_f (void)
 {
-   static uint8_t runState = 0;
+   static runStatus runState = NOCMD;
    static error_user error_out;
 
    FSMresult result;
@@ -211,13 +236,13 @@ static void ciaaMobile_listRecSMS_f (void)
 
       case INIT:
 
-         runState = 0;
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
 
          debug(">>>interf<<<   Leyendo SMS...\r\n");
 
+         runState = ATCMD1;
          frmState = PROC;
 
          break;
@@ -226,19 +251,20 @@ static void ciaaMobile_listRecSMS_f (void)
 
          switch(runState){
 
-            case 0:
+            case ATCMD1:
 
-               result = sendATcmd("AT+CMGZ=\"ALL\"\r");
-               if(OK_CMD_SENT == result){runState = 1;}
+               result = sendATcmd("AT+CMGL=\"ALL\"\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 1:
+            case ATCMD1RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
@@ -249,61 +275,83 @@ static void ciaaMobile_listRecSMS_f (void)
 
       case WRAP:
 
-         ;
-         uint8_t i = 0;
-         uint8_t respNo;
-         uint8_t auxtext[4]; // ERASE LATER, FOR DEBUG ONLY
+         if(OK == error_out.error_formula){
 
-         uint8_t * resp;
-         SMS_rec * target = (SMS_rec *)frmOutput;
-         respNo = getNoCmdResp();
+            uint8_t i = 0;
+            uint8_t respNo;
+            uint8_t auxtext[4]; // ERASE LATER, FOR DEBUG ONLY
 
-         // DEBUG ERASE LATER
+            ATresp resp;
+            SMS_rec * target = (SMS_rec *)frmOutput;
+            respNo = getNoCmdResp();
 
-         debug(">>>interf<<<   TAMAÑO DEL VECTOR: ");
-         itoa(target->meta[0], auxtext, 10);
-         debug(auxtext);
-         debug("\r\n");
-         debug(">>>interf<<<   CANTIDAD DE SMS: ");
-         itoa((respNo-1)/2, auxtext, 10);
-         debug(auxtext);
-         debug("\r\n");
+            // DEBUG ERASE LATER
 
-         // DEBUG ERASE LATER
+            debug(">>>interf<<<   TAMAÑO DEL VECTOR: ");
+            itoa(target->meta[0], auxtext, 10);
+            debug(auxtext);
+            debug("\r\n");
+            debug(">>>interf<<<   CANTIDAD DE SMS: ");
+            itoa((respNo-1)/2, auxtext, 10);
+            debug(auxtext);
+            debug("\r\n");
 
-         if(target->meta[0] < ((respNo-1)/2)){
-            error_out.error_formula = ERR_WRAP;
-            debug(">>>interf<<<   No hay suficiente espacio para los mensajes!\r\n");
-         }
+            // DEBUG ERASE LATER
 
-         else {
+            if(target->meta[0] < ((respNo-1)/2)){
+               error_out.error_formula = ERR_WRAP;
+               debug(">>>interf<<<   No hay suficiente espacio para los mensajes!\r\n");
+            }
 
-            if(1 == respNo){debug(">>>interf<<<   No hay SMSs!\r\n");}
+            else {
 
-            else{
+               if(1 == respNo){debug(">>>interf<<<   No hay SMSs!\r\n");}
 
-               for(i = 0; i < (respNo-1)/2; i++){
+               else{
 
-                  resp = getCmdResp(2*i);
-                  strncpy((target+i)->meta, resp, 149);
-                  (target+i)->meta[149] = '\0';
+                  for(i = 0; i < (respNo-1)/2; i++){
 
-                  resp = getCmdResp((2*i)+1);
-                  strncpy((target+i)->text, resp, 149);
-                  (target+i)->text[149] = '\0';
+                     resp = getCmdResp(2*i);
+                     strncpy((target+i)->meta, resp.param, 149);
+                     (target+i)->meta[149] = '\0';
+
+                     resp = getCmdResp((2*i)+1);
+                     strncpy((target+i)->text, resp.param, 149);
+                     (target+i)->text[149] = '\0';
+                  }
+
                }
 
             }
 
+            (target+i)->meta[0] = '\0';
+
+            frmCback(error_out, frmOutput);
+
+            debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
+
+            frmState = IDLE;
+
          }
 
-         (target+i)->meta[0] = '\0';
+         else{
 
-         frmCback(error_out, frmOutput);
+            ATresp resp;
 
-         debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
 
-         frmState = IDLE;
+            frmCback(error_out, frmOutput);
+
+            debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
+
+            frmState = IDLE;
+
+         }
+
          break;
    }
 
@@ -313,7 +361,7 @@ static void ciaaMobile_listRecSMS_f (void)
 
 static void ciaaMobile_delSMS_f (void)
 {
-   static uint8_t runState = 0;
+   static runStatus runState = NOCMD;
    static error_user error_out;
 
    static uint8_t aux[5]; /* aux buffer */
@@ -328,7 +376,6 @@ static void ciaaMobile_delSMS_f (void)
          aux[0] = '\0';
          smsDel[0] = '\0';
 
-         runState = 0;
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
@@ -341,6 +388,7 @@ static void ciaaMobile_delSMS_f (void)
          strncat(smsDel, aux, strlen(aux));
          strncat(smsDel, "\r", 1);
 
+         runState = ATCMD1;
          frmState = PROC;
 
          break;
@@ -349,19 +397,20 @@ static void ciaaMobile_delSMS_f (void)
 
          switch(runState){
 
-            case 0:
+            case ATCMD1:
 
                result = sendATcmd(smsDel);
-               if(OK_CMD_SENT == result){runState = 1;}
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 1:
+            case ATCMD1RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
@@ -371,6 +420,18 @@ static void ciaaMobile_delSMS_f (void)
          break;
 
       case WRAP:
+
+         if(ERR_GSM == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
 
          frmCback(error_out, 0);
          frmState = IDLE;
@@ -382,7 +443,7 @@ static void ciaaMobile_delSMS_f (void)
 
 static void ciaaMobile_startUp_f (void)
 {
-   static uint8_t runState = 0;
+   static runStatus runState = NOCMD;
    static error_user error_out;
 
    FSMresult result;
@@ -391,13 +452,14 @@ static void ciaaMobile_startUp_f (void)
 
       case INIT:
 
-         runState = 0;
+
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
 
          debug(">>>interf<<<   Inicializando ciaaMobile...\r\n");
 
+         runState = ATCMD1;
          frmState = PROC;
 
          break;
@@ -406,53 +468,74 @@ static void ciaaMobile_startUp_f (void)
 
          switch(runState){
 
-            case 0:
+            case ATCMD1:
 
                result = sendATcmd("AT\r");
-               if(OK_CMD_SENT == result){runState = 1;}
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 1:
+            case ATCMD1RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){runState = 2;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
 
-            case 2:
+            case ATCMD2:
 
-               result = sendATcmd("AT+CMGF=1\r");
-               if(OK_CMD_SENT == result){runState = 3;}
+               result = sendATcmd("AT+CMEE=2\r");
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 3:
+            case ATCMD2RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){runState = 4;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD3;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
 
-            case 4:
+            case ATCMD3:
 
                result = sendATcmd("AT+CSCS=\"GSM\"\r");
-               if(OK_CMD_SENT == result){runState = 5;}
+               if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
-            case 5:
+            case ATCMD3RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
-                  if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD4;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD4:
+
+               result = sendATcmd("AT+CMGF=1\r");
+               if(OK_CMD_SENT == result){runState = ATCMD4RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD4RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
                break;
@@ -462,6 +545,18 @@ static void ciaaMobile_startUp_f (void)
          break;
 
       case WRAP:
+
+         if(ERR_GSM == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
 
          frmCback(error_out, 0);
 
