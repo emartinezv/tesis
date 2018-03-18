@@ -53,6 +53,10 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** @brief sysUpdate period in ms */
+
+#define DELAY_SYSUPD 10;
+
 /*==================[typedef]================================================*/
 
 /** @brief State of the current formula being run */
@@ -162,7 +166,18 @@ typedef struct {
 
 /*==================[external data declaration]==============================*/
 
+/** @brief used for AT command timeout counter */
+
+extern uint32_t timeout_count;
+
 /*==================[external functions declaration]=========================*/
+
+/** @brief Handles AT command timeout and sysUpdate timing
+*
+* @return
+*/
+
+void ciaaMobile_SysTick_Handler (void);
 
 /** @brief Sends an SMS
 *

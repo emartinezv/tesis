@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_INTERF // debug mode
+//#define DEBUG_INTERF // debug mode
 #ifdef DEBUG_INTERF
    #define debug(msg) dbgPrint(msg)
 #else
@@ -78,6 +78,10 @@ static void * frmOutput;
  */
 
 static void * (*frmCback) (error_user, void *);
+
+/** @brief used for sysUpdate counter */
+
+static int32_t sysupd_count = DELAY_SYSUPD;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -452,7 +456,6 @@ static void ciaaMobile_startUp_f (void)
 
       case INIT:
 
-
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
@@ -572,6 +575,14 @@ static void ciaaMobile_startUp_f (void)
 
 /*==================[external functions definition]==========================*/
 
+void ciaaMobile_SysTick_Handler (void)
+{
+   if(timeout_count > 0) timeout_count--;
+   if(sysupd_count > 0) sysupd_count--;
+
+   return;
+}
+
 void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_sendSMS_f;
@@ -618,13 +629,25 @@ void ciaaMobile_startUp (void * (*cback) (error_user, void *))
 
 void ciaaMobile_sysUpdate (void)
 {
-   if (IDLE == frmState){
-      processToken();
-      return;
-   }
-   else {frm();}
+   if(0 == sysupd_count){
 
-   return;
+      if (IDLE == frmState){
+         processToken();
+      }
+      else {frm();}
+
+      sysupd_count = DELAY_SYSUPD;
+
+      return;
+
+   }
+
+   else{
+
+      return;
+
+   }
+
 }
 
 uint8_t ciaaMobile_isIdle (void)

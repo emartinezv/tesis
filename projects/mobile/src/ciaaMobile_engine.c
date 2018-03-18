@@ -74,6 +74,10 @@ static ATresp respVector[RESPVECTOR_SIZE];
 
 static int8_t lastResp = -1;
 
+/** @brief used for AT command timeout counter */
+
+uint32_t timeout_count = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
+
 /*==================[internal functions declaration]=========================*/
 
 /** @brief Updates the AT command FSM with the latest received token
@@ -131,6 +135,8 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          lastResp = -1;
 
          if ((received >= AUTOBAUD) && (received <= SMS_BODY)){ /* command sent by serial port */
+
+            timeout_count = commands[idx].timeout;
 
             strncpy(currCMD,command,strlen(command));
             currCMD[strlen(command)] = '\0';
@@ -380,6 +386,20 @@ FSMresult processToken(void)
 
       received = parse(token, command, parameter);              /* parse the token */
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
+
+   }
+   else{
+
+      if(GSMstatus != WAITING){
+
+         if(timeout_count == 0){
+            debug(">>>engine<<<   COMMAND TIMEOUT\r\n"); // FOR TESTING ONLY
+
+            // INSERT updateFSM call with TIMEOUT token here
+
+         }
+
+      }
 
    }
 

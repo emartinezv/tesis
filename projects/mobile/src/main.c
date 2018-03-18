@@ -68,9 +68,6 @@ void * cbprint (error_user, void *);
 
 /* TIMING COUNTERS */
 
-/** @brief used for processToken function scheduling with SysTick */
-static int32_t mblSysUp_count = DELAY_MBLSYSUP;
-
 /** @brief used for delay counter */
 static uint32_t pausems_count = DELAY_INIT;
 
@@ -300,11 +297,12 @@ void * cbprint (error_user error_in, void * input)
 
 void SysTick_Handler(void)
 {
-   if(mblSysUp_count > 0) mblSysUp_count--;
    if(pausems_count > 0) pausems_count--;
    if(readsms_count > 0) readsms_count--;
    if(sendsms_count > 0) sendsms_count--;
    if(readURC_count > 0) readURC_count--;
+
+   ciaaMobile_SysTick_Handler();
 }
 
 int main(void)
@@ -326,6 +324,8 @@ int main(void)
 
    while (1){
 
+      ciaaMobile_sysUpdate();
+
       if (1 == deleteall){
          deleteall = 0;
          borrar.index = 1;
@@ -333,26 +333,19 @@ int main(void)
          if(ciaaMobile_isIdle()){ciaaMobile_delSMS(&borrar, cbempty);}
       }
 
-      if (0 == mblSysUp_count){
-
-         mblSysUp_count = DELAY_MBLSYSUP;
-         ciaaMobile_sysUpdate();
-
-      }
-
-      if (0 == sendsms_count){
+      /*if (0 == sendsms_count){
 
          sendsms_count = DELAY_SENDSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_sendSMS(&msg, cbempty);}
 
-      }
+      }*/
 
-      /*if (0 == readsms_count){
+      if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
 
-      }*/
+      }
 
       /*if (0 == readURC_count){
 

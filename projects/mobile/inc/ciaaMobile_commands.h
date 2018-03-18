@@ -52,7 +52,7 @@ extern "C" {
 
  /** @brief Default timeout for AT commands in ms */
 
-#define TOUT_DEF 20
+#define TOUT_DEF 20 // PARA TESTING, USAR 20 ms COMO VALOR ESTANDAR
 
 /*==================[typedef]================================================*/
 
@@ -63,7 +63,7 @@ typedef struct {
    uint8_t const * const name;     /**< pointer to str with command name */
    uint8_t const * const sucResp;  /**< pointer to str with successful end responses */
    uint8_t const * const errResp;  /**< pointer to str with error end responses */
-   uint8_t timeout;                /**< command timeout in ms */
+   uint32_t timeout;                /**< command timeout in ms */
 } ATComm;
 
 /*==================[external data declaration]==============================*/
