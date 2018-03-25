@@ -52,7 +52,7 @@ extern "C" {
 
  /** @brief Default timeout for AT commands in ms */
 
-#define TOUT_DEF 20 // PARA TESTING, USAR 20 ms COMO VALOR ESTANDAR
+#define TOUT_DEF 40 // PARA TESTING, USAR 20 ms COMO VALOR ESTANDAR
 
 /*==================[typedef]================================================*/
 
