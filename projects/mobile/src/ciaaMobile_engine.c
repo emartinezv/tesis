@@ -134,9 +134,10 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          idx = index;
          lastResp = -1;
 
-         if ((received >= AUTOBAUD) && (received <= SMS_BODY)){ /* command sent by serial port */
+         if ((AUTOBAUD <= received) && (SMS_BODY >= received)){ /* command sent by serial port */
 
             timeout_count = commands[idx].timeout;
+            debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
             strncpy(currCMD,command,strlen(command));
             currCMD[strlen(command)] = '\0';
@@ -155,7 +156,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          }
 
-         else if ((received = BASIC_RSP) || (received = EXT_RSP)){ /* possible URC */
+         else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
@@ -169,6 +170,14 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
                return ERR_OOO;
             }
 
+         }
+
+         else if (TIMEOUT == received){
+               GSMstatus = WAITING;
+
+               debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
+
+               return ERR_TIMEOUT;
          }
 
          else{
@@ -185,7 +194,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          /* now that the command has been sent, we check the echo from the
             modem and verify that it agrees with the sent command */
 
-         if ((received >= AUTOBAUD) && (received <= SMS_BODY)){
+         if ((AUTOBAUD <= received) && (SMS_BODY >= received)){
 
             uint8_t eqCMD = 1;
             uint8_t eqPAR = 1;
@@ -209,7 +218,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
             }
          }
 
-         else if ((received = BASIC_RSP) || (received = EXT_RSP)){ /* possible URC */
+         else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
@@ -225,6 +234,14 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
                return ERR_CMD_ECHO;
             }
 
+         }
+
+         else if (TIMEOUT == received){
+               GSMstatus = WAITING;
+
+               debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
+
+               return ERR_TIMEOUT;
          }
 
          else{
@@ -243,7 +260,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
             end responses each time */
          ;
 
-         if ((received >= BASIC_RSP) && (received <= EXT_RSP)){
+         if ((BASIC_RSP <= received) && (EXT_RSP >= received)){
 
             if(1 == URCSearch(command)){
                recordURC (command, parameter);
@@ -309,12 +326,20 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          }
 
-         else if ((received >= AUTOBAUD) && (received <= SMS_BODY)){
+         else if ((AUTOBAUD <= received) && (SMS_BODY >= received)){
             GSMstatus = WAITING;
 
             debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
 
             return ERR_OOO;
+         }
+
+         else if (TIMEOUT == received){
+               GSMstatus = WAITING;
+
+               debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
+
+               return ERR_TIMEOUT;
          }
 
          else{
@@ -388,18 +413,9 @@ FSMresult processToken(void)
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 
    }
-   else{
+   else if((GSMstatus != WAITING) && (timeout_count == 0)){
 
-      if(GSMstatus != WAITING){
-
-         if(timeout_count == 0){
-            debug(">>>engine<<<   COMMAND TIMEOUT\r\n"); // FOR TESTING ONLY
-
-            // INSERT updateFSM call with TIMEOUT token here
-
-         }
-
-      }
+      currCmd = updateFSM(TIMEOUT, 0, 0, 0);     /* update FSM */
 
    }
 

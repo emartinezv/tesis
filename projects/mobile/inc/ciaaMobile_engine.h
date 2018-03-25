@@ -90,6 +90,7 @@ typedef enum _FSMresult
    ERR_OOO,           /**< out of order response received */
    ERR_TKN_INV,       /**< token invalid */
    ERR_MSG_CLOSE,     /**< error message from modem received */
+   ERR_TIMEOUT,       /**< AT command timeout */
    ERR_FSM_OOR        /**< FSM out of range */
 } FSMresult;
 
