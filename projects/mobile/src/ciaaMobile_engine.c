@@ -137,7 +137,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          if ((AUTOBAUD <= received) && (SMS_BODY >= received)){ /* command sent by serial port */
 
             timeout_count = commands[idx].timeout;
-            debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n ");
+            debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
             strncpy(currCMD,command,strlen(command));
             currCMD[strlen(command)] = '\0';

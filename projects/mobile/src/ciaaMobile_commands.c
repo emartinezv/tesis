@@ -63,6 +63,9 @@ ATComm const commands [] = {
       {"CSCS"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"CNMI"       , "OK" , "ERROR"                          , TOUT_DEF},
       {"CMGD"       , "OK" , "ERROR"                          , 25000},
+      {"CGATT"      , "OK" , "ERROR, +CME ERROR"              , 10000},
+      {"CSTT"       , "OK" , "ERROR, +CME ERROR"              , 1000*TOUT_DEF}, // VER SI MEJORA
+      {"CIICR"      , "OK" , "ERROR, +CME ERROR"              , 85000},
       {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
       {0 , 0 , 0},
 };

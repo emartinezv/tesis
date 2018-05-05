@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_INTERF // debug mode
+#define DEBUG_INTERF // debug mode
 #ifdef DEBUG_INTERF
    #define debug(msg) dbgPrint(msg)
 #else
@@ -104,6 +104,11 @@ static void ciaaMobile_delSMS_f (void);
  */
 
 static void ciaaMobile_startUp_f (void);
+
+/** @brief Formula to start up GPRS connection
+ */
+
+static void ciaaMobile_startGPRS_f (void);
 
 /*==================[internal data definition]===============================*/
 
@@ -573,6 +578,125 @@ static void ciaaMobile_startUp_f (void)
 
 }
 
+static void ciaaMobile_startGPRS_f (void)
+{
+   static runStatus runState = NOCMD;
+   static error_user error_out;
+
+   static uint8_t APNstring[100];  /* holds the str for the AT+CSTT command */
+
+   FSMresult result;
+
+   switch(frmState) {
+
+      case INIT:
+
+         APNstring[0] = '\0';
+
+         error_out.error_formula = OK;
+         error_out.error_command.command[0] = '\0';
+         error_out.error_command.parameter[0] = '\0';
+
+         strncat(APNstring, "AT+CSTT=\"", 9);
+         strncat(APNstring, ((APN_usr_pwd *)frmInput)->apn, 30);
+         strncat(APNstring, "\",\"", 3);
+         strncat(APNstring, ((APN_usr_pwd *)frmInput)->user, 30);
+         strncat(APNstring, "\",\"", 3);
+         strncat(APNstring, ((APN_usr_pwd *)frmInput)->pwd, 30);
+         strncat(APNstring, "\"\r", 2);
+
+         debug(APNstring);  // SACAR MAS TARDE
+         debug("\r\n");
+
+         runState = ATCMD1;
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case ATCMD1:
+
+               result = sendATcmd("AT+CGATT=1\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD2:
+
+               result = sendATcmd(APNstring);
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD2RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD3;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD3:
+
+               result = sendATcmd("AT+CIICR\r");
+               if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD3RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(ERR_GSM == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
+
+         frmCback(error_out, 0);
+         frmState = IDLE;
+         break;
+   }
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void ciaaMobile_SysTick_Handler (void)
@@ -608,6 +732,16 @@ void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_delSMS_f;
    frmInput = msgdel;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void *))
+{
+   frm = ciaaMobile_startGPRS_f;
+   frmInput = APN;
    frmCback = cback;
    frmState = INIT;
 

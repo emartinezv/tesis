@@ -164,6 +164,18 @@ typedef struct {
                    */
 } SMS_del;
 
+/*---------------------------------------------------------------------------*/
+/*             Data structures for the ciaaMobile_startGPRS function         */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for APN name, user and password */
+
+typedef struct {
+   uint8_t apn[31];   /**< APN address */
+   uint8_t user[31];  /**< User */
+   uint8_t pwd[31];   /**< Password */
+} APN_usr_pwd;
+
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -209,6 +221,16 @@ void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (erro
 */
 
 void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_user, void *));
+
+/** @brief Starts up GPRS connection in the modem
+*
+* @param APN    Pointer to struct containing APN, user and password
+* @param cback  Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

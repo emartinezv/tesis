@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_PARSER // debug mode
+#define DEBUG_PARSER // debug mode
 #ifdef DEBUG_PARSER
    #define debug(msg) dbgPrint(msg)
 #else
@@ -236,8 +236,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             }
 
             else{
-               strncpy(command,&token[3],(strlen(token) - 3)); /* copy everything after '+' */
-               command[strlen(token) -3] = '\0';
+               strncpy(command,&token[3],(strlen(token) - 4)); /* copy everything after '+' */
+               command[strlen(token) -4] = '\0';
 
                debug(">>>parser<<<   EXTENDED COMMAND EXEC: ");
                debug(command);

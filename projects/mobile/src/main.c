@@ -310,6 +310,8 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
+   uint8_t stop_flag = 0;
+
    uint8_t command [150];
    uint8_t parameter [150];
 
@@ -317,6 +319,7 @@ int main(void)
    SMS_del borrar;
 
    SMS_send msg = {"1151751809","Hola mundo!"};
+   APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
 
    pausems(DELAY_INIT);
 
@@ -340,10 +343,18 @@ int main(void)
 
       }*/
 
-      if (0 == readsms_count){
+      /*if (0 == readsms_count){
 
          readsms_count = DELAY_READSMS;
          if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
+
+      }*/
+
+      if ((0 == readsms_count) && (0 == stop_flag)){
+
+         stop_flag = 1;
+         readsms_count = DELAY_READSMS;
+         if(ciaaMobile_isIdle()){ciaaMobile_startGPRS(&APN, cbempty);}
 
       }
 
