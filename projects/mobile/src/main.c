@@ -310,7 +310,8 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
-   uint8_t stop_flag = 0;
+   uint8_t gprs_flag = 0;
+   uint8_t tcp_flag = 0;
 
    uint8_t command [150];
    uint8_t parameter [150];
@@ -320,6 +321,7 @@ int main(void)
 
    SMS_send msg = {"1151751809","Hola mundo!"};
    APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
+   TCP_addr_port addr_port = {"104.236.225.217","2399"};
 
    pausems(DELAY_INIT);
 
@@ -350,11 +352,27 @@ int main(void)
 
       }*/
 
-      if ((0 == readsms_count) && (0 == stop_flag)){
+      if (0 == readsms_count){
 
-         stop_flag = 1;
-         readsms_count = DELAY_READSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_startGPRS(&APN, cbempty);}
+         if (0 == gprs_flag){
+
+            if(ciaaMobile_isIdle()){
+               gprs_flag = 1;
+               readsms_count = DELAY_READSMS;
+               ciaaMobile_startGPRS(&APN, cbempty);
+            }
+
+         }
+
+         else if (0 == tcp_flag){
+
+            if(ciaaMobile_isIdle()){
+               tcp_flag = 1;
+               readsms_count = DELAY_READSMS;
+               ciaaMobile_openTCP(&addr_port, cbempty);
+            }
+
+         }
 
       }
 

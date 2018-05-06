@@ -110,6 +110,11 @@ static void ciaaMobile_startUp_f (void);
 
 static void ciaaMobile_startGPRS_f (void);
 
+/** @brief Formula to open a TCP port
+ */
+
+static void ciaaMobile_openTCP_f (void);
+
 /*==================[internal data definition]===============================*/
 
 /*==================[external data definition]===============================*/
@@ -697,6 +702,105 @@ static void ciaaMobile_startGPRS_f (void)
    return;
 }
 
+static void ciaaMobile_openTCP_f (void)
+{
+   static runStatus runState = NOCMD;
+   static error_user error_out;
+
+   static uint8_t addr_port_string[100];  /* str for the AT+CIPSTART command */
+
+   FSMresult result;
+
+   switch(frmState) {
+
+      case INIT:
+
+         addr_port_string[0] = '\0';
+
+         error_out.error_formula = OK;
+         error_out.error_command.command[0] = '\0';
+         error_out.error_command.parameter[0] = '\0';
+
+         strncat(addr_port_string, "AT+CIPSTART=\"TCP\",\"", 19);
+         strncat(addr_port_string, ((TCP_addr_port *)frmInput)->address, 100);
+         strncat(addr_port_string, "\",\"", 3);
+         strncat(addr_port_string, ((TCP_addr_port *)frmInput)->port, 6);
+         strncat(addr_port_string, "\"\r", 2);
+
+         debug(addr_port_string);  // SACAR MAS TARDE
+         debug("\r\n");
+
+         runState = ATCMD1;
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case ATCMD1:
+
+               result = sendATcmd("AT+CIPSHUT\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD2:
+
+               result = sendATcmd(addr_port_string);
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD2RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(ERR_GSM == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
+
+         frmCback(error_out, 0);
+         frmState = IDLE;
+         break;
+   }
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void ciaaMobile_SysTick_Handler (void)
@@ -742,6 +846,16 @@ void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void 
 {
    frm = ciaaMobile_startGPRS_f;
    frmInput = APN;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_openTCP (TCP_addr_port * addr_port, void * (*cback) (error_user, void *))
+{
+   frm = ciaaMobile_openTCP_f;
+   frmInput = addr_port;
    frmCback = cback;
    frmState = INIT;
 

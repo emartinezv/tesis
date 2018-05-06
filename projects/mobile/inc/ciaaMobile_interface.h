@@ -176,6 +176,17 @@ typedef struct {
    uint8_t pwd[31];   /**< Password */
 } APN_usr_pwd;
 
+/*---------------------------------------------------------------------------*/
+/*            Data structures for the ciaaMobile_openTCP function            */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for address and port */
+
+typedef struct {
+   uint8_t address[100]; /**< TCP address (domain or IP) */
+   uint8_t port[6];      /**< TCP port number as a string */
+} TCP_addr_port;
+
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -231,6 +242,16 @@ void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_user, void *));
 */
 
 void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void *));
+
+/** @brief Opens TCP port
+*
+* @param addr_port Pointer to struct containing the address and port to connect to
+* @param cback     Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_openTCP (TCP_addr_port * addr_port, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *
