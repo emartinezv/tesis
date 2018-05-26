@@ -177,15 +177,21 @@ typedef struct {
 } APN_usr_pwd;
 
 /*---------------------------------------------------------------------------*/
-/*            Data structures for the ciaaMobile_openTCP function            */
+/*            Data structures for the ciaaMobile_openPort function           */
 /*---------------------------------------------------------------------------*/
+
+typedef enum {
+   TCP,         /**< TCP port */
+   UDP          /**< UDP port */
+} portType_e;
 
 /** @brief Type for address and port */
 
 typedef struct {
-   uint8_t address[100]; /**< TCP address (domain or IP) */
-   uint8_t port[6];      /**< TCP port number as a string */
-} TCP_addr_port;
+   portType_e type;         /**< TCP or UDP port */
+   uint8_t    address[100]; /**< TCP address (domain or IP) */
+   uint8_t    port[6];      /**< TCP port number as a string */
+} port_s;
 
 /*==================[external data declaration]==============================*/
 
@@ -243,15 +249,15 @@ void ciaaMobile_delSMS (SMS_del * msgdel, void * (*cback) (error_user, void *));
 
 void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void *));
 
-/** @brief Opens TCP port
+/** @brief Opens TCP or UDP port
 *
-* @param addr_port Pointer to struct containing the address and port to connect to
+* @param port      Pointer to struct containing the type of port, IP address and port #
 * @param cback     Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_openTCP (TCP_addr_port * addr_port, void * (*cback) (error_user, void *));
+void ciaaMobile_openPort (port_s * port, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

@@ -321,7 +321,7 @@ int main(void)
 
    SMS_send msg = {"1151751809","Hola mundo!"};
    APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
-   TCP_addr_port addr_port = {"104.236.225.217","2399"};
+   port_s port1 = {UDP, "104.236.225.217","2399"};
 
    pausems(DELAY_INIT);
 
@@ -369,7 +369,7 @@ int main(void)
             if(ciaaMobile_isIdle()){
                tcp_flag = 1;
                readsms_count = DELAY_READSMS;
-               ciaaMobile_openTCP(&addr_port, cbempty);
+               ciaaMobile_openPort(&port1, cbempty);
             }
 
          }

@@ -110,10 +110,10 @@ static void ciaaMobile_startUp_f (void);
 
 static void ciaaMobile_startGPRS_f (void);
 
-/** @brief Formula to open a TCP port
+/** @brief Formula to open a TCP or UDP port
  */
 
-static void ciaaMobile_openTCP_f (void);
+static void ciaaMobile_openPort_f (void);
 
 /*==================[internal data definition]===============================*/
 
@@ -702,12 +702,12 @@ static void ciaaMobile_startGPRS_f (void)
    return;
 }
 
-static void ciaaMobile_openTCP_f (void)
+static void ciaaMobile_openPort_f (void)
 {
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   static uint8_t addr_port_string[100];  /* str for the AT+CIPSTART command */
+   static uint8_t port_string[100];  /* str for the AT+CIPSTART command */
 
    FSMresult result;
 
@@ -715,19 +715,27 @@ static void ciaaMobile_openTCP_f (void)
 
       case INIT:
 
-         addr_port_string[0] = '\0';
+         port_string[0] = '\0';
 
          error_out.error_formula = OK;
          error_out.error_command.command[0] = '\0';
          error_out.error_command.parameter[0] = '\0';
 
-         strncat(addr_port_string, "AT+CIPSTART=\"TCP\",\"", 19);
-         strncat(addr_port_string, ((TCP_addr_port *)frmInput)->address, 100);
-         strncat(addr_port_string, "\",\"", 3);
-         strncat(addr_port_string, ((TCP_addr_port *)frmInput)->port, 6);
-         strncat(addr_port_string, "\"\r", 2);
+         strncat(port_string, "AT+CIPSTART=\"", 13);
 
-         debug(addr_port_string);  // SACAR MAS TARDE
+         if(TCP == ((port_s *)frmInput)->type){
+            strncat(port_string, "TCP\",\"", 6);
+         }
+         else if(UDP == ((port_s *)frmInput)->type){
+            strncat(port_string, "UDP\",\"", 6);
+         }
+
+         strncat(port_string, ((port_s *)frmInput)->address, 100);
+         strncat(port_string, "\",\"", 3);
+         strncat(port_string, ((port_s *)frmInput)->port, 6);
+         strncat(port_string, "\"\r", 2);
+
+         debug(port_string);  // SACAR MAS TARDE
          debug("\r\n");
 
          runState = ATCMD1;
@@ -777,7 +785,7 @@ static void ciaaMobile_openTCP_f (void)
 
             case ATCMD3:
 
-               result = sendATcmd(addr_port_string);
+               result = sendATcmd(port_string);
                if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -876,10 +884,10 @@ void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void 
    return;
 }
 
-void ciaaMobile_openTCP (TCP_addr_port * addr_port, void * (*cback) (error_user, void *))
+void ciaaMobile_openPort (port_s * port, void * (*cback) (error_user, void *))
 {
-   frm = ciaaMobile_openTCP_f;
-   frmInput = addr_port;
+   frm = ciaaMobile_openPort_f;
+   frmInput = port;
    frmCback = cback;
    frmState = INIT;
 
