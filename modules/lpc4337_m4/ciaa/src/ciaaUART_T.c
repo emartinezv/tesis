@@ -44,6 +44,10 @@
 
 #include "ciaaUART_T.h"
 
+/* define variable for token or data mode */
+
+static serialMode_e serialMode = COMMAND_MODE; /* command or data mode for the serial port */
+
 /* define data buffers and ring buffer structures */
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
@@ -133,7 +137,7 @@ void uart_irq(ciaaUART_e n)
 
    #ifdef TOKENIZER
    if(CIAA_UART_232 == n)
-	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens);
+	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens, serialMode);
    else
 	   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
    #endif
@@ -173,6 +177,7 @@ int uartRecv(ciaaUART_e nUART, void * data, int datalen)
 }
 
 #ifdef TOKENIZER
+
 int tokenRead(void * token){
    if(1 == RingBuffer_IsEmpty(&tokens)){ return 0;}
    else{
@@ -180,4 +185,17 @@ int tokenRead(void * token){
       return 1;
    }
 }
+
+serialMode_e checkSerialMode(void){
+
+   return serialMode;
+}
+
+void changeSerialMode(serialMode_e mode){;
+
+   serialMode = mode;
+   return;
+
+}
+
 #endif

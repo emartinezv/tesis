@@ -113,6 +113,12 @@ typedef struct _URCevent
 
 FSMresult processToken(void);
 
+/** @brief Prints data to the USB UART when serial port is in DATA_MODE
+*
+*/
+
+void printData(void);
+
 /** @brief Sends an AT command to the GSM module
 *
 *  @return Returns the result of the updateFSM invocation

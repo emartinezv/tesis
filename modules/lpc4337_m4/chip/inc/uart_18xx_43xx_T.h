@@ -104,6 +104,15 @@ typedef struct {					/*!< USARTn Structure       */
 	__IO uint32_t TER2;				/*!< Transmit Enable Register. Only on LPC177X_8X UART4 and LPC18XX/43XX USART0/2/3. */
 } LPC_USART_T;
 
+/**
+ * @brief Typedefs for tokenizer functionality
+ */
+
+typedef enum _serialMode_e
+{
+   COMMAND_MODE,
+   DATA_MODE
+} serialMode_e ;
 
 /**
  * @brief Macro defines for UART Receive Buffer register
@@ -757,19 +766,21 @@ int Chip_UART_SendBlocking(LPC_USART_T *pUART, const void *data, int numBytes);
 int Chip_UART_ReadBlocking(LPC_USART_T *pUART, void *data, int numBytes);
 
 /**
- * @brief	UART receive-only interrupt handler for ring buffers with <CR> delimiter tokenizer functionality
- * @param	pUART	: Pointer to selected UART peripheral
- * @param	pRB	: Pointer to ring buffer structure to use
- * @paran   pTKNB : Pointer to token ring buffer
+ * @brief	UART receive-only interrupt handler for ring buffers with tokenizer functionality
+ * @param	pUART	     : Pointer to selected UART peripheral
+ * @param	pRB	     : Pointer to ring buffer structure to use
+ * @paran   pTKNB      : Pointer to token ring buffer
+ * @param   serialMode : Determines if modem serial port is in command or data mode
+ *
  * @return	Nothing
  * @note	If ring buffer support is desired for the receive side
  *			of data transfer, the UART interrupt should call this
  *			function for a receive based interrupt status.
  */
-void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T * pTKNB);
+void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T * pTKNB, serialMode_e serialMode);
 
 /**
- * @brief   UART receive-only interrupt handler for ring buffers with tokenizer
+ * @brief   UART receive-only interrupt handler for ring buffers
  * @param   pUART : Pointer to selected UART peripheral
  * @param   pRB      : Pointer to ring buffer structure to use
  * @return  Nothing
@@ -818,19 +829,20 @@ int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes)
 
 /**
  * @brief	UART receive/transmit interrupt handler for ring buffers with tokenizer option
- * @param	pUART : Pointer to selected UART peripheral
- * @param	pRXRB : Pointer to transmit ring buffer
- * @param	pTXRB : Pointer to receive ring buffer
- * @paran   pTKNB : Pointer to token ring buffer
+ * @param	pUART      : Pointer to selected UART peripheral
+ * @param	pRXRB      : Pointer to transmit ring buffer
+ * @param	pTXRB      : Pointer to receive ring buffer
+ * @paran   serialMode : Determines if modem serial port is in command or data mode
+ *
  * @return	Nothing
  * @note	This provides a basic implementation of the UART IRQ
  *			handler for support of a ring buffer implementation for
  *			transmit and receive.
  */
-void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB);
+void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB, serialMode_e serialMode);
 
 /**
- * @brief   UART receive/transmit interrupt handler for ring buffers with tokenizer
+ * @brief   UART receive/transmit interrupt handler for ring buffers
  * @param   pUART : Pointer to selected UART peripheral
  * @param   pRXRB : Pointer to transmit ring buffer
  * @param   pTXRB : Pointer to receive ring buffer

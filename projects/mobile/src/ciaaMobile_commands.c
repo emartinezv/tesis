@@ -71,6 +71,7 @@ ATComm const commands [] = {
                                                                         // PERO GENERA PROBLEMAS...VER!!!
                     , "ERROR, +CME ERROR"                     , 160000},
       {"CIPSHUT"    , "SHUT OK" , "ERROR, +CME ERROR"         , 65000},
+      {"CIPMODE"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
       {0 , 0 , 0},
 };

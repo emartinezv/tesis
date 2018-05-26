@@ -423,6 +423,26 @@ FSMresult processToken(void)
 
 }
 
+/** When the serial port is in DATA_MODE, this function prints everything
+ *  received through the 232-UART serial port to the USB-UART. This is
+ *  merely a test function; the final version of the library needs to send
+ *  these data to a user-defined buffer of some sort for processing.
+ */
+
+void printData(void){
+
+   uint8_t c = 0;
+
+   if(0 != uartRecv(CIAA_UART_232, &c, 1)){
+
+      uartSend(CIAA_UART_USB, &c, 1);
+
+   }
+
+   return;
+}
+
+
 /** The sendATcmd function sends an AT command to the GSM engine.
  */
 

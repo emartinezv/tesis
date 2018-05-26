@@ -77,6 +77,8 @@ int uartSend(ciaaUART_e nUART, void * data, int datalen);
 int uartRecv(ciaaUART_e nUART, void * data, int datalen);
 #ifdef TOKENIZER
 int tokenRead(void * token);
+serialMode_e checkSerialMode(void);
+void changeSerialMode(serialMode_e mode);
 #endif
 
 #endif /* CIAAUART_H_ */

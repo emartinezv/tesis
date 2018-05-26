@@ -759,12 +759,30 @@ static void ciaaMobile_openTCP_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd(addr_port_string);
+               result = sendATcmd("AT+CIPMODE=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD3;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD3:
+
+               result = sendATcmd(addr_port_string);
+               if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD3RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
@@ -790,6 +808,12 @@ static void ciaaMobile_openTCP_f (void)
             error_out.error_command.command[20] = '\0';
             strncpy(error_out.error_command.parameter, resp.param, 149);
             error_out.error_command.parameter[150] = '\0';
+
+         }
+
+         else{
+
+            changeSerialMode(DATA_MODE);
 
          }
 
@@ -880,7 +904,15 @@ void ciaaMobile_sysUpdate (void)
    if(0 == sysupd_count){
 
       if (IDLE == frmState){
-         processToken();
+
+         if(COMMAND_MODE == checkSerialMode()){
+            processToken();
+         }
+
+         else if (DATA_MODE == checkSerialMode()){
+            printData(); // PARA PRUEBA; CAMBIAR DESPUES A ALGO QUE LE PASE EL STREAM AL USUARIO
+         }
+
       }
       else {frm();}
 
