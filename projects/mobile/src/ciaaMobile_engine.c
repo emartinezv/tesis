@@ -439,6 +439,12 @@ void printData(void){
 
    }
 
+   if(0 != uartRecv(CIAA_UART_USB, &c, 1)){
+
+      uartSend(CIAA_UART_232, &c, 1);
+
+   }
+
    return;
 }
 
