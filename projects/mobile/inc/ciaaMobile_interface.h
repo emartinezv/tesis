@@ -171,9 +171,9 @@ typedef struct {
 /** @brief Type for APN name, user and password */
 
 typedef struct {
-   uint8_t apn[31];   /**< APN address */
-   uint8_t user[31];  /**< User */
-   uint8_t pwd[31];   /**< Password */
+   uint8_t * apn;   /**< APN address */
+   uint8_t * user;  /**< User */
+   uint8_t * pwd;   /**< Password */
 } APN_usr_pwd;
 
 /*---------------------------------------------------------------------------*/
@@ -188,9 +188,9 @@ typedef enum {
 /** @brief Type for address and port */
 
 typedef struct {
-   portType_e type;         /**< TCP or UDP port */
-   uint8_t    address[100]; /**< TCP address (domain or IP) */
-   uint8_t    port[6];      /**< TCP port number as a string */
+   portType_e type;      /**< TCP or UDP port */
+   uint8_t *  address;   /**< TCP address (domain or IP) */
+   uint8_t *  port;      /**< TCP port number as a string */
 } port_s;
 
 /*==================[external data declaration]==============================*/
@@ -258,6 +258,15 @@ void ciaaMobile_startGPRS (APN_usr_pwd * APN, void * (*cback) (error_user, void 
 */
 
 void ciaaMobile_openPort (port_s * port, void * (*cback) (error_user, void *));
+
+/** @brief Closes open TCP or UDP port
+*
+* @param cback     Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_closePort (void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

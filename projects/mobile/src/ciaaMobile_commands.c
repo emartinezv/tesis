@@ -70,6 +70,7 @@ ATComm const commands [] = {
                                                                         // CONNECT OK ENTRE LAS OPCIONES
                                                                         // PERO GENERA PROBLEMAS...VER!!!
                     , "ERROR, +CME ERROR"                     , 160000},
+      {"CIPCLOSE"   , "CLOSE OK", "ERROR, +CME ERROR"         , 1000 * TOUT_DEF}, // ARBITRARIO
       {"CIPSHUT"    , "SHUT OK" , "ERROR, +CME ERROR"         , 65000},
       {"CIPMODE"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},

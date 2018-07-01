@@ -313,6 +313,9 @@ int main(void)
    uint8_t gprs_flag = 0;
    uint8_t tcp_flag = 0;
 
+   uint8_t instruction_str[2];
+   uint8_t instruction;
+
    uint8_t command [150];
    uint8_t parameter [150];
 
@@ -321,17 +324,108 @@ int main(void)
 
    SMS_send msg = {"1151751809","Hola mundo!"};
    APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
-   port_s port1 = {UDP, "104.236.225.217","2399"};
+   port_s port1 = {TCP, "104.236.225.217","2399"};
+   port_s port2 = {UDP, "104.236.225.217","2399"};
 
    pausems(DELAY_INIT);
 
+   dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
+
    ciaaMobile_startUp(cbempty);
+
+   while(!ciaaMobile_isIdle()){
+      ciaaMobile_sysUpdate();
+   }
+
+   dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
+   dbgPrint("\r\n1) Mandar SMS \r\n");
+   dbgPrint("2) Abrir puerto TCP \r\n");
+   dbgPrint("3) Abrir puerto UDP \r\n");
+   dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
 
    while (1){
 
+      if(ciaaMobile_isIdle()){
+         if(0 != uartRecv(CIAA_UART_USB, instruction_str, 1)){
+            instruction_str[1] = '\0';
+            instruction = atoi(instruction_str);
+
+            switch (instruction) {
+
+               case 1:
+
+               dbgPrint("\r\nMandar SMS \r\n\r\n");
+
+               ciaaMobile_sendSMS(&msg, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
+               case 2:
+
+               dbgPrint("EJECUTANDO INSTRUCCION 2... \r\n\r\n");
+               break;
+
+               case 3:
+
+               dbgPrint("\r\nAbrir puerto UDP \r\n\r\n");
+
+               ciaaMobile_startGPRS(&APN, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               ciaaMobile_openPort(&port2, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               while(DATA_MODE == checkSerialMode()){
+
+                  uint8_t data_char;
+
+                  if(0 != uartRecv(CIAA_UART_USB, data_char, 1)){
+                     uartSend(CIAA_UART_232, data_char, 1); /* mando a 232 */
+                     uartSend(CIAA_UART_USB, data_char, 1); /* eco */
+                  }
+
+               }
+
+               break;
+
+               case 4:
+
+               dbgPrint("EJECUTANDO INSTRUCCION 4... \r\n\r\n");
+               break;
+
+               default:
+
+               dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+               break;
+
+            }
+
+         dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
+         dbgPrint("\r\n1) Mandar SMS \r\n");
+         dbgPrint("2) Abrir puerto TCP \r\n");
+         dbgPrint("3) Abrir puerto UDP \r\n");
+         dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
+
+         }
+
+
+
+
+      }
+
       ciaaMobile_sysUpdate();
 
-      if (1 == deleteall){
+      /*if (1 == deleteall){
          deleteall = 0;
          borrar.index = 1;
          borrar.mode = 4;
@@ -352,7 +446,7 @@ int main(void)
 
       }*/
 
-      if (0 == readsms_count){
+      /*if (0 == readsms_count){
 
          if (0 == gprs_flag){
 

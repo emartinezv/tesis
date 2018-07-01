@@ -259,9 +259,17 @@ void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T 
 {
 	if(DATA_MODE == serialMode){
 
+	   static uint8_t plus_count = 0;
+
 	   while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
 	      uint8_t ch = Chip_UART_ReadByte(pUART);
 	      RingBuffer_Insert(pRB, &ch);
+
+	      if('+' == ch){plus_count++;}
+	      else{plus_count = 0;}
+
+	      if(plus_count >= 3){serialMode == COMMAND_MODE;}
+
 	   }
 
 	}
