@@ -193,6 +193,17 @@ typedef struct {
    uint8_t *  port;      /**< TCP port number as a string */
 } port_s;
 
+/*---------------------------------------------------------------------------*/
+/*       Data structures for the ciaaMobile_getSignalQuality function        */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for signal quality */
+
+typedef struct {
+   uint8_t rssi;     /**< RSSI as per the table in the SIM808 manual */
+   uint8_t ber;      /**< BER as per the table in the SIM808 manual */
+} signal_quality_s;
+
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -267,6 +278,16 @@ void ciaaMobile_openPort (port_s * port, void * (*cback) (error_user, void *));
 */
 
 void ciaaMobile_closePort (void * (*cback) (error_user, void *));
+
+/** @brief Gets signal quality values (RSSI and BER)
+*
+* @param signal_quality Pointer to signal quality struct
+* @param cback          Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_getSignalQuality (signal_quality_s * signal_quality, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

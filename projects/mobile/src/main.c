@@ -326,6 +326,7 @@ int main(void)
    APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
    port_s port1 = {TCP, "104.236.225.217","2399"};
    port_s port2 = {UDP, "104.236.225.217","2399"};
+   signal_quality_s sigqual;
 
    pausems(DELAY_INIT);
 
@@ -342,6 +343,7 @@ int main(void)
    dbgPrint("2) Abrir puerto TCP \r\n");
    dbgPrint("3) Abrir puerto UDP \r\n");
    dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
+   dbgPrint("5) Ver calidad de señal \r\n");
 
    while (1){
 
@@ -403,6 +405,19 @@ int main(void)
                dbgPrint("EJECUTANDO INSTRUCCION 4... \r\n\r\n");
                break;
 
+               case 5:
+
+               dbgPrint("\r\nVer calidad de señal \r\n\r\n");
+
+               ciaaMobile_getSignalQuality(&sigqual, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+
+               break;
+
                default:
 
                dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
@@ -410,11 +425,12 @@ int main(void)
 
             }
 
-         dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
-         dbgPrint("\r\n1) Mandar SMS \r\n");
-         dbgPrint("2) Abrir puerto TCP \r\n");
-         dbgPrint("3) Abrir puerto UDP \r\n");
-         dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
+            dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
+            dbgPrint("\r\n1) Mandar SMS \r\n");
+            dbgPrint("2) Abrir puerto TCP \r\n");
+            dbgPrint("3) Abrir puerto UDP \r\n");
+            dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
+            dbgPrint("5) Ver calidad de señal \r\n");
 
          }
 

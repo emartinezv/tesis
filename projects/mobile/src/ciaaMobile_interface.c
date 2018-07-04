@@ -956,6 +956,117 @@ static void ciaaMobile_closePort_f (void)
    return;
 }
 
+static void ciaaMobile_getSignalQuality_f (void)
+{
+   static runStatus runState = NOCMD;
+   static error_user error_out;
+
+   FSMresult result;
+
+   switch(frmState) {
+
+      case INIT:
+
+         error_out.error_formula = OK;
+         error_out.error_command.command[0] = '\0';
+         error_out.error_command.parameter[0] = '\0';
+
+         runState = ATCMD1;
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case ATCMD1:
+
+               result = sendATcmd("AT+CSQ\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(OK == error_out.error_formula){
+
+            ATresp resp;
+            uint8_t auxStr[5];    /* auxiliary string for response parsing*/
+            auxStr[0] = '\0';
+            uint8_t i;
+            uint8_t commaPos = 0; /* position of the comma in the response */
+
+            resp = getCmdResp(0);
+
+            /* Search for the comma in the response, which is in the form RSSI,BER */
+
+            for(i = 0; i < (strlen(resp.param)-1); i++){
+               if(',' == resp.param[i]){commaPos = i; break;}
+            }
+
+            /* Copy the string of RSSI and convert it to a number */
+
+            strncpy(auxStr,&resp.param[0],commaPos);
+            auxStr[commaPos] = '\0';
+
+            ((signal_quality_s *)frmOutput)->rssi = atoi(auxStr);
+
+            /* Copy the string of BER and convert it to a number */
+
+            strncpy(auxStr,&resp.param[commaPos+1],strlen(resp.param)-commaPos-1);
+            auxStr[strlen(resp.param)-commaPos-1] = '\0';
+
+            ((signal_quality_s *)frmOutput)->ber = atoi(auxStr);
+
+            debug(">>>interf<<<   La calidad de señal es ");
+            debug(resp.param);
+            debug(" \r\n");
+
+            frmCback(error_out, frmOutput);
+
+            frmState = IDLE;
+
+         }
+
+         else{
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+            frmCback(error_out, frmOutput);
+
+            frmState = IDLE;
+
+         }
+
+         break;
+   }
+
+   return;
+
+}
+
 /*==================[external functions definition]==========================*/
 
 void ciaaMobile_SysTick_Handler (void)
@@ -1020,6 +1131,16 @@ void ciaaMobile_openPort (port_s * port, void * (*cback) (error_user, void *))
 void ciaaMobile_closePort (void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_closePort_f;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_getSignalQuality (signal_quality_s * signal_quality, void * (*cback) (error_user, void *))
+{
+   frm = ciaaMobile_getSignalQuality_f;
+   frmOutput = signal_quality;
    frmCback = cback;
    frmState = INIT;
 
