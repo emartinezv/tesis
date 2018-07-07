@@ -216,7 +216,6 @@ typedef enum {
    OFF    /**< Power GNSS module off */
 } power_GNSS_e;
 
-
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -311,6 +310,16 @@ void ciaaMobile_getSignalQuality (signal_quality_s * signal_quality, void * (*cb
 */
 
 void ciaaMobile_powerGNSS (power_GNSS_e * command, void * (*cback) (error_user, void *));
+
+/** @brief Get GNSS navigation information
+*
+* @param navInfo   Navigation info vector; must be of size 95 at least
+* @param cback     Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_getGNSSNavInfo (uint8_t * navInfo, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

@@ -318,6 +318,7 @@ int main(void)
 
    uint8_t command [150];
    uint8_t parameter [150];
+   uint8_t navInfo[95];
 
    SMS_rec list[10];
    SMS_del borrar;
@@ -347,6 +348,7 @@ int main(void)
    dbgPrint("5) Ver calidad de señal \r\n");
    dbgPrint("6) Prender GNSS \r\n");
    dbgPrint("7) Apagar GNSS \r\n");
+   dbgPrint("8) Obtener informacion de navegacion GNSS \r\n");
 
    while (1){
 
@@ -438,6 +440,16 @@ int main(void)
 
                break;
 
+               case 8:
+
+               ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
                default:
 
                dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
@@ -453,6 +465,7 @@ int main(void)
             dbgPrint("5) Ver calidad de señal \r\n");
             dbgPrint("6) Prender GNSS \r\n");
             dbgPrint("7) Apagar GNSS \r\n");
+            dbgPrint("8) Obtener informacion de navegacion GNSS \r\n");
 
          }
 
