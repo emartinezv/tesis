@@ -74,6 +74,7 @@ ATComm const commands [] = {
       {"CIPCLOSE"   , "CLOSE OK", "ERROR, +CME ERROR"         , 1000 * TOUT_DEF}, // ARBITRARIO
       {"CIPSHUT"    , "SHUT OK" , "ERROR, +CME ERROR"         , 65000},
       {"CIPMODE"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
+      {"CGNSPWR"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
       {0 , 0 , 0},
 };

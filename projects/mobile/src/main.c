@@ -327,6 +327,7 @@ int main(void)
    port_s port1 = {TCP, "104.236.225.217","2399"};
    port_s port2 = {UDP, "104.236.225.217","2399"};
    signal_quality_s sigqual;
+   power_GNSS_e powerGNSS;
 
    pausems(DELAY_INIT);
 
@@ -344,6 +345,8 @@ int main(void)
    dbgPrint("3) Abrir puerto UDP \r\n");
    dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
    dbgPrint("5) Ver calidad de señal \r\n");
+   dbgPrint("6) Prender GNSS \r\n");
+   dbgPrint("7) Apagar GNSS \r\n");
 
    while (1){
 
@@ -355,8 +358,6 @@ int main(void)
             switch (instruction) {
 
                case 1:
-
-               dbgPrint("\r\nMandar SMS \r\n\r\n");
 
                ciaaMobile_sendSMS(&msg, cbempty);
 
@@ -372,8 +373,6 @@ int main(void)
                break;
 
                case 3:
-
-               dbgPrint("\r\nAbrir puerto UDP \r\n\r\n");
 
                ciaaMobile_startGPRS(&APN, cbempty);
 
@@ -407,14 +406,35 @@ int main(void)
 
                case 5:
 
-               dbgPrint("\r\nVer calidad de señal \r\n\r\n");
-
                ciaaMobile_getSignalQuality(&sigqual, cbempty);
 
                while(!ciaaMobile_isIdle()){
                   ciaaMobile_sysUpdate();
                }
 
+               break;
+
+               case 6:
+
+               powerGNSS = ON;
+
+               ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
+               case 7:
+
+               powerGNSS = OFF;
+
+               ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
 
                break;
 
@@ -431,6 +451,8 @@ int main(void)
             dbgPrint("3) Abrir puerto UDP \r\n");
             dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
             dbgPrint("5) Ver calidad de señal \r\n");
+            dbgPrint("6) Prender GNSS \r\n");
+            dbgPrint("7) Apagar GNSS \r\n");
 
          }
 

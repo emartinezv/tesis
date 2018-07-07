@@ -205,6 +205,18 @@ typedef struct {
                        subclause 7.2.4 */
 } signal_quality_s;
 
+/*---------------------------------------------------------------------------*/
+/*           Data structures for the ciaaMobile_powerGNSS function           */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Enum for turning GNSS module on or off */
+
+typedef enum {
+   ON,    /**< Power GNSS module on */
+   OFF    /**< Power GNSS module off */
+} power_GNSS_e;
+
+
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -289,6 +301,16 @@ void ciaaMobile_closePort (void * (*cback) (error_user, void *));
 */
 
 void ciaaMobile_getSignalQuality (signal_quality_s * signal_quality, void * (*cback) (error_user, void *));
+
+/** @brief Turns GNSS on or off
+*
+* @param command  ON or OFF command
+* @param cback    Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_powerGNSS (power_GNSS_e * command, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *
