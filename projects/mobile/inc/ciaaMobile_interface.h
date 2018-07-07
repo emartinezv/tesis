@@ -200,8 +200,9 @@ typedef struct {
 /** @brief Type for signal quality */
 
 typedef struct {
-   uint8_t rssi;     /**< RSSI as per the table in the SIM808 manual */
-   uint8_t ber;      /**< BER as per the table in the SIM808 manual */
+   int8_t  rssi;    /**< RSSI in dBm */
+   uint8_t ber;     /**< BER as RXQUAL values in the table in GSM 05.08 [20]
+                       subclause 7.2.4 */
 } signal_quality_s;
 
 /*==================[external data declaration]==============================*/

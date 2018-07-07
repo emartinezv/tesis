@@ -1020,22 +1020,54 @@ static void ciaaMobile_getSignalQuality_f (void)
                if(',' == resp.param[i]){commaPos = i; break;}
             }
 
-            /* Copy the string of RSSI and convert it to a number */
+            /* Copy the string of RSSI and convert it into a integer. Then, use the
+             * table in the SIM808 manual to translate this number into an actual
+             * RSSI reading in dBm.
+             *
+             * If the value is not known or detectable by the module, the function
+             * will give a reading of positive 99. This should be interpreted by
+             * the user as an error result. */
 
             strncpy(auxStr,&resp.param[0],commaPos);
             auxStr[commaPos] = '\0';
 
             ((signal_quality_s *)frmOutput)->rssi = atoi(auxStr);
 
-            /* Copy the string of BER and convert it to a number */
+            if(0 == ((signal_quality_s *)frmOutput)->rssi){
+               ((signal_quality_s *)frmOutput)->rssi = -115;
+            }
+
+            else if(1 == ((signal_quality_s *)frmOutput)->rssi){
+               ((signal_quality_s *)frmOutput)->rssi = -111;
+            }
+
+            else if((((signal_quality_s *)frmOutput)->rssi) >= 2 &&
+                    (((signal_quality_s *)frmOutput)->rssi) <= 30){
+               ((signal_quality_s *)frmOutput)->rssi = -110+(((signal_quality_s *)frmOutput)->rssi -2)*2;
+            }
+
+            else if(31 == ((signal_quality_s *)frmOutput)->rssi){
+               ((signal_quality_s *)frmOutput)->rssi = -52;
+            }
+
+            else if(99 == ((signal_quality_s *)frmOutput)->rssi){
+               ((signal_quality_s *)frmOutput)->rssi = 99;
+            }
+
+            /* Copy the string of BER and convert it to a number. The module reports
+             * RXQUAL values as per table in GSM 05.08 [20] subclause 7.2.4 */
 
             strncpy(auxStr,&resp.param[commaPos+1],strlen(resp.param)-commaPos-1);
             auxStr[strlen(resp.param)-commaPos-1] = '\0';
 
             ((signal_quality_s *)frmOutput)->ber = atoi(auxStr);
 
-            debug(">>>interf<<<   La calidad de señal es ");
-            debug(resp.param);
+            debug(">>>interf<<<   RSSI: ");
+            itoa(((signal_quality_s *)frmOutput)->rssi, auxStr, 10);
+            debug(auxStr);
+            debug(", RXQUAL: ");
+            itoa(((signal_quality_s *)frmOutput)->ber, auxStr, 10);
+            debug(auxStr);
             debug(" \r\n");
 
             frmCback(error_out, frmOutput);
