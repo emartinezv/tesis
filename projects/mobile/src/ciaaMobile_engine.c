@@ -293,6 +293,21 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
                lastResp++;
                currTKN++;
 
+               /* Since AT+CIFSR does not return an OK after reporting the IP,
+                * we change check the response and change it to OK if it is
+                * not ERROR.
+                */
+
+               if(0 == strncmp("CIFSR", currCMD, 5)){
+                  if(0 == strstr(command,"ERROR")){
+
+                     debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
+
+                     GSMstatus = WAITING;
+                     return OK_CLOSE;
+                  }
+               }
+
                /* Compare current response with the string of valid          */
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */

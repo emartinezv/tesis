@@ -342,13 +342,14 @@ int main(void)
 
    dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
    dbgPrint("\r\n1) Mandar SMS \r\n");
-   dbgPrint("2) Abrir puerto TCP \r\n");
-   dbgPrint("3) Abrir puerto UDP \r\n");
-   dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
-   dbgPrint("5) Ver calidad de señal \r\n");
-   dbgPrint("6) Prender GNSS \r\n");
-   dbgPrint("7) Apagar GNSS \r\n");
-   dbgPrint("8) Obtener informacion de navegacion GNSS \r\n");
+   dbgPrint("2) Prender GPRS \r\n");
+   dbgPrint("3) Abrir puerto TCP \r\n");
+   dbgPrint("4) Abrir puerto UDP \r\n");
+   dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
+   dbgPrint("6) Ver calidad de señal \r\n");
+   dbgPrint("7) Prender GNSS \r\n");
+   dbgPrint("8) Apagar GNSS \r\n");
+   dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
 
    while (1){
 
@@ -371,16 +372,40 @@ int main(void)
 
                case 2:
 
-               dbgPrint("EJECUTANDO INSTRUCCION 2... \r\n\r\n");
-               break;
-
-               case 3:
-
                ciaaMobile_startGPRS(&APN, cbempty);
 
                while(!ciaaMobile_isIdle()){
                   ciaaMobile_sysUpdate();
                }
+
+               break;
+
+               case 3:
+
+               ciaaMobile_openPort(&port1, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               while(DATA_MODE == checkSerialMode()){
+
+                  uint8_t data_char;
+
+                  if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+                     uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
+                     uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
+                  }
+
+                  if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+                     uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
+                  }
+
+               }
+
+               break;
+
+               case 4:
 
                ciaaMobile_openPort(&port2, cbempty);
 
@@ -392,21 +417,29 @@ int main(void)
 
                   uint8_t data_char;
 
-                  if(0 != uartRecv(CIAA_UART_USB, data_char, 1)){
-                     uartSend(CIAA_UART_232, data_char, 1); /* mando a 232 */
-                     uartSend(CIAA_UART_USB, data_char, 1); /* eco */
+                  if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+                     uartSend(CIAA_UART_232, &data_char, 1); /* mando a 232 */
+                     uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
                   }
 
+                  if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+                     uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
+                  }
+
+               }
+               break;
+
+               case 5:
+
+               ciaaMobile_closePort(cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
                }
 
                break;
 
-               case 4:
-
-               dbgPrint("EJECUTANDO INSTRUCCION 4... \r\n\r\n");
-               break;
-
-               case 5:
+               case 6:
 
                ciaaMobile_getSignalQuality(&sigqual, cbempty);
 
@@ -416,7 +449,7 @@ int main(void)
 
                break;
 
-               case 6:
+               case 7:
 
                powerGNSS = ON;
 
@@ -428,7 +461,7 @@ int main(void)
 
                break;
 
-               case 7:
+               case 8:
 
                powerGNSS = OFF;
 
@@ -440,7 +473,7 @@ int main(void)
 
                break;
 
-               case 8:
+               case 9:
 
                ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
 
@@ -459,13 +492,14 @@ int main(void)
 
             dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
             dbgPrint("\r\n1) Mandar SMS \r\n");
-            dbgPrint("2) Abrir puerto TCP \r\n");
-            dbgPrint("3) Abrir puerto UDP \r\n");
-            dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
-            dbgPrint("5) Ver calidad de señal \r\n");
-            dbgPrint("6) Prender GNSS \r\n");
-            dbgPrint("7) Apagar GNSS \r\n");
-            dbgPrint("8) Obtener informacion de navegacion GNSS \r\n");
+            dbgPrint("2) Prender GPRS \r\n");
+            dbgPrint("3) Abrir puerto TCP \r\n");
+            dbgPrint("4) Abrir puerto UDP \r\n");
+            dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
+            dbgPrint("6) Ver calidad de señal \r\n");
+            dbgPrint("7) Prender GNSS \r\n");
+            dbgPrint("8) Apagar GNSS \r\n");
+            dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
 
          }
 

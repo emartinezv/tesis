@@ -632,7 +632,7 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CGATT=1\r");
+               result = sendATcmd("AT+CIPSHUT\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -650,7 +650,7 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT\r");
+               result = sendATcmd("AT+CIPMODE=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -668,7 +668,7 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD3:
 
-               result = sendATcmd("AT+CIPSHUT\r");
+               result = sendATcmd(APNstring);
                if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -686,7 +686,7 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD4:
 
-               result = sendATcmd(APNstring);
+               result = sendATcmd("AT+CIICR\r");
                if(OK_CMD_SENT == result){runState = ATCMD4RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -704,7 +704,7 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD5:
 
-               result = sendATcmd("AT+CIICR\r");
+               result = sendATcmd("AT+CIFSR\r");
                if(OK_CMD_SENT == result){runState = ATCMD5RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
@@ -816,30 +816,12 @@ static void ciaaMobile_openPort_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT+CIPMODE=1\r");
+               result = sendATcmd(port_string);
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
-
-               result = processToken();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){runState = ATCMD3;}
-                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
-                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
-               }
-               break;
-
-            case ATCMD3:
-
-               result = sendATcmd(port_string);
-               if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
-               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
-               break;
-
-            case ATCMD3RESP:
 
                result = processToken();
                if(NO_UPDATE != result){
