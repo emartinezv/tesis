@@ -255,26 +255,20 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 }
 
 /* UART receive-only interrupt handler for ring buffers with tokenizer */
-void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB, serialMode_e serialMode)
+void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T *pTKNB, serialMode_e * serialMode)
 {
-	if(DATA_MODE == serialMode){
+	if(DATA_MODE == *serialMode){
 
 	   static uint8_t plus_count = 0;
 
 	   while (Chip_UART_ReadLineStatus(pUART) & UART_LSR_RDR) {
 	      uint8_t ch = Chip_UART_ReadByte(pUART);
 	      RingBuffer_Insert(pRB, &ch);
-
-	      if('+' == ch){plus_count++;}
-	      else{plus_count = 0;}
-
-	      if(plus_count >= 3){serialMode == COMMAND_MODE;}
-
 	   }
 
 	}
 
-	else if(COMMAND_MODE == serialMode){
+	else if(COMMAND_MODE == *serialMode){
 
       typedef enum {NONE, ECHO, RESP, DATA, SMSIn, SMSBod} tokenType;
 
@@ -333,6 +327,40 @@ void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB)
    }
 }
 
+/* UART transmit-only interrupt handler for ring buffers with tokenizer*/
+void Chip_UART_TXIntHandlerRB_T (LPC_USART_T *pUART, RINGBUFF_T *pRB, serialMode_e * serialMode)
+{
+   uint8_t ch;
+   static uint8_t plusCount = 0;
+
+   /* Fill FIFO until full or until TX ring buffer is empty */
+   while ((Chip_UART_ReadLineStatus(pUART) & UART_LSR_THRE) != 0 &&
+         RingBuffer_Pop(pRB, &ch)) {
+      Chip_UART_SendByte(pUART, ch);
+
+      if(DATA_MODE == *serialMode){
+
+         if('+' == ch){
+            plusCount++;
+         }
+         else{
+            plusCount = 0;
+         }
+
+         if(plusCount >= 3){
+            *serialMode = COMMAND_MODE;
+         }
+      }
+
+   }
+
+   /* Turn off interrupt if the ring buffer is empty */
+   if (RingBuffer_IsEmpty(pRB)) {
+      /* Shut down transmit */
+      Chip_UART_IntDisable(pUART, UART_IER_THREINT);
+   }
+}
+
 /* UART transmit-only interrupt handler for ring buffers */
 void Chip_UART_TXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB)
 {
@@ -349,6 +377,28 @@ void Chip_UART_TXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB)
 		/* Shut down transmit */
 		Chip_UART_IntDisable(pUART, UART_IER_THREINT);
 	}
+}
+
+/* Populate a transmit ring buffer and start UART transmit with tokenizer function */
+uint32_t Chip_UART_SendRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, const void *data, int bytes, serialMode_e * serialMode)
+{
+   uint32_t ret;
+   uint8_t *p8 = (uint8_t *) data;
+
+   /* Don't let UART transmit ring buffer change in the UART IRQ handler */
+   Chip_UART_IntDisable(pUART, UART_IER_THREINT);
+
+   /* Move as much data as possible into transmit ring buffer */
+   ret = RingBuffer_InsertMult(pRB, p8, bytes);
+   Chip_UART_TXIntHandlerRB_T(pUART, pRB, serialMode);
+
+   /* Add additional data to transmit ring buffer if possible */
+   ret += RingBuffer_InsertMult(pRB, (p8 + ret), (bytes - ret));
+
+   /* Enable UART transmit interrupt */
+   Chip_UART_IntEnable(pUART, UART_IER_THREINT);
+
+   return ret;
 }
 
 /* Populate a transmit ring buffer and start UART transmit */
@@ -382,11 +432,11 @@ int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes)
 }
 
 /* UART receive/transmit interrupt handler for ring buffers with tokenizer */
-void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB, serialMode_e serialMode)
+void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB, serialMode_e * serialMode)
 {
 	/* Handle transmit interrupt if enabled */
 	if (pUART->IER & UART_IER_THREINT) {
-		Chip_UART_TXIntHandlerRB(pUART, pTXRB);
+		Chip_UART_TXIntHandlerRB_T(pUART, pTXRB, serialMode);
 
 		/* Disable transmit interrupt if the ring buffer is empty */
 		if (RingBuffer_IsEmpty(pTXRB)) {

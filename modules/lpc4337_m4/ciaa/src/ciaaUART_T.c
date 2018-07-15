@@ -137,7 +137,7 @@ void uart_irq(ciaaUART_e n)
 
    #ifdef TOKENIZER
    if(CIAA_UART_232 == n)
-	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens, serialMode);
+	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens, &serialMode);
    else
 	   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
    #endif
@@ -166,7 +166,13 @@ int uartSend(ciaaUART_e nUART, void * data, int datalen)
 {
 	uartData_t * u = &(uarts[nUART]);
 
-	return Chip_UART_SendRB(u->uart, u->trb, data, datalen);
+   #ifdef TOKENIZER
+   if(CIAA_UART_232 == nUART)
+      return Chip_UART_SendRB_T(u->uart, u->trb, data, datalen, &serialMode);
+   else
+      return Chip_UART_SendRB(u->uart, u->trb, data, datalen);
+   #endif
+
 }
 
 int uartRecv(ciaaUART_e nUART, void * data, int datalen)
