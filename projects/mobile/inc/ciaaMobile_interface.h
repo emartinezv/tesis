@@ -216,6 +216,18 @@ typedef enum {
    OFF    /**< Power GNSS module off */
 } power_GNSS_e;
 
+/*---------------------------------------------------------------------------*/
+/*         Data structures for the ciaaMobile_checkGSMGPRS function          */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Enum for turning GNSS module on or off */
+
+typedef struct {
+   bool  gsm;   /**< Is the ME attached to the GSM network? */
+   bool  gprs;  /**< Is the ME attached to the GPRS service? */
+} statusGSMGPRS_s;
+
+
 /*==================[external data declaration]==============================*/
 
 /** @brief used for AT command timeout counter */
@@ -320,6 +332,16 @@ void ciaaMobile_powerGNSS (power_GNSS_e * command, void * (*cback) (error_user, 
 */
 
 void ciaaMobile_getGNSSNavInfo (uint8_t * navInfo, void * (*cback) (error_user, void *));
+
+/** @brief Check status of GSM and GPRS connection
+*
+* @param status   Pointer to GSM & GPRS status struct
+* @param cback    Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_checkGSMGPRS (statusGSMGPRS_s * status, void * (*cback) (error_user, void *));
 
 /** @brief ciaaMobile_startUp function
 *

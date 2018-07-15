@@ -313,7 +313,6 @@ int main(void)
    uint8_t gprs_flag = 0;
    uint8_t tcp_flag = 0;
 
-   uint8_t instruction_str[2];
    uint8_t instruction;
 
    uint8_t command [150];
@@ -329,6 +328,7 @@ int main(void)
    port_s port2 = {UDP, "104.236.225.217","2399"};
    signal_quality_s sigqual;
    power_GNSS_e powerGNSS;
+   statusGSMGPRS_s status;
 
    pausems(DELAY_INIT);
 
@@ -350,17 +350,16 @@ int main(void)
    dbgPrint("7) Prender GNSS \r\n");
    dbgPrint("8) Apagar GNSS \r\n");
    dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
+   dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
 
    while (1){
 
       if(ciaaMobile_isIdle()){
-         if(0 != uartRecv(CIAA_UART_USB, instruction_str, 1)){
-            instruction_str[1] = '\0';
-            instruction = atoi(instruction_str);
+         if(0 != uartRecv(CIAA_UART_USB, &instruction, 1)){
 
             switch (instruction) {
 
-               case 1:
+               case '1':
 
                ciaaMobile_sendSMS(&msg, cbempty);
 
@@ -370,7 +369,7 @@ int main(void)
 
                break;
 
-               case 2:
+               case '2':
 
                ciaaMobile_startGPRS(&APN, cbempty);
 
@@ -380,7 +379,7 @@ int main(void)
 
                break;
 
-               case 3:
+               case '3':
 
                ciaaMobile_openPort(&port1, cbempty);
 
@@ -405,7 +404,7 @@ int main(void)
 
                break;
 
-               case 4:
+               case '4':
 
                ciaaMobile_openPort(&port2, cbempty);
 
@@ -429,7 +428,7 @@ int main(void)
                }
                break;
 
-               case 5:
+               case '5':
 
                ciaaMobile_closePort(cbempty);
 
@@ -439,7 +438,7 @@ int main(void)
 
                break;
 
-               case 6:
+               case '6':
 
                ciaaMobile_getSignalQuality(&sigqual, cbempty);
 
@@ -449,7 +448,7 @@ int main(void)
 
                break;
 
-               case 7:
+               case '7':
 
                powerGNSS = ON;
 
@@ -461,7 +460,7 @@ int main(void)
 
                break;
 
-               case 8:
+               case '8':
 
                powerGNSS = OFF;
 
@@ -473,9 +472,19 @@ int main(void)
 
                break;
 
-               case 9:
+               case '9':
 
                ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
+               case 'A':
+
+               ciaaMobile_checkGSMGPRS(&status, cbempty);
 
                while(!ciaaMobile_isIdle()){
                   ciaaMobile_sysUpdate();
@@ -500,6 +509,7 @@ int main(void)
             dbgPrint("7) Prender GNSS \r\n");
             dbgPrint("8) Apagar GNSS \r\n");
             dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
+            dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
 
          }
 

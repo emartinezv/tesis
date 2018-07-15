@@ -1252,6 +1252,127 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
 }
 
+void ciaaMobile_checkGSMGPRS_f (void)
+{
+   static runStatus runState = NOCMD;
+   static error_user error_out;
+
+   FSMresult result;
+
+   switch(frmState) {
+
+      case INIT:
+
+         error_out.error_formula = OK;
+         error_out.error_command.command[0] = '\0';
+         error_out.error_command.parameter[0] = '\0';
+
+         runState = ATCMD1;
+         frmState = PROC;
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case ATCMD1:
+
+               result = sendATcmd("AT+CREG?\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD2:
+
+               result = sendATcmd("AT+CGATT?\r");
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD2RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(OK == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp(0); /* Get the GSM info string */
+
+            /* Copy the GSM info string to the provided output */
+
+            //strncpy((uint8_t *)frmOutput,&resp.param[0],95);
+            //((uint8_t *)frmOutput)[94] = '\0';
+
+            /* Print out the GSM string */
+
+            debug(">>>interf<<<   GSM String:");
+            debug(&resp.param[0]);
+            debug(" \r\n");
+
+            resp = getCmdResp(2); /* Get the GPRS info string */
+
+            /* Copy the GPRS info string to the provided output */
+
+            //strncpy((uint8_t *)frmOutput,&resp.param[0],95);
+            //((uint8_t *)frmOutput)[94] = '\0';
+
+            /* Print out the GPRS string */
+
+            debug(">>>interf<<<   GPRS String:");
+            debug(&resp.param[0]);
+            debug(" \r\n");
+
+         }
+
+         else{
+
+            ATresp resp;
+
+            resp = getCmdResp(getNoCmdResp()-1);
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+         }
+
+         frmCback(error_out, frmOutput);
+
+         frmState = IDLE;
+
+         break;
+   }
+
+   return;
+
+}
+
 /*==================[external functions definition]==========================*/
 
 void ciaaMobile_SysTick_Handler (void)
@@ -1346,6 +1467,16 @@ void ciaaMobile_getGNSSNavInfo (uint8_t * navInfo, void * (*cback) (error_user, 
 {
    frm = ciaaMobile_getGNSSNavInfo_f;
    frmOutput = navInfo;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_checkGSMGPRS (statusGSMGPRS_s * status, void * (*cback) (error_user, void *))
+{
+   frm = ciaaMobile_checkGSMGPRS_f;
+   frmOutput = status;
    frmCback = cback;
    frmState = INIT;
 
