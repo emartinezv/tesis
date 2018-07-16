@@ -1270,6 +1270,9 @@ void ciaaMobile_checkGSMGPRS_f (void)
          runState = ATCMD1;
          frmState = PROC;
 
+         ATresp respGSM;
+         ATresp respGPRS;
+
          break;
 
       case PROC:
@@ -1288,7 +1291,10 @@ void ciaaMobile_checkGSMGPRS_f (void)
                result = processToken();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(OK_CLOSE == result){
+                     respGSM = getCmdResp(0);
+                     runState = ATCMD2;
+                  }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
@@ -1306,7 +1312,10 @@ void ciaaMobile_checkGSMGPRS_f (void)
                result = processToken();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(OK_CLOSE == result){
+                     respGPRS = getCmdResp(0);
+                     frmState = WRAP;
+                  }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
                   else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                }
@@ -1320,10 +1329,6 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
          if(OK == error_out.error_formula){
 
-            ATresp resp;
-
-            resp = getCmdResp(0); /* Get the GSM info string */
-
             /* Copy the GSM info string to the provided output */
 
             //strncpy((uint8_t *)frmOutput,&resp.param[0],95);
@@ -1332,10 +1337,8 @@ void ciaaMobile_checkGSMGPRS_f (void)
             /* Print out the GSM string */
 
             debug(">>>interf<<<   GSM String:");
-            debug(&resp.param[0]);
+            debug(&respGSM.param[0]);
             debug(" \r\n");
-
-            resp = getCmdResp(2); /* Get the GPRS info string */
 
             /* Copy the GPRS info string to the provided output */
 
@@ -1345,7 +1348,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
             /* Print out the GPRS string */
 
             debug(">>>interf<<<   GPRS String:");
-            debug(&resp.param[0]);
+            debug(&respGPRS.param[0]);
             debug(" \r\n");
 
          }

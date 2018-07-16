@@ -224,7 +224,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
             }
 
-            else if((strlen(token)-1) == intPos){
+            else if((strlen(token)-2) == intPos){
                strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
                command[intPos -3] = '\0';
 
