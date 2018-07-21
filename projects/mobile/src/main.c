@@ -62,6 +62,8 @@ void * cb (error_user, void *);
 
 void * cbempty (error_user, void *);
 
+void * cbgsmgprs (error_user, void *);
+
 void * cbprint (error_user, void *);
 
 /*==================[internal data definition]===============================*/
@@ -293,6 +295,72 @@ void * cbprint (error_user error_in, void * input)
    return;
 }
 
+void * cbgsmgprs (error_user error_in, void * input)
+{
+   if(OK != error_in.error_formula){
+      dbgPrint("Error en la ejecucion de formula: ");
+
+      switch(error_in.error_formula){
+
+         case ERR_INIT:
+
+            dbgPrint("Error en inicializacion\r\n");
+
+            break;
+
+         case ERR_PROC:
+
+            dbgPrint("Error en proceso\r\n");
+
+            break;
+
+         case ERR_GSM:
+
+            dbgPrint("Error del engine GSM --- ");
+            dbgPrint(error_in.error_command.command);
+            dbgPrint("(");
+            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(") ---\r\n");
+
+            break;
+
+         case ERR_WRAP:
+
+            dbgPrint("Error en cierre\r\n");
+
+            break;
+
+         default:
+
+            dbgPrint("Error no reconocido\r\n");
+
+            break;
+
+      }
+
+   }
+
+   else{
+
+      if(true == ((statusGSMGPRS_s *)input)->gsm){
+         dbgPrint("\r\n Conectado a red GSM\r\n");
+      }
+      else{
+         dbgPrint("\r\n No conectado a red GSM\r\n");
+      }
+
+      if(true == ((statusGSMGPRS_s *)input)->gprs){
+         dbgPrint("\r\n Conectado a servicio GPRS\r\n");
+      }
+      else{
+         dbgPrint("\r\n No conectado a servicio GPRS\r\n");
+      }
+
+   }
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
@@ -484,7 +552,7 @@ int main(void)
 
                case 'A':
 
-               ciaaMobile_checkGSMGPRS(&status, cbempty);
+               ciaaMobile_checkGSMGPRS(&status, cbgsmgprs);
 
                while(!ciaaMobile_isIdle()){
                   ciaaMobile_sysUpdate();

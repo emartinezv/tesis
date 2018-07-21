@@ -1273,6 +1273,8 @@ void ciaaMobile_checkGSMGPRS_f (void)
          runState = ATCMD1;
          frmState = PROC;
 
+
+
          break;
 
       case PROC:
@@ -1331,8 +1333,12 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             /* Copy the GSM info string to the provided output */
 
-            //strncpy((uint8_t *)frmOutput,&resp.param[0],95);
-            //((uint8_t *)frmOutput)[94] = '\0';
+            if('1' == respGSM.param[3]){
+               ((statusGSMGPRS_s *)frmOutput)->gsm = true;
+            }
+            else{
+               ((statusGSMGPRS_s *)frmOutput)->gsm = false;
+            }
 
             /* Print out the GSM string */
 
@@ -1342,8 +1348,12 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             /* Copy the GPRS info string to the provided output */
 
-            //strncpy((uint8_t *)frmOutput,&resp.param[0],95);
-            //((uint8_t *)frmOutput)[94] = '\0';
+            if('1' == respGPRS.param[1]){
+               ((statusGSMGPRS_s *)frmOutput)->gprs = true;
+            }
+            else{
+               ((statusGSMGPRS_s *)frmOutput)->gprs = false;
+            }
 
             /* Print out the GPRS string */
 
