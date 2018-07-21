@@ -1259,6 +1259,9 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
    FSMresult result;
 
+   static ATresp respGSM;
+   static ATresp respGPRS;
+
    switch(frmState) {
 
       case INIT:
@@ -1269,9 +1272,6 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
          runState = ATCMD1;
          frmState = PROC;
-
-         ATresp respGSM;
-         ATresp respGPRS;
 
          break;
 
