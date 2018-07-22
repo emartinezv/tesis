@@ -40,10 +40,6 @@
 /*==================[inclusions]=============================================*/
 
 #include "rb_tests.h"
-#include "board.h"
-#include "string.h"
-#include "ring_buffer.h"
-#include "ciaaUART_T.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -60,6 +56,41 @@ static void initHardware(void);
  * @param t desired milliseconds to wait
  */
 static void pausems(uint32_t t);
+
+/**
+ * @brief   Initialize variable-length ring buffer
+ * @param   vlrb     : Pointer to variable-length ring buffer to initialize
+ * @param   RingBuff : Pointer to ring buffer to initialize
+ * @param   buffer   : Pointer to buffer to associate with RingBuff
+ * @param   itemSize : Size of each buffer item size
+ * @param   count    : Size of ring buffer
+ * @note Memory pointed by @a buffer must have correct alignment of
+ *          @a itemSize, and @a count must be a power of 2 and must at
+ *          least be 2 or greater.
+ * @return  Nothing
+ */
+int VLRingBuffer_Init(VLRINGBUFF_T * vlrb, RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count);
+
+/** @brief VLRB insert function
+ * @param vlrb pointer to variable-length ring buffer structure
+ * @param data pointer to first element of the item array
+ * @param num  size of the array to be inserted
+ */
+int VLRingBuffer_Insert(VLRINGBUFF_T * vlrb, const void * data, uint16_t num);
+
+/** @brief VLRB pop function
+ * @param vlrb pointer to variable-length ring buffer structure
+ * @param data pointer to memory where popped data will be stored
+ * @param cap  capacity of the memory space pointed to by data
+ */
+int VLRingBuffer_Pop(VLRINGBUFF_T * vlrb, void * data, uint16_t cap);
+
+/**
+ * @brief   Resets the VL ring buffer to empty
+ * @param   RingBuff : Pointer to VL ring buffer
+ * @return  Nothing
+ */
+void VLRingBuffer_Flush(VLRINGBUFF_T * vlrb);
 
 
 /*==================[internal data definition]===============================*/
@@ -86,6 +117,63 @@ static void pausems(uint32_t t)
    }
 }
 
+int VLRingBuffer_Insert(VLRINGBUFF_T * vlrb, const void * data, uint16_t num)
+{
+   int free = 0;
+
+   free = RingBuffer_GetFree(vlrb->rb); /* check for free space in the rb */
+
+   if(free >= num +2){
+      RingBuffer_InsertMult(vlrb->rb, (void *) &num, 2); /* insert size tag */
+      RingBuffer_InsertMult(vlrb->rb, data, num); /* insert data */
+      vlrb->vlcount++;
+      return 1;
+   }
+
+   else{
+      return 0;
+   }
+}
+
+int VLRingBuffer_Pop(VLRINGBUFF_T * vlrb, void * data, uint16_t cap)
+{
+   if(RingBuffer_IsEmpty(vlrb->rb)){ /* if buffer is empty return 0 */
+      return 0;
+   }
+
+   uint16_t size = 0;
+
+   RingBuffer_PopMult(vlrb->rb, (void *) &size, 2); /* pop size tag of latest entry */
+
+   if(cap >= size){ /* if size of last entry is less than memory capacity, pop all data */
+      RingBuffer_PopMult(vlrb->rb, data, (int) size);
+      vlrb->vlcount--;
+      return (int) size;
+   }
+
+   else{
+      RingBuffer_InsertMult(vlrb->rb, (void *) &size, 2); /* push size tag back again */
+      return 0; /* return 0 */
+   }
+
+}
+
+int VLRingBuffer_Init(VLRINGBUFF_T * vlrb, RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count){
+
+   vlrb->vlcount = 0;
+   vlrb->rb = RingBuff;
+
+   return RingBuffer_Init(RingBuff, buffer, itemSize, count);
+
+}
+
+void VLRingBuffer_Flush(VLRINGBUFF_T * vlrb)
+{
+   RingBuffer_Flush(vlrb->rb);
+
+   vlrb->vlcount = 0;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
@@ -99,9 +187,13 @@ int main(void)
    ciaaUARTInit();
 
    RINGBUFF_T rb;
+   RINGBUFF_T rb2;
    uint8_t buf[BUF_SIZE];
+   uint8_t buf2[BUF_SIZE];
+   VLRINGBUFF_T vlrb;
 
    RingBuffer_Init(&rb, &buf, 1, BUF_SIZE);
+   VLRingBuffer_Init(&vlrb, &rb2, &buf2, 1, BUF_SIZE);
 
    pausems(DELAY_MS);
 
@@ -111,6 +203,9 @@ int main(void)
       dbgPrint("1) Ingresar caracteres a ring buffer \r\n");
       dbgPrint("2) Visualizar ring buffer \r\n");
       dbgPrint("3) Vaciar ring buffer \r\n");
+      dbgPrint("4) Ingresar caracteres a VL ring buffer \r\n");
+      dbgPrint("5) Leer ultimo registro del VL ring buffer \r\n");
+      dbgPrint("6) Vaciar VL ring buffer \r\n");
 
       uint8_t option;
 
@@ -128,7 +223,9 @@ int main(void)
 
                if(0 != uartRecv(CIAA_UART_USB, (void *) &input, 1)){
 
+                  dbgPrint("PUSH: ");
                   dbgPrint(&input);
+                  dbgPrint("\r\n");
                   RingBuffer_Insert(&rb, (void *) &input[0]);
 
                }
@@ -147,7 +244,9 @@ int main(void)
 
             while(0 != RingBuffer_Pop(&rb, (void *) &output[0])){
 
+               dbgPrint("POP: ");
                dbgPrint(&output);
+               dbgPrint("\r\n");
 
             }
 
@@ -160,6 +259,61 @@ int main(void)
             RingBuffer_Flush(&rb);
 
             dbgPrint("\r\nRing buffer vaciado\r\n");
+
+            break;
+
+         case '4':
+
+            dbgPrint("\r\nIngrese caracteres y oprima enter para finalizar\r\n\r\n");
+
+            uint8_t buffer[100];
+            uint8_t character = 'A';
+            int i = 0;
+
+            while('\r' != character){
+
+                  if(0 != uartRecv(CIAA_UART_USB, (void *) &character, 1)){
+                     buffer[i] = character;
+                     buffer[i+1] = '\0';
+                     dbgPrint(&buffer[i]);
+                     i++;
+                  }
+
+            }
+
+            VLRingBuffer_Insert(&vlrb, &buffer[0], i+1);
+
+            dbgPrint("\r\n");
+
+            break;
+
+         case '5':
+
+            ;
+
+            dbgPrint("\r\nLeyendo...\r\n");
+
+            uint8_t buffer2[100];
+            int size;
+
+            size = VLRingBuffer_Pop(&vlrb, &buffer2[0], 100);
+
+            if(0 != size){
+
+               output[size] = '\0';
+               dbgPrint("\r\nPOP: ");
+               dbgPrint(buffer2);
+               dbgPrint("\r\n");
+
+            }
+
+            break;
+
+         case '6':
+
+            VLRingBuffer_Flush(&vlrb);
+
+            dbgPrint("\r\nVL ring buffer vaciado\r\n");
 
             break;
 
