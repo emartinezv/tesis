@@ -69,29 +69,6 @@ static void pausems(uint32_t t);
  *          least be 2 or greater.
  * @return  Nothing
  */
-int VLRingBuffer_Init(VLRINGBUFF_T * vlrb, RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count);
-
-/** @brief VLRB insert function
- * @param vlrb pointer to variable-length ring buffer structure
- * @param data pointer to first element of the item array
- * @param num  size of the array to be inserted
- */
-int VLRingBuffer_Insert(VLRINGBUFF_T * vlrb, const void * data, uint16_t num);
-
-/** @brief VLRB pop function
- * @param vlrb pointer to variable-length ring buffer structure
- * @param data pointer to memory where popped data will be stored
- * @param cap  capacity of the memory space pointed to by data
- */
-int VLRingBuffer_Pop(VLRINGBUFF_T * vlrb, void * data, uint16_t cap);
-
-/**
- * @brief   Resets the VL ring buffer to empty
- * @param   RingBuff : Pointer to VL ring buffer
- * @return  Nothing
- */
-void VLRingBuffer_Flush(VLRINGBUFF_T * vlrb);
-
 
 /*==================[internal data definition]===============================*/
 
@@ -115,63 +92,6 @@ static void pausems(uint32_t t)
    while (pausems_count != 0) {
       __WFI();
    }
-}
-
-int VLRingBuffer_Insert(VLRINGBUFF_T * vlrb, const void * data, uint16_t num)
-{
-   int free = 0;
-
-   free = RingBuffer_GetFree(vlrb->rb); /* check for free space in the rb */
-
-   if(free >= num +2){
-      RingBuffer_InsertMult(vlrb->rb, (void *) &num, 2); /* insert size tag */
-      RingBuffer_InsertMult(vlrb->rb, data, num); /* insert data */
-      vlrb->vlcount++;
-      return 1;
-   }
-
-   else{
-      return 0;
-   }
-}
-
-int VLRingBuffer_Pop(VLRINGBUFF_T * vlrb, void * data, uint16_t cap)
-{
-   if(RingBuffer_IsEmpty(vlrb->rb)){ /* if buffer is empty return 0 */
-      return 0;
-   }
-
-   uint16_t size = 0;
-
-   RingBuffer_PopMult(vlrb->rb, (void *) &size, 2); /* pop size tag of latest entry */
-
-   if(cap >= size){ /* if size of last entry is less than memory capacity, pop all data */
-      RingBuffer_PopMult(vlrb->rb, data, (int) size);
-      vlrb->vlcount--;
-      return (int) size;
-   }
-
-   else{
-      RingBuffer_InsertMult(vlrb->rb, (void *) &size, 2); /* push size tag back again */
-      return 0; /* return 0 */
-   }
-
-}
-
-int VLRingBuffer_Init(VLRINGBUFF_T * vlrb, RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count){
-
-   vlrb->vlcount = 0;
-   vlrb->rb = RingBuff;
-
-   return RingBuffer_Init(RingBuff, buffer, itemSize, count);
-
-}
-
-void VLRingBuffer_Flush(VLRINGBUFF_T * vlrb)
-{
-   RingBuffer_Flush(vlrb->rb);
-
-   vlrb->vlcount = 0;
 }
 
 /*==================[external functions definition]==========================*/

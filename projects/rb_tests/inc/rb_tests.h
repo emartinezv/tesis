@@ -41,7 +41,7 @@
 
 #include "board.h"
 #include "string.h"
-#include "ring_buffer.h"
+#include "vl_ring_buffer.h"
 #include "ciaaUART_T.h"
 
 /*==================[cplusplus]==============================================*/
@@ -59,11 +59,6 @@ extern "C" {
 #define BUF_SIZE 64
 
 /*==================[typedef]================================================*/
-
-typedef struct {
-   RINGBUFF_T * rb;
-   int        vlcount;
-} VLRINGBUFF_T;
 
 /*==================[external data declaration]==============================*/
 
