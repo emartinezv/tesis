@@ -87,11 +87,18 @@ int VLRingBuffer_IsEmpty(VLRINGBUFF_T * vlrb);
 int VLRingBuffer_IsFull(VLRINGBUFF_T * vlrb);
 
 /**
- * @brief   Return number of free items in the VL ring buffer
+ * @brief   Return size of free space in the VL ring buffer
  * @param   vlrb : Pointer to VL ring buffer
- * @return  Number of free items in the ring buffer
+ * @return  Size of free space in the ring buffer
  */
 int VLRingBuffer_GetFree(VLRINGBUFF_T * vlrb);
+
+/**
+ * @brief   Return number of VL items in the VL ring buffer
+ * @param   vlrb : Pointer to VL ring buffer
+ * @return  Number of VL items in the VL ring buffer
+ */
+int VLRingBuffer_GetCount(VLRINGBUFF_T * vlrb);
 
 /*==================[cplusplus]==============================================*/
 

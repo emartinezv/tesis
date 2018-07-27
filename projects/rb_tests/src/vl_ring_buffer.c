@@ -100,6 +100,11 @@ int VLRingBuffer_GetFree(VLRINGBUFF_T * vlrb)
    return RingBuffer_GetFree(vlrb->rb);
 }
 
+int VLRingBuffer_GetCount(VLRINGBUFF_T * vlrb)
+{
+   return vlrb->vlcount;
+}
+
 /** @} doxygen end group definition */
 
 /*==================[end of file]============================================*/

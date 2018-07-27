@@ -120,12 +120,10 @@ int main(void)
    while(1){
 
       dbgPrint("\r\n>>>LISTA DE OPCIONES<<<\r\n\r\n");
-      dbgPrint("1) Ingresar caracteres a ring buffer \r\n");
-      dbgPrint("2) Visualizar ring buffer \r\n");
-      dbgPrint("3) Vaciar ring buffer \r\n");
-      dbgPrint("4) Ingresar caracteres a VL ring buffer \r\n");
-      dbgPrint("5) Leer ultimo registro del VL ring buffer \r\n");
-      dbgPrint("6) Vaciar VL ring buffer \r\n");
+      dbgPrint("1) Ingresar caracteres a VL ring buffer \r\n");
+      dbgPrint("2) Leer ultimo registro del VL ring buffer \r\n");
+      dbgPrint("3) Leer cantidad de items del VL ring buffer \r\n");
+      dbgPrint("4) Vaciar VL ring buffer \r\n");
 
       uint8_t option;
 
@@ -134,55 +132,6 @@ int main(void)
       switch(option){
 
          case '1':
-
-            dbgPrint("\r\nIngrese caracteres y oprima enter para finalizar\r\n\r\n");
-
-            uint8_t input[2] = {'A', '\0'};
-
-            while('\r' != input[0]){
-
-               if(0 != uartRecv(CIAA_UART_USB, (void *) &input, 1)){
-
-                  dbgPrint("PUSH: ");
-                  dbgPrint(&input);
-                  dbgPrint("\r\n");
-                  RingBuffer_Insert(&rb, (void *) &input[0]);
-
-               }
-
-            }
-
-            dbgPrint("\r\n");
-
-            break;
-
-         case '2':
-
-            dbgPrint("\r\n");
-
-            uint8_t output[2] = {'A', '\0'};
-
-            while(0 != RingBuffer_Pop(&rb, (void *) &output[0])){
-
-               dbgPrint("POP: ");
-               dbgPrint(&output);
-               dbgPrint("\r\n");
-
-            }
-
-            dbgPrint("\r\n");
-
-            break;
-
-         case '3':
-
-            RingBuffer_Flush(&rb);
-
-            dbgPrint("\r\nRing buffer vaciado\r\n");
-
-            break;
-
-         case '4':
 
             dbgPrint("\r\nIngrese caracteres y oprima enter para finalizar\r\n\r\n");
 
@@ -201,17 +150,17 @@ int main(void)
 
             }
 
-            VLRingBuffer_Insert(&vlrb, &buffer[0], i+1);
+            if(0 == VLRingBuffer_Insert(&vlrb, &buffer[0], i+1)){
+               dbgPrint("\r\nNo hay suficiente espacio\r\n");
+            }
 
             dbgPrint("\r\n");
 
             break;
 
-         case '5':
+         case '2':
 
             ;
-
-            dbgPrint("\r\nLeyendo...\r\n");
 
             uint8_t buffer2[100];
             int size;
@@ -220,16 +169,36 @@ int main(void)
 
             if(0 != size){
 
-               output[size] = '\0';
-               dbgPrint("\r\nPOP: ");
+               buffer2[size] = '\0';
+               dbgPrint("\r\n");
                dbgPrint(buffer2);
                dbgPrint("\r\n");
 
             }
+            else{
+               dbgPrint("\r\nVL ring buffer vacio\r\n");
+            }
 
             break;
 
-         case '6':
+         case '3':
+
+            ;
+
+            int count;
+            uint8_t countstr[10];
+
+            count = VLRingBuffer_GetCount(&vlrb);
+
+            itoa(count, countstr, 10);
+
+            dbgPrint("\r\nHay ");
+            dbgPrint(countstr);
+            dbgPrint(" elementos en el VL ring buffer\r\n");
+
+            break;
+
+         case '4':
 
             VLRingBuffer_Flush(&vlrb);
 
