@@ -54,6 +54,14 @@
 
 /*==================[internal data declaration]==============================*/
 
+/** @brief Buffer for the token VL ring buffer */
+
+static uint8_t tknVlRbBuffer[VL_RB_SIZE];
+
+/** @brief Token VL ring buffer */
+
+static VLRINGBUFF_T tknVlRb;
+
 /** @brief Current state of the GSM engine */
 
 static GSMstate GSMstatus = WAITING;
@@ -415,6 +423,8 @@ static uint8_t recordURC (uint8_t const * const command,
 
 FSMresult processToken(void)
 {
+   detectTokens(&tknVlRb);
+
    ATToken received; /* classifies the received token*/
    FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
@@ -422,8 +432,9 @@ FSMresult processToken(void)
    uint8_t command[TKN_LEN]; /* AT command or response */
    uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
-   if(0 != tokenRead(token)){
+   if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
 
+      VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
       received = parse(token, command, parameter);              /* parse the token */
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 

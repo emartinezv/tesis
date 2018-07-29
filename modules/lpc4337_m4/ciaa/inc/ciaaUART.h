@@ -30,23 +30,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-/*
- * 2017-02-05
- *
- * Modified to include tokenizer functionality in the UART Rx IRQ.
- *
- * If the received character is <CR>, the character is not stored in the ring buffer
- * and all prior characters are flushed, considered part of a single token. This is
- * stored in a token buffer, a matrix composed of token vectors.
- *
- * emartinez
- */
-
-#ifndef CIAAUART_T_H_
-#define CIAAUART_T_H_
-
-#define TOKENIZER ; /* erase if not using tokenizer function */
+ 
+#ifndef CIAAUART_H_
+#define CIAAUART_H_
 
 #include "chip.h"
 #include "string.h"
@@ -62,7 +48,7 @@ typedef enum _ciaaUarts_e
 #define dbgPrint(x)   uartSend(1, (uint8_t *)(x), strlen(x))
 #define rs232Print(x) uartSend(2, (uint8_t *)(x), strlen(x))
 
-#define UART_BUF_SIZE     512
+#define UART_BUF_SIZE	512
 #define UART_RX_FIFO_SIZE 16
 
 typedef struct _uartData
@@ -75,10 +61,5 @@ typedef struct _uartData
 void ciaaUARTInit(void);
 int uartSend(ciaaUART_e nUART, void * data, int datalen);
 int uartRecv(ciaaUART_e nUART, void * data, int datalen);
-#ifdef TOKENIZER
-int tokenRead(void * token);
-serialMode_e checkSerialMode(void);
-void changeSerialMode(serialMode_e mode);
-#endif
 
 #endif /* CIAAUART_H_ */

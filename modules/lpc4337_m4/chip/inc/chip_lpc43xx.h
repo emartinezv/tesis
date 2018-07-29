@@ -204,7 +204,7 @@ extern "C" {
 #include "spi_18xx_43xx.h"
 #include "ssp_18xx_43xx.h"
 #include "timer_18xx_43xx.h"
-#include "uart_18xx_43xx_T.h"
+#include "uart_18xx_43xx.h"
 #include "usbhs_18xx_43xx.h"
 #include "wwdt_18xx_43xx.h"
 #include "romapi_18xx_43xx.h"

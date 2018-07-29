@@ -41,9 +41,10 @@
 
 #include "lpc_types.h"
 #include "string.h"
-#include "ciaaUART_T.h"
+#include "ciaaUART.h"
 #include "ciaaMobile_parser.h"
 #include "ciaaMobile_commands.h"
+#include "ciaaMobile_tokenizer.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -52,6 +53,9 @@ extern "C" {
 #endif
 
 /*==================[macros]=================================================*/
+
+/** @brief Size in bytes of the VL ring buffer */
+#define VL_RB_SIZE 1024
 
 /** @brief Size of the respVector vector (number of responses) */
 #define RESPVECTOR_SIZE 10
@@ -162,4 +166,4 @@ uint8_t readURC (uint8_t * const command, uint8_t * const parameter);
 
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _MAIN_H_ */
+#endif

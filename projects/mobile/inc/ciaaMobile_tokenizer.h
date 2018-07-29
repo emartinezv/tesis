@@ -31,10 +31,10 @@
  *
  */
 
-#ifndef _CIAAMOBILE_PARSER_H_
-#define _CIAAMOBILE_PARSER_H_
+#ifndef _CIAAMOBILE_TOKENIZER_H_
+#define _CIAAMOBILE_TOKENIZER_H_
 
-/** \addtogroup parser parser
+/** \addtogroup tokenizer tokenizer
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -42,6 +42,7 @@
 #include "lpc_types.h"
 #include "string.h"
 #include "ciaaUART.h"
+#include "vl_ring_buffer.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -51,44 +52,36 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
+/** @brief Maximum size of tokens */
+#define TKN_LEN 150
 
+/** @brief Size in bytes of auxiliary buffer */
+#define AUX_BUFF_SIZE 150
 
 /*==================[typedef]================================================*/
 
-/** @brief Type of AT token as per the parse function; used to feed the cmd FSM
- */
-
-typedef enum {INVALID,        /**< token is invalid */
-              AUTOBAUD,       /**< token is the autobauding sequence */
-              BASIC_CMD,      /**< token is a basic command */
-              BASIC_CMD_AMP,  /**< token is a basic command with ampersand */
-              EXT_CMD_TEST,   /**< token is a extended test command */
-              EXT_CMD_WRITE,  /**< token is a extended test command */
-              EXT_CMD_READ,   /**< token is a extended test command */
-              EXT_CMD_EXEC,   /**< token is a extended test command */
-              SMS_BODY,       /**< token is the body of an SMS */
-              BASIC_RSP,      /**< token is a basic response */
-              DATA,           /**< token is a DATA block from a response */
-              SMS_PROMPT,     /**< token is the SMS prompt */
-              EXT_RSP,        /**< token is an extended response */
-              TIMEOUT,        /**< dummy value for timeout events */
-              }ATToken;
+typedef enum {
+   NONE,
+   ECHO,
+   RESP,
+   DATAB,
+   SMSIn,
+   SMSBod}
+tokenType_t;
 
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief AT token parser
+/** @brief Get characters from the UART ring buffer into a local buffer, cycle
+ *         though it and send detected tokens to the token VL ring buffer
 *
-*  @param token Pointer to AT token fetched from the serial port tokenizer
-*  @param command AT command buffer
-*  @param parameter AT parameter buffer
+*  @param  vlrb    : Pointer to the VL ring buffer
 *
-*  @return Returns the type of AT token in an ATToken enum, as well as the
-*          command and parameter parts in their corresponding buffers
+*  @return Returns the number of tokens detected
 */
 
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
+int detectTokens(VLRINGBUFF_T * vlrb);
 
 /*==================[cplusplus]==============================================*/
 
@@ -98,4 +91,4 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _MAIN_H_ */
+#endif

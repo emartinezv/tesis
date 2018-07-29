@@ -31,36 +31,13 @@
  *
  */
 
-/*
- * 2017-02-05
- *
- * Modified to include tokenizer functionality in the UART Rx IRQ.
- *
- * If the received character is <CR>, the character is not stored in the ring buffer
- * and all prior characters are flushed, considered part of a single token.
- *
- * emartinez
- */
-
-#include "ciaaUART_T.h"
-
-/* define variable for token or data mode */
-
-static serialMode_e serialMode = COMMAND_MODE; /* command or data mode for the serial port */
-
-/* define data buffers and ring buffer structures */
+#include "ciaaUART.h"
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];
 
 RINGBUFF_T rrb[3];
 RINGBUFF_T trb[3];
-
-#ifdef TOKENIZER
-uint8_t tknbuf[TKN_BUF_SIZE * TKN_LEN];
-
-RINGBUFF_T tokens;
-#endif
 
 uartData_t uarts[3] =
 {
@@ -113,7 +90,7 @@ void ciaaUARTInit(void)
 
 	/* UART3 (RS232) */
 	Chip_UART_Init(LPC_USART3);
-	Chip_UART_SetBaud(LPC_USART3, 9600);
+	Chip_UART_SetBaud(LPC_USART3, 115200);
 
 	Chip_UART_TXEnable(LPC_USART3);
 
@@ -125,26 +102,13 @@ void ciaaUARTInit(void)
 
 	RingBuffer_Init(uarts[2].rrb, rxbuf[2], 1, UART_BUF_SIZE);
 	RingBuffer_Init(uarts[2].trb, txbuf[2], 1, UART_BUF_SIZE);
-
-   #ifdef TOKENIZER
-	RingBuffer_Init(&tokens, &tknbuf, TKN_LEN, TKN_BUF_SIZE);
-   #endif
 }
 
 void uart_irq(ciaaUART_e n)
 {
 	uartData_t * u = &(uarts[n]);
 
-   #ifdef TOKENIZER
-   if(CIAA_UART_232 == n)
-	   Chip_UART_IRQRBHandler_T(u->uart, u->rrb, u->trb, &tokens, &serialMode);
-   else
-	   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
-   #endif
-
-   #ifndef TOKENIZER
-   Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
-   #endif
+	Chip_UART_IRQRBHandler(u->uart, u->rrb, u->trb);
 }
 
 void UART0_IRQHandler(void)
@@ -166,13 +130,7 @@ int uartSend(ciaaUART_e nUART, void * data, int datalen)
 {
 	uartData_t * u = &(uarts[nUART]);
 
-   #ifdef TOKENIZER
-   if(CIAA_UART_232 == nUART)
-      return Chip_UART_SendRB_T(u->uart, u->trb, data, datalen, &serialMode);
-   else
-      return Chip_UART_SendRB(u->uart, u->trb, data, datalen);
-   #endif
-
+	return Chip_UART_SendRB(u->uart, u->trb, data, datalen);
 }
 
 int uartRecv(ciaaUART_e nUART, void * data, int datalen)
@@ -181,27 +139,3 @@ int uartRecv(ciaaUART_e nUART, void * data, int datalen)
 
 	return Chip_UART_ReadRB(u->uart, u->rrb, data, datalen);
 }
-
-#ifdef TOKENIZER
-
-int tokenRead(void * token){
-   if(1 == RingBuffer_IsEmpty(&tokens)){ return 0;}
-   else{
-      RingBuffer_Pop(&tokens, token);
-      return 1;
-   }
-}
-
-serialMode_e checkSerialMode(void){
-
-   return serialMode;
-}
-
-void changeSerialMode(serialMode_e mode){;
-
-   serialMode = mode;
-   return;
-
-}
-
-#endif

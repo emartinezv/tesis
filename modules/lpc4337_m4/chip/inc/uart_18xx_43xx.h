@@ -29,23 +29,10 @@
  * this code.
  */
 
-/*
- * 2017-02-05
- *
- * Modified to include tokenizer functionality in the UART Rx IRQ.
- *
- * If the received character is <CR>, the character is not stored in the ring buffer
- * and all prior characters are flushed, considered part of a single token.
- *
- * emartinez
- */
-
-
 #ifndef __UART_18XX_43XX_H_
 #define __UART_18XX_43XX_H_
 
 #include "ring_buffer.h"
-#include <ctype.h> /* used in tokenizer functions */
 
 #ifdef __cplusplus
 extern "C" {
@@ -104,15 +91,6 @@ typedef struct {					/*!< USARTn Structure       */
 	__IO uint32_t TER2;				/*!< Transmit Enable Register. Only on LPC177X_8X UART4 and LPC18XX/43XX USART0/2/3. */
 } LPC_USART_T;
 
-/**
- * @brief Typedefs for tokenizer functionality
- */
-
-typedef enum _serialMode_e
-{
-   COMMAND_MODE,
-   DATA_MODE
-} serialMode_e ;
 
 /**
  * @brief Macro defines for UART Receive Buffer register
@@ -319,13 +297,6 @@ typedef enum _serialMode_e
 #define UART_SYNCCTRL_CSCEN            (1 << 4)			/*!< Continuous running clock enable (master mode only)*/
 #define UART_SYNCCTRL_STARTSTOPDISABLE (1 << 5)	        /*!< Do not send start/stop bit*/
 #define UART_SYNCCTRL_CCCLR            (1 << 6)			/*!< stop continuous clock*/
-
-/**
- * @brief Macro defines for tokenizer functionality
- */
-
-#define TKN_BUF_SIZE 16
-#define TKN_LEN 256
 
 /**
  * @brief	Enable transmission on UART TxD pin
@@ -766,41 +737,15 @@ int Chip_UART_SendBlocking(LPC_USART_T *pUART, const void *data, int numBytes);
 int Chip_UART_ReadBlocking(LPC_USART_T *pUART, void *data, int numBytes);
 
 /**
- * @brief	UART receive-only interrupt handler for ring buffers with tokenizer functionality
- * @param	pUART	     : Pointer to selected UART peripheral
- * @param	pRB	     : Pointer to ring buffer structure to use
- * @paran   pTKNB      : Pointer to token ring buffer
- * @param   serialMode : Pointer to the serial port mode variable
- *
+ * @brief	UART receive-only interrupt handler for ring buffers
+ * @param	pUART	: Pointer to selected UART peripheral
+ * @param	pRB		: Pointer to ring buffer structure to use
  * @return	Nothing
  * @note	If ring buffer support is desired for the receive side
  *			of data transfer, the UART interrupt should call this
  *			function for a receive based interrupt status.
  */
-void Chip_UART_RXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, RINGBUFF_T * pTKNB, serialMode_e * serialMode);
-
-/**
- * @brief   UART receive-only interrupt handler for ring buffers
- * @param   pUART : Pointer to selected UART peripheral
- * @param   pRB      : Pointer to ring buffer structure to use
- * @return  Nothing
- * @note If ring buffer support is desired for the receive side
- *       of data transfer, the UART interrupt should call this
- *       function for a receive based interrupt status.
- */
 void Chip_UART_RXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB);
-
-/**
- * @brief   UART transmit-only interrupt handler for ring buffers with tokenizer functionality
- * @param   pUART : Pointer to selected UART peripheral
- * @param   pRB      : Pointer to ring buffer structure to use
- * @param   serialMode : Pointer to the serial port mode variable
- * @return  Nothing
- * @note If ring buffer support is desired for the transmit side
- *       of data transfer, the UART interrupt should call this
- *       function for a transmit based interrupt status.
- */
-void Chip_UART_TXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, serialMode_e * serialMode);
 
 /**
  * @brief	UART transmit-only interrupt handler for ring buffers
@@ -812,20 +757,6 @@ void Chip_UART_TXIntHandlerRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, serialMode_
  *			function for a transmit based interrupt status.
  */
 void Chip_UART_TXIntHandlerRB(LPC_USART_T *pUART, RINGBUFF_T *pRB);
-
-/**
- * @brief   Populate a transmit ring buffer and start UART transmit with tokenizer function
- * @param   pUART : Pointer to selected UART peripheral
- * @param   pRB      : Pointer to ring buffer structure to use
- * @param   data  : Pointer to buffer to move to ring buffer
- * @param   bytes : Number of bytes to move
- * @param   serialMode : Pointer to the serial port mode variable
- * @return  The number of bytes placed into the ring buffer
- * @note Will move the data into the TX ring buffer and start the
- *       transfer. If the number of bytes returned is less than the
- *       number of bytes to send, the ring buffer is considered full.
- */
-uint32_t Chip_UART_SendRB_T(LPC_USART_T *pUART, RINGBUFF_T *pRB, const void *data, int bytes, serialMode_e * serialMode);
 
 /**
  * @brief	Populate a transmit ring buffer and start UART transmit
@@ -854,28 +785,14 @@ uint32_t Chip_UART_SendRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, const void *data,
 int Chip_UART_ReadRB(LPC_USART_T *pUART, RINGBUFF_T *pRB, void *data, int bytes);
 
 /**
- * @brief	UART receive/transmit interrupt handler for ring buffers with tokenizer option
- * @param	pUART      : Pointer to selected UART peripheral
- * @param	pRXRB      : Pointer to transmit ring buffer
- * @param	pTXRB      : Pointer to receive ring buffer
- * @paran   serialMode : Pointer to the serial port mode variable
- *
+ * @brief	UART receive/transmit interrupt handler for ring buffers
+ * @param	pUART	: Pointer to selected UART peripheral
+ * @param	pRXRB	: Pointer to transmit ring buffer
+ * @param	pTXRB	: Pointer to receive ring buffer
  * @return	Nothing
  * @note	This provides a basic implementation of the UART IRQ
  *			handler for support of a ring buffer implementation for
  *			transmit and receive.
- */
-void Chip_UART_IRQRBHandler_T(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB, RINGBUFF_T *pTKNB, serialMode_e * serialMode);
-
-/**
- * @brief   UART receive/transmit interrupt handler for ring buffers
- * @param   pUART : Pointer to selected UART peripheral
- * @param   pRXRB : Pointer to transmit ring buffer
- * @param   pTXRB : Pointer to receive ring buffer
- * @return  Nothing
- * @note This provides a basic implementation of the UART IRQ
- *       handler for support of a ring buffer implementation for
- *       transmit and receive.
  */
 void Chip_UART_IRQRBHandler(LPC_USART_T *pUART, RINGBUFF_T *pRXRB, RINGBUFF_T *pTXRB);
 
@@ -907,3 +824,9 @@ void Chip_UART_ABCmd(LPC_USART_T *pUART, uint32_t mode, bool autorestart,
 #endif
 
 #endif /* __UART_18XX_43XX_H_ */
+
+
+
+
+
+
