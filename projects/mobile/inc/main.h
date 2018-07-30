@@ -39,7 +39,7 @@
 #include "lpc_types.h"
 #include "board.h"
 #include "string.h"
-#include "ciaaUART_T.h"
+#include "ciaaUART.h"
 #include "ciaaMobile_interface.h"
 
 /*==================[cplusplus]==============================================*/

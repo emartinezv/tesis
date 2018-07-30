@@ -55,7 +55,7 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /** @brief Size in bytes of the VL ring buffer */
-#define VL_RB_SIZE 1024
+#define AUX_RB_SIZE 1024
 
 /** @brief Size of the respVector vector (number of responses) */
 #define RESPVECTOR_SIZE 10
@@ -69,6 +69,14 @@ typedef struct _ATresp
    uint8_t cmd[20];
    uint8_t param[200];
 } ATresp;
+
+/** @brief Modes for the serial port */
+
+typedef enum _serialMode_e
+{
+   COMMAND_MODE,
+   DATA_MODE
+} serialMode_e ;
 
 /** @brief State of the GSM engine */
 
@@ -109,6 +117,13 @@ typedef struct _URCevent
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
+
+/** @brief Initializes GSM engine
+*
+*/
+
+void initGsmEngine(void);
+
 
 /** @brief Processes a single token
 *
@@ -157,6 +172,23 @@ uint8_t getNoCmdResp (void);
 */
 
 uint8_t readURC (uint8_t * const command, uint8_t * const parameter);
+
+/** @brief Returns the actual mode of the serial port
+*
+*
+*  @return Returns COMMAND_MODE or DATA_MODE
+*/
+
+serialMode_e checkSerialMode(void);
+
+/** @brief Changes the mode of the serial port
+*
+*  @param mode   : Serial port mode
+*
+*  @return Returns COMMAND_MODE or DATA_MODE
+*/
+
+void changeSerialMode(serialMode_e mode);
 
 /*==================[cplusplus]==============================================*/
 

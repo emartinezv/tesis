@@ -78,10 +78,9 @@ tokenType_t;
 *
 *  @param  vlrb    : Pointer to the VL ring buffer
 *
-*  @return Returns the number of tokens detected
 */
 
-int detectTokens(VLRINGBUFF_T * vlrb);
+void detectTokens(VLRINGBUFF_T * vlrb);
 
 /*==================[cplusplus]==============================================*/
 

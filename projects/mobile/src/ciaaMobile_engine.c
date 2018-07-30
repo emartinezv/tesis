@@ -54,9 +54,17 @@
 
 /*==================[internal data declaration]==============================*/
 
-/** @brief Buffer for the token VL ring buffer */
+/** @brief Command or data mode for the serial port */
 
-static uint8_t tknVlRbBuffer[VL_RB_SIZE];
+static serialMode_e serialMode = COMMAND_MODE;
+
+/** @brief Buffer for the auxiliary ring buffer */
+
+static uint8_t tknRbBuffer[AUX_RB_SIZE];
+
+/** @brief Auxiliary ring buffer*/
+
+static RINGBUFF_T tknRb;
 
 /** @brief Token VL ring buffer */
 
@@ -415,6 +423,14 @@ static uint8_t recordURC (uint8_t const * const command,
 
 /*==================[external functions definition]==========================*/
 
+void initGsmEngine(void){
+
+   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuffer, 1, AUX_RB_SIZE);
+
+   return;
+
+}
+
 /** The processToken function checks is there are unread tokens in the token
  *  ring buffer. If so, it reads the oldest token, parses the token through the
  *  parse function and calls upon the updateFSM function with the result. It
@@ -636,6 +652,18 @@ uint8_t readURC (uint8_t * const command,
 
       return 1;
    }
+}
+
+serialMode_e checkSerialMode(void){
+
+   return serialMode;
+}
+
+void changeSerialMode(serialMode_e mode){;
+
+   serialMode = mode;
+   return;
+
 }
 
 /** @} doxygen end group definition */

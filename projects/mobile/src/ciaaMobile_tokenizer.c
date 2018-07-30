@@ -68,7 +68,7 @@ static uint8_t auxBuffer[AUX_BUFF_SIZE];
 
 /*==================[external functions definition]==========================*/
 
-int detectTokens(VLRINGBUFF_T * vlrb)
+void detectTokens(VLRINGBUFF_T * vlrb)
 {
    /* State-machine variables */
 
@@ -81,9 +81,9 @@ int detectTokens(VLRINGBUFF_T * vlrb)
 
    /* Buffer processing variables */
 
-   uint8_t n = 0     /* number of characters read from UART ring buffer */
-   static uint8_t i = 0     /* index counter */
-   uint8_t ch = '\0' /* character being read */
+   uint8_t n = 0;            /* number of characters read from UART ring buffer */
+   static uint8_t i = 0;     /* index counter */
+   uint8_t ch = '\0';        /* character being read */
 
    n = uartRecv(CIAA_UART_232, &auxBuffer[i], 150);
 
@@ -111,7 +111,7 @@ int detectTokens(VLRINGBUFF_T * vlrb)
             if(SMSBod != token){ crLf = 0; }
             empty = 1;
             uint8_t length = (i+1) - (ECHO == token) - (SMSBod == token)*2;
-            VLRingBuffer_Insert(vlrb, const void * auxBuffer, length); /* insert new token into token VL ring buffer */
+            VLRingBuffer_Insert(vlrb, &auxBuffer, length); /* insert new token into token VL ring buffer */
             i=0;
          }
 
@@ -121,6 +121,10 @@ int detectTokens(VLRINGBUFF_T * vlrb)
 
          pCh = ch;
       }
+
+   }
+
+   return;
 
 }
 
