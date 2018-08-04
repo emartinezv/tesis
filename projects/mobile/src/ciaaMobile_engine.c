@@ -447,12 +447,14 @@ FSMresult processToken(void)
    FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
+   uint8_t tknSize;        /* size of read token */
    uint8_t command[TKN_LEN]; /* AT command or response */
    uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
    if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
 
-      VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
+      tknSize = VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
+      token[tknSize] = '\0';
       received = parse(token, command, parameter);              /* parse the token */
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 
