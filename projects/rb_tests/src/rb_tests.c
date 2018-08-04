@@ -107,13 +107,10 @@ int main(void)
    ciaaUARTInit();
 
    RINGBUFF_T rb;
-   RINGBUFF_T rb2;
    uint8_t buf[BUF_SIZE];
-   uint8_t buf2[BUF_SIZE];
    VLRINGBUFF_T vlrb;
 
-   RingBuffer_Init(&rb, &buf, 1, BUF_SIZE);
-   VLRingBuffer_Init(&vlrb, &rb2, &buf2, 1, BUF_SIZE);
+   VLRingBuffer_Init(&vlrb, &rb, &buf, 1, BUF_SIZE);
 
    pausems(DELAY_MS);
 
@@ -135,11 +132,11 @@ int main(void)
 
             dbgPrint("\r\nIngrese caracteres y oprima enter para finalizar\r\n\r\n");
 
-            uint8_t buffer[100];
+            uint8_t buffer[BUF_SIZE-1];
             uint8_t character = 'A';
             int i = 0;
 
-            while('\r' != character){
+            while(('\r' != character) && (i < (BUF_SIZE-2))){
 
                   if(0 != uartRecv(CIAA_UART_USB, (void *) &character, 1)){
                      buffer[i] = character;
@@ -150,7 +147,7 @@ int main(void)
 
             }
 
-            if(0 == VLRingBuffer_Insert(&vlrb, &buffer[0], i+1)){
+            if(0 == VLRingBuffer_Insert(&vlrb, &buffer[0], i)){
                dbgPrint("\r\nNo hay suficiente espacio\r\n");
             }
 
@@ -162,10 +159,10 @@ int main(void)
 
             ;
 
-            uint8_t buffer2[100];
+            uint8_t buffer2[BUF_SIZE-1];
             int size;
 
-            size = VLRingBuffer_Pop(&vlrb, &buffer2[0], 100);
+            size = VLRingBuffer_Pop(&vlrb, &buffer2[0], BUF_SIZE-2);
 
             if(0 != size){
 

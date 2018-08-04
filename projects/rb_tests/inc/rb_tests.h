@@ -42,7 +42,7 @@
 #include "board.h"
 #include "string.h"
 #include "vl_ring_buffer.h"
-#include "ciaaUART_T.h"
+#include "ciaaUART.h"
 
 /*==================[cplusplus]==============================================*/
 

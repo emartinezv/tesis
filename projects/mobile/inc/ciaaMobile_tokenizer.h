@@ -55,8 +55,8 @@ extern "C" {
 /** @brief Maximum size of tokens */
 #define TKN_LEN 150
 
-/** @brief Size in bytes of auxiliary buffer */
-#define AUX_BUFF_SIZE 150
+/** @brief Size in bytes of the UART read buffer */
+#define READ_BUFF_SIZE TKN_LEN
 
 /*==================[typedef]================================================*/
 
@@ -72,6 +72,12 @@ tokenType_t;
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
+
+/** @brief Initializes tokenizer
+*
+*/
+
+void initTokenizer(void);
 
 /** @brief Get characters from the UART ring buffer into a local buffer, cycle
  *         though it and send detected tokens to the token VL ring buffer

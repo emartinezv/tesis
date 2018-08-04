@@ -122,7 +122,7 @@ typedef struct _URCevent
 *
 */
 
-void initGsmEngine(void);
+void initEngine(void);
 
 
 /** @brief Processes a single token

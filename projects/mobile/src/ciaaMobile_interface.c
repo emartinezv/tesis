@@ -477,7 +477,7 @@ static void ciaaMobile_startUp_f (void)
          debug(">>>interf<<<   Inicializando ciaaMobile...\r\n");
 
          changeSerialMode(COMMAND_MODE); /* start serial comms in command mode */
-         initGsmEngine();
+         initEngine();
 
          runState = ATCMD1;
          frmState = PROC;

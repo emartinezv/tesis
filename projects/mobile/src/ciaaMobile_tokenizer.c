@@ -54,9 +54,21 @@
 
 /*==================[internal data declaration]==============================*/
 
-/** @brief Auxiliary buffer */
+/** @brief Read characters buffer */
 
-static uint8_t auxBuffer[AUX_BUFF_SIZE];
+static uint8_t readChBuff[256];
+
+/** @brief Read characters ring buffer structure */
+
+static RINGBUFF_T readChRb;
+
+/** @brief Current token buffer */
+
+static uint8_t currTknBuff[256];
+
+/** @brief Current token ring buffer structure */
+
+static RINGBUFF_T currTknRb;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -67,6 +79,14 @@ static uint8_t auxBuffer[AUX_BUFF_SIZE];
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
+
+void initTokenizer(void)
+{
+   RingBuffer_Init(&readChRb, &readChBuff, 1, 256);
+   RingBuffer_Init(&currTknRb, &currTknBuff, 1, 256);
+
+   return;
+}
 
 void detectTokens(VLRINGBUFF_T * vlrb)
 {
@@ -81,19 +101,20 @@ void detectTokens(VLRINGBUFF_T * vlrb)
 
    /* Buffer processing variables */
 
-   uint8_t n = 0;            /* number of characters read from UART ring buffer */
-   static uint8_t i = 0;     /* index counter */
-   uint8_t ch = '\0';        /* character being read */
+   uint8_t swapBuffer[READ_BUFF_SIZE];  /* swap buffer */
+   uint8_t n = 0;                       /* number of characters read from UART ring buffer */
+   static uint8_t i = 0;                /* indexing variable for currTkn */
+   uint8_t ch = '\0';                   /* character being read */
 
-   n = uartRecv(CIAA_UART_232, &auxBuffer[i], 150);
+   n = uartRecv(CIAA_UART_232, &swapBuffer, READ_BUFF_SIZE);
 
-   if(0 != n){
-      for(; i < n; i++){
+   RingBuffer_InsertMult(&readChRb, &swapBuffer, n);
 
-         ch = auxBuffer[i];
+   while(0 != RingBuffer_Pop(&readChRb, &ch)){
+
+         RingBuffer_Insert(&currTknRb, &ch);
 
          if(!iscntrl(ch)){empty = 0;}
-         //RingBuffer_Insert(pRB, &ch);
 
          if(('\r' == pCh) && ('\n' != ch) && !crLf && !empty) { token = ECHO; smsIn = 0; } /* cmd echo */
          else if(('\r' == pCh) && ('\n' == ch) && crLf) { token = RESP; smsIn = 0; } /* response */
@@ -110,9 +131,9 @@ void detectTokens(VLRINGBUFF_T * vlrb)
 
             if(SMSBod != token){ crLf = 0; }
             empty = 1;
-            uint8_t length = (i+1) - (ECHO == token) - (SMSBod == token)*2;
-            VLRingBuffer_Insert(vlrb, &auxBuffer, length); /* insert new token into token VL ring buffer */
-            i=0;
+            uint8_t length = RingBuffer_GetCount(&currTknRb) - (ECHO == token) - (SMSBod == token)*2;
+            RingBuffer_PopMult(&currTknRb, &swapBuffer, length);
+            VLRingBuffer_Insert(vlrb, &swapBuffer, length); /* insert new token into token VL ring buffer */
          }
 
          else if(('\r' == pCh) && ('\n' == ch) && !crLf && empty){
@@ -120,8 +141,6 @@ void detectTokens(VLRINGBUFF_T * vlrb)
          }
 
          pCh = ch;
-      }
-
    }
 
    return;

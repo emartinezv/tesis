@@ -423,7 +423,9 @@ static uint8_t recordURC (uint8_t const * const command,
 
 /*==================[external functions definition]==========================*/
 
-void initGsmEngine(void){
+void initEngine(void){
+
+   initTokenizer();
 
    VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuffer, 1, AUX_RB_SIZE);
 
