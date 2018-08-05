@@ -397,6 +397,7 @@ int main(void)
    signal_quality_s sigqual;
    power_GNSS_e powerGNSS;
    statusGSMGPRS_s status;
+   ATresp urc;
 
    pausems(DELAY_INIT);
 
@@ -419,6 +420,7 @@ int main(void)
    dbgPrint("8) Apagar GNSS \r\n");
    dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
    dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
+   dbgPrint("B) Leer URC mas reciente\r\n");
 
    while (1){
 
@@ -560,6 +562,27 @@ int main(void)
 
                break;
 
+               case 'B':
+
+               urc = getURC();
+
+               if(urc.cmd[0] != '\0'){
+                  dbgPrint("\r\nURC: ");
+                  dbgPrint(urc.cmd);
+                  dbgPrint("(");
+                  dbgPrint(urc.param);
+                  dbgPrint(")\r\n");
+               }
+               else{
+                  dbgPrint("\r\nNo hay URCs pendientes\r\n");
+               }
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
                default:
 
                dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
@@ -578,6 +601,7 @@ int main(void)
             dbgPrint("8) Apagar GNSS \r\n");
             dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
             dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
+            dbgPrint("B) Leer URC mas reciente\r\n");
 
          }
 

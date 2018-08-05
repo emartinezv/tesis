@@ -54,14 +54,16 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** @brief Size in bytes of the VL ring buffer */
-#define AUX_RB_SIZE 1024
+/** @brief Size in bytes of the tknVlRb buffer */
+#define TKN_BUF_SIZE 1024
 
-/** @brief Size of the respVector vector (number of responses) */
-#define RESPVECTOR_SIZE 10
+/** @brief Size in bytes of the rspVlRb buffer */
+#define RSP_BUF_SIZE 1024
 
-/** @brief Size of the URC events vector */
-#define URC_VECTOR_SIZE 10
+/** @brief Size in bytes of the urcVlRb buffer */
+#define URC_BUF_SIZE 256
+
+
 
 /** @brief AT command response type */
 typedef struct _ATresp
@@ -149,7 +151,6 @@ FSMresult sendATcmd (const uint8_t * cmdstr);
 
 /** @brief Gets the latest command response
 *
-*
 *  @return Returns the required response (0 if no such response)
 */
 
@@ -162,15 +163,12 @@ ATresp getCmdResp (void);
 
 uint8_t getNoCmdResp (void);
 
-/** @brief Reads the oldest URC event in the URC event vector
+/** @brief Reads the oldest URC event in the URC VLRB
 *
-*  @param command   Main part of the read URC
-*  @param parameter Parameter part of the read URC
-*
-*  @return Returns 1 if successful or 0 if vector is empty
+*  @return Returns the required URC (0 if no such response)
 */
 
-uint8_t readURC (uint8_t * const command, uint8_t * const parameter);
+ATresp getURC (void);
 
 /** @brief Returns the actual mode of the serial port
 *

@@ -54,6 +54,18 @@
 
 /*==================[internal data declaration]==============================*/
 
+/*---------------------------------------------------------------------------*/
+/*                    Internal GSM engine state variables                    */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Current state of the GSM engine */
+
+static GSMstate GSMstatus = WAITING;
+
+/** @brief used for AT command timeout counter */
+
+uint32_t timeout_count = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
+
 /** @brief Command or data mode for the serial port */
 
 static serialMode_e serialMode = COMMAND_MODE;
@@ -64,9 +76,9 @@ static serialMode_e serialMode = COMMAND_MODE;
 
 /** @brief Buffer for the tknVlRb VLRB */
 
-static uint8_t tknRbBuf[AUX_RB_SIZE];
+static uint8_t tknRbBuf[TKN_BUF_SIZE];
 
-/** @brief RB structure for the tknvlRb VLRB */
+/** @brief RB structure for the tknVlRb VLRB */
 
 static RINGBUFF_T tknRb;
 
@@ -78,11 +90,11 @@ static VLRINGBUFF_T tknVlRb;
 /*                 Variables for the response VL ring buffer                 */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Buffer for the rspVector VLRB */
+/** @brief Buffer for the rspVlRb VLRB */
 
-static uint8_t rspRbBuf[AUX_RB_SIZE];
+static uint8_t rspRbBuf[RSP_BUF_SIZE];
 
-/** @brief RB structure for the rspVector VLRB */
+/** @brief RB structure for the rspVlRb VLRB */
 
 static RINGBUFF_T rspRb;
 
@@ -90,23 +102,21 @@ static RINGBUFF_T rspRb;
 
 static VLRINGBUFF_T rspVlRb;
 
+/*---------------------------------------------------------------------------*/
+/*                   Variables for the URC VL ring buffer                    */
+/*---------------------------------------------------------------------------*/
 
+/** @brief Buffer for the urcVlRb VLRB */
 
-/** @brief Current state of the GSM engine */
+static uint8_t urcRbBuf[URC_BUF_SIZE];
 
-static GSMstate GSMstatus = WAITING;
+/** @brief RB structure for the urcVlRb VLRB */
 
-/** @brief Stores URC events */
+static RINGBUFF_T urcRb;
 
-static URCevent URCeventVector [URC_VECTOR_SIZE];
+/** @brief URC VL ring buffer */
 
-/** @brief Number of URC events stored */
-
-static uint8_t URCevents = 0;
-
-/** @brief used for AT command timeout counter */
-
-uint32_t timeout_count = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
+static VLRINGBUFF_T urcVlRb;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -130,7 +140,7 @@ static FSMresult updateFSM (ATToken received,
 *  @param command   Main part of the URC
 *  @param parameter Parameter part of the URC
 *
-*  @return Returns 1 if successful or 0 if vector is full
+*  @return Returns 1 if successful or 0 if VLRB is full
 */
 
 static uint8_t recordURC (uint8_t const * const command,
@@ -412,24 +422,31 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 static uint8_t recordURC (uint8_t const * const command,
                     uint8_t const * const parameter)
 {
-   if((URCevents < 0) || (URCevents >= URC_VECTOR_SIZE)){
-      return 0;
-   }
-   else{
-      strncpy(URCeventVector[URCevents].command, command, strlen(command));
-      URCeventVector[URCevents].command[strlen(command)] = '\0';
-      strncpy(URCeventVector[URCevents].parameter, parameter, strlen(parameter));
-      URCeventVector[URCevents].parameter[strlen(parameter)] = '\0';
-      URCevents ++;
+      if(0 == VLRingBuffer_IsFull(&urcVlRb)){
 
-      debug(">>>engine<<<   URC RECORDED: ");
-      debug(command);
-      debug("(");
-      debug(parameter);
-      debug(")\r\n");
+         uint8_t urcAux[TKN_LEN];
 
-      return 1;
-   }
+         urcAux[0] = '\0';
+
+         strncat(urcAux, command, strlen(command));
+         strncat(urcAux, ".", 1);
+         strncat(urcAux, parameter, strlen(parameter));
+
+         VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
+
+         debug(">>>engine<<<   urcAux: ");
+         debug(urcAux);
+         debug("\r\n");
+
+         return 1;
+      }
+
+      else{
+
+         debug(">>>engine<<<   URC VLRB lleno!\r\n");
+
+         return 0;
+      }
 }
 
 /*==================[external functions definition]==========================*/
@@ -438,8 +455,9 @@ void initEngine(void){
 
    initTokenizer();
 
-   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, AUX_RB_SIZE);
-   VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, AUX_RB_SIZE);
+   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, TKN_BUF_SIZE);
+   VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, RSP_BUF_SIZE);
+   VLRingBuffer_Init(&urcVlRb, &urcRb, &urcRbBuf, 1, URC_BUF_SIZE);
 
    return;
 
@@ -676,27 +694,47 @@ uint8_t getNoCmdResp (void)
    return (VLRingBuffer_GetCount(&rspVlRb));
 }
 
-uint8_t readURC (uint8_t * const command,
-                    uint8_t * const parameter)
+ATresp getURC (void)
 {
-   if((URCevents <= 0) || (URCevents > URC_VECTOR_SIZE)){
-      return 0;
-   }
-   else{
-      strncpy(command, URCeventVector[URCevents - 1].command, strlen(URCeventVector[URCevents - 1].command));
-      command[strlen(URCeventVector[URCevents - 1].command)] = '\0';
-      strncpy(parameter, URCeventVector[URCevents - 1].parameter, strlen(URCeventVector[URCevents - 1].parameter));
-      parameter[strlen(URCeventVector[URCevents -1].parameter)] = '\0';
-      URCevents --;
+   /* fetches the next URC; returns empty response if there are no more
+      responses left */
 
-      debug(">>>engine<<<   URC READ: ");
-      debug(command);
-      debug("(");
-      debug(parameter);
-      debug(")\r\n");
+   uint8_t urcAux[TKN_LEN+20];      /* auxiliary buffer for storing the urc */
+   ATresp dummy;
+   uint8_t urcSiz;
 
-      return 1;
+   dummy.cmd[0] = '\0';
+   dummy.param[0] = '\0';
+
+   if(0 == VLRingBuffer_IsEmpty(&urcVlRb)){
+
+      urcSiz = VLRingBuffer_Pop(&urcVlRb, (void *) urcAux, TKN_LEN+20);
+
+      /* Find the dot which separates command from parameter and parse the */
+      /* raw response into command and parameter strings */
+
+      uint8_t dotPos = 0;
+      uint8_t i;
+
+      for (i = 0; i < TKN_LEN+20; i++){
+         if ('.' == urcAux[i]){
+            dotPos = i;
+            break;
+         }
+      }
+
+      if(0 != dotPos){
+
+         strncpy(dummy.cmd, urcAux, dotPos);
+         dummy.cmd[dotPos] = '\0';
+         strncpy(dummy.param, &urcAux[dotPos+1], urcSiz-dotPos-1);
+         dummy.param[urcSiz-dotPos-1] = '\0';
+
+      }
+
    }
+
+   return dummy;
 }
 
 serialMode_e checkSerialMode(void){
