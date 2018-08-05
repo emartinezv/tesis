@@ -232,6 +232,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
             eqPAR = strncmp(parameter, currPAR, strlen(currPAR));
 
             if ((0 == eqCMD) && (0 == eqPAR)){
+               VLRingBuffer_Flush(&rspVlRb);
                GSMstatus = CMD_ACK;
 
                debug(">>>engine<<<   COMMAND ACK\r\n");
@@ -287,7 +288,6 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          /* process a number of tokens depending on the command, checking for
             end responses each time */
-         VLRingBuffer_Flush(&rspVlRb);
 
          if ((BASIC_RSP <= received) && (EXT_RSP >= received)){
 
@@ -308,17 +308,17 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
                else*/
 
+               rspAux[0] = '\0';
+
                strncat(rspAux, command, strlen(command));
                strncat(rspAux, ".", 1);
                strncat(rspAux, parameter, strlen(parameter));
 
                VLRingBuffer_Insert(&rspVlRb, rspAux, (uint16_t) (strlen(rspAux)));
 
-               debug(">>>engine<<<   RESP: ");
-               debug(command);
-               debug("(");
-               debug(parameter);
-               debug(")\r\n");
+               debug(">>>engine<<<   rspAux: ");
+               debug(rspAux);
+               debug("\r\n");
 
                /* Since AT+CIFSR does not return an OK after reporting the IP,
                 * we change check the response and change it to OK if it is
@@ -628,7 +628,7 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
 ATresp getCmdResp (void)
 {
-   /* fetches the next command response; returns 0 if there are no more
+   /* fetches the next command response; returns empty response if there are no more
       responses left */
 
    uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
@@ -640,7 +640,7 @@ ATresp getCmdResp (void)
 
    if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
 
-      rspSiz = VLRingBuffer_Pop(&rspVlRb, rspAux, TKN_LEN+20);
+      rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_LEN+20);
 
       /* Find the dot which separated command from parameter and parse the */
       /* raw response into command and parameter strings */
