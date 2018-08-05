@@ -1,0 +1,16 @@
+Abbreviations for variable/function names
+
+token        --->   tkn
+buffer       --->   buf
+command      --->   cmd
+parameter    --->   par
+ring buffer  --->   rb
+character    --->   ch
+response     --->   rsp
+formula      --->   frm
+string       --->   str
+callback     --->   cback
+error        --->   err
+delete       --->   del
+
+up to interface

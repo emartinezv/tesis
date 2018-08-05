@@ -58,17 +58,39 @@
 
 static serialMode_e serialMode = COMMAND_MODE;
 
-/** @brief Buffer for the auxiliary ring buffer */
+/*---------------------------------------------------------------------------*/
+/*                   Variables for the token VL ring buffer                  */
+/*---------------------------------------------------------------------------*/
 
-static uint8_t tknRbBuffer[AUX_RB_SIZE];
+/** @brief Buffer for the tknVlRb VLRB */
 
-/** @brief Auxiliary ring buffer*/
+static uint8_t tknRbBuf[AUX_RB_SIZE];
+
+/** @brief RB structure for the tknvlRb VLRB */
 
 static RINGBUFF_T tknRb;
 
 /** @brief Token VL ring buffer */
 
 static VLRINGBUFF_T tknVlRb;
+
+/*---------------------------------------------------------------------------*/
+/*                 Variables for the response VL ring buffer                 */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Buffer for the rspVector VLRB */
+
+static uint8_t rspRbBuf[AUX_RB_SIZE];
+
+/** @brief RB structure for the rspVector VLRB */
+
+static RINGBUFF_T rspRb;
+
+/** @brief Response VL ring buffer */
+
+static VLRINGBUFF_T rspVlRb;
+
+
 
 /** @brief Current state of the GSM engine */
 
@@ -81,14 +103,6 @@ static URCevent URCeventVector [URC_VECTOR_SIZE];
 /** @brief Number of URC events stored */
 
 static uint8_t URCevents = 0;
-
-/** @brief Stores the responses to the active command */
-
-static ATresp respVector[RESPVECTOR_SIZE];
-
-/** @brief Number of response tokens in the last command executed */
-
-static int8_t lastResp = -1;
 
 /** @brief used for AT command timeout counter */
 
@@ -139,16 +153,16 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 {
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
    static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
-   static uint8_t currTKN;          /* number of response token being
-                                       processed */
+
    static uint8_t idx;              /* index of the command in the list */
+
+   uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
 
    switch(GSMstatus){
 
       case WAITING: /* initial state */
 
          idx = index;
-         lastResp = -1;
 
          if ((AUTOBAUD <= received) && (SMS_BODY >= received)){ /* command sent by serial port */
 
@@ -219,7 +233,6 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
             if ((0 == eqCMD) && (0 == eqPAR)){
                GSMstatus = CMD_ACK;
-               currTKN = 0;
 
                debug(">>>engine<<<   COMMAND ACK\r\n");
 
@@ -274,7 +287,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          /* process a number of tokens depending on the command, checking for
             end responses each time */
-         ;
+         VLRingBuffer_Flush(&rspVlRb);
 
          if ((BASIC_RSP <= received) && (EXT_RSP >= received)){
 
@@ -295,19 +308,17 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
                else*/
 
-               strncpy(respVector[currTKN].cmd,command,strlen(command));
-               respVector[currTKN].cmd[strlen(command)] = '\0';
-               strncpy(respVector[currTKN].param,parameter,strlen(parameter));
-               respVector[currTKN].param[strlen(parameter)] = '\0';
+               strncat(rspAux, command, strlen(command));
+               strncat(rspAux, ".", 1);
+               strncat(rspAux, parameter, strlen(parameter));
+
+               VLRingBuffer_Insert(&rspVlRb, rspAux, (uint16_t) (strlen(rspAux)));
 
                debug(">>>engine<<<   RESP: ");
-               debug(respVector[currTKN].cmd);
+               debug(command);
                debug("(");
-               debug(respVector[currTKN].param);
+               debug(parameter);
                debug(")\r\n");
-
-               lastResp++;
-               currTKN++;
 
                /* Since AT+CIFSR does not return an OK after reporting the IP,
                 * we change check the response and change it to OK if it is
@@ -427,7 +438,8 @@ void initEngine(void){
 
    initTokenizer();
 
-   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuffer, 1, AUX_RB_SIZE);
+   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, AUX_RB_SIZE);
+   VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, AUX_RB_SIZE);
 
    return;
 
@@ -614,25 +626,54 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
 }
 
-ATresp getCmdResp (uint8_t index)
+ATresp getCmdResp (void)
 {
    /* fetches the next command response; returns 0 if there are no more
-      response left */
+      responses left */
 
+   uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
    ATresp dummy;
+   uint8_t rspSiz;
 
    dummy.cmd[0] = '\0';
    dummy.param[0] = '\0';
 
-   if(index > lastResp | index < 0){return dummy;}
-   else {return respVector[index];}
+   if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
+
+      rspSiz = VLRingBuffer_Pop(&rspVlRb, rspAux, TKN_LEN+20);
+
+      /* Find the dot which separated command from parameter and parse the */
+      /* raw response into command and parameter strings */
+
+      uint8_t dotPos = 0;
+      uint8_t i;
+
+      for (i = 0; i < TKN_LEN+20; i++){
+         if ('.' == rspAux[i]){
+            dotPos = i;
+            break;
+         }
+      }
+
+      if(0 != dotPos){
+
+         strncpy(dummy.cmd, rspAux, dotPos);
+         dummy.cmd[dotPos] = '\0';
+         strncpy(dummy.param, &rspAux[dotPos+1], rspSiz-dotPos-1);
+         dummy.param[rspSiz-dotPos-1] = '\0';
+
+      }
+
+   }
+
+   return dummy;
 }
 
 uint8_t getNoCmdResp (void)
 {
    /* returns number of total command responses for the last command */
 
-   return (lastResp+1);
+   return (VLRingBuffer_GetCount(&rspVlRb));
 }
 
 uint8_t readURC (uint8_t * const command,

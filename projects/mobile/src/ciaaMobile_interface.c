@@ -223,7 +223,7 @@ static void ciaaMobile_sendSMS_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -327,13 +327,14 @@ static void ciaaMobile_listRecSMS_f (void)
 
                   for(i = 0; i < (respNo-1)/2; i++){
 
-                     resp = getCmdResp(2*i);
+                     resp = getCmdResp();
                      strncpy((target+i)->meta, resp.param, 149);
                      (target+i)->meta[149] = '\0';
 
-                     resp = getCmdResp((2*i)+1);
+                     resp = getCmdResp();
                      strncpy((target+i)->text, resp.param, 149);
                      (target+i)->text[149] = '\0';
+
                   }
 
                }
@@ -354,7 +355,7 @@ static void ciaaMobile_listRecSMS_f (void)
 
             ATresp resp;
 
-            resp = getCmdResp(getNoCmdResp()-1);
+            resp = getCmdResp();
             strncpy(error_out.error_command.command, resp.cmd, 19);
             error_out.error_command.command[20] = '\0';
             strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -442,7 +443,7 @@ static void ciaaMobile_delSMS_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -571,7 +572,7 @@ static void ciaaMobile_startUp_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -732,7 +733,7 @@ static void ciaaMobile_startGPRS_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -844,7 +845,7 @@ static void ciaaMobile_openPort_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -920,7 +921,7 @@ static void ciaaMobile_closePort_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -995,7 +996,7 @@ static void ciaaMobile_getSignalQuality_f (void)
             uint8_t i;
             uint8_t commaPos = 0; /* position of the comma in the response */
 
-            resp = getCmdResp(0);
+            resp = getCmdResp();  /* get the signal quality response */
 
             /* Search for the comma in the response, which is in the form RSSI,BER */
 
@@ -1063,7 +1064,7 @@ static void ciaaMobile_getSignalQuality_f (void)
 
             ATresp resp;
 
-            resp = getCmdResp(getNoCmdResp()-1);
+            resp = getCmdResp();
             strncpy(error_out.error_command.command, resp.cmd, 19);
             error_out.error_command.command[20] = '\0';
             strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -1146,7 +1147,7 @@ static void ciaaMobile_powerGNSS_f (void)
 
                ATresp resp;
 
-               resp = getCmdResp(getNoCmdResp()-1);
+               resp = getCmdResp();
                strncpy(error_out.error_command.command, resp.cmd, 19);
                error_out.error_command.command[20] = '\0';
                strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -1217,7 +1218,7 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
             ATresp resp;
 
-            resp = getCmdResp(0); /* Get the navigation info string */
+            resp = getCmdResp(); /* Get the navigation info string */
 
             /* Copy the navigation info string to the provided output */
 
@@ -1234,7 +1235,7 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
             ATresp resp;
 
-            resp = getCmdResp(getNoCmdResp()-1);
+            resp = getCmdResp();
             strncpy(error_out.error_command.command, resp.cmd, 19);
             error_out.error_command.command[20] = '\0';
             strncpy(error_out.error_command.parameter, resp.param, 149);
@@ -1274,8 +1275,6 @@ void ciaaMobile_checkGSMGPRS_f (void)
          runState = ATCMD1;
          frmState = PROC;
 
-
-
          break;
 
       case PROC:
@@ -1295,7 +1294,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){
-                     respGSM = getCmdResp(0);
+                     respGSM = getCmdResp(); /* get the GSM response */
                      runState = ATCMD2;
                   }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
@@ -1316,7 +1315,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){
-                     respGPRS = getCmdResp(0);
+                     respGPRS = getCmdResp(); /* get the GPRS response */
                      frmState = WRAP;
                   }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
@@ -1368,7 +1367,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             ATresp resp;
 
-            resp = getCmdResp(getNoCmdResp()-1);
+            resp = getCmdResp();
             strncpy(error_out.error_command.command, resp.cmd, 19);
             error_out.error_command.command[20] = '\0';
             strncpy(error_out.error_command.parameter, resp.param, 149);
