@@ -66,9 +66,17 @@ static GSMstate GSMstatus = WAITING;
 
 uint32_t timeout_count = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
 
-/** @brief Command or data mode for the serial port */
+/** @brief Command or Data mode for the serial port */
 
 static serialMode_e serialMode = COMMAND_MODE;
+
+/** @brief Manual or Callback mode for URC handling */
+
+static urcMode_e urcMode = MANUAL_MODE;
+
+/** @brief Function pointer to callback for URCs */
+
+static void (*urcCback) (uint8_t const * const cmd, uint8_t const * const par) = 0;
 
 /*---------------------------------------------------------------------------*/
 /*                   Variables for the token VL ring buffer                  */
@@ -422,31 +430,42 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 static uint8_t recordURC (uint8_t const * const command,
                     uint8_t const * const parameter)
 {
+   if(MANUAL_MODE == urcMode){
+
       if(0 == VLRingBuffer_IsFull(&urcVlRb)){
 
-         uint8_t urcAux[TKN_LEN];
+        uint8_t urcAux[TKN_LEN];
 
-         urcAux[0] = '\0';
+        urcAux[0] = '\0';
 
-         strncat(urcAux, command, strlen(command));
-         strncat(urcAux, ".", 1);
-         strncat(urcAux, parameter, strlen(parameter));
+        strncat(urcAux, command, strlen(command));
+        strncat(urcAux, ".", 1);
+        strncat(urcAux, parameter, strlen(parameter));
 
-         VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
+        VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
 
-         debug(">>>engine<<<   urcAux: ");
-         debug(urcAux);
-         debug("\r\n");
+        debug(">>>engine<<<   urcAux: ");
+        debug(urcAux);
+        debug("\r\n");
 
-         return 1;
-      }
+        return 1;
+     }
 
-      else{
+     else{
 
-         debug(">>>engine<<<   URC VLRB lleno!\r\n");
+        debug(">>>engine<<<   URC VLRB lleno!\r\n");
 
-         return 0;
-      }
+        return 0;
+     }
+   }
+
+   else if(CBACK_MODE == urcMode){
+
+      urcCback(command, parameter);
+      return;
+
+   }
+
 }
 
 /*==================[external functions definition]==========================*/
@@ -454,6 +473,9 @@ static uint8_t recordURC (uint8_t const * const command,
 void initEngine(void){
 
    initTokenizer();
+
+   changeSerialMode(COMMAND_MODE); /* start serial comms in command mode */
+   changeUrcMode(MANUAL_MODE);     /* URC handling starts in manual mode */
 
    VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, TKN_BUF_SIZE);
    VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, RSP_BUF_SIZE);
@@ -737,16 +759,32 @@ ATresp getURC (void)
    return dummy;
 }
 
-serialMode_e checkSerialMode(void){
-
+serialMode_e checkSerialMode(void)
+{
    return serialMode;
 }
 
-void changeSerialMode(serialMode_e mode){;
-
+void changeSerialMode(serialMode_e mode)
+{
    serialMode = mode;
    return;
+}
 
+urcMode_e checkUrcMode(void)
+{
+   return urcMode;
+}
+
+void changeUrcMode(urcMode_e mode)
+{
+   urcMode = mode;
+   return;
+}
+
+void setUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par))
+{
+   urcCback = Cback;
+   return;
 }
 
 /** @} doxygen end group definition */

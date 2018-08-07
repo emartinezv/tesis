@@ -361,6 +361,18 @@ void * cbgsmgprs (error_user error_in, void * input)
    return;
 }
 
+void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
+{
+   dbgPrint("\r\nURC received!\r\n");
+   dbgPrint("CMD: ");
+   dbgPrint(cmd);
+   dbgPrint("PAR: ");
+   dbgPrint(par);
+   dbgPrint("\r\n");
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
@@ -421,6 +433,8 @@ int main(void)
    dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
    dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
    dbgPrint("B) Leer URC mas reciente\r\n");
+   dbgPrint("C) Poner URC handling en modo callback\r\n");
+   dbgPrint("D) Poner URC handling en modo manual\r\n");
 
    while (1){
 
@@ -583,6 +597,26 @@ int main(void)
 
                break;
 
+               case 'C':
+
+               ciaaMobile_setUrcCback(*cbUrc);
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
+               case 'D':
+
+               ciaaMobile_setUrcManual();
+
+               while(!ciaaMobile_isIdle()){
+                  ciaaMobile_sysUpdate();
+               }
+
+               break;
+
                default:
 
                dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
@@ -602,11 +636,10 @@ int main(void)
             dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
             dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
             dbgPrint("B) Leer URC mas reciente\r\n");
+            dbgPrint("C) Poner URC handling en modo callback\r\n");
+            dbgPrint("D) Poner URC handling en modo manual\r\n");
 
          }
-
-
-
 
       }
 

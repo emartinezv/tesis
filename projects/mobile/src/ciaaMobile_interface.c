@@ -477,7 +477,6 @@ static void ciaaMobile_startUp_f (void)
 
          debug(">>>interf<<<   Inicializando ciaaMobile...\r\n");
 
-         changeSerialMode(COMMAND_MODE); /* start serial comms in command mode */
          initEngine();
 
          runState = ATCMD1;
@@ -1502,6 +1501,20 @@ void ciaaMobile_startUp (void * (*cback) (error_user, void *))
    frmCback = cback;
    frmState = INIT;
 
+   return;
+}
+
+void ciaaMobile_setUrcCback (void (*cback) (uint8_t const * const cmd, uint8_t const * const par))
+{
+   changeUrcMode(CBACK_MODE);
+   setUrcCback(cback);
+   return;
+}
+
+void ciaaMobile_setUrcManual (void)
+{
+   changeUrcMode(MANUAL_MODE);
+   setUrcCback(0);
    return;
 }
 

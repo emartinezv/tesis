@@ -352,6 +352,22 @@ void ciaaMobile_checkGSMGPRS (statusGSMGPRS_s * status, void * (*cback) (error_u
 
 void ciaaMobile_startUp (void * (*cback) (error_user, void *));
 
+/** @brief Sets URC handling to cback mode and sets callback function
+*
+* @param cback  Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_setUrcCback (void (*cback) (uint8_t const * const cmd, uint8_t const * const par));
+
+/** @brief Sets URC handling to manual mode
+*
+* @return
+*/
+
+void ciaaMobile_setUrcManual (void);
+
 /** @brief Indicates if the GSM engine is currently idle
  *
  * @return Returns 1 if no formula is being run, 0 otherwise

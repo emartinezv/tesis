@@ -80,6 +80,14 @@ typedef enum _serialMode_e
    DATA_MODE
 } serialMode_e ;
 
+/** @brief Modes for URC handling */
+
+typedef enum _urcMode_e
+{
+   MANUAL_MODE,
+   CBACK_MODE
+} urcMode_e ;
+
 /** @brief State of the GSM engine */
 
 typedef enum _GSMstates
@@ -186,6 +194,18 @@ serialMode_e checkSerialMode(void);
 */
 
 void changeSerialMode(serialMode_e mode);
+
+/** @brief Returns the actual URC handling mode
+*
+*  @return Returns MANUAL_MODE or CBACK_MODE
+*/
+
+urcMode_e checkUrcMode(void);
+
+void changeUrcMode(urcMode_e mode);
+
+void setUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par));
+
 
 /*==================[cplusplus]==============================================*/
 
