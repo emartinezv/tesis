@@ -73,18 +73,13 @@ void * cbprint (error_user, void *);
 /** @brief used for delay counter */
 static uint32_t pausems_count = DELAY_INIT;
 
-/** @brief used for delay counter */
-static uint32_t readsms_count = DELAY_READSMS;
-
-/** @brief used for delay counter */
-static uint32_t sendsms_count = DELAY_SENDSMS;
-
-/** @brief used for delay counter */
-static uint32_t readURC_count = DELAY_READURC;
-
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
+
+/*---------------------------------------------------------------------------*/
+/*                Hardware initialization and system functions               */
+/*---------------------------------------------------------------------------*/
 
 static void initHardware(void)
 {
@@ -100,6 +95,10 @@ static void pausems(uint32_t t)
       __WFI();
    }
 }
+
+/*---------------------------------------------------------------------------*/
+/*                             Callback functions                            */
+/*---------------------------------------------------------------------------*/
 
 void * cbempty (error_user error_in, void * input)
 {
@@ -373,14 +372,89 @@ void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
    return;
 }
 
+/*---------------------------------------------------------------------------*/
+/*                         Testing console functions                         */
+/*---------------------------------------------------------------------------*/
+
+void console_sms (void)
+{
+   uint8_t instruction = 0;
+
+   SMS_send msg = {"1151751809","Hola mundo!"};
+   SMS_rec msgList[SMS_READ_SIZ];
+   SMS_del msgDel = {1, 4};
+
+   while ('S' != instruction){
+
+      if(ciaaMobile_isIdle()){
+
+         dbgPrint("\r\n\r\n >>> CONSOLA DE SMS <<< \r\n\r\n");
+
+         dbgPrint("1) Mandar SMS \r\n");
+         dbgPrint("2) Leer SMSs \r\n");
+         dbgPrint("3) Borrar SMSs \r\n\r\n");
+
+         dbgPrint("S) Salir a la consola principal \r\n");
+
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+
+         switch (instruction) {
+
+            case '1':
+
+            ciaaMobile_sendSMS(&msg, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '2':
+
+            ciaaMobile_listRecSMS(&msgList[0], SMS_READ_SIZ, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '3':
+
+            ciaaMobile_delSMS(&msgDel, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case 'S':
+
+            break;
+
+            default:
+
+            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            break;
+
+         }
+
+      }
+
+      ciaaMobile_sysUpdate();
+
+   }
+
+   return;
+}
+
 /*==================[external functions definition]==========================*/
 
 void SysTick_Handler(void)
 {
    if(pausems_count > 0) pausems_count--;
-   if(readsms_count > 0) readsms_count--;
-   if(sendsms_count > 0) sendsms_count--;
-   if(readURC_count > 0) readURC_count--;
 
    ciaaMobile_SysTick_Handler();
 }
@@ -402,7 +476,6 @@ int main(void)
    SMS_rec list[10];
    SMS_del borrar;
 
-   SMS_send msg = {"1151751809","Hola mundo!"};
    APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
    port_s port1 = {TCP, "104.236.225.217","2399"};
    port_s port2 = {UDP, "104.236.225.217","2399"};
@@ -421,223 +494,203 @@ int main(void)
       ciaaMobile_sysUpdate();
    }
 
-   dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
-   dbgPrint("\r\n1) Mandar SMS \r\n");
-   dbgPrint("2) Prender GPRS \r\n");
-   dbgPrint("3) Abrir puerto TCP \r\n");
-   dbgPrint("4) Abrir puerto UDP \r\n");
-   dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
-   dbgPrint("6) Ver calidad de señal \r\n");
-   dbgPrint("7) Prender GNSS \r\n");
-   dbgPrint("8) Apagar GNSS \r\n");
-   dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
-   dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
-   dbgPrint("B) Leer URC mas reciente\r\n");
-   dbgPrint("C) Poner URC handling en modo callback\r\n");
-   dbgPrint("D) Poner URC handling en modo manual\r\n");
-
    while (1){
 
       if(ciaaMobile_isIdle()){
-         if(0 != uartRecv(CIAA_UART_USB, &instruction, 1)){
 
-            switch (instruction) {
+         dbgPrint("\r\n >>> CONSOLA PRINCIPAL <<< \r\n\r\n");
+         dbgPrint("1) CONSOLA SMS \r\n");
+         dbgPrint("2) Prender GPRS \r\n");
+         dbgPrint("3) Abrir puerto TCP \r\n");
+         dbgPrint("4) Abrir puerto UDP \r\n");
+         dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
+         dbgPrint("6) Ver calidad de señal \r\n");
+         dbgPrint("7) Prender GNSS \r\n");
+         dbgPrint("8) Apagar GNSS \r\n");
+         dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
+         dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
+         dbgPrint("B) Leer URC mas reciente\r\n");
+         dbgPrint("C) Poner URC handling en modo callback\r\n");
+         dbgPrint("D) Poner URC handling en modo manual\r\n");
 
-               case '1':
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
 
-               ciaaMobile_sendSMS(&msg, cbempty);
+         switch (instruction) {
 
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
+            case '1':
+
+            console_sms();
+
+            break;
+
+            case '2':
+
+            ciaaMobile_startGPRS(&APN, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '3':
+
+            ciaaMobile_openPort(&port1, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            while(DATA_MODE == checkSerialMode()){
+
+               uint8_t data_char;
+
+               if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+                  uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
+                  uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
                }
 
-               break;
-
-               case '2':
-
-               ciaaMobile_startGPRS(&APN, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
+               if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+                  uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
                }
-
-               break;
-
-               case '3':
-
-               ciaaMobile_openPort(&port1, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               while(DATA_MODE == checkSerialMode()){
-
-                  uint8_t data_char;
-
-                  if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-                     uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
-                     uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-                  }
-
-                  if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-                     uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-                  }
-
-               }
-
-               break;
-
-               case '4':
-
-               ciaaMobile_openPort(&port2, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               while(DATA_MODE == checkSerialMode()){
-
-                  uint8_t data_char;
-
-                  if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-                     uartSend(CIAA_UART_232, &data_char, 1); /* mando a 232 */
-                     uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-                  }
-
-                  if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-                     uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-                  }
-
-               }
-               break;
-
-               case '5':
-
-               ciaaMobile_closePort(cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case '6':
-
-               ciaaMobile_getSignalQuality(&sigqual, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case '7':
-
-               powerGNSS = ON;
-
-               ciaaMobile_powerGNSS(&powerGNSS, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case '8':
-
-               powerGNSS = OFF;
-
-               ciaaMobile_powerGNSS(&powerGNSS, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case '9':
-
-               ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case 'A':
-
-               ciaaMobile_checkGSMGPRS(&status, cbgsmgprs);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case 'B':
-
-               urc = getURC();
-
-               if(urc.cmd[0] != '\0'){
-                  dbgPrint("\r\nURC: ");
-                  dbgPrint(urc.cmd);
-                  dbgPrint("(");
-                  dbgPrint(urc.param);
-                  dbgPrint(")\r\n");
-               }
-               else{
-                  dbgPrint("\r\nNo hay URCs pendientes\r\n");
-               }
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case 'C':
-
-               ciaaMobile_setUrcCback(*cbUrc);
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               case 'D':
-
-               ciaaMobile_setUrcManual();
-
-               while(!ciaaMobile_isIdle()){
-                  ciaaMobile_sysUpdate();
-               }
-
-               break;
-
-               default:
-
-               dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
-               break;
 
             }
 
-            dbgPrint("\r\n >>> CONSOLA DE TESTEO <<< \r\n");
-            dbgPrint("\r\n1) Mandar SMS \r\n");
-            dbgPrint("2) Prender GPRS \r\n");
-            dbgPrint("3) Abrir puerto TCP \r\n");
-            dbgPrint("4) Abrir puerto UDP \r\n");
-            dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
-            dbgPrint("6) Ver calidad de señal \r\n");
-            dbgPrint("7) Prender GNSS \r\n");
-            dbgPrint("8) Apagar GNSS \r\n");
-            dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
-            dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
-            dbgPrint("B) Leer URC mas reciente\r\n");
-            dbgPrint("C) Poner URC handling en modo callback\r\n");
-            dbgPrint("D) Poner URC handling en modo manual\r\n");
+            break;
+
+            case '4':
+
+            ciaaMobile_openPort(&port2, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            while(DATA_MODE == checkSerialMode()){
+
+               uint8_t data_char;
+
+               if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+                  uartSend(CIAA_UART_232, &data_char, 1); /* mando a 232 */
+                  uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
+               }
+
+               if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+                  uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
+               }
+
+            }
+            break;
+
+            case '5':
+
+            ciaaMobile_closePort(cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '6':
+
+            ciaaMobile_getSignalQuality(&sigqual, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '7':
+
+            powerGNSS = ON;
+
+            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '8':
+
+            powerGNSS = OFF;
+
+            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case '9':
+
+            ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case 'A':
+
+            ciaaMobile_checkGSMGPRS(&status, cbgsmgprs);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case 'B':
+
+            urc = getURC();
+
+            if(urc.cmd[0] != '\0'){
+               dbgPrint("\r\nURC: ");
+               dbgPrint(urc.cmd);
+               dbgPrint("(");
+               dbgPrint(urc.param);
+               dbgPrint(")\r\n");
+            }
+            else{
+               dbgPrint("\r\nNo hay URCs pendientes\r\n");
+            }
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case 'C':
+
+            ciaaMobile_setUrcCback(*cbUrc);
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            case 'D':
+
+            ciaaMobile_setUrcManual();
+
+            while(!ciaaMobile_isIdle()){
+               ciaaMobile_sysUpdate();
+            }
+
+            break;
+
+            default:
+
+            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            break;
 
          }
 
