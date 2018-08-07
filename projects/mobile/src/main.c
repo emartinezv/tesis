@@ -368,7 +368,7 @@ void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
    dbgPrint(cmd);
    dbgPrint("PAR: ");
    dbgPrint(par);
-   dbgPrint("\r\n");
+   dbgPrint("\r\n\r\n");
 
    return;
 }
@@ -645,65 +645,6 @@ int main(void)
 
       ciaaMobile_sysUpdate();
 
-      /*if (1 == deleteall){
-         deleteall = 0;
-         borrar.index = 1;
-         borrar.mode = 4;
-         if(ciaaMobile_isIdle()){ciaaMobile_delSMS(&borrar, cbempty);}
-      }
-
-      /*if (0 == sendsms_count){
-
-         sendsms_count = DELAY_SENDSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_sendSMS(&msg, cbempty);}
-
-      }*/
-
-      /*if (0 == readsms_count){
-
-         readsms_count = DELAY_READSMS;
-         if(ciaaMobile_isIdle()){ciaaMobile_listRecSMS(list, 10, cbprint);}
-
-      }*/
-
-      /*if (0 == readsms_count){
-
-         if (0 == gprs_flag){
-
-            if(ciaaMobile_isIdle()){
-               gprs_flag = 1;
-               readsms_count = DELAY_READSMS;
-               ciaaMobile_startGPRS(&APN, cbempty);
-            }
-
-         }
-
-         else if (0 == tcp_flag){
-
-            if(ciaaMobile_isIdle()){
-               tcp_flag = 1;
-               readsms_count = DELAY_READSMS;
-               ciaaMobile_openPort(&port1, cbempty);
-            }
-
-         }
-
-      }
-
-      /*if (0 == readURC_count){
-
-         readURC_count = DELAY_READURC;
-         dbgPrint("Leyendo URCs...\r\n");
-         if(readURC(command, parameter)){
-
-            dbgPrint("CMD: ");
-            dbgPrint(command);
-            dbgPrint("\r\nPAR: ");
-            dbgPrint(parameter);
-            dbgPrint("\r\n");
-
-         }
-      }*/
    }
 
    return 0;

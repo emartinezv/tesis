@@ -207,8 +207,8 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
 
             if(1 == URCSearch(command)){
-               recordURC (command, parameter);
                debug(">>>engine<<<   URC detected\r\n");
+               recordURC (command, parameter);
 
                return OK_URC;
             }
@@ -269,8 +269,8 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
 
             if(1 == URCSearch(command)){
-               recordURC (command, parameter);
                debug(">>>engine<<<   URC detected\r\n");
+               recordURC (command, parameter);
 
                return OK_URC;
             }
@@ -310,8 +310,8 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          if ((BASIC_RSP <= received) && (EXT_RSP >= received)){
 
             if(1 == URCSearch(command)){
-               recordURC (command, parameter);
                debug(">>>engine<<<   URC detected\r\n");
+               recordURC (command, parameter);
 
                return OK_URC;
             }
