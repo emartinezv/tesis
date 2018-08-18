@@ -63,8 +63,6 @@ extern "C" {
 /** @brief Size in bytes of the urcVlRb buffer */
 #define URC_BUF_SIZE 256
 
-
-
 /** @brief AT command response type */
 typedef struct _ATresp
 {

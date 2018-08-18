@@ -80,15 +80,16 @@ typedef enum {INVALID,        /**< token is invalid */
 
 /** @brief AT token parser
 *
-*  @param token Pointer to AT token fetched from the serial port tokenizer
-*  @param command AT command buffer
-*  @param parameter AT parameter buffer
+*  @param token       Pointer to AT token fetched from the serial port tokenizer
+*  @param command     AT command buffer
+*  @param parameter   AT parameter buffer
+*  @param tknlen      length of the received token
 *
 *  @return Returns the type of AT token in an ATToken enum, as well as the
 *          command and parameter parts in their corresponding buffers
 */
 
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter);
+ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter, int tknlen);
 
 /*==================[cplusplus]==============================================*/
 

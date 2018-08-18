@@ -269,12 +269,30 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CMGL=\"ALL\"\r");
+               result = sendATcmd("AT+CSDH=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD2:
+
+               result = sendATcmd("AT+CMGL=\"ALL\"\r");
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD2RESP:
 
                result = processToken();
                if(NO_UPDATE != result){

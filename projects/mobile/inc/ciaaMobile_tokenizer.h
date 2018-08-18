@@ -53,10 +53,10 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /** @brief Maximum size of tokens */
-#define TKN_LEN 150
+#define TKN_LEN 300
 
 /** @brief Size in bytes of the UART read buffer */
-#define READ_BUFF_SIZE TKN_LEN
+#define READ_BUFF_SIZE (TKN_LEN)
 
 /*==================[typedef]================================================*/
 

@@ -50,6 +50,8 @@
    #define debug(msg)
 #endif
 
+#define DEBUG_NOTIMEOUT // ignore command timeouts
+
 /*==================[global data]============================================*/
 
 /*==================[internal data declaration]==============================*/
@@ -499,23 +501,27 @@ FSMresult processToken(void)
    FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
-   uint8_t tknSize;        /* size of read token */
+   int tknSize;        /* size of read token */
    uint8_t command[TKN_LEN]; /* AT command or response */
    uint8_t parameter[TKN_LEN]; /* AT command or response argument */
 
    if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
 
       tknSize = VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
-      token[tknSize] = '\0';
-      received = parse(token, command, parameter);              /* parse the token */
+      received = parse(token, command, parameter, tknSize);     /* parse the token */
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 
    }
+
+   #ifndef DEBUG_NOTIMEOUT
+
    else if((GSMstatus != WAITING) && (timeout_count == 0)){
 
       currCmd = updateFSM(TIMEOUT, 0, 0, 0);     /* update FSM */
 
    }
+
+   #endif
 
    return currCmd;
 
@@ -559,7 +565,7 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
    uint8_t cmd[TKN_LEN];   /* AT command  */
    uint8_t par[TKN_LEN];   /* AT command arguments */
 
-   sending = parse(cmdstr, cmd, par);
+   sending = parse(cmdstr, cmd, par, strlen(cmdstr));
    idx = commSearch(cmd); /* search for command */
 
    if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY))){

@@ -48,7 +48,7 @@ typedef enum _ciaaUarts_e
 #define dbgPrint(x)   uartSend(1, (uint8_t *)(x), strlen(x))
 #define rs232Print(x) uartSend(2, (uint8_t *)(x), strlen(x))
 
-#define UART_BUF_SIZE	512
+#define UART_BUF_SIZE	2048
 #define UART_RX_FIFO_SIZE 16
 
 typedef struct _uartData

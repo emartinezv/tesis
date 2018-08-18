@@ -67,7 +67,7 @@
  *  each buffer. These results are later used to feed the command FSM.
  */
 
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter)
+ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter, int tknlen)
 {
    int i = 0; /* loop counter */
 
@@ -91,7 +91,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
          /* Search for ':' character and store position if present */
 
-         for(i = 3; i < (strlen(token)-2); i++){
+         for(i = 3; i < (tknlen-2); i++){
             if(':' == token[i]){
                colonPos = i;
                break;
@@ -101,8 +101,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          /* If no ':' character is present we have a simple extended sintax response */
 
          if(0 == colonPos){
-            strncpy(command,&token[3],strlen(token)-5);
-            command[strlen(token)-5] = '\0';
+            strncpy(command,&token[3],tknlen-5);
+            command[tknlen-5] = '\0';
 
             debug(">>>parser<<<   EXTENDED RESPONSE: ");
             debug(command);
@@ -116,8 +116,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
          else{
             strncpy(command,&token[3],colonPos-3);
             command[colonPos-3] = '\0';
-            strncpy(parameter,&token[colonPos+1],strlen(token)-colonPos-3);
-            parameter[strlen(token)-colonPos-3] = '\0';
+            strncpy(parameter,&token[colonPos+1],tknlen-colonPos-3);
+            parameter[tknlen-colonPos-3] = '\0';
 
             debug(">>>parser<<<   EXTENDED RESPONSE: ");
             debug(command);
@@ -143,8 +143,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       /* Basic response */
 
       else{
-         strncpy(command,&token[2],strlen(token)-4);
-         command[strlen(token)-4] = '\0';
+         strncpy(command,&token[2],tknlen-4);
+         command[tknlen-4] = '\0';
 
          debug(">>>parser<<<   BASIC RESPONSE: ");
          debug(command);
@@ -154,7 +154,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   else if('\r' == token[strlen(token)-1]){ /* token is an echo */
+   else if('\r' == token[tknlen-1]){ /* token is an echo */
 
       /* determine if the token is an AT command, be it extended or basic */
 
@@ -177,14 +177,14 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             /* Search for '=' and '?' characters and store position to determine type
                of extended AT command */
 
-            for (i = 3; i < strlen(token); i++){
+            for (i = 3; i < tknlen; i++){
                if ('=' == token[i]){
                   equalPos = i;
                   break;
                }
             }
 
-            for (i = 3; i < strlen(token); i++){
+            for (i = 3; i < tknlen; i++){
                if ('?' == token[i]){
                   intPos = i;
                   break;
@@ -210,8 +210,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                }
 
                else{
-                  strncpy(parameter,&token[equalPos+1],strlen(token)-equalPos-2);
-                  parameter[strlen(token)-equalPos-2] = '\0';
+                  strncpy(parameter,&token[equalPos+1],tknlen-equalPos-2);
+                  parameter[tknlen-equalPos-2] = '\0';
 
                   debug(">>>parser<<<   EXTENDED COMMAND WRITE: ");
                   debug(command);
@@ -224,7 +224,7 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
             }
 
-            else if((strlen(token)-2) == intPos){
+            else if((tknlen-2) == intPos){
                strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
                command[intPos -3] = '\0';
 
@@ -236,8 +236,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             }
 
             else{
-               strncpy(command,&token[3],(strlen(token) - 4)); /* copy everything after '+' */
-               command[strlen(token) -4] = '\0';
+               strncpy(command,&token[3],(tknlen - 4)); /* copy everything after '+' */
+               command[tknlen -4] = '\0';
 
                debug(">>>parser<<<   EXTENDED COMMAND EXEC: ");
                debug(command);
@@ -259,8 +259,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
                debug(command);
 
                if('\r' != token[4]){
-                  strncpy(parameter,&token[4],strlen(token)-4);
-                  parameter[strlen(token)-4] = '\0';
+                  strncpy(parameter,&token[4],tknlen-4);
+                  parameter[tknlen-4] = '\0';
 
                   debug("(");
                   debug(parameter);
@@ -293,8 +293,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
             debug(command);
 
             if('\r' != token[3]){
-               strncpy(parameter,&token[3],strlen(token)-3);
-               parameter[strlen(token)-3] = '\0';
+               strncpy(parameter,&token[3],tknlen-3);
+               parameter[tknlen-3] = '\0';
 
                debug("(");
                debug(parameter);
@@ -318,11 +318,11 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
       }
    }
 
-   else if(('\r' == token[strlen(token)-2]) && ('\n' == token[strlen(token)-1])){ /* token is a <data> block */
+   else if(('\r' == token[tknlen-2]) && ('\n' == token[tknlen-1])){ /* token is a <data> block */
 
       strncpy(command,"DATA\0",5);
-      strncpy(parameter,token,strlen(token)-2);
-      parameter[strlen(token)-2] = '\0';
+      strncpy(parameter,token,tknlen-2);
+      parameter[tknlen-2] = '\0';
 
       debug(">>>parser<<<   DATA BLOCK: ");
       debug(parameter);
@@ -334,8 +334,8 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
    else{ /* token is SMS Body echo or error */
 
       strncpy(command,"SMS_BODY\0",9);
-      strncpy(parameter,&token[0],strlen(token));
-      parameter[strlen(token)] = '\0';
+      strncpy(parameter,&token[0],tknlen);
+      parameter[tknlen] = '\0';
 
       debug(">>>parser<<<   SMS BODY: ");
       debug(parameter);
