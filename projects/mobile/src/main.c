@@ -388,7 +388,7 @@ void console_sms (void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n\r\n >>> CONSOLA DE SMS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n >>> CONSOLA SMS <<< \r\n\r\n");
 
          dbgPrint("1) Mandar SMS \r\n");
          dbgPrint("2) Leer SMSs \r\n");
@@ -404,29 +404,17 @@ void console_sms (void)
 
             ciaaMobile_sendSMS(&msg, cbempty);
 
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
             break;
 
             case '2':
 
-            ciaaMobile_listRecSMS(&msgList[0], SMS_READ_SIZ, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
+            ciaaMobile_listRecSMS(&msgList[0], SMS_READ_SIZ, cbprint);
 
             break;
 
             case '3':
 
             ciaaMobile_delSMS(&msgDel, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
 
             break;
 
@@ -439,6 +427,243 @@ void console_sms (void)
             dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
             break;
 
+         }
+
+         while(!ciaaMobile_isIdle()){
+            ciaaMobile_sysUpdate();
+         }
+
+      }
+
+      ciaaMobile_sysUpdate();
+
+   }
+
+   return;
+
+}
+
+void console_gprs (void)
+{
+   uint8_t instruction = 0;
+
+   APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
+   port_s port1 = {TCP, "104.236.225.217","2399"};
+   port_s port2 = {UDP, "104.236.225.217","2399"};
+
+   while ('S' != instruction){
+
+      if(ciaaMobile_isIdle()){
+
+         dbgPrint("\r\n\r\n >>> CONSOLA GPRS <<< \r\n\r\n");
+
+         dbgPrint("1) Prender GPRS \r\n");
+         dbgPrint("2) Abrir puerto TCP \r\n");
+         dbgPrint("3) Abrir puerto UDP \r\n");
+         dbgPrint("4) Cerrar puerto TCP o UDP \r\n\r\n");
+
+         dbgPrint("S) Salir a la consola principal \r\n");
+
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+
+         switch (instruction) {
+
+            case '1':
+
+            ciaaMobile_startGPRS(&APN, cbempty);
+
+            break;
+
+            case '2':
+
+            ciaaMobile_openPort(&port1, cbempty);
+
+            break;
+
+            case '3':
+
+            ciaaMobile_openPort(&port2, cbempty);
+
+            break;
+
+            case '4':
+
+            ciaaMobile_closePort(cbempty);
+
+            break;
+
+            case 'S':
+
+            break;
+
+            default:
+
+            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            break;
+
+         }
+
+         while(!ciaaMobile_isIdle()){
+            ciaaMobile_sysUpdate();
+         }
+
+         while(DATA_MODE == checkSerialMode()){
+
+            uint8_t data_char;
+
+            if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+               uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
+               uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
+            }
+
+            if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+               uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
+            }
+
+         }
+
+      }
+
+      ciaaMobile_sysUpdate();
+
+   }
+
+   return;
+}
+
+void console_gnss (void)
+{
+   uint8_t instruction = 0;
+
+   uint8_t navInfo[95];
+   power_GNSS_e powerGNSS;
+
+   while ('S' != instruction){
+
+      if(ciaaMobile_isIdle()){
+
+         dbgPrint("\r\n\r\n >>> CONSOLA GNSS <<< \r\n\r\n");
+
+         dbgPrint("1) Prender GNSS \r\n");
+         dbgPrint("2) Apagar GNSS \r\n");
+         dbgPrint("3) Obtener informacion de navegacion GNSS \r\n\r\n");
+
+         dbgPrint("S) Salir a la consola principal \r\n");
+
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+
+         switch (instruction) {
+
+            case '1':
+
+            powerGNSS = ON;
+
+            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+            break;
+
+            case '2':
+
+            powerGNSS = OFF;
+
+            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+
+            break;
+
+            case '3':
+
+            ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
+
+            break;
+
+            case 'S':
+
+            break;
+
+            default:
+
+            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            break;
+
+         }
+
+         while(!ciaaMobile_isIdle()){
+            ciaaMobile_sysUpdate();
+         }
+
+      }
+
+      ciaaMobile_sysUpdate();
+
+   }
+
+   return;
+}
+
+void console_urc (void)
+{
+   uint8_t instruction = 0;
+
+   ATresp urc;
+
+   while ('S' != instruction){
+
+      if(ciaaMobile_isIdle()){
+
+         dbgPrint("\r\n\r\n >>> CONSOLA URC <<< \r\n\r\n");
+
+         dbgPrint("1) Leer URC mas reciente\r\n");
+         dbgPrint("2) Poner URC handling en modo callback\r\n");
+         dbgPrint("3) Poner URC handling en modo manual\r\n\r\n");
+
+         dbgPrint("S) Salir a la consola principal \r\n");
+
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+
+         switch (instruction) {
+
+            case '1':
+
+            urc = getURC();
+
+            if(urc.cmd[0] != '\0'){
+               dbgPrint("\r\nURC: ");
+               dbgPrint(urc.cmd);
+               dbgPrint("(");
+               dbgPrint(urc.param);
+               dbgPrint(")\r\n");
+            }
+            else{
+               dbgPrint("\r\nNo hay URCs pendientes\r\n");
+            }
+
+            break;
+
+            case '2':
+
+            ciaaMobile_setUrcCback(cbUrc);
+
+            break;
+
+            case '3':
+
+            ciaaMobile_setUrcManual();
+
+            break;
+
+            case 'S':
+
+            break;
+
+            default:
+
+            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            break;
+
+         }
+
+         while(!ciaaMobile_isIdle()){
+            ciaaMobile_sysUpdate();
          }
 
       }
@@ -469,20 +694,8 @@ int main(void)
 
    uint8_t instruction;
 
-   uint8_t command [150];
-   uint8_t parameter [150];
-   uint8_t navInfo[95];
-
-   SMS_rec list[10];
-   SMS_del borrar;
-
-   APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
-   port_s port1 = {TCP, "104.236.225.217","2399"};
-   port_s port2 = {UDP, "104.236.225.217","2399"};
    signal_quality_s sigqual;
-   power_GNSS_e powerGNSS;
    statusGSMGPRS_s status;
-   ATresp urc;
 
    pausems(DELAY_INIT);
 
@@ -499,19 +712,14 @@ int main(void)
       if(ciaaMobile_isIdle()){
 
          dbgPrint("\r\n >>> CONSOLA PRINCIPAL <<< \r\n\r\n");
+
          dbgPrint("1) CONSOLA SMS \r\n");
-         dbgPrint("2) Prender GPRS \r\n");
-         dbgPrint("3) Abrir puerto TCP \r\n");
-         dbgPrint("4) Abrir puerto UDP \r\n");
-         dbgPrint("5) Cerrar puerto TCP o UDP \r\n");
-         dbgPrint("6) Ver calidad de señal \r\n");
-         dbgPrint("7) Prender GNSS \r\n");
-         dbgPrint("8) Apagar GNSS \r\n");
-         dbgPrint("9) Obtener informacion de navegacion GNSS \r\n");
-         dbgPrint("A) Obtener informacion de estado GSM y GPRS \r\n");
-         dbgPrint("B) Leer URC mas reciente\r\n");
-         dbgPrint("C) Poner URC handling en modo callback\r\n");
-         dbgPrint("D) Poner URC handling en modo manual\r\n");
+         dbgPrint("2) CONSOLA GPRS \r\n");
+         dbgPrint("3) CONSOLA GNSS \r\n");
+         dbgPrint("4) CONSOLA URC \r\n\r\n");
+
+         dbgPrint("5) Ver calidad de señal \r\n");
+         dbgPrint("6) Estado red GSM y GPRS \r\n\r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
 
@@ -525,173 +733,44 @@ int main(void)
 
             case '2':
 
-            ciaaMobile_startGPRS(&APN, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
+            console_gprs();
 
             break;
 
             case '3':
 
-            ciaaMobile_openPort(&port1, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            while(DATA_MODE == checkSerialMode()){
-
-               uint8_t data_char;
-
-               if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-                  uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
-                  uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-               }
-
-               if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-                  uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-               }
-
-            }
+            console_gnss();
 
             break;
 
             case '4':
 
-            ciaaMobile_openPort(&port2, cbempty);
+            console_urc();
 
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            while(DATA_MODE == checkSerialMode()){
-
-               uint8_t data_char;
-
-               if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-                  uartSend(CIAA_UART_232, &data_char, 1); /* mando a 232 */
-                  uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-               }
-
-               if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-                  uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-               }
-
-            }
             break;
 
             case '5':
 
-            ciaaMobile_closePort(cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
+            ciaaMobile_getSignalQuality (&sigqual, cbempty);
 
             break;
 
             case '6':
 
-            ciaaMobile_getSignalQuality(&sigqual, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case '7':
-
-            powerGNSS = ON;
-
-            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case '8':
-
-            powerGNSS = OFF;
-
-            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case '9':
-
-            ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case 'A':
-
             ciaaMobile_checkGSMGPRS(&status, cbgsmgprs);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case 'B':
-
-            urc = getURC();
-
-            if(urc.cmd[0] != '\0'){
-               dbgPrint("\r\nURC: ");
-               dbgPrint(urc.cmd);
-               dbgPrint("(");
-               dbgPrint(urc.param);
-               dbgPrint(")\r\n");
-            }
-            else{
-               dbgPrint("\r\nNo hay URCs pendientes\r\n");
-            }
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case 'C':
-
-            ciaaMobile_setUrcCback(*cbUrc);
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
-
-            break;
-
-            case 'D':
-
-            ciaaMobile_setUrcManual();
-
-            while(!ciaaMobile_isIdle()){
-               ciaaMobile_sysUpdate();
-            }
 
             break;
 
             default:
 
             dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+
             break;
 
+         }
+
+         while(!ciaaMobile_isIdle()){
+            ciaaMobile_sysUpdate();
          }
 
       }

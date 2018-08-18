@@ -144,7 +144,7 @@ typedef struct {
 
 typedef struct {
    uint8_t meta[150]; /**< metadata */
-   uint8_t text[150]; /**< text of the SMS message */
+   uint8_t text[300]; /**< text of the SMS message */
 } SMS_rec;
 
 /*---------------------------------------------------------------------------*/

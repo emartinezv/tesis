@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_ENGINE // debug mode
+//#define DEBUG_ENGINE // debug mode
 #ifdef DEBUG_ENGINE
    #define debug(msg) dbgPrint(msg)
 #else
@@ -679,7 +679,7 @@ ATresp getCmdResp (void)
 
    uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
    ATresp dummy;
-   uint8_t rspSiz;
+   uint16_t rspSiz;
 
    dummy.cmd[0] = '\0';
    dummy.param[0] = '\0';

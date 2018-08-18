@@ -67,7 +67,7 @@ extern "C" {
 typedef struct _ATresp
 {
    uint8_t cmd[20];
-   uint8_t param[200];
+   uint8_t param[300];
 } ATresp;
 
 /** @brief Modes for the serial port */

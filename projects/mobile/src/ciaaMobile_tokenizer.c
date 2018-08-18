@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_TOKENIZER // debug mode
+//#define DEBUG_TOKENIZER // debug mode
 #ifdef DEBUG_TOKENIZER
    #define debug(msg) dbgPrint(msg)
 #else

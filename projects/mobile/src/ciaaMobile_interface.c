@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_INTERF // debug mode
+//#define DEBUG_INTERF // debug mode
 #ifdef DEBUG_INTERF
    #define debug(msg) dbgPrint(msg)
 #else
@@ -346,12 +346,12 @@ static void ciaaMobile_listRecSMS_f (void)
                   for(i = 0; i < (respNo-1)/2; i++){
 
                      resp = getCmdResp();
-                     strncpy((target+i)->meta, resp.param, 149);
-                     (target+i)->meta[149] = '\0';
+                     strncpy((target+i)->meta, resp.param, strlen(resp.param));
+                     (target+i)->meta[strlen(resp.param)] = '\0';
 
                      resp = getCmdResp();
-                     strncpy((target+i)->text, resp.param, 149);
-                     (target+i)->text[149] = '\0';
+                     strncpy((target+i)->text, resp.param, strlen(resp.param));
+                     (target+i)->text[strlen(resp.param)] = '\0';
 
                   }
 
