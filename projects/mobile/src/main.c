@@ -388,7 +388,7 @@ void console_sms (void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n\r\n >>> CONSOLA SMS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> CONSOLA SMS <<< \r\n\r\n");
 
          dbgPrint("1) Mandar SMS \r\n");
          dbgPrint("2) Leer SMSs \r\n");
@@ -455,7 +455,7 @@ void console_gprs (void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n\r\n >>> CONSOLA GPRS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> CONSOLA GPRS <<< \r\n\r\n");
 
          dbgPrint("1) Prender GPRS \r\n");
          dbgPrint("2) Abrir puerto TCP \r\n");
@@ -542,7 +542,7 @@ void console_gnss (void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n\r\n >>> CONSOLA GNSS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> CONSOLA GNSS <<< \r\n\r\n");
 
          dbgPrint("1) Prender GNSS \r\n");
          dbgPrint("2) Apagar GNSS \r\n");
@@ -610,7 +610,7 @@ void console_urc (void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n\r\n >>> CONSOLA URC <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> CONSOLA URC <<< \r\n\r\n");
 
          dbgPrint("1) Leer URC mas reciente\r\n");
          dbgPrint("2) Poner URC handling en modo callback\r\n");
@@ -711,7 +711,7 @@ int main(void)
 
       if(ciaaMobile_isIdle()){
 
-         dbgPrint("\r\n >>> CONSOLA PRINCIPAL <<< \r\n\r\n");
+         dbgPrint("\r\n>>> CONSOLA PRINCIPAL <<< \r\n\r\n");
 
          dbgPrint("1) CONSOLA SMS \r\n");
          dbgPrint("2) CONSOLA GPRS \r\n");

@@ -241,6 +241,132 @@ static void ciaaMobile_sendSMS_f (void)
 
 }
 
+static void ciaaMobile_readRecSMS_f (void)
+{
+   static runStatus runState = NOCMD;
+   static error_user error_out;
+
+   FSMresult result;
+
+   uint8_t strSmsRead[15]; /* string to assemble the SMS read command*/
+   uint8_t strAux[5];      /* auxiliary string */
+
+   switch(frmState) {
+
+      case INIT:
+
+         error_out.error_formula = OK;
+         error_out.error_command.command[0] = '\0';
+         error_out.error_command.parameter[0] = '\0';
+
+         debug(">>>interf<<<   Leyendo SMS...\r\n");
+
+         runState = ATCMD1;
+         frmState = PROC;
+
+         strSmsRead[0] = '\0';
+
+         strncat(strSmsRead, "AT+CMGR=", 8);
+         itoa(((SMS_rd_params *)frmInput)->index, strAux, 10);
+         strncat(strSmsRead, strAux, strlen(strAux));
+         strncat(strSmsRead, ",", 1);
+         itoa(((SMS_rd_params *)frmInput)->mode, strAux, 10);
+         strncat(strSmsRead, strAux, strlen(strAux));
+         strncat(strSmsRead, "\r", 1);
+
+         break;
+
+      case PROC:
+
+         switch(runState){
+
+            case ATCMD1:
+
+               result = sendATcmd("AT+CSDH=1\r");
+               if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD1RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){runState = ATCMD2;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+            case ATCMD2:
+
+               result = sendATcmd(strSmsRead);
+               if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
+               else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               break;
+
+            case ATCMD2RESP:
+
+               result = processToken();
+               if(NO_UPDATE != result){
+                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+                  else if(OK_CLOSE == result){frmState = WRAP;}
+                  else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
+                  else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
+               }
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(OK == error_out.error_formula){
+
+            ATresp resp;
+
+            resp = getCmdResp();
+            strncpy(((SMS_rec *)frmOutput)->meta, resp.param, strlen(resp.param));
+            ((SMS_rec *)frmOutput)->meta[strlen(resp.param)] = '\0';
+
+            resp = getCmdResp();
+            strncpy(((SMS_rec *)frmOutput)->text, resp.param, strlen(resp.param));
+            ((SMS_rec *)frmOutput)->text[strlen(resp.param)] = '\0';
+
+            frmCback(error_out, frmOutput);
+
+            debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
+
+            frmState = IDLE;
+
+         }
+
+         else{
+
+            ATresp resp;
+
+            resp = getCmdResp();
+            strncpy(error_out.error_command.command, resp.cmd, 19);
+            error_out.error_command.command[20] = '\0';
+            strncpy(error_out.error_command.parameter, resp.param, 149);
+            error_out.error_command.parameter[150] = '\0';
+
+            frmCback(error_out, frmOutput);
+
+            debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
+
+            frmState = IDLE;
+
+         }
+
+         break;
+   }
+
+   return;
+
+}
+
 static void ciaaMobile_listRecSMS_f (void)
 {
    static runStatus runState = NOCMD;
@@ -1417,6 +1543,17 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_sendSMS_f;
    frmInput = msg;
+   frmCback = cback;
+   frmState = INIT;
+
+   return;
+}
+
+void ciaaMobile_readRecSMS (SMS_rec * msg, SMS_rd_params * params, void * (*cback) (error_user, void *))
+{
+   frm = ciaaMobile_readRecSMS_f;
+   frmInput = params;
+   frmOutput = msg;
    frmCback = cback;
    frmState = INIT;
 

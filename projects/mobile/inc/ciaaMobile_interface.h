@@ -137,10 +137,25 @@ typedef struct {
 } SMS_send_ret;
 
 /*---------------------------------------------------------------------------*/
-/*           Data structures for the ciaaMobile_listRecSMS function          */
+/*  Data structures for the ciaaMobile_listRecSMS and ciaaMobile_readRecSMS  */
+/*  functions                                                                */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Type for SMS read return */
+/** @brief Type for SMS read mode */
+
+typedef enum {
+   NORMAL = 0,     /**< change status to read if message unread */
+   NOCHANGE = 1,   /**< do not change status of message */
+} SMS_rd_mode;
+
+/** @brief Type for SMS read parameters */
+
+typedef struct {
+   uint8_t index;    /**< SMS message index in memory */
+   SMS_rd_mode mode; /**< SMS read mode (change status or leave as is) */
+} SMS_rd_params;
+
+/** @brief Type for SMS record */
 
 typedef struct {
    uint8_t meta[150]; /**< metadata */
@@ -252,6 +267,17 @@ void ciaaMobile_SysTick_Handler (void);
 */
 
 void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_user, void *));
+
+/** @brief Read a single received SMS
+*
+* @param msg    Pointer to storage variable for SMS to be read
+* @param params SMS read parameters (index and mode)
+* @param cback  Function pointer to callback function
+*
+* @return
+*/
+
+void ciaaMobile_readRecSMS (SMS_rec * msg, SMS_rd_params * params, void * (*cback) (error_user, void *));
 
 /** @brief Lists received SMSs in a vector
 *
