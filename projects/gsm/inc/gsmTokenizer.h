@@ -53,11 +53,11 @@ extern "C" {
 /** @brief Maximum size of tokens */
 #define TKN_LEN 300
 
-/** @brief Size in bytes of the UART swap buffer */
-#define SWAP_BUF_SIZ (TKN_LEN)
+/** @brief Size in bytes of the UART read buffer */
+#define RD_BUF_SIZ TKN_LEN
 
-/** @brief Size in bytes of the read character buffer (must be power of 2) */
-#define RD_BUF_SIZ 512
+/** @brief Size in bytes of the UART swap buffer */
+#define SWAP_BUF_SIZ TKN_LEN
 
 /** @brief Size in bytes of the current token buffer (must be power of 2) */
 #define CURR_TKN_BUF_SIZ 512
