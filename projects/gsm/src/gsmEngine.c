@@ -39,7 +39,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "ciaaMobile_engine.h"
+#include "gsmEngine.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -473,7 +473,7 @@ static uint8_t recordURC (uint8_t const * const command,
 
 void initEngine(void){
 
-   initTokenizer();
+   gsmInitTokenizer();
 
    changeSerialMode(COMMAND_MODE); /* start serial comms in command mode */
    changeUrcMode(MANUAL_MODE);     /* URC handling starts in manual mode */
@@ -494,7 +494,7 @@ void initEngine(void){
 
 FSMresult processToken(void)
 {
-   detectTokens(&tknVlRb);
+   gsmDetectTkns(&tknVlRb);
 
    ATToken received; /* classifies the received token*/
    FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */

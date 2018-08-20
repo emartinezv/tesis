@@ -39,7 +39,7 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "ciaaMobile_interface.h"
+#include "gsmInterface.h"
 
 /*==================[macros and definitions]=================================*/
 

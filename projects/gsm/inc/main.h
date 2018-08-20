@@ -31,16 +31,16 @@
  *
  */
 
-#ifndef _CIAAMOBILE_COMMANDS_H_
-#define _CIAAMOBILE_COMMANDS_H_
-
-/** \addtogroup commands commands
- ** @{ */
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 /*==================[inclusions]=============================================*/
 
 #include "lpc_types.h"
+#include "board.h"
 #include "string.h"
+#include "ciaaUART.h"
+#include "gsmInterface.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -50,47 +50,26 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
- /** @brief Default timeout for AT commands in ms */
+/* Initial delay */
+#define DELAY_INIT 5000
 
-#define TOUT_DEF 40 // PARA TESTING, USAR 20 ms COMO VALOR ESTANDAR
+/* Size of SMS read vector */
+#define SMS_READ_SIZ 10
+
+/** led number to toggle */
+#define LED_ROJO 4
+#define LED_VERDE 5
 
 /*==================[typedef]================================================*/
 
-/** @brief Used for the internal catalog of AT commands; stores the name and
- *         valid end responses */
-
-typedef struct {
-   uint8_t const * const name;     /**< pointer to str with command name */
-   uint8_t const * const sucResp;  /**< pointer to str with successful end responses */
-   uint8_t const * const errResp;  /**< pointer to str with error end responses */
-   uint32_t timeout;                /**< command timeout in ms */
-} ATComm;
-
 /*==================[external data declaration]==============================*/
-
-extern ATComm const commands [];
-
-extern uint8_t const * const URCs [];
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief Searches for a cmd and returns it's position in the commands vector
- *
- *  @param command Pointer to str with the name of the command to search
- *
- *  @return Position of the cmd in the commands vector (65535 if unknown)
+/** @brief main function
+ * @return main function should never return
  */
-
-uint16_t commSearch(uint8_t const * const command);
-
-/** @brief Searches for an URC and returns 1 if recognized, 0 if absent
- *
- *  @param  urc Pointer to str with the name of the URC to search
- *
- *  @return 1 if URC recognized, 0 if absent
- */
-
-uint8_t URCSearch(uint8_t const * const urc);
+int main(void);
 
 /*==================[cplusplus]==============================================*/
 

@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _CIAAMOBILE_ENGINE_H_
-#define _CIAAMOBILE_ENGINE_H_
+#ifndef _GSM_ENGINE_H_
+#define _GSM_ENGINE_H_
 
 /** \addtogroup engine engine
  ** @{ */
@@ -42,9 +42,9 @@
 #include "lpc_types.h"
 #include "string.h"
 #include "ciaaUART.h"
-#include "ciaaMobile_parser.h"
-#include "ciaaMobile_commands.h"
-#include "ciaaMobile_tokenizer.h"
+#include "gsmParser.h"
+#include "gsmCommands.h"
+#include "gsmTokenizer.h"
 
 /*==================[cplusplus]==============================================*/
 

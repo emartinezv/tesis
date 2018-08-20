@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _CIAAMOBILE_INTERFACE_H_
-#define _CIAAMOBILE_INTERFACE_H_
+#ifndef _GSM_INTERFACE_H_
+#define _GSM_INTERFACE_H_
 
 /** \addtogroup interface interface
  ** @{ */
@@ -43,7 +43,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "ciaaUART.h"
-#include "ciaaMobile_engine.h"
+#include "gsmEngine.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -65,7 +65,7 @@ typedef enum {
    IDLE = 0, /**< no formula currently running*/
    INIT = 1, /**< initializing formula */
    PROC = 2, /**< running commands */
-   WRAP = 3 /**< wrapping up formula and callback */
+   WRAP = 3  /**< wrapping up formula and callback */
 } frmStatus;
 
 /** @brief Number of command in the PROC section being executed */
@@ -422,4 +422,4 @@ void ciaaMobile_sysUpdate (void);
 
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _CIAAMOBILE_INTERFACE_H_ */
+#endif /* #ifndef _GSM_INTERFACE_H_ */

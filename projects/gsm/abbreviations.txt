@@ -5,6 +5,8 @@ buffer       --->   buf
 command      --->   cmd
 parameter    --->   par
 ring buffer  --->   rb
+variable-length 
+ring buffer  --->   vlRb
 character    --->   ch
 response     --->   rsp
 formula      --->   frm
@@ -12,5 +14,6 @@ string       --->   str
 callback     --->   cback
 error        --->   err
 delete       --->   del
+read         --->   rd
+current      --->   curr
 
-up to interface

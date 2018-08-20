@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _CIAAMOBILE_PARSER_H_
-#define _CIAAMOBILE_PARSER_H_
+#ifndef _GSM_PARSER_H_
+#define _GSM_PARSER_H_
 
 /** \addtogroup parser parser
  ** @{ */
@@ -99,4 +99,4 @@ ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * paramete
 
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef _MAIN_H_ */
+#endif /* #ifndef _GSM_PARSER_H_ */

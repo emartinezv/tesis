@@ -1,7 +1,5 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2018, Ezequiel Martinez Vazquez
  * All rights reserved.
- *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,69 +29,78 @@
  *
  */
 
-#ifndef _CIAAMOBILE_TOKENIZER_H_
-#define _CIAAMOBILE_TOKENIZER_H_
+#ifndef _GSM_TOKENIZER_H_
+#define _GSM_TOKENIZER_H_
 
-/** \addtogroup tokenizer tokenizer
+/** \addtogroup gsm
  ** @{ */
 
-/*==================[inclusions]=============================================*/
+/*==================[inclusions]============================================*/
 
 #include "lpc_types.h"
 #include "string.h"
 #include "ciaaUART.h"
 #include "vl_ring_buffer.h"
 
-/*==================[cplusplus]==============================================*/
+/*==================[cplusplus]=============================================*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*==================[macros]=================================================*/
+/*==================[macros]================================================*/
 
 /** @brief Maximum size of tokens */
 #define TKN_LEN 300
 
-/** @brief Size in bytes of the UART read buffer */
-#define READ_BUFF_SIZE (TKN_LEN)
+/** @brief Size in bytes of the UART swap buffer */
+#define SWAP_BUF_SIZ (TKN_LEN)
 
-/*==================[typedef]================================================*/
+/** @brief Size in bytes of the read character buffer (must be power of 2) */
+#define RD_BUF_SIZ 512
+
+/** @brief Size in bytes of the current token buffer (must be power of 2) */
+#define CURR_TKN_BUF_SIZ 512
+
+/*==================[typedef]===============================================*/
+
+/** @brief Token type enum for the tokenizer functionality */
 
 typedef enum {
-   NONE,
-   ECHO,
-   RESP,
-   DATAB,
-   SMSIn,
-   SMSBod}
-tokenType_t;
+   NONE,    /**< No token detected yet */
+   ECHO,    /**< AT command echo */
+   RESP,    /**< AT command response */
+   DATAB,   /**< DATA block */
+   SMSIN,   /**< SMS send prompt */
+   SMSBOD   /**< SMS send body */
+}
+tknType_e;
 
-/*==================[external data declaration]==============================*/
+/*==================[external data declaration]=============================*/
 
-/*==================[external functions declaration]=========================*/
+/*==================[external functions declaration]========================*/
 
 /** @brief Initializes tokenizer
 *
 */
 
-void initTokenizer(void);
+void gsmInitTokenizer(void);
 
 /** @brief Get characters from the UART ring buffer into a local buffer, cycle
  *         though it and send detected tokens to the token VL ring buffer
 *
-*  @param  vlrb    : Pointer to the VL ring buffer
+*  @param  tknVlRb   : Pointer to the token VL ring buffer
 *
 */
 
-void detectTokens(VLRINGBUFF_T * vlrb);
+void gsmDetectTkns(VLRINGBUFF_T * tknVlRb);
 
-/*==================[cplusplus]==============================================*/
+/*==================[cplusplus]=============================================*/
 
 #ifdef __cplusplus
 }
 #endif
 
 /** @} doxygen end group definition */
-/*==================[end of file]============================================*/
+/*==================[end of file]===========================================*/
 #endif
