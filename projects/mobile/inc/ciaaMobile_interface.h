@@ -162,6 +162,13 @@ typedef struct {
    uint8_t text[300]; /**< text of the SMS message */
 } SMS_rec;
 
+/** @brief Type for SMS printout */
+
+typedef struct {
+   uint8_t noMsg;      /**< number of messages */
+   SMS_rec * firstMsg; /**< pointer to the first message */
+} SMS_print;
+
 /*---------------------------------------------------------------------------*/
 /*             Data structures for the ciaaMobile_delSMS function            */
 /*---------------------------------------------------------------------------*/
@@ -281,14 +288,14 @@ void ciaaMobile_readRecSMS (SMS_rec * msg, SMS_rd_params * params, void * (*cbac
 
 /** @brief Lists received SMSs in a vector
 *
-* @param list  Pointer to storage vector for SMSs to be read
-* @param noMsg Number of messages to read (must be <= the size of list)
-* @param cback Function pointer to callback function
+* @param list   Pointer to storage vector for SMSs to be read
+* @param listSz Size of the storage vector
+* @param cback  Function pointer to callback function
 *
 * @return
 */
 
-void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_user, void *));
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t listSz, void * (*cback) (error_user, void *));
 
 /** @brief Deletes a single SMS from memory
 *

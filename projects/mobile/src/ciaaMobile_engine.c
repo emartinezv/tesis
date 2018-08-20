@@ -43,7 +43,6 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_ENGINE // debug mode
 #ifdef DEBUG_ENGINE
    #define debug(msg) dbgPrint(msg)
 #else

@@ -58,6 +58,7 @@ ATComm const commands [] = {
       {"I"          , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
       {"CMEE"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"CMGL"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , 20000},
+      {"CMGR"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , 5000},
       {"CMGF"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , TOUT_DEF},
       {"CMGS"       , "> " , "ERROR, +CME ERROR, +CMS ERROR"  , 60000},
       {"CSDH"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , TOUT_DEF},

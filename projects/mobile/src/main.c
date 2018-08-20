@@ -38,6 +38,13 @@
 
 #include "main.h"
 
+/* DEBUG DEFINES */
+
+//#define DEBUG_TKNZER
+//#define DEBUG_PARSER
+//#define DEBUG_ENGINE
+//#define DEBUG_INTERF
+
 /*==================[macros and definitions]=================================*/
 
 /*==================[global data]============================================*/
@@ -274,9 +281,10 @@ void * cbprint (error_user error_in, void * input)
    else{
 
       uint8_t i = 0;
-      SMS_rec * target = (SMS_rec *)input;
+      SMS_rec * target = ((SMS_print *)input)->firstMsg;
+      uint8_t noMsg = ((SMS_print *)input)->noMsg;
 
-      for(i = 0; (target+i)->meta[0] != '\0'; i++){
+      for(i = 0; i < noMsg; i++){
 
          dbgPrint((target+i)->text);
          dbgPrint("\r\n");
@@ -383,6 +391,8 @@ void console_sms (void)
    SMS_send msg = {"1151751809","Hola mundo!"};
    SMS_rec msgList[SMS_READ_SIZ];
    SMS_del msgDel = {1, 4};
+   SMS_rec recMsg;
+   SMS_rd_params params = {1, NOCHANGE};
 
    while ('S' != instruction){
 
@@ -391,8 +401,9 @@ void console_sms (void)
          dbgPrint("\r\n\r\n>>> CONSOLA SMS <<< \r\n\r\n");
 
          dbgPrint("1) Mandar SMS \r\n");
-         dbgPrint("2) Leer SMSs \r\n");
-         dbgPrint("3) Borrar SMSs \r\n\r\n");
+         dbgPrint("2) Leer todos los SMSs \r\n");
+         dbgPrint("3) Borrar todos los SMSs \r\n");
+         dbgPrint("4) Leer el primer SMS \r\n\r\n");
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
@@ -415,6 +426,12 @@ void console_sms (void)
             case '3':
 
             ciaaMobile_delSMS(&msgDel, cbempty);
+
+            break;
+
+            case '4':
+
+            ciaaMobile_readRecSMS(&recMsg, &params, cbprint);
 
             break;
 

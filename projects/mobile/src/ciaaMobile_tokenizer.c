@@ -43,8 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_TOKENIZER // debug mode
-#ifdef DEBUG_TOKENIZER
+#ifdef DEBUG_TKNZER
    #define debug(msg) dbgPrint(msg)
 #else
    #define debug(msg)
@@ -90,8 +89,6 @@ void initTokenizer(void)
 
 void detectTokens(VLRINGBUFF_T * vlrb)
 {
-   debug(">>>tknzer<<<   detectTokens invoked\r\n");
-
    /* State-machine variables */
 
    tokenType_t token = NONE;

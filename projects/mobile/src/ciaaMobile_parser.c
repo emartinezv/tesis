@@ -43,7 +43,6 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_PARSER // debug mode
 #ifdef DEBUG_PARSER
    #define debug(msg) dbgPrint(msg)
 #else

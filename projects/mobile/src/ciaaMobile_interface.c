@@ -43,7 +43,6 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_INTERF // debug mode
 #ifdef DEBUG_INTERF
    #define debug(msg) dbgPrint(msg)
 #else
@@ -248,7 +247,7 @@ static void ciaaMobile_readRecSMS_f (void)
 
    FSMresult result;
 
-   uint8_t strSmsRead[15]; /* string to assemble the SMS read command*/
+   static uint8_t strSmsRead[15]; /* string to assemble the SMS read command*/
    uint8_t strAux[5];      /* auxiliary string */
 
    switch(frmState) {
@@ -273,6 +272,10 @@ static void ciaaMobile_readRecSMS_f (void)
          itoa(((SMS_rd_params *)frmInput)->mode, strAux, 10);
          strncat(strSmsRead, strAux, strlen(strAux));
          strncat(strSmsRead, "\r", 1);
+
+         debug(">>>interf<<<   strSmsRead: ");
+         debug(strSmsRead);
+         debug("\r\n");
 
          break;
 
@@ -334,7 +337,12 @@ static void ciaaMobile_readRecSMS_f (void)
             strncpy(((SMS_rec *)frmOutput)->text, resp.param, strlen(resp.param));
             ((SMS_rec *)frmOutput)->text[strlen(resp.param)] = '\0';
 
-            frmCback(error_out, frmOutput);
+            SMS_print printout;
+
+            printout.noMsg = 1;
+            printout.firstMsg = frmOutput;
+
+            frmCback(error_out, &printout);
 
             debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
 
@@ -485,9 +493,12 @@ static void ciaaMobile_listRecSMS_f (void)
 
             }
 
-            (target+i)->meta[0] = '\0';
+            SMS_print printout;
 
-            frmCback(error_out, frmOutput);
+            printout.noMsg = i;
+            printout.firstMsg = frmOutput;
+
+            frmCback(error_out, &printout);
 
             debug(">>>interf<<<   Lectura de SMS concluida!\r\n");
 
@@ -525,7 +536,7 @@ static void ciaaMobile_delSMS_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   static uint8_t aux[5]; /* aux buffer */
+   uint8_t aux[5]; /* aux buffer */
    static uint8_t smsDel[20];  /* holds the str of the sms del cmd including paramenters */
 
    FSMresult result;
@@ -1552,6 +1563,7 @@ void ciaaMobile_sendSMS (SMS_send * msg, void * (*cback) (error_user, void *))
 void ciaaMobile_readRecSMS (SMS_rec * msg, SMS_rd_params * params, void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_readRecSMS_f;
+   msg->meta[0] = 1; /* we hide the number of messages inside the msg record */
    frmInput = params;
    frmOutput = msg;
    frmCback = cback;
@@ -1560,10 +1572,10 @@ void ciaaMobile_readRecSMS (SMS_rec * msg, SMS_rd_params * params, void * (*cbac
    return;
 }
 
-void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t noMsg, void * (*cback) (error_user, void *))
+void ciaaMobile_listRecSMS (SMS_rec * list, uint8_t listSz, void * (*cback) (error_user, void *))
 {
    frm = ciaaMobile_listRecSMS_f;
-   list->meta[0] = noMsg; /* we hide the noMsg integer inside the list vector */
+   list->meta[0] = listSz;
    frmOutput = list;
    frmCback = cback;
    frmState = INIT;
