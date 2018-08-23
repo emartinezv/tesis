@@ -43,6 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG_PARSER
 #ifdef DEBUG_PARSER
    #define debug(msg) dbgPrint(msg)
 #else
@@ -66,283 +67,332 @@
  *  each buffer. These results are later used to feed the command FSM.
  */
 
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter, int tknlen)
+tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
+                            uint8_t * par, uint16_t tknLen)
 {
    int i = 0; /* loop counter */
 
-   uint8_t equalPos = 0; /* position of the '=' char in the token, if present */
-   uint8_t intPos = 0;   /* position of the '?' char in the token, if present */
-   uint8_t colonPos = 0; /* position of the ':' char in the token, if present */
+   uint8_t equalPos = 0; /* position of the '=' char in tkn, if present */
+   uint8_t intPos = 0;   /* position of the '?' char in tkn, if present */
+   uint8_t colonPos = 0; /* position of the ':' char in tkn, if present */
 
    /* In all cases we determine which sort of token we have and we copy the
     * appropiate parts of the token into the command and parameter buffers */
 
-   command[0] = '\0';
-   parameter[0] = '\0';
+   cmd[0] = '\0';
+   par[0] = '\0';
 
-   /* determine if the token is a response or an echo */
+   /* The last character of the token has the tokenizer token type encoded. We
+    * extract it and make a first classification before trying to determine
+    * the parser token type.
+    */
 
-   if(('\r' == token[0]) && ('\n' == token[1])){ /* token is a response */
+   tknTypeTknzer_e tknType;
+   tknType = (tknTypeTknzer_e)tkn[tknLen-1];
+   tknLen--; /* discard this last character for string search purposes */
 
-      /* Extended syntax response */
+   /* In the following code we analize the token and try to divide it into a
+    * cmd and par (if present). For all purposes the leading and trailing \r
+    * and \n characters are ignored.
+    */
 
-      if('+' == token[2]){
+   switch(tknType){
 
-         /* Search for ':' character and store position if present */
+      case ECHO: /* token should be the echo of an AT command sent by us;
+                    the last character is by definition \r */
 
-         for(i = 3; i < (tknlen-2); i++){
-            if(':' == token[i]){
-               colonPos = i;
-               break;
+         if(('A' == tkn[0]) && ('T' == tkn[1])){
+
+            /* autobauding sync sequence (AT) */
+
+            if('\r' == tkn[2]){
+               strncpy(cmd,"AT\0",3);
+
+               debug(">>>parser<<<   AUTOBAUD\r\n");
+
+               return AUTOBAUD;
             }
-         }
 
-         /* If no ':' character is present we have a simple extended sintax response */
+            /* extended AT command */
 
-         if(0 == colonPos){
-            strncpy(command,&token[3],tknlen-5);
-            command[tknlen-5] = '\0';
+            else if('+' == tkn[2]){
 
-            debug(">>>parser<<<   EXTENDED RESPONSE: ");
-            debug(command);
-            debug("\r\n");
+               /* Search for '=' and '?' characters and store position to
+                * determine type of extended AT command */
 
-            return EXT_RSP;
-         }
-
-         /* If ':' character is present, what follows is a parameter of the response */
-
-         else{
-            strncpy(command,&token[3],colonPos-3);
-            command[colonPos-3] = '\0';
-            strncpy(parameter,&token[colonPos+1],tknlen-colonPos-3);
-            parameter[tknlen-colonPos-3] = '\0';
-
-            debug(">>>parser<<<   EXTENDED RESPONSE: ");
-            debug(command);
-            debug("(");
-            debug(parameter);
-            debug(")\r\n");
-
-            return EXT_RSP;
-         }
-
-      }
-
-      /* SMS Prompt */
-
-      else if( '>' == token[2] && ' ' == token[3]){
-         strncpy(command,"> \0",3);
-
-         debug(">>>parser<<<   SMS PROMPT\r\n");
-
-         return SMS_PROMPT;
-      }
-
-      /* Basic response */
-
-      else{
-         strncpy(command,&token[2],tknlen-4);
-         command[tknlen-4] = '\0';
-
-         debug(">>>parser<<<   BASIC RESPONSE: ");
-         debug(command);
-         debug("\r\n");
-
-         return BASIC_RSP;
-      }
-   }
-
-   else if('\r' == token[tknlen-1]){ /* token is an echo */
-
-      /* determine if the token is an AT command, be it extended or basic */
-
-      if(('A' == token[0]) && ('T' == token[1])){
-
-         /* autobauding sync sequence */
-
-         if('\r' == token[2]){
-            strncpy(command,"AT\0",3);
-
-            debug(">>>parser<<<   AUTOBAUD\r\n");
-
-            return AUTOBAUD;
-         }
-
-         /* extended AT command */
-
-         else if('+' == token[2]){
-
-            /* Search for '=' and '?' characters and store position to determine type
-               of extended AT command */
-
-            for (i = 3; i < tknlen; i++){
-               if ('=' == token[i]){
-                  equalPos = i;
-                  break;
+               for (i = 3; i < tknLen; i++){
+                  if ('=' == tkn[i]){
+                     equalPos = i;
+                     break;
+                  }
                }
-            }
 
-            for (i = 3; i < tknlen; i++){
-               if ('?' == token[i]){
-                  intPos = i;
-                  break;
+               for (i = 3; i < tknLen; i++){
+                  if ('?' == tkn[i]){
+                     intPos = i;
+                     break;
+                  }
                }
-            }
 
-            /* Determine the type of extended command (TEST, READ, WRITE or EXECUTION)
-               depending on the position of the '=' and '?' characters. Afterwards,
-               copy the correct part of the token corresponding to the command. */
+               /* Determine the type of extended command (TEST, READ, WRITE or
+                * EXECUTION) depending on the position of the '=' and '?'
+                * characters. Afterwards, copy the correct part of the token
+                * corresponding to the command and parameter */
 
-            if (0 != equalPos){
+               if (0 != equalPos){
 
-               strncpy(command,&token[3],(equalPos - 3)); /* copy the part between '+' and '=' */
-               command[equalPos -3] = '\0';
+                  /* copy the part between '+' and '=' to cmd */
+                  strncpy(cmd,&tkn[3],(equalPos - 3));
+                  cmd[equalPos -3] = '\0';
 
-               if((equalPos+1) == intPos){
+                  /* TEST extended command (AT+...=?) */
+                  if((equalPos+1) == intPos){
 
-                  debug(">>>parser<<<   EXTENDED COMMAND TEST: ");
-                  debug(command);
+                     debug(">>>parser<<<   EXTENDED COMMAND TEST: ");
+                     debug(cmd);
+                     debug("\r\n");
+
+                     return EXT_CMD_TEST;
+                  }
+
+                  /* WRITE extended command (AT+...=...) */
+                  else{
+                     /* copy the part between '=' and the end to par */
+                     strncpy(par,&tkn[equalPos+1],tknLen-equalPos-2);
+                     par[tknLen-equalPos-2] = '\0';
+
+                     debug(">>>parser<<<   EXTENDED COMMAND WRITE: ");
+                     debug(cmd);
+                     debug("(");
+                     debug(par);
+                     debug(")\r\n");
+
+                     return EXT_CMD_WRITE;
+                  }
+
+               }
+
+               /* READ extended command (AT+...?) */
+               else if((tknLen-2) == intPos){
+
+                  /* copy the part between '+' and '?' to cmd*/
+                  strncpy(cmd,&tkn[3],(intPos - 3));
+                  cmd[intPos -3] = '\0';
+
+                  debug(">>>parser<<<   EXTENDED COMMAND READ: ");
+                  debug(cmd);
                   debug("\r\n");
 
-                  return EXT_CMD_TEST;
+                  return EXT_CMD_READ;
+               }
+
+               /* EXECUTE extended command (AT+...) */
+               else{
+
+                  /* copy everything after '+' to cmd */
+                  strncpy(cmd,&tkn[3],(tknLen - 4));
+                  cmd[tknLen -4] = '\0';
+
+                  debug(">>>parser<<<   EXTENDED COMMAND EXEC: ");
+                  debug(cmd);
+                  debug("\r\n");
+
+                  return EXT_CMD_EXEC;
+               }
+            }
+
+            /* basic AT command with ampersand (AT&...) */
+
+            else if('&' == tkn[2]){
+
+               if('\r' != tkn[3]){
+                  /* first char after the & is the cmd */
+                  cmd[0] = tkn[3];
+                  cmd[1] = '\0';
+
+                  debug(">>>parser<<<   AT COMMAND W/&: ");
+                  debug(cmd);
+
+                  if('\r' != tkn[4]){
+                     /* if present, everything after cmd char is the par */
+                     strncpy(par,&tkn[4],tknLen-4);
+                     par[tknLen-4] = '\0';
+
+                     debug("(");
+                     debug(par);
+                     debug(")");
+                  }
+
+                  debug("\r\n");
+
+                  return BASIC_CMD_AMP;
+
                }
 
                else{
-                  strncpy(parameter,&token[equalPos+1],tknlen-equalPos-2);
-                  parameter[tknlen-equalPos-2] = '\0';
 
-                  debug(">>>parser<<<   EXTENDED COMMAND WRITE: ");
-                  debug(command);
-                  debug("(");
-                  debug(parameter);
-                  debug(")\r\n");
+                  debug(">>>parser<<<   INVALID TOKEN\r\n");
 
-                  return EXT_CMD_WRITE;
+                  return INVALID;
+
                }
 
             }
 
-            else if((tknlen-2) == intPos){
-               strncpy(command,&token[3],(intPos - 3)); /* copy the part between '+' and '?' */
-               command[intPos -3] = '\0';
+            /* basic AT command (AT...) */
 
-               debug(">>>parser<<<   EXTENDED COMMAND READ: ");
-               debug(command);
-               debug("\r\n");
+            else {
+               /* first char after AT is the cmd */
+               cmd[0] = tkn[2];
+               cmd[1] = '\0';
 
-               return EXT_CMD_READ;
-            }
+               debug(">>>parser<<<   AT COMMAND: ");
+               debug(cmd);
 
-            else{
-               strncpy(command,&token[3],(tknlen - 4)); /* copy everything after '+' */
-               command[tknlen -4] = '\0';
-
-               debug(">>>parser<<<   EXTENDED COMMAND EXEC: ");
-               debug(command);
-               debug("\r\n");
-
-               return EXT_CMD_EXEC;
-            }
-         }
-
-         /* basic AT command with ampersand */
-
-         else if('&' == token[2]){
-
-            if('\r' != token[3]){
-               command[0] = token[3];
-               command[1] = '\0';
-
-               debug(">>>parser<<<   AT COMMAND W/&: ");
-               debug(command);
-
-               if('\r' != token[4]){
-                  strncpy(parameter,&token[4],tknlen-4);
-                  parameter[tknlen-4] = '\0';
+               if('\r' != tkn[3]){
+                  /* if present, everything after cmd char is the par */
+                  strncpy(par,&tkn[3],tknLen-3);
+                  par[tknLen-3] = '\0';
 
                   debug("(");
-                  debug(parameter);
+                  debug(par);
                   debug(")");
                }
 
                debug("\r\n");
 
-               return BASIC_CMD_AMP;
+               return BASIC_CMD;
 
             }
+
+         }
+
+         else{
+
+            debug(">>>parser<<<   INVALID TOKEN\r\n");
+
+            return INVALID;
+
+         }
+
+      break;
+
+      case RSP:
+      case SMS_PROMPT: /* token should be a response by the GSM modem, be it a
+                          basic or extended command response or a SMS prompt;
+                          the token starts and ends with \r\n */
+
+         /* Extended syntax response */
+
+         if('+' == tkn[2]){
+
+            /* Search for ':' character and store position if present */
+
+            for(i = 3; i < (tknLen-2); i++){
+               if(':' == tkn[i]){
+                  colonPos = i;
+                  break;
+               }
+            }
+
+            /* If no ':' character is present we have a simple extended sintax
+             * response (+...) */
+
+            if(0 == colonPos){
+               /* everything after the + is the cmd */
+               strncpy(cmd,&tkn[3],tknLen-5);
+               cmd[tknLen-5] = '\0';
+
+               debug(">>>parser<<<   EXTENDED RESPONSE: ");
+               debug(cmd);
+               debug("\r\n");
+
+               return EXT_RSP;
+            }
+
+            /* If ':' character is present, what follows is a parameter of
+             * the response (+...:...) */
 
             else{
+               /* everything between the + and the : is the cmd */
+               strncpy(cmd,&tkn[3],colonPos-3);
+               cmd[colonPos-3] = '\0';
+               /* everything between the : and the end is the par */
+               strncpy(par,&tkn[colonPos+1],tknLen-colonPos-3);
+               par[tknLen-colonPos-3] = '\0';
 
-               debug(">>>parser<<<   INVALID TOKEN\r\n");
+               debug(">>>parser<<<   EXTENDED RESPONSE: ");
+               debug(cmd);
+               debug("(");
+               debug(par);
+               debug(")\r\n");
 
-               return INVALID;
-
+               return EXT_RSP;
             }
 
          }
 
-         /* basic AT command */
+         /* SMS Prompt (> ) */
 
-         else {
-            command[0] = token[2];
-            command[1] = '\0';
+         else if('>' == tkn[2] && ' ' == tkn[3]){
+            strncpy(cmd,"> \0",3);
 
-            debug(">>>parser<<<   AT COMMAND: ");
-            debug(command);
+            debug(">>>parser<<<   SMS PROMPT\r\n");
 
-            if('\r' != token[3]){
-               strncpy(parameter,&token[3],tknlen-3);
-               parameter[tknlen-3] = '\0';
+            return SMS_PROMPT_P;
+         }
 
-               debug("(");
-               debug(parameter);
-               debug(")");
-            }
+         /* Basic response */
 
+         else{
+            /* the whole token is the response */
+            strncpy(cmd,&tkn[2],tknLen-4);
+            cmd[tknLen-4] = '\0';
+
+            debug(">>>parser<<<   BASIC RESPONSE: ");
+            debug(cmd);
             debug("\r\n");
 
-            return BASIC_CMD;
-
+            return BASIC_RSP;
          }
 
-      }
+      break;
 
-      else{
+      case DATA_BLOCK:
 
-         debug(">>>parser<<<   INVALID TOKEN\r\n");
+         /* we enter DATA as the cmd */
+         strncpy(cmd,"DATA\0",5);
+         /* the whole token is the parameter */
+         strncpy(par,tkn,tknLen-2);
+         par[tknLen-2] = '\0';
 
-         return INVALID;
+         debug(">>>parser<<<   DATA BLOCK: ");
+         debug(par);
+         debug("\r\n");
 
-      }
+         return DATA_BLOCK_P;
+
+      break;
+
+      case SMS_BODY:
+      default:
+
+         /* we enter SMS_BODY as the cmd */
+         strncpy(cmd,"SMS_BODY\0",9);
+         /* the whole token is the parameter */
+         strncpy(par,&tkn[0],tknLen);
+         par[tknLen] = '\0';
+
+         debug(">>>parser<<<   SMS BODY: ");
+         debug(par);
+         debug("\r\n");
+
+         return SMS_BODY_P;
+
+      break;
+
    }
 
-   else if(('\r' == token[tknlen-2]) && ('\n' == token[tknlen-1])){ /* token is a <data> block */
-
-      strncpy(command,"DATA\0",5);
-      strncpy(parameter,token,tknlen-2);
-      parameter[tknlen-2] = '\0';
-
-      debug(">>>parser<<<   DATA BLOCK: ");
-      debug(parameter);
-      debug("\r\n");
-
-      return DATA;
-   }
-
-   else{ /* token is SMS Body echo or error */
-
-      strncpy(command,"SMS_BODY\0",9);
-      strncpy(parameter,&token[0],tknlen);
-      parameter[tknlen] = '\0';
-
-      debug(">>>parser<<<   SMS BODY: ");
-      debug(parameter);
-      debug("\r\n");
-
-      return SMS_BODY;
-
-   }
 }
 
 /** @} doxygen end group definition */

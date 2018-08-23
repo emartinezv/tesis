@@ -16,4 +16,5 @@ error        --->   err
 delete       --->   del
 read         --->   rd
 current      --->   curr
+length       --->   len
 

@@ -63,6 +63,12 @@ extern "C" {
 /** @brief Size in bytes of the urcVlRb buffer */
 #define URC_BUF_SIZE 256
 
+/** @brief Max size of an AT token command part */
+#define TKN_CMD_SIZ 20
+
+   /** @brief Max size of an AT token parameter part */
+#define TKN_PAR_SIZ 300
+
 /** @brief AT command response type */
 typedef struct _ATresp
 {

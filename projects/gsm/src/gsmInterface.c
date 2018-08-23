@@ -43,6 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG_INTERF
 #ifdef DEBUG_INTERF
    #define debug(msg) dbgPrint(msg)
 #else

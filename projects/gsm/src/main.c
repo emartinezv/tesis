@@ -38,13 +38,6 @@
 
 #include "main.h"
 
-/* DEBUG DEFINES */
-
-//#define DEBUG_TKNZER
-//#define DEBUG_PARSER
-//#define DEBUG_ENGINE
-//#define DEBUG_INTERF
-
 /*==================[macros and definitions]=================================*/
 
 /*==================[global data]============================================*/
@@ -705,9 +698,6 @@ int main(void)
 {
    initHardware();
    ciaaUARTInit();
-
-   uint8_t gprs_flag = 0;
-   uint8_t tcp_flag = 0;
 
    uint8_t instruction;
 

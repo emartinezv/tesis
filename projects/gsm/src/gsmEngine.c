@@ -43,6 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG_ENGINE
 #ifdef DEBUG_ENGINE
    #define debug(msg) dbgPrint(msg)
 #else
@@ -139,7 +140,7 @@ static VLRINGBUFF_T urcVlRb;
 *  @return Returns the result of the latest updateFSM invocation
 */
 
-static FSMresult updateFSM (ATToken received,
+static FSMresult updateFSM (tknTypeParser_e received,
                     uint8_t const * const command,
                     uint8_t const * const parameter,
                     uint8_t const index);
@@ -167,7 +168,7 @@ static uint8_t recordURC (uint8_t const * const command,
  *  of the current command after the function call is the output.
  */
 
-static FSMresult updateFSM (ATToken received, uint8_t const * const command,
+static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const command,
                             uint8_t const * const parameter, uint8_t index)
 {
    static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
@@ -183,7 +184,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          idx = index;
 
-         if ((AUTOBAUD <= received) && (SMS_BODY >= received)){ /* command sent by serial port */
+         if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){ /* command sent by serial port */
 
             timeout_count = commands[idx].timeout;
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
@@ -243,7 +244,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
          /* now that the command has been sent, we check the echo from the
             modem and verify that it agrees with the sent command */
 
-         if ((AUTOBAUD <= received) && (SMS_BODY >= received)){
+         if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){
 
             uint8_t eqCMD = 1;
             uint8_t eqPAR = 1;
@@ -387,7 +388,7 @@ static FSMresult updateFSM (ATToken received, uint8_t const * const command,
 
          }
 
-         else if ((AUTOBAUD <= received) && (SMS_BODY >= received)){
+         else if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){
             GSMstatus = WAITING;
 
             debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
@@ -496,7 +497,7 @@ FSMresult processToken(void)
 {
    gsmDetectTkns(&tknVlRb);
 
-   ATToken received; /* classifies the received token*/
+   tknTypeParser_e received; /* classifies the received token*/
    FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
@@ -507,7 +508,7 @@ FSMresult processToken(void)
    if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
 
       tknSize = VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
-      received = parse(token, command, parameter, tknSize);     /* parse the token */
+      received = gsmParseTkn(token, command, parameter, tknSize);     /* parse the token */
       currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
 
    }
@@ -557,17 +558,31 @@ void printData(void){
 
 FSMresult sendATcmd (const uint8_t * cmdstr)
 {
-   ATToken sending;   /* classifies the command being sent */
+   tknTypeParser_e sending;   /* classifies the command being sent */
    FSMresult result;  /* result of the updateFSM invocation */
    uint16_t idx;     /* index of the command to be sent in the command list */
 
-   uint8_t cmd[TKN_LEN];   /* AT command  */
-   uint8_t par[TKN_LEN];   /* AT command arguments */
+   uint8_t aux = 0;
+   uint8_t cmdStrCla[TKN_LEN];
+   cmdStrCla[0] = '\0';
+   strncat(cmdStrCla, cmdstr, strlen(cmdstr));
 
-   sending = parse(cmdstr, cmd, par, strlen(cmdstr));
+   if('\r' == cmdstr[strlen(cmdstr)-1]){
+      aux = (uint8_t)ECHO;
+   }
+   else{
+      aux = (uint8_t)SMS_BODY;
+   }
+
+   strncat(cmdStrCla, &aux, 1);
+
+   uint8_t cmd[TKN_CMD_SIZ];   /* AT command  */
+   uint8_t par[TKN_PAR_SIZ];   /* AT command arguments */
+
+   sending = gsmParseTkn(cmdStrCla, cmd, par, strlen(cmdStrCla));
    idx = commSearch(cmd); /* search for command */
 
-   if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY))){
+   if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY_P))){
 
       switch(sending){ /* modify format depending on the AT command type, send
                        through serial port and call updateFSM function */
@@ -644,7 +659,7 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
             break;
 
-         case SMS_BODY:
+         case SMS_BODY_P:
 
             rs232Print(par);
             rs232Print("\x1A");

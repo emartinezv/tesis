@@ -67,14 +67,14 @@ extern "C" {
 /** @brief Token type enum for the tokenizer functionality */
 
 typedef enum {
-   NONE,    /**< No token detected yet */
-   ECHO,    /**< AT command echo */
-   RESP,    /**< AT command response */
-   DATAB,   /**< DATA block */
-   SMSIN,   /**< SMS send prompt */
-   SMSBOD   /**< SMS send body */
+   NONE       = 0,   /**< No token detected yet */
+   ECHO       = 1,   /**< AT command echo */
+   RSP        = 2,   /**< AT command response */
+   DATA_BLOCK = 3,   /**< DATA block */
+   SMS_PROMPT = 4,   /**< SMS send prompt */
+   SMS_BODY   = 5,   /**< SMS send body */
 }
-tknType_e;
+tknTypeTknzer_e;
 
 /*==================[external data declaration]=============================*/
 

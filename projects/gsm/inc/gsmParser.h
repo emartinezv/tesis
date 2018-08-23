@@ -42,6 +42,7 @@
 #include "lpc_types.h"
 #include "string.h"
 #include "ciaaUART.h"
+#include "gsmTokenizer.h"
 
 /*==================[cplusplus]==============================================*/
 
@@ -58,21 +59,21 @@ extern "C" {
 /** @brief Type of AT token as per the parse function; used to feed the cmd FSM
  */
 
-typedef enum {INVALID,        /**< token is invalid */
-              AUTOBAUD,       /**< token is the autobauding sequence */
-              BASIC_CMD,      /**< token is a basic command */
-              BASIC_CMD_AMP,  /**< token is a basic command with ampersand */
-              EXT_CMD_TEST,   /**< token is a extended test command */
-              EXT_CMD_WRITE,  /**< token is a extended test command */
-              EXT_CMD_READ,   /**< token is a extended test command */
-              EXT_CMD_EXEC,   /**< token is a extended test command */
-              SMS_BODY,       /**< token is the body of an SMS */
-              BASIC_RSP,      /**< token is a basic response */
-              DATA,           /**< token is a DATA block from a response */
-              SMS_PROMPT,     /**< token is the SMS prompt */
-              EXT_RSP,        /**< token is an extended response */
-              TIMEOUT,        /**< dummy value for timeout events */
-              }ATToken;
+typedef enum {INVALID,        /**< Token is invalid */
+              AUTOBAUD,       /**< Token is the autobauding sequence */
+              BASIC_CMD,      /**< Token is a basic command */
+              BASIC_CMD_AMP,  /**< Token is a basic command with ampersand */
+              EXT_CMD_TEST,   /**< Token is a extended test command */
+              EXT_CMD_WRITE,  /**< Token is a extended test command */
+              EXT_CMD_READ,   /**< Token is a extended test command */
+              EXT_CMD_EXEC,   /**< Token is a extended test command */
+              SMS_BODY_P,     /**< Token is the body of an SMS */
+              BASIC_RSP,      /**< Token is a basic response */
+              DATA_BLOCK_P,   /**< Token is a DATA block from a response */
+              SMS_PROMPT_P,   /**< Token is the SMS prompt */
+              EXT_RSP,        /**< Token is an extended response */
+              TIMEOUT,        /**< Dummy value for timeout events */
+              }tknTypeParser_e;
 
 /*==================[external data declaration]==============================*/
 
@@ -80,16 +81,17 @@ typedef enum {INVALID,        /**< token is invalid */
 
 /** @brief AT token parser
 *
-*  @param token       Pointer to AT token fetched from the serial port tokenizer
-*  @param command     AT command buffer
-*  @param parameter   AT parameter buffer
-*  @param tknlen      length of the received token
+*  @param tkn      Pointer to AT token fetched from the serial port tokenizer
+*  @param cmd      AT command buffer
+*  @param par      AT parameter buffer
+*  @param tknLen   Length of the received token
 *
-*  @return Returns the type of AT token in an ATToken enum, as well as the
-*          command and parameter parts in their corresponding buffers
+*  @return Returns the type of AT token in an tknTypeParser_e enum, as well as
+*          the command and parameter parts in their corresponding buffers
 */
 
-ATToken parse(uint8_t const * const token, uint8_t * command, uint8_t * parameter, int tknlen);
+tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
+                            uint8_t * par, uint16_t tknLen);
 
 /*==================[cplusplus]==============================================*/
 

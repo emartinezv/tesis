@@ -42,6 +42,7 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define DEBUG_TKNZER
 #ifdef DEBUG_TKNZER
    #define debug(msg) dbgPrint(msg)
 #else
@@ -82,7 +83,7 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 {
    /* State-machine variables and flags */
 
-   tknType_e currTkn = NONE;     /* Classification of the current token */
+   tknTypeTknzer_e currTkn = NONE;     /* Classification of the current token */
 
    static uint8_t crLf = 0;    /* Initial <CR><LF> sequence detected */
    static uint8_t empty = 1;   /* Non-control characters received */
@@ -134,19 +135,19 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
          debug(">>>tknzer<<<   AT command echo\r\n");
       } /* AT command echo */
       else if(('\r' == pCh) && ('\n' == ch) && crLf){
-         currTkn = RESP; smsIn = 0;
+         currTkn = RSP; smsIn = 0;
          debug(">>>tknzer<<<   AT command response\r\n");
       } /* AT command response */
       else if(('\r' == pCh) && ('\n' == ch) && !crLf && !empty && !smsIn){
-         currTkn = DATAB; smsIn = 0;
+         currTkn = DATA_BLOCK; smsIn = 0;
          debug(">>>tknzer<<<   DATA block\r\n");
       } /* DATA block */
       else if(('\r' == pCh) && ('\n' == ch) && !crLf && !empty && smsIn) {
-         currTkn = SMSBOD; smsIn = 0; crLf = 1;
+         currTkn = SMS_BODY; smsIn = 0; crLf = 1;
          debug(">>>tknzer<<<   SMS send body\r\n");
       } /* SMS send body */
       else if(('>' == pCh) && (' ' == ch) && crLf) {
-         currTkn = SMSIN; smsIn = 1;
+         currTkn = SMS_PROMPT; smsIn = 1;
          debug(">>>tknzer<<<   SMS send prompt\r\n");
       } /* SMS send prompt */
       else { currTkn = NONE; }
@@ -156,14 +157,17 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 
       if(NONE != currTkn){
 
-         if(SMSBOD != currTkn){ crLf = 0;}
+         if(SMS_BODY != currTkn){ crLf = 0;}
          empty = 1;
          int length = RingBuffer_GetCount(&currTknRb)
-                      - (ECHO == currTkn) - (SMSBOD == currTkn)*2;
+                      - (ECHO == currTkn) - (SMS_BODY == currTkn)*2;
          RingBuffer_PopMult(&currTknRb, &swapBuf, length);
 
+         /* Add the token type as a trailer to the current token */
+         swapBuf[length]=(uint8_t)currTkn;
+
          /* insert current token into token VL ring buffer */
-         VLRingBuffer_Insert(tknVlRb, &swapBuf, length);
+         VLRingBuffer_Insert(tknVlRb, &swapBuf, length+1);
       }
 
       else if(('\r' == pCh) && ('\n' == ch) && !crLf && empty){
