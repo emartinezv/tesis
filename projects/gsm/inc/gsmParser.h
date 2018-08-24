@@ -34,7 +34,7 @@
 #ifndef _GSM_PARSER_H_
 #define _GSM_PARSER_H_
 
-/** \addtogroup parser parser
+/** \addtogroup gsm
  ** @{ */
 
 /*==================[inclusions]=============================================*/
