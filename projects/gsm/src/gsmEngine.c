@@ -57,12 +57,12 @@
 /*==================[internal data declaration]==============================*/
 
 /*---------------------------------------------------------------------------*/
-/*                    Internal GSM engine state variables                    */
+/*                      Internal engine state variables                      */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Current state of the GSM engine */
+/** @brief Current state of the engine */
 
-static GSMstate GSMstatus = WAITING;
+static fsmState_e fsmState = WAITING;
 
 /** @brief used for AT command timeout counter */
 
@@ -130,31 +130,30 @@ static VLRINGBUFF_T urcVlRb;
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief Updates the AT command FSM with the latest received token
+/** @brief Updates the engine FSM with the latest received token
 *
-*  @param received  Type of AT token as per the parse function
-*  @param command   Main part of the AT token used as input
-*  @param parameter Parameter part of the AT token used as input
-*  @param index     Index of the AT command (for sending only)
+*  @param received  Type of token as per the gsmParseTkn function
+*  @param cmd       Main part of the token used as input
+*  @param par       Parameter part of the token used as input
+*  @param index     Index of the AT command (for sending cmds only)
 *
-*  @return Returns the result of the latest updateFSM invocation
+*  @return Returns the event triggered by the updateFSM call
 */
 
-static FSMresult updateFSM (tknTypeParser_e received,
-                    uint8_t const * const command,
-                    uint8_t const * const parameter,
-                    uint8_t const index);
+static fsmEvent gsmUpdateFsm (tknTypeParser_e received,
+                              uint8_t const * const cmd,
+                              uint8_t const * const par, uint8_t const index);
 
-/** @brief Records a new URC event in the URC event vector
+/** @brief Records a new URC in the URC vector
 *
-*  @param command   Main part of the URC
-*  @param parameter Parameter part of the URC
+*  @param cmd   Command part of the URC
+*  @param par   Parameter part of the URC
 *
 *  @return Returns 1 if successful or 0 if VLRB is full
 */
 
-static uint8_t recordURC (uint8_t const * const command,
-                    uint8_t const * const parameter);
+static uint8_t gsmRecordUrc (uint8_t const * const cmd,
+                             uint8_t const * const par);
 
 /*==================[internal data definition]===============================*/
 
@@ -162,10 +161,13 @@ static uint8_t recordURC (uint8_t const * const command,
 
 /*==================[internal functions definition]==========================*/
 
-/** The updateFSM function updates the internal FSM which preserves the state
- *  of the  current command execution. The latest token received from the GSM
- *  engine (as processed by the parse function) is the input, and the state
- *  of the current command after the function call is the output.
+/** The gsmUpdateFsm function updates the engine FSM which preserves the state
+ *  of the current command execution. The input is always a token, either one
+ *  received from the GSM module or an AT command the user is  trying to send.
+ *  The token is already processed by the gsmParseTkn functino, so we have it's
+ *  type in detail. The output of the function is the event triggered by the
+ *  processing of the input token. State is internal to the FSM, but the user
+ *  gets the events to see what just happened.
  */
 
 static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const command,
@@ -472,7 +474,7 @@ static uint8_t recordURC (uint8_t const * const command,
 
 /*==================[external functions definition]==========================*/
 
-void initEngine(void){
+void gsmInitEngine(void){
 
    gsmInitTokenizer();
 
@@ -493,7 +495,7 @@ void initEngine(void){
  *  returns the result of the updateFSM invocation
  */
 
-FSMresult processToken(void)
+fsmEvent gsmProcessTkn(void)
 {
    gsmDetectTkns(&tknVlRb);
 
@@ -533,7 +535,7 @@ FSMresult processToken(void)
  *  these data to a user-defined buffer of some sort for processing.
  */
 
-void printData(void){
+void gsmPrintData(void){
 
    uint8_t c = 0;
 
@@ -556,7 +558,7 @@ void printData(void){
 /** The sendATcmd function sends an AT command to the GSM engine.
  */
 
-FSMresult sendATcmd (const uint8_t * cmdstr)
+fsmEvent gsmSendCmd (const uint8_t * cmdstr)
 {
    tknTypeParser_e sending;   /* classifies the command being sent */
    FSMresult result;  /* result of the updateFSM invocation */
@@ -686,7 +688,7 @@ FSMresult sendATcmd (const uint8_t * cmdstr)
 
 }
 
-ATresp getCmdResp (void)
+rsp_t gsmGetCmdRsp (void)
 {
    /* fetches the next command response; returns empty response if there are no more
       responses left */
@@ -729,14 +731,14 @@ ATresp getCmdResp (void)
    return dummy;
 }
 
-uint8_t getNoCmdResp (void)
+uint8_t gsmGetNoCmdRsp (void)
 {
    /* returns number of total command responses for the last command */
 
    return (VLRingBuffer_GetCount(&rspVlRb));
 }
 
-ATresp getURC (void)
+rsp_t gsmGetUrc (void)
 {
    /* fetches the next URC; returns empty response if there are no more
       responses left */
@@ -779,29 +781,29 @@ ATresp getURC (void)
    return dummy;
 }
 
-serialMode_e checkSerialMode(void)
+serialMode_e gsmCheckSerialMode(void)
 {
    return serialMode;
 }
 
-void changeSerialMode(serialMode_e mode)
+void gsmChangeSerialMode(serialMode_e mode)
 {
    serialMode = mode;
    return;
 }
 
-urcMode_e checkUrcMode(void)
+urcMode_e gsmCheckUrcMode(void)
 {
    return urcMode;
 }
 
-void changeUrcMode(urcMode_e mode)
+void gsmChangeUrcMode(urcMode_e mode)
 {
    urcMode = mode;
    return;
 }
 
-void setUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par))
+void gsmSetUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par))
 {
    urcCback = Cback;
    return;
