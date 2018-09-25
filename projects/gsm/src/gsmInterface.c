@@ -1545,7 +1545,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
 void ciaaMobile_SysTick_Handler (void)
 {
-   if(timeout_count > 0) timeout_count--;
+   if(toutCnt > 0) toutCnt--;
    if(sysupd_count > 0) sysupd_count--;
 
    return;

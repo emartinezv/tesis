@@ -56,41 +56,49 @@ extern "C" {
 
 /*==================[typedef]================================================*/
 
-/** @brief Used for the internal catalog of AT commands; stores the name and
- *         valid end responses */
+/** @brief Used for the internal catalog of AT commands; stores the name,
+ *         successful and error end responses and timeout in ms */
 
 typedef struct {
    uint8_t const * const name;     /**< pointer to str with command name */
-   uint8_t const * const sucResp;  /**< pointer to str with successful end responses */
-   uint8_t const * const errResp;  /**< pointer to str with error end responses */
-   uint32_t timeout;                /**< command timeout in ms */
-} ATComm;
+   uint8_t const * const sucRsp;   /**< pointer to str with successful end
+                                        responses */
+   uint8_t const * const errRsp;   /**< pointer to str with error end
+                                        responses */
+   uint32_t timeout;               /**< command timeout in ms */
+} atCmd_t;
+
+/** @brief Used for the internal catalog of URCs; stores the name of the URC */
+
+typedef struct {
+   uint8_t const * const name;     /**< pointer to str with URC name */
+} urc_t;
 
 /*==================[external data declaration]==============================*/
 
-extern ATComm const commands [];
+extern atCmd_t const commands [];
 
-extern uint8_t const * const URCs [];
+extern urc_t const urcs [];
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief Searches for a cmd and returns it's position in the commands vector
+/** @brief Searches for a cmd and returns its position in the commands vector
  *
- *  @param command Pointer to str with the name of the command to search
+ *  @param cmd Pointer to str with the name of the command to search
  *
  *  @return Position of the cmd in the commands vector (65535 if unknown)
  */
 
-uint16_t commSearch(uint8_t const * const command);
+uint16_t gsmCmdSearch(uint8_t const * const cmd);
 
-/** @brief Searches for an URC and returns 1 if recognized, 0 if absent
+/** @brief Searches for an URC and returns 1 if recognized, 0 otherwise
  *
  *  @param  urc Pointer to str with the name of the URC to search
  *
- *  @return 1 if URC recognized, 0 if absent
+ *  @return 1 if URC recognized, 0 otherwise
  */
 
-uint8_t URCSearch(uint8_t const * const urc);
+uint8_t gsmUrcSearch(uint8_t const * const urc);
 
 /*==================[cplusplus]==============================================*/
 

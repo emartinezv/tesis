@@ -66,7 +66,7 @@ static fsmState_e fsmState = WAITING;
 
 /** @brief used for AT command timeout counter */
 
-uint32_t timeout_count = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
+uint32_t toutCnt = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
 
 /** @brief Command or Data mode for the serial port */
 
@@ -140,7 +140,7 @@ static VLRINGBUFF_T urcVlRb;
 *  @return Returns the event triggered by the updateFSM call
 */
 
-static fsmEvent gsmUpdateFsm (tknTypeParser_e received,
+static fsmEvent gsmUpdateFsm (tknTypeParser_e tknType,
                               uint8_t const * const cmd,
                               uint8_t const * const par, uint8_t const index);
 
@@ -170,49 +170,51 @@ static uint8_t gsmRecordUrc (uint8_t const * const cmd,
  *  gets the events to see what just happened.
  */
 
-static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const command,
-                            uint8_t const * const parameter, uint8_t index)
+static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
+                                uint8_t const * const cmd,
+                                uint8_t const * const par, uint8_t idx)
 {
-   static uint8_t currCMD[TKN_LEN]; /* command being currently executed */
-   static uint8_t currPAR[TKN_LEN]; /* parameter of the current command */
+   static uint8_t currCmd[TKN_CMD_SIZ]; /* command being currently executed */
+   static uint8_t currPar[TKN_PAR_SIZ]; /* parameter of the current command */
 
-   static uint8_t idx;              /* index of the command in the list */
+   uint8_t rspAux[TKN_CMD_SIZ+TKN_PAR_SIZ+1];  /* auxiliary buffer for storing
+                                                  the latest response */
 
-   uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
-
-   switch(GSMstatus){
+   switch(fsmState){
 
       case WAITING: /* initial state */
 
-         idx = index;
+         /* command sent by serial port */
 
-         if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){ /* command sent by serial port */
+         if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            timeout_count = commands[idx].timeout;
+            toutCnt = commands[idx].timeout;
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
-            strncpy(currCMD,command,strlen(command));
-            currCMD[strlen(command)] = '\0';
-            strncpy(currPAR,parameter,strlen(parameter));
-            currPAR[strlen(parameter)] = '\0';
+            strncpy(currCmd,cmd,strlen(cmd));
+            currCmd[strlen(cmd)] = '\0';
+            strncpy(currPar,par,strlen(par));
+            currPar[strlen(par)] = '\0';
 
-            GSMstatus = CMD_SENT;
+            fsmState = CMD_SENT;
 
             debug(">>>engine<<<   COMMAND SENT: ");
-            debug(command);
+            debug(cmd);
             debug("(");
-            debug(parameter);
+            debug(par);
             debug(")\r\n");
 
             return OK_CMD_SENT;
 
          }
 
-         else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
+         /* possible URC */
 
-            if(1 == URCSearch(command)){
+         else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){
+
+            if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               recordURC (command, parameter);
+               gsmRecordUrc (cmd, par);
 
                return OK_URC;
             }
@@ -224,13 +226,17 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
          }
 
-         else if (TIMEOUT == received){
-               GSMstatus = WAITING;
+         /* command timeout */
+
+         else if (TIMEOUT == tknType){
+               fsmState = WAITING;
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
                return ERR_TIMEOUT;
          }
+
+         /* invalid token */
 
          else{
             debug(">>>engine<<<   INVALID TOKEN\r\n");
@@ -241,28 +247,30 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
          break;
 
-      case CMD_SENT:
+      case CMD_SENT: /* cmd sent, waiting for echo */
 
-         /* now that the command has been sent, we check the echo from the
-            modem and verify that it agrees with the sent command */
+         /* we check the echo from the modem and verify that it agrees with the
+            command that was sent by comparing both the command and parameter
+            strings */
 
-         if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){
+         if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            uint8_t eqCMD = 1;
-            uint8_t eqPAR = 1;
-            eqCMD = strncmp(command, currCMD, strlen(currCMD));
-            eqPAR = strncmp(parameter, currPAR, strlen(currPAR));
+            uint8_t eqCmd = 1;
+            uint8_t eqPar = 1;
+            eqCmd = strncmp(cmd, currCmd, strlen(currCmd));
+            eqPar = strncmp(par, currPar, strlen(currPar));
 
-            if ((0 == eqCMD) && (0 == eqPAR)){
-               VLRingBuffer_Flush(&rspVlRb);
-               GSMstatus = CMD_ACK;
+            if ((0 == eqCmd) && (0 == eqPar)){
+               VLRingBuffer_Flush(&rspVlRb); /* flush response VLRB since we
+                                                have a new command */
+               fsmState = CMD_ACK;
 
                debug(">>>engine<<<   COMMAND ACK\r\n");
 
                return OK_CMD_ACK;
             }
             else{
-               GSMstatus = WAITING;
+               fsmState = WAITING;
 
                debug(">>>engine<<<   COMMAND ECHO ERROR\r\n");
 
@@ -270,16 +278,18 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
             }
          }
 
-         else if ((BASIC_RSP == received) || (EXT_RSP == received)){ /* possible URC */
+         /* possible URC */
 
-            if(1 == URCSearch(command)){
+         else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){
+
+            if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               recordURC (command, parameter);
+               gsmRecordUrc (cmd, par);
 
                return OK_URC;
-            }
+
             else{
-               GSMstatus = WAITING;
+               fsmState = WAITING;
 
                debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND ECHO EXPECTED\r\n");
 
@@ -288,16 +298,20 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
          }
 
-         else if (TIMEOUT == received){
-               GSMstatus = WAITING;
+         /* command timeout */
+
+         else if (TIMEOUT == tknType){
+               fsmState = WAITING;
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
                return ERR_TIMEOUT;
          }
 
+         /* invalid token */
+
          else{
-            GSMstatus = WAITING;
+            fsmState = WAITING;
 
             debug(">>>engine<<<   INVALID TOKEN\r\n");
 
@@ -311,11 +325,11 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
          /* process a number of tokens depending on the command, checking for
             end responses each time */
 
-         if ((BASIC_RSP <= received) && (EXT_RSP >= received)){
+         if ((BASIC_RSP <= tknType) && (EXT_RSP >= tknType)){
 
-            if(1 == URCSearch(command)){
+            if(1 == URCSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               recordURC (command, parameter);
+               recordURC (cmd, par);
 
                return OK_URC;
             }
@@ -332,9 +346,9 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
                rspAux[0] = '\0';
 
-               strncat(rspAux, command, strlen(command));
+               strncat(rspAux, cmd, strlen(cmd));
                strncat(rspAux, ".", 1);
-               strncat(rspAux, parameter, strlen(parameter));
+               strncat(rspAux, par, strlen(par));
 
                VLRingBuffer_Insert(&rspVlRb, rspAux, (uint16_t) (strlen(rspAux)));
 
@@ -347,12 +361,12 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
                 * not ERROR.
                 */
 
-               if(0 == strncmp("CIFSR", currCMD, 5)){
-                  if(0 == strstr(command,"ERROR")){
+               if(0 == strncmp("CIFSR", currCmd, 5)){
+                  if(0 == strstr(cmd,"ERROR")){
 
                      debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
-                     GSMstatus = WAITING;
+                     fsmState = WAITING;
                      return OK_CLOSE;
                   }
                }
@@ -361,11 +375,11 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               if(NULL != strstr(commands[idx].sucResp,command)){
+               if(NULL != strstr(commands[idx].sucResp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
-                  GSMstatus = WAITING;
+                  fsmState = WAITING;
                   return OK_CLOSE;
                }
 
@@ -373,11 +387,11 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               else if(NULL != strstr(commands[idx].errResp,command)){
+               else if(NULL != strstr(commands[idx].errResp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
-                  GSMstatus = WAITING;
+                  fsmState = WAITING;
                   return ERR_MSG_CLOSE;
                }
 
@@ -390,16 +404,16 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
          }
 
-         else if ((AUTOBAUD <= received) && (SMS_BODY_P >= received)){
-            GSMstatus = WAITING;
+         else if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
+            fsmState = WAITING;
 
             debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
 
             return ERR_OOO;
          }
 
-         else if (TIMEOUT == received){
-               GSMstatus = WAITING;
+         else if (TIMEOUT == tknType){
+               fsmState = WAITING;
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
@@ -409,9 +423,9 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
          else{
 
             debug(">>>engine<<<   INVALID TOKEN RECEIVED: ");
-            debug(command);
+            debug(cmd);
             debug("(");
-            debug(parameter);
+            debug(par);
             debug(")\r\n");
 
             return ERR_TKN_INV;
@@ -423,7 +437,7 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
          debug(">>>engine<<<   ERROR: SWITCH OUT OF RANGE");
 
-         GSMstatus = WAITING;
+         fsmState = WAITING;
          return ERR_FSM_OOR;
 
          break;
@@ -431,7 +445,7 @@ static FSMresult updateFSM (tknTypeParser_e received, uint8_t const * const comm
 
 }
 
-static uint8_t recordURC (uint8_t const * const command,
+static uint8_t gsmRecordUrc (uint8_t const * const command,
                     uint8_t const * const parameter)
 {
    if(MANUAL_MODE == urcMode){
@@ -517,7 +531,7 @@ fsmEvent gsmProcessTkn(void)
 
    #ifndef DEBUG_NOTIMEOUT
 
-   else if((GSMstatus != WAITING) && (timeout_count == 0)){
+   else if((fsmState != WAITING) && (toutCnt == 0)){
 
       currCmd = updateFSM(TIMEOUT, 0, 0, 0);     /* update FSM */
 

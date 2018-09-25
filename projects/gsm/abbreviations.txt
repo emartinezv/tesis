@@ -17,4 +17,6 @@ delete       --->   del
 read         --->   rd
 current      --->   curr
 length       --->   len
+timeout      --->   tout
+count        --->   cnt
 

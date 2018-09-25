@@ -31,8 +31,7 @@
  *
  */
 
-/** @brief This module handles the internal AT cmd catalog storage and search
- */
+/** @brief AT command catalog and URC catalog storage and search functions */
 
 /** \addtogroup commands commands
  ** @{ */
@@ -51,9 +50,9 @@
 
 /*==================[external data definition]===============================*/
 
-/** @brief Vector of known AT commands, including their end response options */
+/** @brief Vector of known AT commands */
 
-ATComm const commands [] = {
+atCmd_t const commands [] = {
       {"AT"         , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
       {"I"          , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
       {"CMEE"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
@@ -81,37 +80,37 @@ ATComm const commands [] = {
       {"CGNSPWR"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
       {"CGNSINF"    , "OK" , "ERROR, +CME ERROR"              , 1000 * TOUT_DEF}, // ARBITRARIO
       {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
-      {0 , 0 , 0},
+      {0 , 0 , 0}
 };
 
-/** @brief Vector of known Unrequested Result Codes */
+/** @brief Vector of known URCs */
 
-uint8_t const * const URCs [] = {
-      "CMTI",
-      0
+urc_t const urcs [] = {
+      {"CMTI"},
+      {0}
 };
 
 /*==================[internal functions definition]==========================*/
 
 /*==================[external functions definition]==========================*/
 
-uint16_t commSearch(uint8_t const * const command)
+uint16_t gsmCmdSearch(uint8_t const * const cmd)
 {
    int i = 0;
 
    for(i = 0; 0 != commands[i].name; i++){
-      if(0 == strcmp(command, commands[i].name)){return i;}
+      if(0 == strcmp(cmd, commands[i].name)){return i;}
    }
 
    return 65535;
 }
 
-uint8_t URCSearch(uint8_t const * const urc)
+uint8_t gsmUrcSearch(uint8_t const * const urc)
 {
    int i = 0;
 
-   for(i = 0; 0 != URCs[i]; i++){
-      if(0 == strcmp(urc, URCs[i])){return 1;}
+   for(i = 0; 0 != urcs[i].name; i++){
+      if(0 == strcmp(urc, urcs[i].name)){return 1;}
    }
 
    return 0;

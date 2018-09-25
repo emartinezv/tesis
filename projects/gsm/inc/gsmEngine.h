@@ -120,12 +120,6 @@ typedef enum _fsmEvent
    ERR_FSM_OOR        /**< FSM out of range */
 } fsmEvent_e;
 
-typedef struct _urc_t
-{
-   uint8_t cmd[TKN_CMD_SIZ];
-   uint8_t par[TKN_PAR_SIZ];
-} urc_t;
-
 /*==================[typedef]================================================*/
 
 /*==================[external data declaration]==============================*/
