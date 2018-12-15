@@ -34,7 +34,7 @@
 #ifndef _GSM_ENGINE_H_
 #define _GSM_ENGINE_H_
 
-/** \addtogroup engine engine
+/** \addtogroup gsm
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -64,16 +64,16 @@ extern "C" {
 #define URC_BUF_SIZE 256
 
 /** @brief Max size of an AT token command part */
-#define TKN_CMD_SIZ 20
+#define TKN_CMD_SIZE 20
 
    /** @brief Max size of an AT token parameter part */
-#define TKN_PAR_SIZ 300
+#define TKN_PAR_SIZE 300
 
 /** @brief AT command response type */
 typedef struct _rsp_t
 {
-   uint8_t cmd[TKN_CMD_SIZ];
-   uint8_t par[TKN_PAR_SIZ];
+   uint8_t cmd[TKN_CMD_SIZE];
+   uint8_t par[TKN_PAR_SIZE];
 } rsp_t;
 
 /** @brief Modes for the serial port */
@@ -126,7 +126,7 @@ typedef enum _fsmEvent
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief Initializes engine
+/** @brief Initializes the library engine
 *
 */
 
@@ -135,10 +135,16 @@ void gsmInitEngine(void);
 
 /** @brief Processes a single token
 *
-*  @return Returns the event triggered by the updateFSM call
+*  @return Returns the event triggered by the gsmUpdateFsm call
 */
 
 fsmEvent_e gsmProcessTkn(void);
+
+/** @brief Decrements the timeout counter
+*
+*/
+
+void gsmDecToutCnt(void);
 
 /** @brief Prints data to the USB UART when serial port is in DATA_MODE
 *
@@ -148,7 +154,7 @@ void gsmPrintData(void);
 
 /** @brief Sends an AT command to the GSM module
 *
-*  @return Returns the event triggered by the updateFSM call
+*  @return Returns the event triggered by the gsmUpdateFsm call
 *
 *  @param cmdstr AT command string including parameters
 */
@@ -169,6 +175,22 @@ rsp_t gsmGetCmdRsp (void);
 
 uint8_t gsmGetNoCmdRsp (void);
 
+/** @brief Returns the actual mode of the serial port
+*
+*
+*  @return Returns COMMAND_MODE or DATA_MODE
+*/
+
+serialMode_e gsmGetSerialMode(void);
+
+/** @brief Changes the mode of the serial port
+*
+*  @param mode   : Serial port mode
+*
+*/
+
+void gsmSetSerialMode(serialMode_e mode);
+
 /** @brief Reads the oldest URC event in the URC VLRB
 *
 *  @return Returns the required URC (0 if no such response)
@@ -176,33 +198,28 @@ uint8_t gsmGetNoCmdRsp (void);
 
 rsp_t gsmGetUrc (void);
 
-/** @brief Returns the actual mode of the serial port
-*
-*
-*  @return Returns COMMAND_MODE or DATA_MODE
-*/
-
-serialMode_e gsmCheckSerialMode(void);
-
-/** @brief Changes the mode of the serial port
-*
-*  @param mode   : Serial port mode
-*
-*  @return Returns COMMAND_MODE or DATA_MODE
-*/
-
-void gsmChangeSerialMode(serialMode_e mode);
-
 /** @brief Returns the actual URC handling mode
 *
 *  @return Returns MANUAL_MODE or CBACK_MODE
 */
 
-urcMode_e gsmCheckUrcMode(void);
+urcMode_e gsmGetUrcMode(void);
 
-void gsmChangeUrcMode(urcMode_e mode);
+/** @brief Changes the URC handling mode
+*
+*  @param mode   : URC handling mode
+*
+*/
 
-void gsmSetUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par));
+void gsmSetUrcMode(urcMode_e mode);
+
+/** @brief Sets the URC callback function
+*
+*  @param cback   : URC callback function
+*
+*/
+
+void gsmSetUrcCback(void (*cback) (uint8_t const * const cmd, uint8_t const * const par));
 
 
 /*==================[cplusplus]==============================================*/

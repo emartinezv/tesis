@@ -34,7 +34,7 @@
 /** @brief This module handles the internal engine of the library
  */
 
-/** \addtogroup engine engine
+/** \addtogroup gsm
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -66,7 +66,7 @@ static fsmState_e fsmState = WAITING;
 
 /** @brief used for AT command timeout counter */
 
-uint32_t toutCnt = 0; /* NO ES STATIC, VER SI ES PROBLEMATICO */
+static uint32_t toutCnt = 0;
 
 /** @brief Command or Data mode for the serial port */
 
@@ -133,14 +133,16 @@ static VLRINGBUFF_T urcVlRb;
 /** @brief Updates the engine FSM with the latest received token
 *
 *  @param received  Type of token as per the gsmParseTkn function
-*  @param cmd       Main part of the token used as input
+*  @param cmd       Command part of the token used as input
 *  @param par       Parameter part of the token used as input
-*  @param index     Index of the AT command (for sending cmds only)
+*  @param index     Index of the AT command in the commands vector (only when
+*                   sending cmds)
+*
 *
 *  @return Returns the event triggered by the updateFSM call
 */
 
-static fsmEvent gsmUpdateFsm (tknTypeParser_e tknType,
+static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                               uint8_t const * const cmd,
                               uint8_t const * const par, uint8_t const index);
 
@@ -163,11 +165,12 @@ static uint8_t gsmRecordUrc (uint8_t const * const cmd,
 
 /** The gsmUpdateFsm function updates the engine FSM which preserves the state
  *  of the current command execution. The input is always a token, either one
- *  received from the GSM module or an AT command the user is  trying to send.
- *  The token is already processed by the gsmParseTkn functino, so we have it's
+ *  received from the GSM module or an AT command the user is trying to send.
+ *  The token is already processed by the gsmParseTkn function, so we have it's
  *  type in detail. The output of the function is the event triggered by the
- *  processing of the input token. State is internal to the FSM, but the user
- *  gets the events to see what just happened.
+ *  processing of the input token. State is internal to the FSM, but the upper
+ *  layer (Interface) gets the events to see what just happened. All executions
+ *  of the function will return a fsmEvent_e type response of some sort.
  */
 
 static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
@@ -182,14 +185,23 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
    switch(fsmState){
 
-      case WAITING: /* initial state */
+      /* This is the initial state of the FSM when the engine is initialized or
+       * after a command has been closed.
+       */
 
-         /* command sent by serial port */
+      case WAITING:
+
+         /* If the token type is between AUTOBAUD AND SMS_BODY_P, we are
+          * dealing with a command sent by the user */
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            toutCnt = commands[idx].timeout;
+            toutCnt = commands[idx].timeout; /* load timeout counter for the
+                                                specific command */
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
+
+            /* Initialize current command buffers cmd and par and progress
+             * to CMD_SENT state*/
 
             strncpy(currCmd,cmd,strlen(cmd));
             currCmd[strlen(cmd)] = '\0';
@@ -208,16 +220,23 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          }
 
-         /* possible URC */
+         /* If the token type is BASIC_RSP or EXT_RESP, we may be dealing with
+          * an URC. We check the list of recognized URCs and log it if it is
+          * in that list. Otherwise, we raise an out-of-order event, as we got
+          * a response without any command being currently executed. */
 
          else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){
 
+            /* Search in the recognized URCs list and log the URC if correct */
+
             if(1 == gsmUrcSearch(cmd)){
+
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc (cmd, par);
 
                return OK_URC;
             }
+
             else{
                debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND EXPECTED\r\n");
 
@@ -226,17 +245,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          }
 
-         /* command timeout */
-
-         else if (TIMEOUT == tknType){
-               fsmState = WAITING;
-
-               debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
-
-               return ERR_TIMEOUT;
-         }
-
-         /* invalid token */
+         /* Any other sort of token is considered invalid */
 
          else{
             debug(">>>engine<<<   INVALID TOKEN\r\n");
@@ -247,18 +256,29 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          break;
 
-      case CMD_SENT: /* cmd sent, waiting for echo */
+      /* The user has sent a recognized command and we are waiting for the echo
+       * from the modem.
+       */
 
-         /* we check the echo from the modem and verify that it agrees with the
+      case CMD_SENT:
+
+         /* We check the echo from the modem and verify that it agrees with the
             command that was sent by comparing both the command and parameter
-            strings */
+            strings. The token type must be between AUTOBAUD and SMS_BODY_P. */
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
             uint8_t eqCmd = 1;
             uint8_t eqPar = 1;
+
+            /* Compare the cmd and par part of the current command with the
+             * received echo */
+
             eqCmd = strncmp(cmd, currCmd, strlen(currCmd));
             eqPar = strncmp(par, currPar, strlen(currPar));
+
+            /* If the echo is congruent, flush the rspVlRb and progress to
+             * CMD_ACK state */
 
             if ((0 == eqCmd) && (0 == eqPar)){
                VLRingBuffer_Flush(&rspVlRb); /* flush response VLRB since we
@@ -269,6 +289,10 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                return OK_CMD_ACK;
             }
+
+            /* If the echo is incorrect, report error and go back to WAITING
+             * state */
+
             else{
                fsmState = WAITING;
 
@@ -278,15 +302,21 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             }
          }
 
-         /* possible URC */
+         /* If the token type is BASIC_RSP or EXT_RESP, we may be dealing with
+          * an URC. We check the list of recognized URCs and log it if it is
+          * in that list. Otherwise, we raise an out-of-order event, as we got
+          * a response without any command being currently executed. */
 
          else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){
+
+            /* Search in the recognized URCs list and log the URC if correct */
 
             if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc (cmd, par);
 
                return OK_URC;
+            }
 
             else{
                fsmState = WAITING;
@@ -298,7 +328,9 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          }
 
-         /* command timeout */
+         /* If the token type is TIMEOUT, the maximum response time for this
+          * specific command has been exceeded. We report the error and go back
+          * to the WAITING state */
 
          else if (TIMEOUT == tknType){
                fsmState = WAITING;
@@ -308,24 +340,39 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                return ERR_TIMEOUT;
          }
 
-         /* invalid token */
+         /* Any other sort of token is considered invalid */
 
          else{
             fsmState = WAITING;
 
-            debug(">>>engine<<<   INVALID TOKEN\r\n");
+            debug(">>>engine<<<   INVALID TOKEN RECEIVED: ");
+            debug(cmd);
+            debug("(");
+            debug(par);
+            debug(")\r\n");
 
             return ERR_TKN_INV;
          }
 
          break;
 
+      /* This is the third possible state of the FSM. We have correctly
+       * received the echo and are now waiting for the responses to the
+       * command. The command can be closed by either a successful closing
+       * response, an error closing response or timeout. In all cases, we
+       * return to the WAITING state.
+       */
+
       case CMD_ACK:
 
-         /* process a number of tokens depending on the command, checking for
-            end responses each time */
+         /* If the token type is BASIC_RSP or EXT_RESP, we may be dealing with
+          * an URC. We check the list of recognized URCs and log it if it is
+          * in that list. Otherwise, we consider it a response to the command
+          * and add it to the rspVlRb. */
 
          if ((BASIC_RSP <= tknType) && (EXT_RSP >= tknType)){
+
+            /* Search in the recognized URCs list and log the URC if correct */
 
             if(1 == URCSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
@@ -336,13 +383,8 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
             else{
 
-               /* store the response in the active command response vector */
-
-               /*if(currTKN >= RESPVECTOR_SIZE){
-
-               }  ERROR SI ME QUEDA GRANDE LA RESPUESTA EN RESPVECTOR...
-
-               else*/
+               /* Store the response in the rspAux auxiliary variable and
+                * insert it in the rspVlRb. */
 
                rspAux[0] = '\0';
 
@@ -356,9 +398,10 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug(rspAux);
                debug("\r\n");
 
-               /* Since AT+CIFSR does not return an OK after reporting the IP,
-                * we change check the response and change it to OK if it is
-                * not ERROR.
+               /* CORNER CASE: Since AT+CIFSR does not return an OK after
+                * reporting the IP, we check the response and change it to OK
+                * if it is not ERROR. Note that the actual response (the IP)
+                * has already been stored in the rspVlRb.
                 */
 
                if(0 == strncmp("CIFSR", currCmd, 5)){
@@ -375,7 +418,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               if(NULL != strstr(commands[idx].sucResp,cmd)){
+               if(NULL != strstr(commands[idx].sucRsp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -387,7 +430,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               else if(NULL != strstr(commands[idx].errResp,cmd)){
+               else if(NULL != strstr(commands[idx].errRsp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
@@ -395,14 +438,18 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                   return ERR_MSG_CLOSE;
                }
 
-               /* if the response is not an end response, just report OK_RESP */
+               /* If the response is not an end response, just report
+                * OK_RESP */
 
                else{
-                  return OK_RESP;
+                  return OK_RSP;
                }
             }
 
          }
+
+         /* If we get a command-type token, we report an out-of-order error and
+          * go back to the WAITING state */
 
          else if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
             fsmState = WAITING;
@@ -412,6 +459,10 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             return ERR_OOO;
          }
 
+         /* If the token type is TIMEOUT, the maximum response time for this
+          * specific command has been exceeded. We report the error and go back
+          * to the WAITING state */
+
          else if (TIMEOUT == tknType){
                fsmState = WAITING;
 
@@ -419,6 +470,8 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                return ERR_TIMEOUT;
          }
+
+         /* Any other sort of token is considered invalid */
 
          else{
 
@@ -433,9 +486,12 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          break;
 
+      /* If for some reason we reach the default case the FSM has been
+       * corrupted. We report this and go back to the WAITING state. */
+
       default:
 
-         debug(">>>engine<<<   ERROR: SWITCH OUT OF RANGE");
+         debug(">>>engine<<<   ERROR: FSM OUT OF RANGE");
 
          fsmState = WAITING;
          return ERR_FSM_OOR;
@@ -509,12 +565,12 @@ void gsmInitEngine(void){
  *  returns the result of the updateFSM invocation
  */
 
-fsmEvent gsmProcessTkn(void)
+fsmEvent_e gsmProcessTkn(void)
 {
    gsmDetectTkns(&tknVlRb);
 
    tknTypeParser_e received; /* classifies the received token*/
-   FSMresult currCmd = NO_UPDATE; /* result of the updateFSM invocation */
+   fsmEvent_e currCmd = NO_UPDATE; /* result of the updateFSM invocation */
 
    uint8_t token[TKN_LEN]; /* received token */
    int tknSize;        /* size of read token */
@@ -541,6 +597,17 @@ fsmEvent gsmProcessTkn(void)
 
    return currCmd;
 
+}
+
+/** @brief Decrements the timeout counter
+*
+*/
+
+void gsmDecToutCnt(void){
+
+   toutCnt--;
+
+   return;
 }
 
 /** When the serial port is in DATA_MODE, this function prints everything
@@ -572,10 +639,10 @@ void gsmPrintData(void){
 /** The sendATcmd function sends an AT command to the GSM engine.
  */
 
-fsmEvent gsmSendCmd (const uint8_t * cmdstr)
+fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 {
    tknTypeParser_e sending;   /* classifies the command being sent */
-   FSMresult result;  /* result of the updateFSM invocation */
+   fsmEvent_e result;  /* result of the updateFSM invocation */
    uint16_t idx;     /* index of the command to be sent in the command list */
 
    uint8_t aux = 0;
@@ -708,11 +775,11 @@ rsp_t gsmGetCmdRsp (void)
       responses left */
 
    uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
-   ATresp dummy;
+   rsp_t dummy;
    uint16_t rspSiz;
 
    dummy.cmd[0] = '\0';
-   dummy.param[0] = '\0';
+   dummy.par[0] = '\0';
 
    if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
 
@@ -735,8 +802,8 @@ rsp_t gsmGetCmdRsp (void)
 
          strncpy(dummy.cmd, rspAux, dotPos);
          dummy.cmd[dotPos] = '\0';
-         strncpy(dummy.param, &rspAux[dotPos+1], rspSiz-dotPos-1);
-         dummy.param[rspSiz-dotPos-1] = '\0';
+         strncpy(dummy.par, &rspAux[dotPos+1], rspSiz-dotPos-1);
+         dummy.par[rspSiz-dotPos-1] = '\0';
 
       }
 
@@ -758,11 +825,11 @@ rsp_t gsmGetUrc (void)
       responses left */
 
    uint8_t urcAux[TKN_LEN+20];      /* auxiliary buffer for storing the urc */
-   ATresp dummy;
+   rsp_t dummy;
    uint8_t urcSiz;
 
    dummy.cmd[0] = '\0';
-   dummy.param[0] = '\0';
+   dummy.par[0] = '\0';
 
    if(0 == VLRingBuffer_IsEmpty(&urcVlRb)){
 
@@ -785,8 +852,8 @@ rsp_t gsmGetUrc (void)
 
          strncpy(dummy.cmd, urcAux, dotPos);
          dummy.cmd[dotPos] = '\0';
-         strncpy(dummy.param, &urcAux[dotPos+1], urcSiz-dotPos-1);
-         dummy.param[urcSiz-dotPos-1] = '\0';
+         strncpy(dummy.par, &urcAux[dotPos+1], urcSiz-dotPos-1);
+         dummy.par[urcSiz-dotPos-1] = '\0';
 
       }
 
@@ -795,31 +862,31 @@ rsp_t gsmGetUrc (void)
    return dummy;
 }
 
-serialMode_e gsmCheckSerialMode(void)
+serialMode_e gsmGetSerialMode(void)
 {
    return serialMode;
 }
 
-void gsmChangeSerialMode(serialMode_e mode)
+void gsmSetSerialMode(serialMode_e mode)
 {
    serialMode = mode;
    return;
 }
 
-urcMode_e gsmCheckUrcMode(void)
+urcMode_e gsmGetUrcMode(void)
 {
    return urcMode;
 }
 
-void gsmChangeUrcMode(urcMode_e mode)
+void gsmSetUrcMode(urcMode_e mode)
 {
    urcMode = mode;
    return;
 }
 
-void gsmSetUrcCback(void (*Cback) (uint8_t const * const cmd, uint8_t const * const par))
+void gsmSetUrcCback(void (*cback) (uint8_t const * const cmd, uint8_t const * const par))
 {
-   urcCback = Cback;
+   urcCback = cback;
    return;
 }
 
