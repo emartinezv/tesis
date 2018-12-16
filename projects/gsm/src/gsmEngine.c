@@ -501,14 +501,23 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
 }
 
+/** The gsmRecordUrc function handles received URCs. If urcMode is MANUAL_MODE,
+ *  the URC is stored in the urcVlRb. If it is in CBACK_MODE, it calls the
+ *  configured callback function with the URC as it's arguments.
+ */
+
 static uint8_t gsmRecordUrc (uint8_t const * const command,
                     uint8_t const * const parameter)
 {
+   /* If in MANUAL_MODE, the URC is stored in the urcVlRb and the function
+    * returns 1. If the buffer is full, it returns 0.
+    */
+
    if(MANUAL_MODE == urcMode){
 
       if(0 == VLRingBuffer_IsFull(&urcVlRb)){
 
-        uint8_t urcAux[TKN_LEN];
+        uint8_t urcAux[TKN_LEN]; /* auxiliary vector */
 
         urcAux[0] = '\0';
 
@@ -533,6 +542,10 @@ static uint8_t gsmRecordUrc (uint8_t const * const command,
      }
    }
 
+   /* If in CBACK_MODE, the callback function is called with the URCs cmd and
+    * par strings as the arguments.
+    */
+
    else if(CBACK_MODE == urcMode){
 
       urcCback(command, parameter);
@@ -544,12 +557,16 @@ static uint8_t gsmRecordUrc (uint8_t const * const command,
 
 /*==================[external functions definition]==========================*/
 
+/* The gsmInitEngine function initializes the tokenizer module, the serial
+ * comms and urc modes and all three variable-length ring buffers.
+ */
+
 void gsmInitEngine(void){
 
    gsmInitTokenizer();
 
-   changeSerialMode(COMMAND_MODE); /* start serial comms in command mode */
-   changeUrcMode(MANUAL_MODE);     /* URC handling starts in manual mode */
+   gsmSetSerialMode(COMMAND_MODE); /* start serial comms in command mode */
+   gsmSetUrcMode(MANUAL_MODE);     /* URC handling starts in manual mode */
 
    VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, TKN_BUF_SIZE);
    VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, RSP_BUF_SIZE);
@@ -559,43 +576,50 @@ void gsmInitEngine(void){
 
 }
 
-/** The processToken function checks is there are unread tokens in the token
+/** The processToken function checks if there are unread tokens in the token
  *  ring buffer. If so, it reads the oldest token, parses the token through the
- *  parse function and calls upon the updateFSM function with the result. It
- *  returns the result of the updateFSM invocation
+ *  parse function and calls upon the gsmUpdateFsm function with the result. It
+ *  then passes along the return value of the gsmUpdateFsm call.
  */
 
 fsmEvent_e gsmProcessTkn(void)
 {
    gsmDetectTkns(&tknVlRb);
 
-   tknTypeParser_e received; /* classifies the received token*/
-   fsmEvent_e currCmd = NO_UPDATE; /* result of the updateFSM invocation */
+   tknTypeParser_e received;       /* stores the received token type */
+   fsmEvent_e result = NO_UPDATE;  /* stores the resulting event of the
+                                      gsmUpdateFsm call */
 
-   uint8_t token[TKN_LEN]; /* received token */
-   int tknSize;        /* size of read token */
-   uint8_t command[TKN_LEN]; /* AT command or response */
-   uint8_t parameter[TKN_LEN]; /* AT command or response argument */
+   uint8_t tkn[TKN_LEN]; /* received token */
+   int tknSize;          /* size of read token */
+   uint8_t cmd[TKN_CMD_SIZE]; /* AT command or response */
+   uint8_t par[TKN_PAR_SIZE]; /* AT command or response argument */
+
+   /* If the tknVlRb is not empty, pop the latest token, parse ir and send it
+    * as an argument to the gsmUpdateFsm function to update the FSM. */
 
    if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
 
-      tknSize = VLRingBuffer_Pop(&tknVlRb, &token, TKN_LEN);
-      received = gsmParseTkn(token, command, parameter, tknSize);     /* parse the token */
-      currCmd = updateFSM(received, command, parameter, 0);     /* update FSM */
+      tknSize = VLRingBuffer_Pop(&tknVlRb, &tkn, TKN_LEN);/* pop latest tkn */
+      received = gsmParseTkn(tkn, cmd, par, tknSize);     /* parse the tkn */
+      result = gsmUpdateFsm(received, cmd, par, 0);       /* update FSM */
 
    }
 
    #ifndef DEBUG_NOTIMEOUT
 
+   /* If the timeout counter has dropped to 0, call the gsmUpdateFsm function
+    * with a TIMEOUT token type. */
+
    else if((fsmState != WAITING) && (toutCnt == 0)){
 
-      currCmd = updateFSM(TIMEOUT, 0, 0, 0);     /* update FSM */
+      result = gsmUpdateFsm(TIMEOUT, 0, 0, 0);     /* update FSM */
 
    }
 
    #endif
 
-   return currCmd;
+   return result;
 
 }
 
@@ -636,19 +660,28 @@ void gsmPrintData(void){
 }
 
 
-/** The sendATcmd function sends an AT command to the GSM engine.
+/** The gsmSendCmd function first parses cmdstr in the same way as we would do
+ *  with a token received from the GSM module. This is needed since we are
+ *  going to use the token to update the FSM. We parse cmdstr, make sure that
+ *  it is a recognized command and write it in the correct format to the
+ *  serial port. Afterwards, gsmUpdateFsm is called.
  */
 
 fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 {
    tknTypeParser_e sending;   /* classifies the command being sent */
-   fsmEvent_e result;  /* result of the updateFSM invocation */
-   uint16_t idx;     /* index of the command to be sent in the command list */
+   fsmEvent_e result;         /* result of the updateFSM invocation */
+   uint16_t idx;              /* index of the command to be sent in
+                                 the commands vector */
 
-   uint8_t aux = 0;
-   uint8_t cmdStrCla[TKN_LEN];
+   uint8_t aux = 0;            /* auxiliary variable*/
+   uint8_t cmdStrCla[TKN_LEN]; /* auxiliary vector for expanded cmd string*/
    cmdStrCla[0] = '\0';
    strncat(cmdStrCla, cmdstr, strlen(cmdstr));
+
+   /* Add ECHO (if tkn finishes with '\r') or SMS_BODY to the end of the
+    * expanded cmd string to aid the parser.
+    */
 
    if('\r' == cmdstr[strlen(cmdstr)-1]){
       aux = (uint8_t)ECHO;
@@ -662,98 +695,26 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
    uint8_t cmd[TKN_CMD_SIZ];   /* AT command  */
    uint8_t par[TKN_PAR_SIZ];   /* AT command arguments */
 
+   /* Parse AT cmd and check if it is valid. */
+
    sending = gsmParseTkn(cmdStrCla, cmd, par, strlen(cmdStrCla));
    idx = commSearch(cmd); /* search for command */
 
+   /* If the command is valid, send it through the serial port and then update
+    * the FSM by invoking gsmUpdateFsm. */
+
    if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY_P))){
 
-      switch(sending){ /* modify format depending on the AT command type, send
-                       through serial port and call updateFSM function */
+      rs232Print(cmdstr); /* Send the cmd string through the serial port */
 
-         case AUTOBAUD:
+      if(SMS_BODY_P == sending){
 
-            rs232Print("AT\r");
-
-            result = updateFSM(sending,"AT","",idx);
-
-            break;
-
-         case BASIC_CMD:
-
-            rs232Print("AT");
-            rs232Print(cmd);
-            if(par != 0) {rs232Print(par);}
-            rs232Print("\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case BASIC_CMD_AMP:
-
-            rs232Print("AT&");
-            rs232Print(cmd);
-            if(par != 0) {rs232Print(par);}
-            rs232Print("\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case EXT_CMD_TEST:
-
-            rs232Print("AT+");
-            rs232Print(cmd);
-            rs232Print("=?\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case EXT_CMD_WRITE:
-
-            rs232Print("AT+");
-            rs232Print(cmd);
-            rs232Print("=");
-            rs232Print(par);
-            rs232Print("\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case EXT_CMD_READ:
-
-            rs232Print("AT+");
-            rs232Print(cmd);
-            rs232Print("?\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case EXT_CMD_EXEC:
-
-            rs232Print("AT+");
-            rs232Print(cmd);
-            rs232Print("\r");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
-
-         case SMS_BODY_P:
-
-            rs232Print(par);
-            rs232Print("\x1A");
-
-            result = updateFSM(sending,cmd,par,idx);
-
-            break;
+         rs232Print("\x1A"); /* If we are sending an SMS_BODY type token we
+                                need to add the final Ctrl-Z char */
 
       }
 
-      return result;
+      result = updateFSM(sending,cmd,par,idx); /* update FSM */
 
    }
 
@@ -763,9 +724,9 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 
       result = ERR_CMD_UKN;
 
-      return result;
-
    }
+
+   return result;
 
 }
 
@@ -774,29 +735,37 @@ rsp_t gsmGetCmdRsp (void)
    /* fetches the next command response; returns empty response if there are no more
       responses left */
 
-   uint8_t rspAux[TKN_LEN+20];      /* auxiliary buffer for storing the response */
-   rsp_t dummy;
-   uint16_t rspSiz;
+   uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE]; /* aux buffer for the rsp str */
+   rsp_t dummy;                               /* aux rsp variable */
+   uint16_t rspSiz;                           /* rsp size */
 
    dummy.cmd[0] = '\0';
    dummy.par[0] = '\0';
+
+   /* If the rspVlRb is not empty, pop a response and separate it into cmd and
+    * par strings by looking for the '.' char which acts as a separator.
+    */
 
    if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
 
       rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_LEN+20);
 
-      /* Find the dot which separated command from parameter and parse the */
+      /* Find the dot which separated command from parameter and separate the
       /* raw response into command and parameter strings */
 
       uint8_t dotPos = 0;
       uint8_t i;
 
-      for (i = 0; i < TKN_LEN+20; i++){
+      for (i = 0; i < (TKN_CMD_SIZE+TKN_PAR_SIZE); i++){
          if ('.' == rspAux[i]){
             dotPos = i;
             break;
          }
       }
+
+      /* Copy the cmd and par strings in the respective parts of the dummy rsp
+       * variable.
+       */
 
       if(0 != dotPos){
 
@@ -824,19 +793,23 @@ rsp_t gsmGetUrc (void)
    /* fetches the next URC; returns empty response if there are no more
       responses left */
 
-   uint8_t urcAux[TKN_LEN+20];      /* auxiliary buffer for storing the urc */
-   rsp_t dummy;
-   uint8_t urcSiz;
+   uint8_t urcAux[TKN_CMD_SIZE+TKN_PAR_SIZE]; /* aux buffer for the urc str */
+   rsp_t dummy;                               /* aux rsp variable */
+   uint16_t urcSiz;                           /* urc size */
 
    dummy.cmd[0] = '\0';
    dummy.par[0] = '\0';
 
+   /* If the urcVlRb is not empty, pop an urc and separate it into cmd and par
+    * strings by looking for the '.' char which acts as a separator.
+    */
+
    if(0 == VLRingBuffer_IsEmpty(&urcVlRb)){
 
-      urcSiz = VLRingBuffer_Pop(&urcVlRb, (void *) urcAux, TKN_LEN+20);
+      urcSiz = VLRingBuffer_Pop(&urcVlRb, (void *) urcAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
 
-      /* Find the dot which separates command from parameter and parse the */
-      /* raw response into command and parameter strings */
+      /* Find the dot which separates command from parameter and separate the
+      /* raw urc into command and parameter strings */
 
       uint8_t dotPos = 0;
       uint8_t i;
@@ -847,6 +820,10 @@ rsp_t gsmGetUrc (void)
             break;
          }
       }
+
+      /* Copy the cmd and par strings in the respective parts of the dummy rsp
+       * variable.
+       */
 
       if(0 != dotPos){
 
