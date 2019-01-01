@@ -137,7 +137,7 @@ static void ciaaMobile_sendSMS_f (void)
 
    static uint8_t smsText[160+1];
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -178,14 +178,14 @@ static void ciaaMobile_sendSMS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd(smsCmd);
+               result = gsmSendCmd(smsCmd);
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -196,14 +196,14 @@ static void ciaaMobile_sendSMS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd(smsText);
+               result = gsmSendCmd(smsText);
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -221,12 +221,12 @@ static void ciaaMobile_sendSMS_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -246,7 +246,7 @@ static void ciaaMobile_readRecSMS_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    static uint8_t strSmsRead[15]; /* string to assemble the SMS read command*/
    uint8_t strAux[5];      /* auxiliary string */
@@ -286,14 +286,14 @@ static void ciaaMobile_readRecSMS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CSDH=1\r");
+               result = gsmSendCmd("AT+CSDH=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -304,14 +304,14 @@ static void ciaaMobile_readRecSMS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd(strSmsRead);
+               result = gsmSendCmd(strSmsRead);
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -328,15 +328,15 @@ static void ciaaMobile_readRecSMS_f (void)
 
          if(OK == error_out.error_formula){
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(((SMS_rec *)frmOutput)->meta, resp.param, strlen(resp.param));
-            ((SMS_rec *)frmOutput)->meta[strlen(resp.param)] = '\0';
+            rsp = gsmGetCmdRsp();
+            strncpy(((SMS_rec *)frmOutput)->meta, rsp.par, strlen(rsp.par));
+            ((SMS_rec *)frmOutput)->meta[strlen(rsp.par)] = '\0';
 
-            resp = getCmdResp();
-            strncpy(((SMS_rec *)frmOutput)->text, resp.param, strlen(resp.param));
-            ((SMS_rec *)frmOutput)->text[strlen(resp.param)] = '\0';
+            rsp = gsmGetCmdRsp();
+            strncpy(((SMS_rec *)frmOutput)->text, rsp.par, strlen(rsp.par));
+            ((SMS_rec *)frmOutput)->text[strlen(rsp.par)] = '\0';
 
             SMS_print printout;
 
@@ -353,12 +353,12 @@ static void ciaaMobile_readRecSMS_f (void)
 
          else{
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(error_out.error_command.command, resp.cmd, 19);
+            rsp = gsmGetCmdRsp();
+            strncpy(error_out.error_command.command, rsp.cmd, 19);
             error_out.error_command.command[20] = '\0';
-            strncpy(error_out.error_command.parameter, resp.param, 149);
+            strncpy(error_out.error_command.parameter, rsp.par, 149);
             error_out.error_command.parameter[150] = '\0';
 
             frmCback(error_out, frmOutput);
@@ -381,7 +381,7 @@ static void ciaaMobile_listRecSMS_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -404,14 +404,14 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CSDH=1\r");
+               result = gsmSendCmd("AT+CSDH=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -422,14 +422,14 @@ static void ciaaMobile_listRecSMS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT+CMGL=\"ALL\"\r");
+               result = gsmSendCmd("AT+CMGL=\"ALL\"\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -447,12 +447,12 @@ static void ciaaMobile_listRecSMS_f (void)
          if(OK == error_out.error_formula){
 
             uint8_t i = 0;
-            uint8_t respNo;
+            uint8_t rspNo;
             uint8_t auxtext[4]; // ERASE LATER, FOR DEBUG ONLY
 
-            ATresp resp;
+            rsp_t rsp;
             SMS_rec * target = (SMS_rec *)frmOutput;
-            respNo = getNoCmdResp();
+            rspNo = gsmGetNoCmdRsp();
 
             // DEBUG ERASE LATER
 
@@ -461,32 +461,32 @@ static void ciaaMobile_listRecSMS_f (void)
             debug(auxtext);
             debug("\r\n");
             debug(">>>interf<<<   CANTIDAD DE SMS: ");
-            itoa((respNo-1)/2, auxtext, 10);
+            itoa((rspNo-1)/2, auxtext, 10);
             debug(auxtext);
             debug("\r\n");
 
             // DEBUG ERASE LATER
 
-            if(target->meta[0] < ((respNo-1)/2)){
+            if(target->meta[0] < ((rspNo-1)/2)){
                error_out.error_formula = ERR_WRAP;
                debug(">>>interf<<<   No hay suficiente espacio para los mensajes!\r\n");
             }
 
             else {
 
-               if(1 == respNo){debug(">>>interf<<<   No hay SMSs!\r\n");}
+               if(1 == rspNo){debug(">>>interf<<<   No hay SMSs!\r\n");}
 
                else{
 
-                  for(i = 0; i < (respNo-1)/2; i++){
+                  for(i = 0; i < (rspNo-1)/2; i++){
 
-                     resp = getCmdResp();
-                     strncpy((target+i)->meta, resp.param, strlen(resp.param));
-                     (target+i)->meta[strlen(resp.param)] = '\0';
+                     rsp = gsmGetCmdRsp();
+                     strncpy((target+i)->meta, rsp.par, strlen(rsp.par));
+                     (target+i)->meta[strlen(rsp.par)] = '\0';
 
-                     resp = getCmdResp();
-                     strncpy((target+i)->text, resp.param, strlen(resp.param));
-                     (target+i)->text[strlen(resp.param)] = '\0';
+                     rsp = gsmGetCmdRsp();
+                     strncpy((target+i)->text, rsp.par, strlen(rsp.par));
+                     (target+i)->text[strlen(rsp.par)] = '\0';
 
                   }
 
@@ -509,12 +509,12 @@ static void ciaaMobile_listRecSMS_f (void)
 
          else{
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(error_out.error_command.command, resp.cmd, 19);
+            rsp = gsmGetCmdRsp();
+            strncpy(error_out.error_command.command, rsp.cmd, 19);
             error_out.error_command.command[20] = '\0';
-            strncpy(error_out.error_command.parameter, resp.param, 149);
+            strncpy(error_out.error_command.parameter, rsp.par, 149);
             error_out.error_command.parameter[150] = '\0';
 
             frmCback(error_out, frmOutput);
@@ -540,7 +540,7 @@ static void ciaaMobile_delSMS_f (void)
    uint8_t aux[5]; /* aux buffer */
    static uint8_t smsDel[20];  /* holds the str of the sms del cmd including paramenters */
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -572,14 +572,14 @@ static void ciaaMobile_delSMS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd(smsDel);
+               result = gsmSendCmd(smsDel);
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -597,12 +597,12 @@ static void ciaaMobile_delSMS_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -621,7 +621,7 @@ static void ciaaMobile_startUp_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -633,7 +633,7 @@ static void ciaaMobile_startUp_f (void)
 
          debug(">>>interf<<<   Inicializando ciaaMobile...\r\n");
 
-         initEngine();
+         gsmInitEngine();
 
          runState = ATCMD1;
          frmState = PROC;
@@ -646,14 +646,14 @@ static void ciaaMobile_startUp_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT\r");
+               result = gsmSendCmd("AT\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -664,14 +664,14 @@ static void ciaaMobile_startUp_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT+CMEE=2\r");
+               result = gsmSendCmd("AT+CMEE=2\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD3;}
@@ -682,14 +682,14 @@ static void ciaaMobile_startUp_f (void)
 
             case ATCMD3:
 
-               result = sendATcmd("AT+CSCS=\"GSM\"\r");
+               result = gsmSendCmd("AT+CSCS=\"GSM\"\r");
                if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD3RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD4;}
@@ -700,14 +700,14 @@ static void ciaaMobile_startUp_f (void)
 
             case ATCMD4:
 
-               result = sendATcmd("AT+CMGF=1\r");
+               result = gsmSendCmd("AT+CMGF=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD4RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD4RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -725,12 +725,12 @@ static void ciaaMobile_startUp_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -755,7 +755,7 @@ static void ciaaMobile_startGPRS_f (void)
 
    static uint8_t APNstring[100];  /* holds the str for the AT+CSTT command */
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -789,14 +789,14 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CIPSHUT\r");
+               result = gsmSendCmd("AT+CIPSHUT\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -807,14 +807,14 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT+CIPMODE=1\r");
+               result = gsmSendCmd("AT+CIPMODE=1\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD3;}
@@ -825,14 +825,14 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD3:
 
-               result = sendATcmd(APNstring);
+               result = gsmSendCmd(APNstring);
                if(OK_CMD_SENT == result){runState = ATCMD3RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD3RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD4;}
@@ -843,14 +843,14 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD4:
 
-               result = sendATcmd("AT+CIICR\r");
+               result = gsmSendCmd("AT+CIICR\r");
                if(OK_CMD_SENT == result){runState = ATCMD4RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD4RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD5;}
@@ -861,14 +861,14 @@ static void ciaaMobile_startGPRS_f (void)
 
             case ATCMD5:
 
-               result = sendATcmd("AT+CIFSR\r");
+               result = gsmSendCmd("AT+CIFSR\r");
                if(OK_CMD_SENT == result){runState = ATCMD5RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD5RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -886,12 +886,12 @@ static void ciaaMobile_startGPRS_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -912,7 +912,7 @@ static void ciaaMobile_openPort_f (void)
 
    static uint8_t port_string[100];  /* str for the AT+CIPSTART command */
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -952,14 +952,14 @@ static void ciaaMobile_openPort_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CIPCLOSE=0\r");
+               result = gsmSendCmd("AT+CIPCLOSE=0\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){runState = ATCMD2;}
@@ -973,14 +973,14 @@ static void ciaaMobile_openPort_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd(port_string);
+               result = gsmSendCmd(port_string);
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -998,12 +998,12 @@ static void ciaaMobile_openPort_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -1011,7 +1011,7 @@ static void ciaaMobile_openPort_f (void)
 
          else{
 
-            changeSerialMode(DATA_MODE);
+            gsmSetSerialMode(DATA_MODE);
 
          }
 
@@ -1028,7 +1028,7 @@ static void ciaaMobile_closePort_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -1049,14 +1049,14 @@ static void ciaaMobile_closePort_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CIPCLOSE=0\r");
+               result = gsmSendCmd("AT+CIPCLOSE=0\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -1074,18 +1074,18 @@ static void ciaaMobile_closePort_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
          }
 
-         changeSerialMode(COMMAND_MODE);
+         gsmSetSerialMode(COMMAND_MODE);
 
          frmCback(error_out, 0);
          frmState = IDLE;
@@ -1100,7 +1100,7 @@ static void ciaaMobile_getSignalQuality_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -1121,14 +1121,14 @@ static void ciaaMobile_getSignalQuality_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CSQ\r");
+               result = gsmSendCmd("AT+CSQ\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -1145,18 +1145,18 @@ static void ciaaMobile_getSignalQuality_f (void)
 
          if(OK == error_out.error_formula){
 
-            ATresp resp;
+            rsp_t rsp;
             uint8_t auxStr[5];    /* auxiliary string for response parsing*/
             auxStr[0] = '\0';
             uint8_t i;
             uint8_t commaPos = 0; /* position of the comma in the response */
 
-            resp = getCmdResp();  /* get the signal quality response */
+            rsp = gsmGetCmdRsp();  /* get the signal quality response */
 
             /* Search for the comma in the response, which is in the form RSSI,BER */
 
-            for(i = 0; i < (strlen(resp.param)-1); i++){
-               if(',' == resp.param[i]){commaPos = i; break;}
+            for(i = 0; i < (strlen(rsp.par)-1); i++){
+               if(',' == rsp.par[i]){commaPos = i; break;}
             }
 
             /* Copy the string of RSSI and convert it into a integer. Then, use the
@@ -1167,7 +1167,7 @@ static void ciaaMobile_getSignalQuality_f (void)
              * will give a reading of positive 99. This should be interpreted by
              * the user as an error result. */
 
-            strncpy(auxStr,&resp.param[0],commaPos);
+            strncpy(auxStr,&rsp.par[0],commaPos);
             auxStr[commaPos] = '\0';
 
             ((signal_quality_s *)frmOutput)->rssi = atoi(auxStr);
@@ -1196,8 +1196,8 @@ static void ciaaMobile_getSignalQuality_f (void)
             /* Copy the string of BER and convert it to a number. The module reports
              * RXQUAL values as per table in GSM 05.08 [20] subclause 7.2.4 */
 
-            strncpy(auxStr,&resp.param[commaPos+1],strlen(resp.param)-commaPos-1);
-            auxStr[strlen(resp.param)-commaPos-1] = '\0';
+            strncpy(auxStr,&rsp.par[commaPos+1],strlen(rsp.par)-commaPos-1);
+            auxStr[strlen(rsp.par)-commaPos-1] = '\0';
 
             ((signal_quality_s *)frmOutput)->ber = atoi(auxStr);
 
@@ -1217,12 +1217,12 @@ static void ciaaMobile_getSignalQuality_f (void)
 
          else{
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(error_out.error_command.command, resp.cmd, 19);
+            rsp = gsmGetCmdRsp();
+            strncpy(error_out.error_command.command, rsp.cmd, 19);
             error_out.error_command.command[20] = '\0';
-            strncpy(error_out.error_command.parameter, resp.param, 149);
+            strncpy(error_out.error_command.parameter, rsp.par, 149);
             error_out.error_command.parameter[150] = '\0';
 
             frmCback(error_out, frmOutput);
@@ -1245,7 +1245,7 @@ static void ciaaMobile_powerGNSS_f (void)
 
    static uint8_t cmdStr[14]; /* string to determine ON or OFF command */
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -1275,14 +1275,14 @@ static void ciaaMobile_powerGNSS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd(cmdStr);
+               result = gsmSendCmd(cmdStr);
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -1300,12 +1300,12 @@ static void ciaaMobile_powerGNSS_f (void)
          if(OK != error_out.error_formula){
             if(ERR_GSM == error_out.error_formula){
 
-               ATresp resp;
+               rsp_t rsp;
 
-               resp = getCmdResp();
-               strncpy(error_out.error_command.command, resp.cmd, 19);
+               rsp = gsmGetCmdRsp();
+               strncpy(error_out.error_command.command, rsp.cmd, 19);
                error_out.error_command.command[20] = '\0';
-               strncpy(error_out.error_command.parameter, resp.param, 149);
+               strncpy(error_out.error_command.parameter, rsp.par, 149);
                error_out.error_command.parameter[150] = '\0';
 
             }
@@ -1326,7 +1326,7 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
    switch(frmState) {
 
@@ -1347,14 +1347,14 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CGNSINF\r");
+               result = gsmSendCmd("AT+CGNSINF\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){frmState = WRAP;}
@@ -1371,13 +1371,13 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
          if(OK == error_out.error_formula){
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp(); /* Get the navigation info string */
+            rsp = gsmGetCmdRsp(); /* Get the navigation info string */
 
             /* Copy the navigation info string to the provided output */
 
-            strncpy((uint8_t *)frmOutput,&resp.param[0],95);
+            strncpy((uint8_t *)frmOutput,&rsp.par[0],95);
             ((uint8_t *)frmOutput)[94] = '\0';
 
             debug(">>>interf<<<   NavInfo String:");
@@ -1388,12 +1388,12 @@ static void ciaaMobile_getGNSSNavInfo_f (void)
 
          else{
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(error_out.error_command.command, resp.cmd, 19);
+            rsp = gsmGetCmdRsp();
+            strncpy(error_out.error_command.command, rsp.cmd, 19);
             error_out.error_command.command[20] = '\0';
-            strncpy(error_out.error_command.parameter, resp.param, 149);
+            strncpy(error_out.error_command.parameter, rsp.par, 149);
             error_out.error_command.parameter[150] = '\0';
 
          }
@@ -1414,10 +1414,10 @@ void ciaaMobile_checkGSMGPRS_f (void)
    static runStatus runState = NOCMD;
    static error_user error_out;
 
-   FSMresult result;
+   fsmEvent_e result;
 
-   static ATresp respGSM;
-   static ATresp respGPRS;
+   static rsp_t rspGSM;
+   static rsp_t rspGPRS;
 
    switch(frmState) {
 
@@ -1438,18 +1438,18 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             case ATCMD1:
 
-               result = sendATcmd("AT+CREG?\r");
+               result = gsmSendCmd("AT+CREG?\r");
                if(OK_CMD_SENT == result){runState = ATCMD1RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD1RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){
-                     respGSM = getCmdResp(); /* get the GSM response */
+                     rspGSM = gsmGetCmdRsp(); /* get the GSM response */
                      runState = ATCMD2;
                   }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
@@ -1459,18 +1459,18 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             case ATCMD2:
 
-               result = sendATcmd("AT+CGATT?\r");
+               result = gsmSendCmd("AT+CGATT?\r");
                if(OK_CMD_SENT == result){runState = ATCMD2RESP;}
                else{error_out.error_formula = ERR_PROC; frmState = WRAP;}
                break;
 
             case ATCMD2RESP:
 
-               result = processToken();
+               result = gsmProcessTkn();
                if(NO_UPDATE != result){
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
                   else if(OK_CLOSE == result){
-                     respGPRS = getCmdResp(); /* get the GPRS response */
+                     rspGPRS = gsmGetCmdRsp(); /* get the GPRS response */
                      frmState = WRAP;
                   }
                   else if(ERR_MSG_CLOSE == result){{error_out.error_formula = ERR_GSM; frmState = WRAP;};}
@@ -1488,7 +1488,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
             /* Copy the GSM info string to the provided output */
 
-            if('1' == respGSM.param[3]){
+            if('1' == rspGSM.par[3]){
                ((statusGSMGPRS_s *)frmOutput)->gsm = true;
             }
             else{
@@ -1498,12 +1498,12 @@ void ciaaMobile_checkGSMGPRS_f (void)
             /* Print out the GSM string */
 
             debug(">>>interf<<<   GSM String:");
-            debug(&respGSM.param[0]);
+            debug(&rspGSM.par[0]);
             debug(" \r\n");
 
             /* Copy the GPRS info string to the provided output */
 
-            if('1' == respGPRS.param[1]){
+            if('1' == rspGPRS.par[1]){
                ((statusGSMGPRS_s *)frmOutput)->gprs = true;
             }
             else{
@@ -1513,19 +1513,19 @@ void ciaaMobile_checkGSMGPRS_f (void)
             /* Print out the GPRS string */
 
             debug(">>>interf<<<   GPRS String:");
-            debug(&respGPRS.param[0]);
+            debug(&rspGPRS.par[0]);
             debug(" \r\n");
 
          }
 
          else{
 
-            ATresp resp;
+            rsp_t rsp;
 
-            resp = getCmdResp();
-            strncpy(error_out.error_command.command, resp.cmd, 19);
+            rsp = gsmGetCmdRsp();
+            strncpy(error_out.error_command.command, rsp.cmd, 19);
             error_out.error_command.command[20] = '\0';
-            strncpy(error_out.error_command.parameter, resp.param, 149);
+            strncpy(error_out.error_command.parameter, rsp.par, 149);
             error_out.error_command.parameter[150] = '\0';
 
          }
@@ -1545,7 +1545,7 @@ void ciaaMobile_checkGSMGPRS_f (void)
 
 void ciaaMobile_SysTick_Handler (void)
 {
-   if(toutCnt > 0) toutCnt--;
+   if(!gsmToutCntZero) gsmDecToutCnt();
    if(sysupd_count > 0) sysupd_count--;
 
    return;
@@ -1674,15 +1674,15 @@ void ciaaMobile_startUp (void * (*cback) (error_user, void *))
 
 void ciaaMobile_setUrcCback (void (*cback) (uint8_t const * const cmd, uint8_t const * const par))
 {
-   changeUrcMode(CBACK_MODE);
-   setUrcCback(cback);
+   gsmSetUrcMode(CBACK_MODE);
+   gsmSetUrcCback(cback);
    return;
 }
 
 void ciaaMobile_setUrcManual (void)
 {
-   changeUrcMode(MANUAL_MODE);
-   setUrcCback(0);
+   gsmSetUrcMode(MANUAL_MODE);
+   gsmSetUrcCback(0);
    return;
 }
 
@@ -1696,12 +1696,12 @@ void ciaaMobile_sysUpdate (void)
 
       if (IDLE == frmState){
 
-         if(COMMAND_MODE == checkSerialMode()){
-            processToken();
+         if(COMMAND_MODE == gsmGetSerialMode()){
+            gsmProcessTkn();
          }
 
-         else if (DATA_MODE == checkSerialMode()){
-            printData(); // PARA PRUEBA; CAMBIAR DESPUES A ALGO QUE LE PASE EL STREAM AL USUARIO
+         else if (DATA_MODE == gsmGetSerialMode()){
+            gsmPrintData(); // PARA PRUEBA; CAMBIAR DESPUES A ALGO QUE LE PASE EL STREAM AL USUARIO
          }
 
       }

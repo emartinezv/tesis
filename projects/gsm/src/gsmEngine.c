@@ -177,10 +177,10 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
 {
-   static uint8_t currCmd[TKN_CMD_SIZ]; /* command being currently executed */
-   static uint8_t currPar[TKN_PAR_SIZ]; /* parameter of the current command */
+   static uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
+   static uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
 
-   uint8_t rspAux[TKN_CMD_SIZ+TKN_PAR_SIZ+1];  /* auxiliary buffer for storing
+   uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1];  /* auxiliary buffer for storing
                                                   the latest response */
 
    switch(fsmState){
@@ -374,9 +374,9 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
             /* Search in the recognized URCs list and log the URC if correct */
 
-            if(1 == URCSearch(cmd)){
+            if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               recordURC (cmd, par);
+               gsmRecordUrc(cmd, par);
 
                return OK_URC;
             }
@@ -623,9 +623,11 @@ fsmEvent_e gsmProcessTkn(void)
 
 }
 
-/** @brief Decrements the timeout counter
-*
-*/
+uint8_t gsmToutCntZero(void){
+
+   return(toutCnt == 0);
+
+}
 
 void gsmDecToutCnt(void){
 
@@ -692,13 +694,13 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 
    strncat(cmdStrCla, &aux, 1);
 
-   uint8_t cmd[TKN_CMD_SIZ];   /* AT command  */
-   uint8_t par[TKN_PAR_SIZ];   /* AT command arguments */
+   uint8_t cmd[TKN_CMD_SIZE];   /* AT command  */
+   uint8_t par[TKN_PAR_SIZE];   /* AT command arguments */
 
    /* Parse AT cmd and check if it is valid. */
 
    sending = gsmParseTkn(cmdStrCla, cmd, par, strlen(cmdStrCla));
-   idx = commSearch(cmd); /* search for command */
+   idx = gsmCmdSearch(cmd); /* search for command */
 
    /* If the command is valid, send it through the serial port and then update
     * the FSM by invoking gsmUpdateFsm. */
@@ -714,7 +716,7 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 
       }
 
-      result = updateFSM(sending,cmd,par,idx); /* update FSM */
+      result = gsmUpdateFsm(sending,cmd,par,idx); /* update FSM */
 
    }
 
@@ -748,7 +750,7 @@ rsp_t gsmGetCmdRsp (void)
 
    if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
 
-      rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_LEN+20);
+      rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
 
       /* Find the dot which separated command from parameter and separate the
       /* raw response into command and parameter strings */

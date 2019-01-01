@@ -517,7 +517,7 @@ void console_gprs (void)
             ciaaMobile_sysUpdate();
          }
 
-         while(DATA_MODE == checkSerialMode()){
+         while(DATA_MODE == gsmGetSerialMode()){
 
             uint8_t data_char;
 
@@ -614,7 +614,7 @@ void console_urc (void)
 {
    uint8_t instruction = 0;
 
-   ATresp urc;
+   rsp_t urc;
 
    while ('S' != instruction){
 
@@ -634,13 +634,13 @@ void console_urc (void)
 
             case '1':
 
-            urc = getURC();
+            urc = gsmGetUrc();
 
             if(urc.cmd[0] != '\0'){
                dbgPrint("\r\nURC: ");
                dbgPrint(urc.cmd);
                dbgPrint("(");
-               dbgPrint(urc.param);
+               dbgPrint(urc.par);
                dbgPrint(")\r\n");
             }
             else{

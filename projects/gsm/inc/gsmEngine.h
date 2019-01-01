@@ -140,6 +140,12 @@ void gsmInitEngine(void);
 
 fsmEvent_e gsmProcessTkn(void);
 
+/** @brief Checks if timeout counter has reached zero
+*
+*/
+
+uint8_t gsmToutCntZero(void);
+
 /** @brief Decrements the timeout counter
 *
 */
