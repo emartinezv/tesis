@@ -50,7 +50,7 @@
    #define debug(msg)
 #endif
 
-#define DEBUG_NOTIMEOUT // ignore command timeouts
+//#define DEBUG_NOTIMEOUT // ignore command timeouts
 
 /*==================[global data]============================================*/
 
@@ -179,6 +179,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 {
    static uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
    static uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
+   static uint8_t idxSave;               /* save index of current command */
 
    uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1];  /* auxiliary buffer for storing
                                                   the latest response */
@@ -198,6 +199,9 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
             toutCnt = commands[idx].timeout; /* load timeout counter for the
                                                 specific command */
+
+            idxSave = idx;                   /* save command index */
+
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
             /* Initialize current command buffers cmd and par and progress
@@ -418,7 +422,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               if(NULL != strstr(commands[idx].sucRsp,cmd)){
+               if(NULL != strstr(commands[idxSave].sucRsp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -430,7 +434,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               else if(NULL != strstr(commands[idx].errRsp,cmd)){
+               else if(NULL != strstr(commands[idxSave].errRsp,cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 

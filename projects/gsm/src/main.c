@@ -44,7 +44,7 @@
 
 /*==================[internal data declaration]==============================*/
 
-static uint8_t deleteall = 0;
+static uint8_t deleteAll = 0;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -58,20 +58,20 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-void * cb (error_user, void *);
+void * cb (errorUser_s, void *);
 
-void * cbempty (error_user, void *);
+void * cbempty (errorUser_s, void *);
 
-void * cbgsmgprs (error_user, void *);
+void * cbgsmgprs (errorUser_s, void *);
 
-void * cbprint (error_user, void *);
+void * cbprint (errorUser_s, void *);
 
 /*==================[internal data definition]===============================*/
 
 /* TIMING COUNTERS */
 
 /** @brief used for delay counter */
-static uint32_t pausems_count = DELAY_INIT;
+static uint32_t pausemsCount = DELAY_INIT;
 
 /*==================[external data definition]===============================*/
 
@@ -90,8 +90,8 @@ static void initHardware(void)
 
 static void pausems(uint32_t t)
 {
-   pausems_count = t;
-   while (pausems_count != 0) {
+   pausemsCount = t;
+   while (pausemsCount != 0) {
       __WFI();
    }
 }
@@ -100,14 +100,14 @@ static void pausems(uint32_t t)
 /*                             Callback functions                            */
 /*---------------------------------------------------------------------------*/
 
-void * cbempty (error_user error_in, void * input)
+void * cbempty (errorUser_s error_in, void * input)
 {
    dbgPrint("Funcion cbempty ejecutada\r\n");
 
-   if(OK != error_in.error_formula){
+   if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
 
-      switch(error_in.error_formula){
+      switch(error_in.errorFrm){
 
          case ERR_INIT:
 
@@ -124,9 +124,9 @@ void * cbempty (error_user error_in, void * input)
          case ERR_GSM:
 
             dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.error_command.command);
+            dbgPrint(error_in.errorCmd.cmd);
             dbgPrint("(");
-            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(error_in.errorCmd.par);
             dbgPrint(") ---\r\n");
 
             break;
@@ -150,12 +150,12 @@ void * cbempty (error_user error_in, void * input)
    return 0;
 }
 
-void * cbled (error_user error_in, void * input)
+void * cbled (errorUser_s error_in, void * input)
 {
-   if(OK != error_in.error_formula){
+   if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
 
-      switch(error_in.error_formula){
+      switch(error_in.errorFrm){
 
          case ERR_INIT:
 
@@ -172,9 +172,9 @@ void * cbled (error_user error_in, void * input)
          case ERR_GSM:
 
             dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.error_command.command);
+            dbgPrint(error_in.errorCmd.cmd);
             dbgPrint("(");
-            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(error_in.errorCmd.par);
             dbgPrint(") ---\r\n");
 
             break;
@@ -198,7 +198,7 @@ void * cbled (error_user error_in, void * input)
    dbgPrint("Actualizando LEDs...\r\n");
 
    uint8_t i = 0;
-   SMS_rec * target = (SMS_rec *)input;
+   smsRec_s * target = (smsRec_s *)input;
 
    for(i = 0; (target+i)->meta[0] != '\0'; i++){
 
@@ -216,12 +216,12 @@ void * cbled (error_user error_in, void * input)
    return;
 }
 
-void * cbprint (error_user error_in, void * input)
+void * cbprint (errorUser_s error_in, void * input)
 {
-   if(OK != error_in.error_formula){
+   if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
 
-      switch(error_in.error_formula){
+      switch(error_in.errorFrm){
 
          case ERR_INIT:
 
@@ -238,9 +238,9 @@ void * cbprint (error_user error_in, void * input)
          case ERR_GSM:
 
             dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.error_command.command);
+            dbgPrint(error_in.errorCmd.cmd);
             dbgPrint("(");
-            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(error_in.errorCmd.par);
             dbgPrint(") ---\r\n");
 
             break;
@@ -263,19 +263,19 @@ void * cbprint (error_user error_in, void * input)
 
    dbgPrint("Imprimiendo SMS...\r\n\r\n");
 
-   if(OK != error_in.error_formula){
+   if(OK != error_in.errorFrm){
       dbgPrint("Error en la lectura de SMS!\r\n");
-      dbgPrint(error_in.error_command.command);
+      dbgPrint(error_in.errorCmd.cmd);
       dbgPrint("(");
-      dbgPrint(error_in.error_command.parameter);
+      dbgPrint(error_in.errorCmd.par);
       dbgPrint(")\r\n");
    }
 
    else{
 
       uint8_t i = 0;
-      SMS_rec * target = ((SMS_print *)input)->firstMsg;
-      uint8_t noMsg = ((SMS_print *)input)->noMsg;
+      smsRec_s * target = ((smsPrint_s *)input)->firstMsg;
+      uint8_t noMsg = ((smsPrint_s *)input)->noMsg;
 
       for(i = 0; i < noMsg; i++){
 
@@ -283,7 +283,7 @@ void * cbprint (error_user error_in, void * input)
          dbgPrint("\r\n");
 
          if(0 != strstr((target+i)->text,"borrar")){
-            deleteall = 1;
+            deleteAll = 1;
          }
 
       }
@@ -295,12 +295,12 @@ void * cbprint (error_user error_in, void * input)
    return;
 }
 
-void * cbgsmgprs (error_user error_in, void * input)
+void * cbgsmgprs (errorUser_s error_in, void * input)
 {
-   if(OK != error_in.error_formula){
+   if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
 
-      switch(error_in.error_formula){
+      switch(error_in.errorFrm){
 
          case ERR_INIT:
 
@@ -317,9 +317,9 @@ void * cbgsmgprs (error_user error_in, void * input)
          case ERR_GSM:
 
             dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.error_command.command);
+            dbgPrint(error_in.errorCmd.cmd);
             dbgPrint("(");
-            dbgPrint(error_in.error_command.parameter);
+            dbgPrint(error_in.errorCmd.par);
             dbgPrint(") ---\r\n");
 
             break;
@@ -342,14 +342,14 @@ void * cbgsmgprs (error_user error_in, void * input)
 
    else{
 
-      if(true == ((statusGSMGPRS_s *)input)->gsm){
+      if(true == ((connStatus_s *)input)->gsm){
          dbgPrint("\r\n Conectado a red GSM\r\n");
       }
       else{
          dbgPrint("\r\n No conectado a red GSM\r\n");
       }
 
-      if(true == ((statusGSMGPRS_s *)input)->gprs){
+      if(true == ((connStatus_s *)input)->gprs){
          dbgPrint("\r\n Conectado a servicio GPRS\r\n");
       }
       else{
@@ -381,15 +381,15 @@ void console_sms (void)
 {
    uint8_t instruction = 0;
 
-   SMS_send msg = {"1151751809","Hola mundo!"};
-   SMS_rec msgList[SMS_READ_SIZ];
-   SMS_del msgDel = {1, 4};
-   SMS_rec recMsg;
-   SMS_rd_params params = {1, NOCHANGE};
+   smsOut_s msg = {"1151751809","Hola mundo!"};
+   smsRec_s msgList[SMS_READ_SIZ];
+   smsDel_s msgDel = {1, 4};
+   smsRec_s recMsg;
+   smsRdPars_s params = {1, NOCHANGE};
 
    while ('S' != instruction){
 
-      if(ciaaMobile_isIdle()){
+      if(gsmIsIdle()){
 
          dbgPrint("\r\n\r\n>>> CONSOLA SMS <<< \r\n\r\n");
 
@@ -406,25 +406,25 @@ void console_sms (void)
 
             case '1':
 
-            ciaaMobile_sendSMS(&msg, cbempty);
+            gsmSmsSend(&msg, cbempty);
 
             break;
 
             case '2':
 
-            ciaaMobile_listRecSMS(&msgList[0], SMS_READ_SIZ, cbprint);
+            gsmSmsList(&msgList[0], SMS_READ_SIZ, cbprint);
 
             break;
 
             case '3':
 
-            ciaaMobile_delSMS(&msgDel, cbempty);
+            gsmSmsDel(&msgDel, cbempty);
 
             break;
 
             case '4':
 
-            ciaaMobile_readRecSMS(&recMsg, &params, cbprint);
+            gsmSmsRead(&recMsg, &params, cbprint);
 
             break;
 
@@ -439,13 +439,13 @@ void console_sms (void)
 
          }
 
-         while(!ciaaMobile_isIdle()){
-            ciaaMobile_sysUpdate();
+         while(!gsmIsIdle()){
+            gsmProcess();
          }
 
       }
 
-      ciaaMobile_sysUpdate();
+      gsmProcess();
 
    }
 
@@ -457,13 +457,13 @@ void console_gprs (void)
 {
    uint8_t instruction = 0;
 
-   APN_usr_pwd APN = {"datos.personal.com","datos","datos"};
+   apnUserPwd_s APN = {"datos.personal.com","datos","datos"};
    port_s port1 = {TCP, "104.236.225.217","2399"};
    port_s port2 = {UDP, "104.236.225.217","2399"};
 
    while ('S' != instruction){
 
-      if(ciaaMobile_isIdle()){
+      if(gsmIsIdle()){
 
          dbgPrint("\r\n\r\n>>> CONSOLA GPRS <<< \r\n\r\n");
 
@@ -480,25 +480,25 @@ void console_gprs (void)
 
             case '1':
 
-            ciaaMobile_startGPRS(&APN, cbempty);
+            gsmGprsStart(&APN, cbempty);
 
             break;
 
             case '2':
 
-            ciaaMobile_openPort(&port1, cbempty);
+            gsmGprsOpenPort(&port1, cbempty);
 
             break;
 
             case '3':
 
-            ciaaMobile_openPort(&port2, cbempty);
+            gsmGprsOpenPort(&port2, cbempty);
 
             break;
 
             case '4':
 
-            ciaaMobile_closePort(cbempty);
+            gsmGprsClosePort(cbempty);
 
             break;
 
@@ -513,8 +513,8 @@ void console_gprs (void)
 
          }
 
-         while(!ciaaMobile_isIdle()){
-            ciaaMobile_sysUpdate();
+         while(!gsmIsIdle()){
+            gsmProcess();
          }
 
          while(DATA_MODE == gsmGetSerialMode()){
@@ -534,7 +534,7 @@ void console_gprs (void)
 
       }
 
-      ciaaMobile_sysUpdate();
+      gsmProcess();
 
    }
 
@@ -546,11 +546,11 @@ void console_gnss (void)
    uint8_t instruction = 0;
 
    uint8_t navInfo[95];
-   power_GNSS_e powerGNSS;
+   pwrGnss_e powerGNSS;
 
    while ('S' != instruction){
 
-      if(ciaaMobile_isIdle()){
+      if(gsmIsIdle()){
 
          dbgPrint("\r\n\r\n>>> CONSOLA GNSS <<< \r\n\r\n");
 
@@ -568,7 +568,7 @@ void console_gnss (void)
 
             powerGNSS = ON;
 
-            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+            gsmGnssPwr(&powerGNSS, cbempty);
 
             break;
 
@@ -576,13 +576,13 @@ void console_gnss (void)
 
             powerGNSS = OFF;
 
-            ciaaMobile_powerGNSS(&powerGNSS, cbempty);
+            gsmGnssPwr(&powerGNSS, cbempty);
 
             break;
 
             case '3':
 
-            ciaaMobile_getGNSSNavInfo(navInfo, cbempty);
+            gsmGnssGetData(navInfo, cbempty);
 
             break;
 
@@ -597,13 +597,13 @@ void console_gnss (void)
 
          }
 
-         while(!ciaaMobile_isIdle()){
-            ciaaMobile_sysUpdate();
+         while(!gsmIsIdle()){
+            gsmProcess();
          }
 
       }
 
-      ciaaMobile_sysUpdate();
+      gsmProcess();
 
    }
 
@@ -618,7 +618,7 @@ void console_urc (void)
 
    while ('S' != instruction){
 
-      if(ciaaMobile_isIdle()){
+      if(gsmIsIdle()){
 
          dbgPrint("\r\n\r\n>>> CONSOLA URC <<< \r\n\r\n");
 
@@ -651,13 +651,13 @@ void console_urc (void)
 
             case '2':
 
-            ciaaMobile_setUrcCback(cbUrc);
+            gsmSetUrcCbackMode(cbUrc);
 
             break;
 
             case '3':
 
-            ciaaMobile_setUrcManual();
+            gsmSetUrcManualMode();
 
             break;
 
@@ -672,13 +672,13 @@ void console_urc (void)
 
          }
 
-         while(!ciaaMobile_isIdle()){
-            ciaaMobile_sysUpdate();
+         while(!gsmIsIdle()){
+            gsmProcess();
          }
 
       }
 
-      ciaaMobile_sysUpdate();
+      gsmProcess();
 
    }
 
@@ -689,9 +689,9 @@ void console_urc (void)
 
 void SysTick_Handler(void)
 {
-   if(pausems_count > 0) pausems_count--;
+   if(pausemsCount > 0) pausemsCount--;
 
-   ciaaMobile_SysTick_Handler();
+   gsmSysTickHandler();
 }
 
 int main(void)
@@ -701,22 +701,22 @@ int main(void)
 
    uint8_t instruction;
 
-   signal_quality_s sigqual;
-   statusGSMGPRS_s status;
+   sigQual_s sigqual;
+   connStatus_s status;
 
    pausems(DELAY_INIT);
 
    dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
 
-   ciaaMobile_startUp(cbempty);
+   gsmStartUp(cbempty);
 
-   while(!ciaaMobile_isIdle()){
-      ciaaMobile_sysUpdate();
+   while(!gsmIsIdle()){
+      gsmProcess();
    }
 
    while (1){
 
-      if(ciaaMobile_isIdle()){
+      if(gsmIsIdle()){
 
          dbgPrint("\r\n>>> CONSOLA PRINCIPAL <<< \r\n\r\n");
 
@@ -758,13 +758,13 @@ int main(void)
 
             case '5':
 
-            ciaaMobile_getSignalQuality (&sigqual, cbempty);
+            gsmGetSigQual (&sigqual, cbempty);
 
             break;
 
             case '6':
 
-            ciaaMobile_checkGSMGPRS(&status, cbgsmgprs);
+            gsmCheckConn(&status, cbgsmgprs);
 
             break;
 
@@ -776,13 +776,13 @@ int main(void)
 
          }
 
-         while(!ciaaMobile_isIdle()){
-            ciaaMobile_sysUpdate();
+         while(!gsmIsIdle()){
+            gsmProcess();
          }
 
       }
 
-      ciaaMobile_sysUpdate();
+      gsmProcess();
 
    }
 
