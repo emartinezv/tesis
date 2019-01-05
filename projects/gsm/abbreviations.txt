@@ -19,4 +19,6 @@ current      --->   curr
 length       --->   len
 timeout      --->   tout
 count        --->   cnt
+index        --->   idx
+power        --->   pwr
 
