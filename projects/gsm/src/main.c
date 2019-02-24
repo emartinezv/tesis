@@ -261,30 +261,25 @@ void * cbprint (errorUser_s error_in, void * input)
 
    }
 
-   dbgPrint("Imprimiendo SMS...\r\n\r\n");
-
-   if(OK != error_in.errorFrm){
-      dbgPrint("Error en la lectura de SMS!\r\n");
-      dbgPrint(error_in.errorCmd.cmd);
-      dbgPrint("(");
-      dbgPrint(error_in.errorCmd.par);
-      dbgPrint(")\r\n");
-   }
-
    else{
 
+      dbgPrint("Imprimiendo SMS...\r\n\r\n");
+
       uint8_t i = 0;
-      smsRec_s * target = ((smsPrint_s *)input)->firstMsg;
-      uint8_t noMsg = ((smsPrint_s *)input)->noMsg;
+      smsRec_s * target = ((smsListRet_s *)input)->msgs;
+      uint8_t noMsg = ((smsListRet_s *)input)->noMsgs;
+
+      uint8_t auxtext[5];
+
+      dbgPrint("Nro de mensajes: ");
+      itoa(noMsg, auxtext, 10);
+      dbgPrint(auxtext);
+      dbgPrint("\r\n");
 
       for(i = 0; i < noMsg; i++){
 
          dbgPrint((target+i)->text);
          dbgPrint("\r\n");
-
-         if(0 != strstr((target+i)->text,"borrar")){
-            deleteAll = 1;
-         }
 
       }
 
@@ -382,10 +377,12 @@ void console_sms (void)
    uint8_t instruction = 0;
 
    smsOut_s msg = {"1151751809","Hola mundo!"};
+   smsConf_s conf;
    smsRec_s msgList[SMS_READ_SIZ];
    smsDel_s msgDel = {1, 4};
    smsRec_s recMsg;
-   smsRdPars_s params = {1, NOCHANGE};
+   smsReadPars_s parRead = {1, NOCHANGE};
+   smsListPars_s parList = {ALL, NOCHANGE, SMS_READ_SIZ};
 
    while ('S' != instruction){
 
@@ -406,13 +403,13 @@ void console_sms (void)
 
             case '1':
 
-            gsmSmsSend(&msg, cbempty);
+            gsmSmsSend(&msg, &conf, cbempty);
 
             break;
 
             case '2':
 
-            gsmSmsList(&msgList[0], SMS_READ_SIZ, cbprint);
+            gsmSmsList(&msgList[0], &parList, cbprint);
 
             break;
 
@@ -424,7 +421,7 @@ void console_sms (void)
 
             case '4':
 
-            gsmSmsRead(&recMsg, &params, cbprint);
+            gsmSmsRead(&recMsg, &parRead, cbprint);
 
             break;
 

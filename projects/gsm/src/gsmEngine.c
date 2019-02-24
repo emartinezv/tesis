@@ -446,6 +446,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                 * OK_RESP */
 
                else{
+
                   return OK_RSP;
                }
             }
@@ -666,14 +667,14 @@ void gsmPrintData(void){
 }
 
 
-/** The gsmSendCmd function first parses cmdstr in the same way as we would do
+/** The gsmSendCmd function first parses cmdStr in the same way as we would do
  *  with a token received from the GSM module. This is needed since we are
- *  going to use the token to update the FSM. We parse cmdstr, make sure that
+ *  going to use the token to update the FSM. We parse cmdStr, make sure that
  *  it is a recognized command and write it in the correct format to the
  *  serial port. Afterwards, gsmUpdateFsm is called.
  */
 
-fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
+fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
 {
    tknTypeParser_e sending;   /* classifies the command being sent */
    fsmEvent_e result;         /* result of the updateFSM invocation */
@@ -683,13 +684,13 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
    uint8_t aux = 0;            /* auxiliary variable*/
    uint8_t cmdStrCla[TKN_LEN]; /* auxiliary vector for expanded cmd string*/
    cmdStrCla[0] = '\0';
-   strncat(cmdStrCla, cmdstr, strlen(cmdstr));
+   strncat(cmdStrCla, cmdStr, strlen(cmdStr));
 
    /* Add ECHO (if tkn finishes with '\r') or SMS_BODY to the end of the
     * expanded cmd string to aid the parser.
     */
 
-   if('\r' == cmdstr[strlen(cmdstr)-1]){
+   if('\r' == cmdStr[strlen(cmdStr)-1]){
       aux = (uint8_t)ECHO;
    }
    else{
@@ -711,7 +712,7 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
 
    if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY_P))){
 
-      rs232Print(cmdstr); /* Send the cmd string through the serial port */
+      rs232Print(cmdStr); /* Send the cmd string through the serial port */
 
       if(SMS_BODY_P == sending){
 
@@ -719,6 +720,10 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdstr)
                                 need to add the final Ctrl-Z char */
 
       }
+
+      debug(">>>engine<<<   SENT COMMAND ");
+      debug(cmdStr);
+      debug("\r\n");
 
       result = gsmUpdateFsm(sending,cmd,par,idx); /* update FSM */
 

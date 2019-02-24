@@ -53,11 +53,15 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** @brief sysUpdate period in ms */
+/** @brief GSM processing period in ms */
 
-#define DELAY_SYSUPD 10;
+#define DELAY_PROC 10;
 
 /*==================[typedef]================================================*/
+
+/*---------------------------------------------------------------------------*/
+/*                Data structures for internal state retention               */
+/*---------------------------------------------------------------------------*/
 
 /** @brief State of the current formula being run */
 
@@ -94,7 +98,11 @@ typedef enum _procStatus_e {
    ATCMD10RESP
 } procStatus_e;
 
-/** @brief Type for formula error code return */
+/*---------------------------------------------------------------------------*/
+/*                     Data structures for error handling                    */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for formula level error code return */
 
 typedef enum _errorFrm_e {
    OK,         /**< no errors */
@@ -104,7 +112,7 @@ typedef enum _errorFrm_e {
    ERR_WRAP    /**< error during wrap process */
 } errorFrm_e;
 
-/** @brief Type for command error code return */
+/** @brief Type for command level error code return */
 
 typedef struct _errorCmd_s {
    uint8_t cmd[TKN_CMD_SIZE];     /**< error command */
@@ -119,7 +127,7 @@ typedef struct _errorUser_s {
 } errorUser_s;
 
 /*---------------------------------------------------------------------------*/
-/*            Data structures for the ciaaMobile_sendSMS function            */
+/*                Data structures for the gsmSmsSend function                */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Type for outgoing SMS message */
@@ -132,42 +140,58 @@ typedef struct _smsOut_s {
 /** @brief Type for outgoing SMS confirmation message */
 
 typedef struct _smsConf_s {
-   uint8_t cmgl;   /**< CMGL code returned */
-   uint8_t result; /**< result of the send attempt */
+   uint8_t mr;     /**< mr code returned */
 } smsConf_s;
 
 /*---------------------------------------------------------------------------*/
-/*  Data structures for the ciaaMobile_listRecSMS and ciaaMobile_readRecSMS  */
-/*  functions                                                                */
+/*        Data structures for the gsmSmsRead and gsmSmsList functions        */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Type for SMS read mode */
 
-typedef enum _smsRdMode_e {
+typedef enum _smsReadMode_e {
    NORMAL = 0,     /**< change status to read if message unread */
    NOCHANGE = 1,   /**< do not change status of message */
-} smsRdMode_e;
+} smsReadMode_e;
 
 /** @brief Type for SMS read parameters */
 
-typedef struct _smsRdPars_s {
+typedef struct _smsReadPars_s {
    uint8_t idx;        /**< SMS message index in memory */
-   smsRdMode_e mode; /**< SMS read mode (change status or leave as is) */
-} smsRdPars_s;
+   smsReadMode_e mode; /**< SMS read mode (change status or leave as is) */
+} smsReadPars_s;
 
-/** @brief Type for SMS record */
+/** @brief Type for received SMS */
 
 typedef struct _smsRec_s {
    uint8_t meta[TKN_PAR_SIZE/2]; /**< metadata */
    uint8_t text[TKN_PAR_SIZE];   /**< text of the SMS message */
 } smsRec_s;
 
-/** @brief Type for SMS printout */
+/** @brief Type for SMS list messages status */
 
-typedef struct _smsPrint_s {
-   uint8_t noMsg;      /**< number of messages */
-   smsRec_s * firstMsg; /**< pointer to the first message */
-} smsPrint_s;
+typedef enum _smsListStat_e {
+   REC_UNREAD,  /**< Received unread messages */
+   REC_READ,    /**< Received read messages */
+   STO_UNSENT,  /**< Stored unsent messages */
+   STO_SENT,    /**< Stored sent messages */
+   ALL          /**< All messages */
+} smsListStat_e;
+
+/** @brief Type for SMS list parameters */
+
+typedef struct _smsListPars_s {
+   smsListStat_e stat; /**< SMS list messages status */
+   smsReadMode_e mode; /**< SMS read mode (change status or leave as is) */
+   uint8_t listSize;   /**< Size of the SMS list vector */
+} smsListPars_s;
+
+/** @brief Type for SMS list return */
+
+typedef struct _smsListRet_s {
+   smsRec_s * msgs;  /**< Pointer to message array */
+   uint8_t noMsgs;   /**< Size of message array */
+} smsListRet_s;
 
 /*---------------------------------------------------------------------------*/
 /*             Data structures for the ciaaMobile_delSMS function            */
@@ -333,13 +357,14 @@ void gsmSetUrcManualMode (void);
 
 /** @brief Sends an SMS
 *
-* @param msg Pointer to SMS message to be sent
+* @param msg   Pointer to SMS message to be sent
+* @param conf  Pointer to confirmation of SMS being sent
 * @param cback Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsSend (smsOut_s * msg, void * (*cback) (errorUser_s, void *));
+void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, void * (*cback) (errorUser_s, void *));
 
 /** @brief Read a single received SMS
 *
@@ -350,18 +375,18 @@ void gsmSmsSend (smsOut_s * msg, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmSmsRead (smsRec_s * msg, smsRdPars_s * pars, void * (*cback) (errorUser_s, void *));
+void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, void * (*cback) (errorUser_s, void *));
 
 /** @brief Lists received SMSs in a vector
 *
 * @param list     Pointer to storage vector for SMSs to be read
-* @param listSize Size of the storage vector
+* @param pars     SMS list parameters (status, mode and number of messages)
 * @param cback    Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsList (smsRec_s * list, uint8_t listSize, void * (*cback) (errorUser_s, void *));
+void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUser_s, void *));
 
 /** @brief Deletes a single SMS from memory
 *

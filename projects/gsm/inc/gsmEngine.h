@@ -162,10 +162,10 @@ void gsmPrintData(void);
 *
 *  @return Returns the event triggered by the gsmUpdateFsm call
 *
-*  @param cmdstr AT command string including parameters
+*  @param cmdStr AT command string including parameters
 */
 
-fsmEvent_e gsmSendCmd (const uint8_t * cmdstr);
+fsmEvent_e gsmSendCmd (const uint8_t * cmdStr);
 
 /** @brief Gets the latest command response
 *
