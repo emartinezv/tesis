@@ -127,6 +127,46 @@ typedef struct _errorUser_s {
 } errorUser_s;
 
 /*---------------------------------------------------------------------------*/
+/*                              Misc. data structures                        */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for formula callback */
+
+typedef void * (*frmCback_t) (errorUser_s, void *)
+
+/** @brief Type for URC callback */
+
+typedef void (*urcCback_t) (uint8_t const * const cmd,
+                            uint8_t const * const par)
+
+/** @brief Type for DATA_MODE callback */
+
+typedef void * (*dataCback_t) ()
+
+/*---------------------------------------------------------------------------*/
+/*              Data structures for the gsmGetSigQual function               */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Type for signal quality */
+
+typedef struct _sigQual_s {
+   int8_t  rssi;    /**< RSSI in dBm */
+   uint8_t ber;     /**< BER as RXQUAL values in the table in GSM 05.08 [20]
+                       subclause 7.2.4 */
+} sigQual_s;
+
+/*---------------------------------------------------------------------------*/
+/*               Data structures for the gsmCheckConn function               */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Struct for determining the status of the GSM and GPRS connections */
+
+typedef struct _connStatus_s {
+   bool  gsm;   /**< Is the ME attached to the GSM network? */
+   bool  gprs;  /**< Is the ME attached to the GPRS service? */
+} connStatus_s;
+
+/*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmSmsSend function                */
 /*---------------------------------------------------------------------------*/
 
@@ -175,7 +215,7 @@ typedef enum _smsListStat_e {
    REC_READ,    /**< Received read messages */
    STO_UNSENT,  /**< Stored unsent messages */
    STO_SENT,    /**< Stored sent messages */
-   ALL          /**< All messages */
+   ALL_MSG      /**< All messages */
 } smsListStat_e;
 
 /** @brief Type for SMS list parameters */
@@ -186,7 +226,7 @@ typedef struct _smsListPars_s {
    uint8_t listSize;   /**< Size of the SMS list vector */
 } smsListPars_s;
 
-/** @brief Type for SMS list return */
+/** @brief Type for SMS read/list return */
 
 typedef struct _smsListRet_s {
    smsRec_s * msgs;  /**< Pointer to message array */
@@ -194,24 +234,28 @@ typedef struct _smsListRet_s {
 } smsListRet_s;
 
 /*---------------------------------------------------------------------------*/
-/*             Data structures for the ciaaMobile_delSMS function            */
+/*                Data structures for the gsmSmsDel function                 */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Type for SMS deletion command */
+/** @brief Type for SMS deletion mode */
 
-typedef struct _smsDel_s {
-   uint8_t idx;   /**< index of the message in memory */
-   uint8_t mode;  /**< deletion mode
-                   *   0 del the message indicated by index
-                   *   1 del all read messages (ignores index)
-                   *   2 del all read and sent messages (ignores index)
-                   *   3 del all read, sent and unsent messages (ignores index)
-                   *   4 del all messages (ignores index)
-                   */
-} smsDel_s;
+typedef enum _smsDelMode_e {
+   INDEX = 0,              /**< del the message indicated by index */
+   READ = 1,               /**< del all read messages */
+   READ_SENT = 2,          /**< del all read and sent messages */
+   READ_SENT_UNSENT = 3,   /**< del all read, sent and unsent messages */
+   DEL_ALL = 4             /**< del all messages */
+} smsDelMode_e;
+
+/** @brief Type for SMS delete parameters */
+
+typedef struct _smsDelPars_s {
+   uint8_t idx;        /**< index of the message in memory */
+   smsDelMode_e mode;  /**< deletion mode */
+} smsDelPars_s;
 
 /*---------------------------------------------------------------------------*/
-/*             Data structures for the ciaaMobile_startGPRS function         */
+/*               Data structures for the gsmGprsStart function               */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Type for APN name, user and password */
@@ -223,7 +267,7 @@ typedef struct _apnUserPwd_s {
 } apnUserPwd_s;
 
 /*---------------------------------------------------------------------------*/
-/*            Data structures for the ciaaMobile_openPort function           */
+/*              Data structures for the gsmGprsOpenPort function             */
 /*---------------------------------------------------------------------------*/
 
 typedef enum _portType_e {
@@ -235,24 +279,12 @@ typedef enum _portType_e {
 
 typedef struct _port_s {
    portType_e type;      /**< TCP or UDP port */
-   uint8_t *  address;   /**< TCP address (domain or IP) */
-   uint8_t *  port;      /**< TCP port number as a string */
+   uint8_t *  address;   /**< address (domain or IP) */
+   uint16_t   port;      /**< port number */
 } port_s;
 
 /*---------------------------------------------------------------------------*/
-/*       Data structures for the ciaaMobile_getSignalQuality function        */
-/*---------------------------------------------------------------------------*/
-
-/** @brief Type for signal quality */
-
-typedef struct _sigQual_s {
-   int8_t  rssi;    /**< RSSI in dBm */
-   uint8_t ber;     /**< BER as RXQUAL values in the table in GSM 05.08 [20]
-                       subclause 7.2.4 */
-} sigQual_s;
-
-/*---------------------------------------------------------------------------*/
-/*           Data structures for the ciaaMobile_powerGNSS function           */
+/*                Data structures for the gsmGnssPwr function                */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Enum for turning GNSS module on or off */
@@ -262,23 +294,7 @@ typedef enum _pwrGnss_e {
    OFF    /**< Power GNSS module off */
 } pwrGnss_e;
 
-/*---------------------------------------------------------------------------*/
-/*         Data structures for the ciaaMobile_checkGSMGPRS function          */
-/*---------------------------------------------------------------------------*/
-
-/** @brief Struct for determining the status of the GSM and GPRS connections */
-
-typedef struct _connStatus_s {
-   bool  gsm;   /**< Is the ME attached to the GSM network? */
-   bool  gprs;  /**< Is the ME attached to the GPRS service? */
-} connStatus_s;
-
-
 /*==================[external data declaration]==============================*/
-
-/** @brief used for AT command timeout counter */
-
-extern uint32_t timeout_count;
 
 /*==================[external functions declaration]=========================*/
 
@@ -293,9 +309,9 @@ extern uint32_t timeout_count;
 * @return
 */
 
-void gsmStartUp (void * (*cback) (errorUser_s, void *));
+void gsmStartUp (frmCback_t cback);
 
-/** @brief Handles AT command timeout and sysUpdate timing
+/** @brief Handles AT command timeout and gsmProcess function timing
 *
 * @return
 */
@@ -323,7 +339,7 @@ uint8_t gsmIsIdle (void);
 * @return
 */
 
-void gsmGetSigQual (sigQual_s * sigQual, void * (*cback) (errorUser_s, void *));
+void gsmGetSigQual (sigQual_s * sigQual, frmCback_t cback);
 
 /** @brief Check status of GSM and GPRS connection
 *
@@ -333,7 +349,7 @@ void gsmGetSigQual (sigQual_s * sigQual, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmCheckConn (connStatus_s * status, void * (*cback) (errorUser_s, void *));
+void gsmCheckConn (connStatus_s * status, frmCback_t cback);
 
 /** @brief Sets URC handling to cback mode and sets callback function
 *
@@ -342,7 +358,7 @@ void gsmCheckConn (connStatus_s * status, void * (*cback) (errorUser_s, void *))
 * @return
 */
 
-void gsmSetUrcCbackMode (void (*cback) (uint8_t const * const cmd, uint8_t const * const par));
+void gsmSetUrcCbackMode (urcCback_t cback);
 
 /** @brief Sets URC handling to manual mode
 *
@@ -364,7 +380,7 @@ void gsmSetUrcManualMode (void);
 * @return
 */
 
-void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, void * (*cback) (errorUser_s, void *));
+void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, frmCback_t cback);
 
 /** @brief Read a single received SMS
 *
@@ -375,7 +391,7 @@ void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, void * (*cback) (errorUser_s,
 * @return
 */
 
-void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, void * (*cback) (errorUser_s, void *));
+void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, frmCback_t cback);
 
 /** @brief Lists received SMSs in a vector
 *
@@ -386,7 +402,7 @@ void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, void * (*cback) (errorUse
 * @return
 */
 
-void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUser_s, void *));
+void gsmSmsList (smsRec_s * list, smsListPars_s * pars, frmCback_t cback);
 
 /** @brief Deletes a single SMS from memory
 *
@@ -396,7 +412,7 @@ void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUs
 * @return
 */
 
-void gsmSmsDel (smsDel_s * msgdel, void * (*cback) (errorUser_s, void *));
+void gsmSmsDel (smsDelPars_s * msgdel, frmCback_t cback);
 
 /*---------------------------------------------------------------------------*/
 /*                             GPRS functions                                */
@@ -410,7 +426,7 @@ void gsmSmsDel (smsDel_s * msgdel, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmGprsStart (apnUserPwd_s * apn, void * (*cback) (errorUser_s, void *));
+void gsmGprsStart (apnUserPwd_s * apn, frmCback_t cback);
 
 /** @brief Opens TCP or UDP port
 *
@@ -420,7 +436,7 @@ void gsmGprsStart (apnUserPwd_s * apn, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmGprsOpenPort (port_s * port, void * (*cback) (errorUser_s, void *));
+void gsmGprsOpenPort (port_s * port, frmCback_t cback);
 
 /** @brief Closes open TCP or UDP port
 *
@@ -429,7 +445,7 @@ void gsmGprsOpenPort (port_s * port, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmGprsClosePort (void * (*cback) (errorUser_s, void *));
+void gsmGprsClosePort (frmCback_t cback);
 
 /*---------------------------------------------------------------------------*/
 /*                             GNSS functions                                */
@@ -443,7 +459,7 @@ void gsmGprsClosePort (void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmGnssPwr (pwrGnss_e * cmd, void * (*cback) (errorUser_s, void *));
+void gsmGnssPwr (pwrGnss_e * cmd, frmCback_t cback);
 
 /** @brief Get GNSS data
 *
@@ -453,7 +469,7 @@ void gsmGnssPwr (pwrGnss_e * cmd, void * (*cback) (errorUser_s, void *));
 * @return
 */
 
-void gsmGnssGetData (uint8_t * gnssData, void * (*cback) (errorUser_s, void *));
+void gsmGnssGetData (uint8_t * gnssData, frmCback_t cback);
 
 /*==================[cplusplus]==============================================*/
 

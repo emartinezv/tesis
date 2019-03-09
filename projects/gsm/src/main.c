@@ -379,10 +379,10 @@ void console_sms (void)
    smsOut_s msg = {"1151751809","Hola mundo!"};
    smsConf_s conf;
    smsRec_s msgList[SMS_READ_SIZ];
-   smsDel_s msgDel = {1, 4};
+   smsDelPars_s msgDel = {1, DEL_ALL};
    smsRec_s recMsg;
    smsReadPars_s parRead = {1, NOCHANGE};
-   smsListPars_s parList = {ALL, NOCHANGE, SMS_READ_SIZ};
+   smsListPars_s parList = {ALL_MSG, NOCHANGE, SMS_READ_SIZ};
 
    while ('S' != instruction){
 
@@ -455,8 +455,8 @@ void console_gprs (void)
    uint8_t instruction = 0;
 
    apnUserPwd_s APN = {"datos.personal.com","datos","datos"};
-   port_s port1 = {TCP, "104.236.225.217","2399"};
-   port_s port2 = {UDP, "104.236.225.217","2399"};
+   port_s port1 = {TCP, "104.236.225.217",2399};
+   port_s port2 = {UDP, "104.236.225.217",2399};
 
    while ('S' != instruction){
 

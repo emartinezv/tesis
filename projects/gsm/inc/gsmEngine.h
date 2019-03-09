@@ -66,8 +66,11 @@ extern "C" {
 /** @brief Max size of an AT token command part */
 #define TKN_CMD_SIZE 20
 
-   /** @brief Max size of an AT token parameter part */
+/** @brief Max size of an AT token parameter part */
 #define TKN_PAR_SIZE 300
+
+/** @brief Max size in chars of the AT+CGNSINF response */
+#define MAX_CGNSINF_SIZE 94
 
 /** @brief AT command response type */
 typedef struct _rsp_t

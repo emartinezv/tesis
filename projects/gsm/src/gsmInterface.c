@@ -282,10 +282,10 @@ static void gsmStartUpF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -351,7 +351,8 @@ static void gsmGetSigQualF (void)
          if(OK == errorOut.errorFrm){
 
             rsp_t rsp;
-            uint8_t auxStr[5];    /* auxiliary string for response parsing*/
+            uint8_t auxStr[2+1];  /* auxiliary string for response parsing*/
+                                  /* XX\0 --> max string length 3 */
             auxStr[0] = '\0';
             uint8_t i;
             uint8_t commaPos = 0; /* position of the comma in the response */
@@ -424,10 +425,10 @@ static void gsmGetSigQualF (void)
             rsp_t rsp;
 
             rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-            errorOut.errorCmd.cmd[20] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, 149);
-            errorOut.errorCmd.par[150] = '\0';
+            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
          }
 
@@ -555,10 +556,10 @@ void gsmCheckConnF (void)
             rsp_t rsp;
 
             rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-            errorOut.errorCmd.cmd[20] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, 149);
-            errorOut.errorCmd.par[150] = '\0';
+            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
          }
 
@@ -581,14 +582,17 @@ static void gsmSmsSendF (void)
    static procStatus_e procState = NOCMD;
    static errorUser_s errorOut;
 
-   /* smsCmd is "AT+CMGS="XXX"\r" where XXX is the phone number. Maximum phone
-    * number length under the ITU-T standard E.164 is 15 digits plus the "+"
-      symbol if present. */
+   /* Maximum phone number length under the ITU-T standard E.164 is 15 digits
+    * plus the "+" symbol if present.
+    *
+    * AT+CMGS="+(phone number)"\r\0 --> max str length 28 */
 
-   static uint8_t smsCmd[9+16+3];
+   static uint8_t smsCmd[9+1+15+3];
 
    /* Maximum SMS size according to 3GPP standard TS 23.038 is 160 chars using
-    * GSM 7-bit alphabet */
+    * GSM 7-bit alphabet
+    *
+    * (smstext)\0 --> max str length 161 */
 
    static uint8_t smsText[160+1];
 
@@ -619,9 +623,9 @@ static void gsmSmsSendF (void)
 
          }
 
-         strncat(smsCmd, "AT+CMGS=\"", 9);
+         strncat(smsCmd, "AT+CMGS=\"", strlen("AT+CMGS=\"");
          strncat(smsCmd, ((smsOut_s *)frmInput)->dest,strlen(((smsOut_s *)frmInput)->dest));
-         strncat(smsCmd, "\"\r", 2);
+         strncat(smsCmd, "\"\r", strlen("\"\r"));
 
          strncpy(smsText, ((smsOut_s *)frmInput)->text, strlen(((smsOut_s *)frmInput)->text));
          smsText[strlen(((smsOut_s *)frmInput)->text)] = '\0';
@@ -689,10 +693,10 @@ static void gsmSmsSendF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -729,8 +733,11 @@ static void gsmSmsReadF (void)
 
    fsmEvent_e result;
 
-   static uint8_t strSmsRead[15]; /* string to assemble the SMS read command*/
-   uint8_t strAux[5];             /* auxiliary string */
+   static uint8_t strSmsRead[8+5+1]; /* string for the SMS read command*/
+                                     /* AT+CMGR=XXX,Y\0 --> max str len 14 */
+
+   uint8_t auxStr[3+1];              /* auxiliary string */
+                                     /* XXX\0 --> max str length 4 */
 
    switch(frmState) {
 
@@ -745,13 +752,13 @@ static void gsmSmsReadF (void)
 
          strSmsRead[0] = '\0';
 
-         strncat(strSmsRead, "AT+CMGR=", 8);
-         itoa(((smsReadPars_s *)frmInput)->idx, strAux, 10);
-         strncat(strSmsRead, strAux, strlen(strAux));
-         strncat(strSmsRead, ",", 1);
-         itoa(((smsReadPars_s *)frmInput)->mode, strAux, 10);
-         strncat(strSmsRead, strAux, strlen(strAux));
-         strncat(strSmsRead, "\r", 1);
+         strncat(strSmsRead, "AT+CMGR=", strlen("AT+CMGR="));
+         itoa(((smsReadPars_s *)frmInput)->idx, auxStr, 10);
+         strncat(strSmsRead, auxStr, strlen(auxStr));
+         strncat(strSmsRead, ",", strlen(","));
+         itoa(((smsReadPars_s *)frmInput)->mode, auxStr, 10);
+         strncat(strSmsRead, auxStr, strlen(auxStr));
+         strncat(strSmsRead, "\r", strlen("\r"));
 
          debug(">>>interf<<<   strSmsRead: ");
          debug(strSmsRead);
@@ -824,10 +831,10 @@ static void gsmSmsReadF (void)
             rsp_t rsp;
 
             rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-            errorOut.errorCmd.cmd[20] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, 149);
-            errorOut.errorCmd.par[150] = '\0';
+            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
          }
 
@@ -854,8 +861,16 @@ static void gsmSmsListF (void)
 
    fsmEvent_e result;
 
-   static uint8_t strSmsList[24]; /* string to assemble the SMS list command*/
-   static uint8_t strAux[13];      /* auxiliary string */
+   /* String to assemble the SMS list command
+    *
+    * AT+CMGL="(status)",Y\r\0 --> max string length */
+
+   static uint8_t strSmsList[9+10+3+2];
+
+   /* Auxiliary string. Longest status string is "REC UNREAD" which is 10
+    * chars long, so the string needs to be 11 chars long including the \0  */
+
+   static uint8_t auxStr[10+1];
 
    switch(frmState) {
 
@@ -870,47 +885,47 @@ static void gsmSmsListF (void)
 
          strSmsList[0] = '\0';
 
-         strncat(strSmsList, "AT+CMGL=", 8);
+         strncat(strSmsList, "AT+CMGL=", strlen("AT+CMGL="));
 
          switch(((smsListPars_s *)frmInput)->stat){
 
             case REC_UNREAD:
 
-               strncpy(strAux,"\"REC UNREAD\"",strlen("\"REC UNREAD\""));
+               strncpy(auxStr,"\"REC UNREAD\"",strlen("\"REC UNREAD\""));
 
                break;
 
             case REC_READ:
 
-               strncpy(strAux,"\"REC READ\"",strlen("\"REC READ\""));
+               strncpy(auxStr,"\"REC READ\"",strlen("\"REC READ\""));
 
                break;
 
             case STO_UNSENT:
 
-               strncpy(strAux,"\"STO UNSENT\"",strlen("\"STO UNSENT\""));
+               strncpy(auxStr,"\"STO UNSENT\"",strlen("\"STO UNSENT\""));
 
                break;
 
             case STO_SENT:
 
-               strncpy(strAux,"\"STO SENT\"",strlen("\"STO SENT\""));
+               strncpy(auxStr,"\"STO SENT\"",strlen("\"STO SENT\""));
 
                break;
 
-            case ALL:
+            case ALL_MSG:
 
-               strncpy(strAux,"\"ALL\"",strlen("\"ALL\""));
+               strncpy(auxStr,"\"ALL\"",strlen("\"ALL\""));
 
                break;
 
          }
 
-         strncat(strSmsList, strAux, strlen(strAux));
-         strncat(strSmsList, ",", 1);
-         itoa(((smsListPars_s *)frmInput)->mode, strAux, 10);
-         strncat(strSmsList, strAux, strlen(strAux));
-         strncat(strSmsList, "\r", 1);
+         strncat(strSmsList, auxStr, strlen(auxStr));
+         strncat(strSmsList, ",", strlen(","));
+         itoa(((smsListPars_s *)frmInput)->mode, auxStr, 10);
+         strncat(strSmsList, auxStr, strlen(auxStr));
+         strncat(strSmsList, "\r", strlen("\r"));
 
          debug(">>>interf<<<   strSmsList: ");
          debug(strSmsList);
@@ -970,7 +985,8 @@ static void gsmSmsListF (void)
          if(OK == errorOut.errorFrm){
 
             uint8_t i = 0;
-            uint8_t auxtext[4];
+            uint8_t auxStr[3+1];  /* auxiliary string */
+                                  /* XXX\0 --> max str length 4 */
 
             rsp_t rsp;
             smsRec_s * target = (smsRec_s *)frmOutput;
@@ -979,17 +995,17 @@ static void gsmSmsListF (void)
             // DEBUG ERASE LATER
 
             debug(">>>interf<<<   NO OF RESPONSES: ");
-            itoa(rspNo, auxtext, 10);
-            debug(auxtext);
+            itoa(rspNo, auxStr, 10);
+            debug(auxStr);
             debug("\r\n");
 
             debug(">>>interf<<<   VECTOR SIZE: ");
-            itoa(((smsListPars_s *)frmInput)->listSize, auxtext, 10);
-            debug(auxtext);
+            itoa(((smsListPars_s *)frmInput)->listSize, auxStr, 10);
+            debug(auxStr);
             debug("\r\n");
             debug(">>>interf<<<   NO OF SMSs: ");
-            itoa((rspNo-1)/2, auxtext, 10);
-            debug(auxtext);
+            itoa((rspNo-1)/2, auxStr, 10);
+            debug(auxStr);
             debug("\r\n");
 
             // DEBUG ERASE LATER
@@ -1028,10 +1044,10 @@ static void gsmSmsListF (void)
             rsp_t rsp;
 
             rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-            errorOut.errorCmd.cmd[20] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, 149);
-            errorOut.errorCmd.par[150] = '\0';
+            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
          }
 
@@ -1056,8 +1072,14 @@ static void gsmSmsDelF (void)
    static procStatus_e procState = NOCMD;
    static errorUser_s errorOut;
 
-   uint8_t aux[5]; /* aux buffer */
-   static uint8_t smsDel[20];  /* holds the str of the sms del cmd including paramenters */
+   uint8_t auxStr[4]; /* auxiliary string */
+                      /* XXX\0 --> max str length 4 */
+
+   /* String to assemble the SMS delete command
+    *
+    * AT+CMGD=XXX,Y\r\0 --> max string length 15 */
+
+   static uint8_t smsDel[8+3+1+1+2];
 
    fsmEvent_e result;
 
@@ -1065,20 +1087,20 @@ static void gsmSmsDelF (void)
 
       case INIT:
 
-         aux[0] = '\0';
+         auxStr[0] = '\0';
          smsDel[0] = '\0';
 
          errorOut.errorFrm = OK;
          errorOut.errorCmd.cmd[0] = '\0';
          errorOut.errorCmd.par[0] = '\0';
 
-         strncat(smsDel, "AT+CMGD=", 8);
-         itoa(((smsDel_s *)frmInput)->idx, aux, 10);
-         strncat(smsDel, aux, strlen(aux));
-         strncat(smsDel, ",", 1);
-         itoa(((smsDel_s *)frmInput)->mode, aux, 10);
-         strncat(smsDel, aux, strlen(aux));
-         strncat(smsDel, "\r", 1);
+         strncat(smsDel, "AT+CMGD=", strlen("AT+CMGD="));
+         itoa(((smsDelPars_s *)frmInput)->idx, auxStr, 10);
+         strncat(smsDel, auxStr, strlen(auxStr));
+         strncat(smsDel, ",", strlen(","));
+         itoa(((smsDelPars_s *)frmInput)->mode, auxStr, 10);
+         strncat(smsDel, auxStr, strlen(auxStr));
+         strncat(smsDel, "\r", strlen("\r"));
 
          procState = ATCMD1;
          frmState = PROC;
@@ -1119,10 +1141,10 @@ static void gsmSmsDelF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -1144,7 +1166,14 @@ static void gsmGprsStartF (void)
    static procStatus_e procState = NOCMD;
    static errorUser_s errorOut;
 
-   static uint8_t APNstring[100];  /* holds the str for the AT+CSTT command */
+   /* String to assemble the GPRS start command
+    *
+    * apn, user and pwd are arbitrarely assumed to be no longer than 30 chars
+    * each (a reasonable assumption by all practical accounts)
+    *
+    * AT+CSTT="(apn)","(user)","(pwd)"\r\0 --> max string length */
+
+   static uint8_t APNstring[9+30+3+30+3+30+3];
 
    fsmEvent_e result;
 
@@ -1158,13 +1187,16 @@ static void gsmGprsStartF (void)
          errorOut.errorCmd.cmd[0] = '\0';
          errorOut.errorCmd.par[0] = '\0';
 
-         strncat(APNstring, "AT+CSTT=\"", 9);
-         strncat(APNstring, ((apnUserPwd_s *)frmInput)->apn, 30);
-         strncat(APNstring, "\",\"", 3);
-         strncat(APNstring, ((apnUserPwd_s *)frmInput)->user, 30);
-         strncat(APNstring, "\",\"", 3);
-         strncat(APNstring, ((apnUserPwd_s *)frmInput)->pwd, 30);
-         strncat(APNstring, "\"\r", 2);
+         strncat(APNstring, "AT+CSTT=\"", strlen("AT+CSTT=\""));
+         strncat(APNstring, ((apnUserPwd_s *)frmInput)->apn,
+                             strlen(((apnUserPwd_s *)frmInput)->apn));
+         strncat(APNstring, "\",\"", strlen("\",\""));
+         strncat(APNstring, ((apnUserPwd_s *)frmInput)->user,
+                             strlen(((apnUserPwd_s *)frmInput)->user));
+         strncat(APNstring, "\",\"", strlen("\",\""));
+         strncat(APNstring, ((apnUserPwd_s *)frmInput)->pwd,
+                             strlen(((apnUserPwd_s *)frmInput)->pwd));
+         strncat(APNstring, "\"\r", strlen("\"\r"));
 
          procState = ATCMD1;
          frmState = PROC;
@@ -1277,10 +1309,10 @@ static void gsmGprsStartF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -1299,7 +1331,16 @@ static void gsmGprsOpenPortF (void)
    static procStatus_e procState = NOCMD;
    static errorUser_s errorOut;
 
-   static uint8_t port_string[100];  /* str for the AT+CIPSTART command */
+   /* String to assemble the TCP/UDP open port command
+    *
+    * IP/domain is arbitrarely assumed to be no longer than 50 chars
+    *
+    * AT+CIPSTART="XXX","(IP/domain)",(port)\r\0 --> max string length 78 */
+
+   static uint8_t portStr[13+3+3+50+2+5+2];
+
+   uint8_t auxStr[6]; /* auxiliary string */
+                      /* XXXXX\0 --> max str length 6 */
 
    fsmEvent_e result;
 
@@ -1307,25 +1348,28 @@ static void gsmGprsOpenPortF (void)
 
       case INIT:
 
-         port_string[0] = '\0';
+         portStr[0] = '\0';
 
          errorOut.errorFrm = OK;
          errorOut.errorCmd.cmd[0] = '\0';
          errorOut.errorCmd.par[0] = '\0';
 
-         strncat(port_string, "AT+CIPSTART=\"", 13);
+         strncat(portStr, "AT+CIPSTART=\"", strlen("AT+CIPSTART=\""));
 
          if(TCP == ((port_s *)frmInput)->type){
-            strncat(port_string, "TCP\",\"", 6);
+            strncat(portStr, "TCP\",\"", strlen("TCP\",\""));
          }
          else if(UDP == ((port_s *)frmInput)->type){
-            strncat(port_string, "UDP\",\"", 6);
+            strncat(portStr, "UDP\",\"", strlen("UDP\",\""));
          }
 
-         strncat(port_string, ((port_s *)frmInput)->address, 100);
-         strncat(port_string, "\",\"", 3);
-         strncat(port_string, ((port_s *)frmInput)->port, 6);
-         strncat(port_string, "\"\r", 2);
+         strncat(portStr, ((port_s *)frmInput)->address,
+                 strlen(((port_s *)frmInput)->address));
+
+         itoa(((port_s *)frmInput)->port, auxStr, 10);
+         strncat(portStr, "\",\"", strlen("\",\""));
+         strncat(portStr, auxStr, strlen(auxStr));
+         strncat(portStr, "\"\r", strlen("\"\r"));
 
          procState = ATCMD1;
          frmState = PROC;
@@ -1359,7 +1403,7 @@ static void gsmGprsOpenPortF (void)
 
             case ATCMD2:
 
-               result = gsmSendCmd(port_string);
+               result = gsmSendCmd(portStr);
                if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
                else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
                break;
@@ -1387,10 +1431,10 @@ static void gsmGprsOpenPortF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -1464,10 +1508,10 @@ static void gsmGprsClosePortF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -1492,7 +1536,12 @@ static void gsmGnssPwrF (void)
    static procStatus_e procState = NOCMD;
    static errorUser_s errorOut;
 
-   static uint8_t cmdStr[14]; /* string to determine ON or OFF command */
+   /* String to assemble the GNSS on/off command
+    *
+    *
+    * AT+CGNSPWR=X\r\0 --> max string length 14 */
+
+   static uint8_t cmdStr[14];
 
    fsmEvent_e result;
 
@@ -1508,12 +1557,10 @@ static void gsmGnssPwrF (void)
          frmState = PROC;
 
          if(ON == *((pwrGnss_e *)frmInput)){
-            strncpy(cmdStr,"AT+CGNSPWR=1\r",14);
-            debug(cmdStr);
+            strncpy(cmdStr,"AT+CGNSPWR=1\r", strlen("AT+CGNSPWR=1\r"));
          }
          else if(OFF == *((pwrGnss_e *)frmInput)){
-            strncpy(cmdStr,"AT+CGNSPWR=0\r",14);
-            debug(cmdStr);
+            strncpy(cmdStr,"AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"));
          }
 
          break;
@@ -1552,10 +1599,10 @@ static void gsmGnssPwrF (void)
                rsp_t rsp;
 
                rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-               errorOut.errorCmd.cmd[20] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, 149);
-               errorOut.errorCmd.par[150] = '\0';
+               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
             }
          }
@@ -1624,10 +1671,12 @@ static void gsmGnssGetDataF (void)
 
             rsp = gsmGetCmdRsp(); /* Get the navigation info string */
 
-            /* Copy the navigation info string to the provided output */
+            /* Copy the navigation info string to the provided output. The
+             * constant MAX_CGNSINF_SIZE is defined in gsmEngine.h and is
+             * taken from the SIM808 manual as being 94 characters. */
 
-            strncpy((uint8_t *)frmOutput,&rsp.par[0],95);
-            ((uint8_t *)frmOutput)[94] = '\0';
+            strncpy((uint8_t *)frmOutput,&rsp.par[0],MAX_CGNSINF_SIZE);
+            ((uint8_t *)frmOutput)[MAX_CGNSINF_SIZE+1] = '\0';
 
             debug(">>>interf<<<   NavInfo String:");
             debug(((uint8_t *)frmOutput));
@@ -1640,10 +1689,10 @@ static void gsmGnssGetDataF (void)
             rsp_t rsp;
 
             rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, 19);
-            errorOut.errorCmd.cmd[20] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, 149);
-            errorOut.errorCmd.par[150] = '\0';
+            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
          }
 
@@ -1682,7 +1731,7 @@ void gsmSysTickHandler (void)
 
 /** This function needs to be called periodically to process commands and
  *  their responses. The user determines the frequency with which the function
- *  is called by modifying the DELAY_SYSUPD constant. As a general rule, each
+ *  is called by modifying the DELAY_PROC constant. As a general rule, each
  *  invocation of this function processes a single token from the serial port
  *  stream. This keeps the execution short and helps the user decide how much
  *  processor time he wants to allot to the GSM processing engine.
@@ -1699,7 +1748,9 @@ void gsmProcess (void)
          }
 
          else if (DATA_MODE == gsmGetSerialMode()){
-            gsmPrintData(); // PARA PRUEBA; CAMBIAR DESPUES A ALGO QUE LE PASE EL STREAM AL USUARIO
+            gsmPrintData(); // PARA PRUEBA; CAMBIAR A UNA LLAMADA DE CALLBACK
+                            // QUE IDEALMENTE VACIE EL BUFFER DE RECEPCION 232
+                            // Y LEA EL SERIAL USB COMO ENTRADA
          }
 
       }
@@ -1795,7 +1846,7 @@ void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUs
    return;
 }
 
-void gsmSmsDel (smsDel_s * msgdel, void * (*cback) (errorUser_s, void *))
+void gsmSmsDel (smsDelPars_s * msgdel, void * (*cback) (errorUser_s, void *))
 {
    frm = gsmSmsDelF;
    frmInput = msgdel;
