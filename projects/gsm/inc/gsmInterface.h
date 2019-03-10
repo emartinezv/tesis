@@ -149,7 +149,7 @@ typedef void (*urcCback_t) (uint8_t const * const cmd,
 
 /** @brief Type for DATA_MODE callback */
 
-typedef void (*dataCback_t) (uint8_t * const write, uint8_t * const read);
+typedef void (*dataCback_t) (void);
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGetSigQual function               */
@@ -376,6 +376,28 @@ void gsmSetUrcMode (urcMode_e mode);
 */
 
 void gsmSetUrcCback (urcCback_t cback);
+
+/** @brief Sets DATA_MODE cback
+*
+* @param cback  Function pointer to callback function
+*
+* @return
+*/
+
+void gsmSetDataCback (dataCback_t cback);
+
+/** @brief Writes and reads data from serial port in DATA_MODE
+*
+* @param write   Pointer to buffer with characters to be written
+* @param nwrite  Pointer to integer with number of characters to be written
+* @param read    Pointer to buffer to store characters to be read
+* @param nread   Pointer to integer with number of characters to be read
+*
+* @return
+*/
+
+void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
+                           uint8_t * nread);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */

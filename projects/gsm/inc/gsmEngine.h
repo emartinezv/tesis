@@ -176,6 +176,13 @@ rsp_t gsmGetCmdRsp (void);
 
 uint8_t gsmGetNoCmdRsp (void);
 
+/** @brief Reads the oldest URC event in the URC VLRB
+*
+*  @return Returns the required URC (0 if no such response)
+*/
+
+rsp_t gsmGetUrc (void);
+
 /** @brief Returns the actual mode of the serial port
 *
 *
@@ -192,12 +199,27 @@ serialMode_e gsmGetSerialMode(void);
 
 void gsmSetSerialMode(serialMode_e mode);
 
-/** @brief Reads the oldest URC event in the URC VLRB
+/** @brief Writes data to the RS-232 port when in DATA_MODE
 *
-*  @return Returns the required URC (0 if no such response)
+*  @param write  : Pointer to data being written
+*  @param size   : Number of chars to be written
+*
+*  @return       : Number of chars effectively written
+*
 */
 
-rsp_t gsmGetUrc (void);
+uint8_t gsmWriteData(uint8_t const * const write, uint8_t size);
+
+/** @brief Reads data from the RS-232 port when in DATA_MODE
+*
+*  @param read   : Pointer to data buffer for read data
+*  @param size   : Number of chars to be read at max
+*
+*  @return       : Number of chars effectively read
+*
+*/
+
+uint8_t gsmReadData(uint8_t * const read, uint8_t size);
 
 /*==================[cplusplus]==============================================*/
 

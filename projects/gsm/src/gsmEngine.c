@@ -831,6 +831,28 @@ void gsmSetSerialMode(serialMode_e mode)
    return;
 }
 
+uint8_t gsmWriteData(uint8_t const * const write, uint8_t size)
+{
+   /* Write size chars to the UART */
+
+   uint8_t n = 0;
+
+   n = uartSend(CIAA_UART_232, write, size);
+
+   return n;
+}
+
+uint8_t gsmReadData(uint8_t * const read, uint8_t size)
+{
+   /* Read size chars from the UART */
+
+   uint8_t n = 0;
+
+   n = uartRecv(CIAA_UART_232, read, size);
+
+   return n;
+}
+
 /** @} doxygen end group definition */
 
 /*==================[end of file]============================================*/

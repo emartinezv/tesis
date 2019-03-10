@@ -1774,9 +1774,7 @@ void gsmProcess (void)
          }
 
          else if (DATA_MODE == gsmGetSerialMode()){
-            gsmPrintData(); // PARA PRUEBA; CAMBIAR A UNA LLAMADA DE CALLBACK
-                            // QUE IDEALMENTE VACIE EL BUFFER DE RECEPCION 232
-                            // Y LEA EL SERIAL USB COMO ENTRADA
+            dataCback();
          }
 
       }
@@ -1830,6 +1828,21 @@ void gsmSetUrcMode (urcMode_e mode)
 void gsmSetUrcCback (urcCback_t cback)
 {
    urcCback = cback;
+   return;
+}
+
+void gsmSetDataCback (dataCback_t cback)
+{
+   dataCback = cback;
+   return;
+}
+
+void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
+                           uint8_t * nRead)
+{
+   *nWrite = gsmWriteData(write, *nWrite);
+   *nRead = gsmReadData(read, *nRead);
+
    return;
 }
 

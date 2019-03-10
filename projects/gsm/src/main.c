@@ -361,9 +361,36 @@ void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
    dbgPrint("\r\nURC received!\r\n");
    dbgPrint("CMD: ");
    dbgPrint(cmd);
-   dbgPrint("PAR: ");
+   dbgPrint(" PAR: ");
    dbgPrint(par);
    dbgPrint("\r\n\r\n");
+
+   return;
+}
+
+void cbData (void)
+{
+   uint8_t usbReadBuf[21];
+   uint8_t serialReadBuf[21];
+
+   uint8_t nRead = 20;
+
+   uint8_t n;
+
+   /* Read USB UART and store it */
+
+   n = uartRecv(CIAA_UART_USB, usbReadBuf, 20);
+   usbReadBuf[n]='\0';
+
+   /* Write USB UART data to serial port and read from serial port */
+
+   gsmWriteReadDataMode (usbReadBuf, &n, serialReadBuf, &nRead);
+
+   serialReadBuf[nRead]='\0';
+
+   /* Write data read from serial port to USB UART */
+
+   n = uartSend(CIAA_UART_USB, serialReadBuf, nRead);
 
    return;
 }
@@ -397,7 +424,7 @@ void console_sms (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
 
          switch (instruction) {
 
@@ -442,8 +469,6 @@ void console_sms (void)
 
       }
 
-      gsmProcess();
-
    }
 
    return;
@@ -471,7 +496,7 @@ void console_gprs (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
 
          switch (instruction) {
 
@@ -531,8 +556,6 @@ void console_gprs (void)
 
       }
 
-      gsmProcess();
-
    }
 
    return;
@@ -557,7 +580,7 @@ void console_gnss (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
 
          switch (instruction) {
 
@@ -600,8 +623,6 @@ void console_gnss (void)
 
       }
 
-      gsmProcess();
-
    }
 
    return;
@@ -625,7 +646,7 @@ void console_urc (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
 
          switch (instruction) {
 
@@ -675,8 +696,6 @@ void console_urc (void)
 
       }
 
-      gsmProcess();
-
    }
 
    return;
@@ -702,6 +721,7 @@ int main(void)
    connStatus_s status;
 
    gsmSetUrcCback(cbUrc);
+   gsmSetDataCback(cbData);
 
    pausems(DELAY_INIT);
 
