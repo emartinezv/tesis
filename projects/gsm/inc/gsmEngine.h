@@ -87,14 +87,6 @@ typedef enum _serialMode_e
    DATA_MODE
 } serialMode_e ;
 
-/** @brief Modes for URC handling */
-
-typedef enum _urcMode_e
-{
-   MANUAL_MODE,
-   CBACK_MODE
-} urcMode_e ;
-
 /** @brief State of the engine FSM */
 
 typedef enum _fsmState_e
@@ -206,30 +198,6 @@ void gsmSetSerialMode(serialMode_e mode);
 */
 
 rsp_t gsmGetUrc (void);
-
-/** @brief Returns the actual URC handling mode
-*
-*  @return Returns MANUAL_MODE or CBACK_MODE
-*/
-
-urcMode_e gsmGetUrcMode(void);
-
-/** @brief Changes the URC handling mode
-*
-*  @param mode   : URC handling mode
-*
-*/
-
-void gsmSetUrcMode(urcMode_e mode);
-
-/** @brief Sets the URC callback function
-*
-*  @param cback   : URC callback function
-*
-*/
-
-void gsmSetUrcCback(void (*cback) (uint8_t const * const cmd, uint8_t const * const par));
-
 
 /*==================[cplusplus]==============================================*/
 

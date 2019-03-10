@@ -648,13 +648,13 @@ void console_urc (void)
 
             case '2':
 
-            gsmSetUrcCbackMode(cbUrc);
+            gsmSetUrcMode(CBACK_MODE);
 
             break;
 
             case '3':
 
-            gsmSetUrcManualMode();
+            gsmSetUrcMode(MANUAL_MODE);
 
             break;
 
@@ -700,6 +700,8 @@ int main(void)
 
    sigQual_s sigqual;
    connStatus_s status;
+
+   gsmSetUrcCback(cbUrc);
 
    pausems(DELAY_INIT);
 

@@ -72,14 +72,6 @@ static uint32_t toutCnt = 0;
 
 static serialMode_e serialMode = COMMAND_MODE;
 
-/** @brief Manual or Callback mode for URC handling */
-
-static urcMode_e urcMode = MANUAL_MODE;
-
-/** @brief Function pointer to callback for URCs */
-
-static void (*urcCback) (uint8_t const * const cmd, uint8_t const * const par) = 0;
-
 /*---------------------------------------------------------------------------*/
 /*                   Variables for the token VL ring buffer                  */
 /*---------------------------------------------------------------------------*/
@@ -506,64 +498,43 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
 }
 
-/** The gsmRecordUrc function handles received URCs. If urcMode is MANUAL_MODE,
- *  the URC is stored in the urcVlRb. If it is in CBACK_MODE, it calls the
- *  configured callback function with the URC as it's arguments.
- */
+/** The gsmRecordUrc function records received URCs in a VLRB */
 
 static uint8_t gsmRecordUrc (uint8_t const * const command,
                     uint8_t const * const parameter)
 {
-   /* If in MANUAL_MODE, the URC is stored in the urcVlRb and the function
-    * returns 1. If the buffer is full, it returns 0.
-    */
+   if(0 == VLRingBuffer_IsFull(&urcVlRb)){
 
-   if(MANUAL_MODE == urcMode){
+     uint8_t urcAux[TKN_LEN]; /* auxiliary vector */
 
-      if(0 == VLRingBuffer_IsFull(&urcVlRb)){
+     urcAux[0] = '\0';
 
-        uint8_t urcAux[TKN_LEN]; /* auxiliary vector */
+     strncat(urcAux, command, strlen(command));
+     strncat(urcAux, ".", 1);
+     strncat(urcAux, parameter, strlen(parameter));
 
-        urcAux[0] = '\0';
+     VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
 
-        strncat(urcAux, command, strlen(command));
-        strncat(urcAux, ".", 1);
-        strncat(urcAux, parameter, strlen(parameter));
+     debug(">>>engine<<<   urcAux: ");
+     debug(urcAux);
+     debug("\r\n");
 
-        VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
+     return 1;
+  }
 
-        debug(">>>engine<<<   urcAux: ");
-        debug(urcAux);
-        debug("\r\n");
+  else{
 
-        return 1;
-     }
+     debug(">>>engine<<<   URC VLRB lleno!\r\n");
 
-     else{
-
-        debug(">>>engine<<<   URC VLRB lleno!\r\n");
-
-        return 0;
-     }
-   }
-
-   /* If in CBACK_MODE, the callback function is called with the URCs cmd and
-    * par strings as the arguments.
-    */
-
-   else if(CBACK_MODE == urcMode){
-
-      urcCback(command, parameter);
-      return;
-
-   }
+     return 0;
+  }
 
 }
 
 /*==================[external functions definition]==========================*/
 
 /* The gsmInitEngine function initializes the tokenizer module, the serial
- * comms and urc modes and all three variable-length ring buffers.
+ * comms and all three variable-length ring buffers.
  */
 
 void gsmInitEngine(void){
@@ -571,7 +542,6 @@ void gsmInitEngine(void){
    gsmInitTokenizer();
 
    gsmSetSerialMode(COMMAND_MODE); /* start serial comms in command mode */
-   gsmSetUrcMode(MANUAL_MODE);     /* URC handling starts in manual mode */
 
    VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, TKN_BUF_SIZE);
    VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, RSP_BUF_SIZE);
@@ -858,23 +828,6 @@ serialMode_e gsmGetSerialMode(void)
 void gsmSetSerialMode(serialMode_e mode)
 {
    serialMode = mode;
-   return;
-}
-
-urcMode_e gsmGetUrcMode(void)
-{
-   return urcMode;
-}
-
-void gsmSetUrcMode(urcMode_e mode)
-{
-   urcMode = mode;
-   return;
-}
-
-void gsmSetUrcCback(void (*cback) (uint8_t const * const cmd, uint8_t const * const par))
-{
-   urcCback = cback;
    return;
 }
 

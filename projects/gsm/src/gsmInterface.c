@@ -77,9 +77,24 @@ static void * frmOutput;
 /** @brief Function pointer to callback for the current formula being run
  */
 
-static void * (*frmCback) (errorUser_s, void *);
+static frmCback_t frmCback;
 
-/** @brief used for GSM processing period counter */
+/** @brief Mode variable for URC handling
+ */
+
+static urcMode_e urcMode = MANUAL_MODE;
+
+/** @brief Function pointer to callback for URCs
+ */
+
+static urcCback_t urcCback;
+
+/** @brief Function pointer to callback for DATA_MODE
+ */
+
+static dataCback_t dataCback;
+
+/** @brief Period counter for GSM processing */
 
 static int32_t procCount = DELAY_PROC;
 
@@ -623,7 +638,7 @@ static void gsmSmsSendF (void)
 
          }
 
-         strncat(smsCmd, "AT+CMGS=\"", strlen("AT+CMGS=\"");
+         strncat(smsCmd, "AT+CMGS=\"", strlen("AT+CMGS=\""));
          strncat(smsCmd, ((smsOut_s *)frmInput)->dest,strlen(((smsOut_s *)frmInput)->dest));
          strncat(smsCmd, "\"\r", strlen("\"\r"));
 
@@ -1712,7 +1727,7 @@ static void gsmGnssGetDataF (void)
 /*                  General GSM library operation functions                  */
 /*---------------------------------------------------------------------------*/
 
-void gsmStartUp (void * (*cback) (errorUser_s, void *))
+void gsmStartUp (frmCback_t cback)
 {
    frm = gsmStartUpF;
    frmCback = cback;
@@ -1745,6 +1760,17 @@ void gsmProcess (void)
 
          if(COMMAND_MODE == gsmGetSerialMode()){
             gsmProcessTkn();
+
+            if(CBACK_MODE == urcMode){
+
+               rsp_t dummy;
+               dummy = gsmGetUrc();
+
+               if('\0' != dummy.cmd[0]){
+                  urcCback(dummy.cmd, dummy.par);
+               }
+            }
+
          }
 
          else if (DATA_MODE == gsmGetSerialMode()){
@@ -1775,7 +1801,7 @@ uint8_t gsmIsIdle (void)
    return(frmState == IDLE);
 }
 
-void gsmGetSigQual (sigQual_s * sigQual, void * (*cback) (errorUser_s, void *))
+void gsmGetSigQual (sigQual_s * sigQual, frmCback_t cback)
 {
    frm = gsmGetSigQualF;
    frmOutput = sigQual;
@@ -1785,7 +1811,7 @@ void gsmGetSigQual (sigQual_s * sigQual, void * (*cback) (errorUser_s, void *))
    return;
 }
 
-void gsmCheckConn (connStatus_s * status, void * (*cback) (errorUser_s, void *))
+void gsmCheckConn (connStatus_s * status, frmCback_t cback)
 {
    frm = gsmCheckConnF;
    frmOutput = status;
@@ -1795,17 +1821,15 @@ void gsmCheckConn (connStatus_s * status, void * (*cback) (errorUser_s, void *))
    return;
 }
 
-void gsmSetUrcCbackMode (void (*cback) (uint8_t const * const cmd, uint8_t const * const par))
+void gsmSetUrcMode (urcMode_e mode)
 {
-   gsmSetUrcMode(CBACK_MODE);
-   gsmSetUrcCback(cback);
+   urcMode = mode;
    return;
 }
 
-void gsmSetUrcManualMode (void)
+void gsmSetUrcCback (urcCback_t cback)
 {
-   gsmSetUrcMode(MANUAL_MODE);
-   gsmSetUrcCback(0);
+   urcCback = cback;
    return;
 }
 
@@ -1813,7 +1837,7 @@ void gsmSetUrcManualMode (void)
 /*                              SMS functions                                */
 /*---------------------------------------------------------------------------*/
 
-void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, void * (*cback) (errorUser_s, void *))
+void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, frmCback_t cback)
 {
    frm = gsmSmsSendF;
    frmInput = msg;
@@ -1824,7 +1848,7 @@ void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, void * (*cback) (errorUser_s,
    return;
 }
 
-void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, void * (*cback) (errorUser_s, void *))
+void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, frmCback_t cback)
 {
    frm = gsmSmsReadF;
    frmInput = pars;
@@ -1835,7 +1859,7 @@ void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, void * (*cback) (errorUse
    return;
 }
 
-void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUser_s, void *))
+void gsmSmsList (smsRec_s * list, smsListPars_s * pars, frmCback_t cback)
 {
    frm = gsmSmsListF;
    frmInput = pars;
@@ -1846,7 +1870,7 @@ void gsmSmsList (smsRec_s * list, smsListPars_s * pars, void * (*cback) (errorUs
    return;
 }
 
-void gsmSmsDel (smsDelPars_s * msgdel, void * (*cback) (errorUser_s, void *))
+void gsmSmsDel (smsDelPars_s * msgdel, frmCback_t cback)
 {
    frm = gsmSmsDelF;
    frmInput = msgdel;
@@ -1860,7 +1884,7 @@ void gsmSmsDel (smsDelPars_s * msgdel, void * (*cback) (errorUser_s, void *))
 /*                             GPRS functions                                */
 /*---------------------------------------------------------------------------*/
 
-void gsmGprsStart (apnUserPwd_s * apn, void * (*cback) (errorUser_s, void *))
+void gsmGprsStart (apnUserPwd_s * apn, frmCback_t cback)
 {
    frm = gsmGprsStartF;
    frmInput = apn;
@@ -1870,7 +1894,7 @@ void gsmGprsStart (apnUserPwd_s * apn, void * (*cback) (errorUser_s, void *))
    return;
 }
 
-void gsmGprsOpenPort (port_s * port, void * (*cback) (errorUser_s, void *))
+void gsmGprsOpenPort (port_s * port, frmCback_t cback)
 {
    frm = gsmGprsOpenPortF;
    frmInput = port;
@@ -1880,7 +1904,7 @@ void gsmGprsOpenPort (port_s * port, void * (*cback) (errorUser_s, void *))
    return;
 }
 
-void gsmGprsClosePort (void * (*cback) (errorUser_s, void *))
+void gsmGprsClosePort (frmCback_t cback)
 {
    frm = gsmGprsClosePortF;
    frmCback = cback;
@@ -1893,7 +1917,7 @@ void gsmGprsClosePort (void * (*cback) (errorUser_s, void *))
 /*                             GNSS functions                                */
 /*---------------------------------------------------------------------------*/
 
-void gsmGnssPwr (pwrGnss_e * cmd, void * (*cback) (errorUser_s, void *))
+void gsmGnssPwr (pwrGnss_e * cmd, frmCback_t cback)
 {
    frm = gsmGnssPwrF;
    frmInput = cmd;
@@ -1903,7 +1927,7 @@ void gsmGnssPwr (pwrGnss_e * cmd, void * (*cback) (errorUser_s, void *))
    return;
 }
 
-void gsmGnssGetData (uint8_t * gnssData, void * (*cback) (errorUser_s, void *))
+void gsmGnssGetData (uint8_t * gnssData, frmCback_t cback)
 {
    frm = gsmGnssGetDataF;
    frmOutput = gnssData;

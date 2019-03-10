@@ -132,16 +132,24 @@ typedef struct _errorUser_s {
 
 /** @brief Type for formula callback */
 
-typedef void * (*frmCback_t) (errorUser_s, void *)
+typedef void * (*frmCback_t) (errorUser_s, void *);
+
+/** @brief Modes for URC handling */
+
+typedef enum _urcMode_e
+{
+   MANUAL_MODE,
+   CBACK_MODE
+} urcMode_e ;
 
 /** @brief Type for URC callback */
 
 typedef void (*urcCback_t) (uint8_t const * const cmd,
-                            uint8_t const * const par)
+                            uint8_t const * const par);
 
 /** @brief Type for DATA_MODE callback */
 
-typedef void * (*dataCback_t) ()
+typedef void (*dataCback_t) (uint8_t * const write, uint8_t * const read);
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGetSigQual function               */
@@ -351,21 +359,23 @@ void gsmGetSigQual (sigQual_s * sigQual, frmCback_t cback);
 
 void gsmCheckConn (connStatus_s * status, frmCback_t cback);
 
-/** @brief Sets URC handling to cback mode and sets callback function
+/** @brief Sets URC handling either cback mode or manual mode
+*
+* @param mode   URC handling mode
+*
+* @return
+*/
+
+void gsmSetUrcMode (urcMode_e mode);
+
+/** @brief Sets URC cback
 *
 * @param cback  Function pointer to callback function
 *
 * @return
 */
 
-void gsmSetUrcCbackMode (urcCback_t cback);
-
-/** @brief Sets URC handling to manual mode
-*
-* @return
-*/
-
-void gsmSetUrcManualMode (void);
+void gsmSetUrcCback (urcCback_t cback);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */
