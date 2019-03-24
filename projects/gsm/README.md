@@ -5,7 +5,18 @@ Based on SIMCOM's SIM808 module and the EDU-CIAA-NXP board, though implementatio
 
 ## General description
 
-GSM modems traditionally work with AT commands through a serial RS-232 port. This is an old protocol, harking back to a [specific command language](https://en.wikipedia.org/wiki/Hayes_command_set) originally developed by Dennis Hayes for the Hayes Smartmodem 300 baud modem in 1981. It generally works in a command-responde fashion, although certain conditions in the modem (such as startup messages or receiving an SMS) may give rise to what is called an URC (UnRequested Code). Thus, we need to send commands (checking their echo to confirm reception), interpret the responses and also be on the lookout for URCs, which may come up at any time without any preceding command.
+GSM modems traditionally work with serial RS-232 communication. The usual protocol is informally called *AT protocol*, though it's technical name is the *Hayes command set*. It is an old protocol, harking back to a [specific command language](https://en.wikipedia.org/wiki/Hayes_command_set) originally developed by Dennis Hayes for the Hayes Smartmodem 300 baud modem in 1981. It generally works in a command-response fashion, although certain conditions in the modem (such as startup messages or receiving an SMS) may give rise to what is called an URC (UnRequested Code). Thus, we need to send commands (checking their echo to confirm reception), interpret the responses and also be on the lookout for URCs, which may come up at any time without any preceding command. An sample command-response interaction would be as follows:
+
+CMD: **AT**                       (this command does nothing, just confirms modem availability)
+RSP: **OK**                       (almost all commands are closed with an OK message)
+CMD: **AT+CREG?**                 (asking if we are connected to the GSM network)
+RSP: **+CREG: 0,1**               (we are conected to the network)
+RSP: **OK**                       
+CMD: **AT+CMGS="+5491151751810"** (send an SMS to the indicated number)
+RSP: **`> `**                     (prompts us to write the text and then enter Ctrl+Z)
+CMD: **Hola!**                    (we enter the text and enter Crtl+Z)
+RSP: **+CMGS: 4**                 (the message was sent successfully and 4 is the storage code)
+RSP: **OK**
 
 The function of the library is to allow the user to interact with the modem at a higher abstraction level than that of AT commands. For most of the tasks the user may want to do with the modem (send or read SMSs, open a TCP or UDP port, get GPS information, etc.), several commands need to be sent, analyzing their responses and any possible error messages. The intention is to hide this as much as possible from the user and present to him a streamlined interface.
 
@@ -13,20 +24,65 @@ The function of the library is to allow the user to interact with the modem at a
 
 The library was designed with a strong emphasis on defining a number of abstraction layers and keeping a vertical-communication scheme as much as possible. That is, layers should ideally communicate only with the layer above and below it.
 
-   +--------------+
-   |              |
-   | gsmInterface |
-   |              |
-   +--------------+
-         \|
-         \|
-    +-----------+
-    |           |
-    | gsmEngine |
-    |           |
-    +-----------+
+    +--------------+
+    |              |
+    |     User     |
+    |              |
+    +--------------+
+            | 
+            |
+     +------------+
+     |            |
+     |  Protocol  |
+     |            |
+     +------------+
+            |
+            |
+     +------------+
+     |            |
+     |   Comms    |
+     |            |
+     +------------+
+
+The **User** layer involves all the functions the user needs to implement the library into his program (startup functions, timers, etc.) as well as the actual GSM modem-related functions (sending an SMS, reading an SMS, opening a TCP port, etc.).
+
+The **Protocol** layer handles all the issues related to the AT command protocol. This means interpreting the actual commands and responses, keeping an internal status indicating whether a command has been processed fully, etc.
+
+The **Comms** layer handles the serial communication and the tokenization process; that is, turning the continuous serial traffic into discrete units which can later be analized by the Protocol layer under AT command classification schemes.
 
 ## Software structure
+
+While the intention is to have the software structure mimic the abstraction layers, there is always a bit of overlap. However, this overlap has been minimized as much as possible. The software is divided into five modules, as the following image indicates.
+
+    +--------------+
+    |              |
+    | gsmInterface |
+    |              |
+    +--------------+
+           |
+           |
+     +------------+     +------------+     +-------------+
+     |            |     |            |     |             |
+     | gsmEngine  |-----|  gsmParser |-----| gsmCommands |
+     |            |     |            |     |             |
+     +------------+     +------------+     +-------------+
+           |
+           |
+    +--------------+
+    |              |
+    | gsmTokenizer |
+    |              |
+    +--------------+
+
+The **gsmInterface** module handles all user-facing functions. 
+
+The **gsmEngine** module handles the general state of the library, as well as an important FSM which determines if a command is currently being processed and if so, in which state of the cycle we currently are.
+
+The **gsmParser** module is comprised of a single function, but it's importance is central. It turns the raw tokens received from the gsmTokenizer module into processed AT commands, classified according to the protocol's rules.
+
+The **gsmCommands** module is rather simple; it just lists the recognized AT commands and URCs. It also provides a search function.
+
+The **gsmTokenizer** module interacts directly with the serial connection to the GSM modem. It breaks up the raw serial transit into tokens, which are then sent to the upper layers for classification and processing.
 
 ## Usage
 
