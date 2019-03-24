@@ -53,7 +53,7 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** @brief GSM processing period in ms */
+/** @brief invocation period of gsmProcess in ms */
 
 #define DELAY_PROC 10;
 
@@ -212,7 +212,7 @@ typedef struct _smsReadPars_s {
 /** @brief Type for received SMS */
 
 typedef struct _smsRec_s {
-   uint8_t meta[TKN_PAR_SIZE/2]; /**< metadata */
+   uint8_t meta[TKN_PAR_SIZE]; /**< metadata */
    uint8_t text[TKN_PAR_SIZE];   /**< text of the SMS message */
 } smsRec_s;
 
@@ -302,6 +302,16 @@ typedef enum _pwrGnss_e {
    OFF    /**< Power GNSS module off */
 } pwrGnss_e;
 
+/*---------------------------------------------------------------------------*/
+/*              Data structures for the gsmGnssGetData function              */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Struct for storing GNSS info */
+
+typedef struct _dataGnss_s {
+   uint8_t data[95];   /**< GNSS data string */
+} dataGnss_s;
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
@@ -326,8 +336,8 @@ void gsmStartUp (frmCback_t cback);
 
 void gsmSysTickHandler (void);
 
-/** @brief Processes commands and URCs at the rate of one token per invocation
-*
+/** @brief Processes commands, responded and URCs at the rate of one token
+*  per invocation
 */
 
 void gsmProcess (void);
@@ -368,7 +378,7 @@ void gsmCheckConn (connStatus_s * status, frmCback_t cback);
 
 void gsmSetUrcMode (urcMode_e mode);
 
-/** @brief Sets URC cback
+/** @brief Sets URC cback function
 *
 * @param cback  Function pointer to callback function
 *
@@ -414,7 +424,7 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
 
 void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, frmCback_t cback);
 
-/** @brief Read a single received SMS
+/** @brief Reads a single received SMS
 *
 * @param msg    Pointer to storage variable for SMS to be read
 * @param pars   SMS read parameters (index and mode)
@@ -501,7 +511,7 @@ void gsmGnssPwr (pwrGnss_e * cmd, frmCback_t cback);
 * @return
 */
 
-void gsmGnssGetData (uint8_t * gnssData, frmCback_t cback);
+void gsmGnssGetData (dataGnss_s * dataGnss, frmCback_t cback);
 
 /*==================[cplusplus]==============================================*/
 

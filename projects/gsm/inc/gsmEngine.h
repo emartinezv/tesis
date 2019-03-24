@@ -67,7 +67,13 @@ extern "C" {
 #define TKN_CMD_SIZE 20
 
 /** @brief Max size of an AT token parameter part */
-#define TKN_PAR_SIZE 300
+
+#define TKN_PAR_SIZE 300 /* Max size is usually determined by SMS message
+                            length which is topped at 160 chars with the usual
+                            GSM-7 coding. However, if using UCS2 coding the max
+                            number of chars will be 67, but they come out of
+                            the modem coded at a 4-to-1 rate, which means a max
+                            of 268 effective chars to store.
 
 /** @brief Max size in chars of the AT+CGNSINF response */
 #define MAX_CGNSINF_SIZE 94

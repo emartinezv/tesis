@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /*==================[inclusions]=============================================*/
 
 #include "main.h"
@@ -43,8 +41,6 @@
 /*==================[global data]============================================*/
 
 /*==================[internal data declaration]==============================*/
-
-static uint8_t deleteAll = 0;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -565,7 +561,7 @@ void console_gnss (void)
 {
    uint8_t instruction = 0;
 
-   uint8_t navInfo[95];
+   dataGnss_s navInfo;
    pwrGnss_e powerGNSS;
 
    while ('S' != instruction){
@@ -602,7 +598,7 @@ void console_gnss (void)
 
             case '3':
 
-            gsmGnssGetData(navInfo, cbempty);
+            gsmGnssGetData(&navInfo, cbempty);
 
             break;
 
