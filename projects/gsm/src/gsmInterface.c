@@ -1546,6 +1546,9 @@ static void gsmGprsOpenPortF (void)
    uint8_t auxStr[6]; /* auxiliary string */
                       /* XXXXX\0 --> max str length 6 */
 
+   rsp_t rsp; /* auxiliary variable used to analize the response to CIPSTART
+              /* and distinguish the open port attempt results */
+
    fsmEvent_e result;
 
    switch(frmState) {
@@ -1620,8 +1623,31 @@ static void gsmGprsOpenPortF (void)
 
                result = gsmProcessTkn();
                if(NO_UPDATE != result){
+
                   if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
+
+                  /* CIPSTART has several closing responses, some of which
+                   * indicate an error. Therefore, we need to further analyze
+                   * the specific response in order to determine any possible
+                   * error messages. */
+
+                  else if(OK_CLOSE == result){
+
+                     uint8_t noRsp, i;
+                     noRsp = gsmGetNoCmdRsp(); /* store number of responses */
+
+                     /* get the last response */
+                     for (i = 0; i < noRsp; i++){rsp = gsmGetCmdRsp();}
+
+                     if (0 == strcmp(rsp.cmd, "CONNECT FAIL")) {
+                        errorOut.errorFrm = ERR_PROC; frmState = WRAP;
+                     }
+
+                     else {
+                        frmState = WRAP;
+                     }
+
+                  }
                   else if(ERR_MSG_CLOSE == result){
                      errorOut.errorFrm = ERR_GSM;
                      frmState = WRAP;

@@ -1,7 +1,6 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,7 +51,9 @@ extern "C" {
 
  /** @brief Default timeout for AT commands in ms */
 
-#define TOUT_DEF 40 // PARA TESTING, USAR 20 ms COMO VALOR ESTANDAR
+#define TOUT_DEF 100 /* SIMCOM modules do not specify a default timeout period,
+                        but looking at other manufacturers the suggested value
+                        seems to be around 100 ms */
 
 /*==================[typedef]================================================*/
 

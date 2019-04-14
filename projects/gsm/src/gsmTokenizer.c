@@ -79,6 +79,24 @@ void gsmInitTokenizer(void)
    return;
 }
 
+/* gsmDetectTkns takes the raw serial input and turns it into discrete parts we
+ * call tokens. This is accomplished by detecting certain character sequences
+ * that indicate the beginning or end of certain type of token (AT commands,
+ * responses, prompts for SMS text and others). Once we have tokens, then the
+ * upper layers of the library can process them according to the rules of the
+ * AT protocol. The function does make a very rough classification of each
+ * token type, but the upper layers refine this classification.
+ *
+ * The function accumulates the incoming characters in a ring buffer
+ * (currTknRb) and looks for the specific characters mentioned. This takes the
+ * form of a FSM of sorts, since the condition for token detection sometimes
+ * involves both starting and finishing characters. When the function has
+ * detected a token, it pops a number of characters from currTknRb and inserts
+ * them as a single entry in tknVlRb, the VLRB sent as by the upper layer as
+ * the single input variable with the invocation.
+ *
+ */
+
 void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 {
    /* State-machine variables and flags */
@@ -110,8 +128,8 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
       debug(">>>tknzer<<<   CURRENT TOKEN RB FULL!\r\n");
    }
 
-   /* Cycle through each read char, detect all tokens and insert them in the
-    * token vlrb */
+   /* Cycle through each char in rdBuf, detect all tokens and insert them in
+    * the token vlrb */
    for(i = 0; i < n; i++){
 
       ch = rdBuf[i];
@@ -125,10 +143,6 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 
       if(!iscntrl(ch)){empty = 0;} /* if ch is not a control character then
                                       lower the empty flag */
-
-      /* Read "tokenizer SM.txt" to understand the logic of the tokenizer
-       * state machine logic which follows
-       */
 
       if(('\r' == pCh) && ('\n' != ch) && !crLf && !empty){
          currTkn = ECHO; smsIn = 0;

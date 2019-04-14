@@ -109,8 +109,8 @@ typedef enum _fsmEvent
    NO_UPDATE,         /**< no change to FSM */
    OK_CMD_SENT,       /**< command sent */
    OK_CMD_ACK,        /**< command acknowledged */
-   OK_RSP,            /**< non-closing responde received */
-   OK_URC,            /**< URC proccessed */
+   OK_RSP,            /**< non-closing response received */
+   OK_URC,            /**< URC processed */
    OK_CLOSE,          /**< successful closing response received */
    ERR_CMD_UKN,       /**< unknown command sent */
    ERR_CMD_ECHO,      /**< cmd echo erroneous or missing */

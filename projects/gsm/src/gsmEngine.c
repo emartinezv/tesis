@@ -414,7 +414,16 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               if(NULL != strstr(commands[idxSave].sucRsp,cmd)){
+               uint8_t auxCmd[22]; /* aux variable to format the cmd so that
+                                      it includes the closing response
+                                      separator characters */
+
+               auxCmd[0]='-';
+               auxCmd[1]='\0';
+               strncat(auxCmd, cmd, strlen(cmd));
+               strncat(auxCmd, "-", strlen("-"));
+
+               if(NULL != strstr(commands[idxSave].sucRsp,auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -426,7 +435,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               else if(NULL != strstr(commands[idxSave].errRsp,cmd)){
+               else if(NULL != strstr(commands[idxSave].errRsp,auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 

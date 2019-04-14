@@ -80,7 +80,7 @@ tknTypeTknzer_e;
 
 /*==================[external functions declaration]========================*/
 
-/** @brief Initializes tokenizer
+/** @brief Initializes tokenizer and it's RB
 *
 */
 

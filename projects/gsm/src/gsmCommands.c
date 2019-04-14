@@ -1,7 +1,5 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
- *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,33 +51,35 @@
 /** @brief Vector of known AT commands */
 
 atCmd_t const commands [] = {
-      {"AT"         , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
-      {"I"          , "OK" , "ERROR, +CMS ERROR"              , TOUT_DEF},
-      {"CMEE"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CMGL"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , 20000},
-      {"CMGR"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , 5000},
-      {"CMGF"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , TOUT_DEF},
-      {"CMGS"       , "> " , "ERROR, +CME ERROR, +CMS ERROR"  , 60000},
-      {"CSDH"       , "OK" , "ERROR, +CME ERROR, +CMS ERROR"  , TOUT_DEF},
-      {"CSCS"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CREG"       , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CSQ"        , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CNMI"       , "OK" , "ERROR"                          , TOUT_DEF},
-      {"CMGD"       , "OK" , "ERROR"                          , 25000},
-      {"CGATT"      , "OK" , "ERROR, +CME ERROR"              , 10000},
-      {"CSTT"       , "OK" , "ERROR, +CME ERROR"              , 1000*TOUT_DEF}, // VER SI MEJORA
-      {"CIICR"      , "OK" , "ERROR, +CME ERROR"              , 85000},
-      {"CIPSTART"   , "ALREADY CONNECT, CONNECT, STATE: , CONNECT FAIL" // PARCHE HORRIBLE DEBERIA DECIR
-                                                                        // CONNECT OK ENTRE LAS OPCIONES
-                                                                        // PERO GENERA PROBLEMAS...VER!!!
-                    , "ERROR, +CME ERROR"                     , 160000},
-      {"CIPCLOSE"   , "CLOSE OK", "ERROR, +CME ERROR"         , 1000 * TOUT_DEF}, // ARBITRARIO
-      {"CIPSHUT"    , "SHUT OK" , "ERROR, +CME ERROR"         , 65000},
-      {"CIFSR"      , "OK"  , "ERROR, +CME ERROR"              , 1000 * TOUT_DEF}, // ARBITRARIO
-      {"CIPMODE"    , "OK" , "ERROR, +CME ERROR"              , 1000 * TOUT_DEF}, // ARBITRARIO
-      {"CGNSPWR"    , "OK" , "ERROR, +CME ERROR"              , TOUT_DEF},
-      {"CGNSINF"    , "OK" , "ERROR, +CME ERROR"              , 1000 * TOUT_DEF}, // ARBITRARIO
-      {"SMS_BODY"   , "OK" , "ERROR"                          , 60000},
+      {"AT"         , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"I"          , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"CMEE"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"CMGL"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , 20000},
+      {"CMGR"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , 5000},
+      {"CMGF"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , TOUT_DEF},
+      {"CMGS"       , "-> -" , "-ERROR-CME ERROR-CMS ERROR-"   , 60000},
+      {"CSDH"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , TOUT_DEF},
+      {"CSCS"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"CREG"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"CSQ"        , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
+      {"CNMI"       , "-OK-" , "-ERROR-"                         , TOUT_DEF},
+      {"CMGD"       , "-OK-" , "-ERROR-"                         , 25000},
+      {"CGATT"      , "-OK-" , "-ERROR-CME ERROR-"              , 10000},
+      {"CSTT"       , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
+      {"CIICR"      , "-OK-" , "-ERROR-CME ERROR-"              , 85000},
+      {"CIPSTART"   , "-CONNECT OK-ALREADY CONNECT-CONNECT FAIL-CONNECT-"
+                            /* "CONNECT" is not listed as a closing response
+                             * in the SIM808 manual, but actual experiments
+                             * indicate that it appears occasionally when
+                             * connecting to an UDP port. */
+                    , "-ERROR-CME ERROR-"                       , 160000},
+      {"CIPCLOSE"   , "-CLOSE OK-", "-ERROR-CME ERROR-"         , TOUT_DEF}, //P
+      {"CIPSHUT"    , "-SHUT OK-" , "-ERROR-CME ERROR-"         , 65000},
+      {"CIFSR"      , "-OK-"  , "-ERROR-CME ERROR-"             , TOUT_DEF},
+      {"CIPMODE"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
+      {"CGNSPWR"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
+      {"CGNSINF"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
+      {"SMS_BODY"   , "-OK-" , "-ERROR-"                         , 60000},
       {0 , 0 , 0}
 };
 

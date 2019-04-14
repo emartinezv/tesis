@@ -53,7 +53,7 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
-/** @brief invocation period of gsmProcess in ms */
+/** @brief Invocation period of gsmProcess in ms */
 
 #define DELAY_PROC 10;
 
