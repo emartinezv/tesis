@@ -1975,7 +1975,7 @@ static void gsmGnssGetDataF (void)
 
 /* This function needs to be called from the basic ARM SysTick_Handler function
  * to handle gsmProcess calls and AT command timeouts. When called, it
- * decrements both procCnt and toutCnt. It must me mentioned that procCnt is
+ * decrements both procCnt and toutCnt. It must be mentioned that procCnt is
  * an interface-level variable, while toutCnt is an engine-level variable.
  * This is why a function is used to decrement toutCnt, as it is not in scope
  * in interface.

@@ -12,16 +12,16 @@ The AT protocol generally works in a command-response fashion, although certain 
 
 An sample command-response interaction would be as follows:
 
-```CMD: **AT**```                       (this command does nothing, just confirms modem availability)  
-```RSP: **OK**```                    (almost all commands are closed with an OK message)  
-```CMD: **AT+CREG?**```               (asking if we are connected to the GSM network)  
-```RSP: **+CREG: 0,1**```               (we are conected to the network)  
-```RSP: **OK**```  
-```CMD: **AT+CMGS="+5491151751810"**``` (send an SMS to the indicated number)  
-```RSP: **`> `**```                     (prompts us to write the text and then enter Ctrl+Z)  
-```CMD: **Hola!**```                    (we enter the text and enter Crtl+Z)  
-```RSP: **+CMGS: 4**```                 (the message was sent successfully and 4 is the storage code)  
-```RSP: **OK**```  
+```CMD: AT```                       (this command does nothing, just confirms modem availability)  
+```RSP: OK```                       (almost all commands are closed with an OK message)  
+```CMD: AT+CREG?```                 (asking if we are connected to the GSM network)  
+```RSP: +CREG: 0,1```               (we are conected to the network)  
+```RSP: OK```  
+```CMD: AT+CMGS="+5491151751810"``` (send an SMS to the indicated number)  
+```RSP: `> ````                     (prompts us to write the text and then enter Ctrl+Z)  
+```CMD: Hola!```                    (we enter the text and enter Crtl+Z)  
+```RSP: +CMGS: 4```                 (the message was sent successfully and 4 is the storage code)  
+```RSP: OK```  
 
 The function of the library is to allow the user to interact with the modem at a higher abstraction level than that of AT commands. For most of the tasks the user is interested in (send or read SMSs, open a TCP or UDP port, get GPS information, etc.), several commands need to be sent, analyzing their responses and any possible error messages. The intention is to hide this as much as possible from the user and present to him a streamlined interface.
 
@@ -49,7 +49,7 @@ The library was designed with a strong emphasis on defining a number of abstract
      |            |
      +------------+
 
-The **User** layer involves all the functions the user needs to implement the library into his program (startup functions, timers, etc.) as well as the actual GSM modem-related functions (sending an SMS, reading an SMS, opening a TCP port, etc.). Almost all the lower level details are hidden from him.
+The **User** layer involves all the functions the user needs to implement the library into his program (startup functions, timers, etc.) as well as the actual GSM modem-related functions (sending an SMS, reading an SMS, opening a TCP port, etc.). Almost all the lower level details are hidden from the user.
 
 The **Protocol** layer handles all the issues related to the AT command protocol. This means interpreting the actual commands and responses, keeping an internal status indicating whether a command has been processed fully, etc.
 
@@ -85,7 +85,7 @@ The `gsmEngine` module handles the general state of the library, as well as an i
 
 The `gsmParser` module is comprised of a single function, but it's importance is central. It turns the raw tokens received from the gsmTokenizer module into processed AT commands, classified according to the protocol's rules.
 
-The `gsmCommands` module is rather simple; it just lists the recognized AT commands and URCs. It also provides a search function.
+The `gsmCommands` module is rather simple; it just lists the recognized AT commands and URCs. It also provides a search function for both commands and URCs.
 
 The `gsmTokenizer` module interacts directly with the serial connection to the GSM modem. It breaks up the raw serial transit into tokens, which are then sent to the upper layers for classification and processing. The library includes a special variable-length ring buffer (VLRB) library, which extends the functionality of standard ring buffers to items of arbitrary length. This allows for a more efficient use of memory.
 
