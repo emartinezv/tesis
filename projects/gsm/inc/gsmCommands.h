@@ -51,9 +51,12 @@ extern "C" {
 
  /** @brief Default timeout for AT commands in ms */
 
-#define TOUT_DEF 100 /* SIMCOM modules do not specify a default timeout period,
-                        but looking at other manufacturers the suggested value
-                        seems to be around 100 ms */
+#define TOUT_DEF 100   /* SIMCOM modules do not specify a default timeout
+                          period, but looking at other manufacturers the
+                          suggested value seems to be around 100 ms */
+
+#define UNKNOWN_CMD 65535  /* Value returned by gsmCmdSearch when cmd is not
+                              found */
 
 /*==================[typedef]================================================*/
 

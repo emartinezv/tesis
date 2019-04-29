@@ -689,7 +689,8 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
    /* If the command is valid, send it through the serial port and then update
     * the FSM by invoking gsmUpdateFsm. */
 
-   if((65535 != idx) && ((sending >= AUTOBAUD) && (sending <= SMS_BODY_P))){
+   if((UNKNOWN_CMD != idx) && ((sending >= AUTOBAUD) &&
+      (sending <= SMS_BODY_P))){
 
       rs232Print(cmdStr); /* Send the cmd string through the serial port */
 
@@ -736,35 +737,35 @@ rsp_t gsmGetCmdRsp (void)
     * par strings by looking for the '.' char which acts as a separator.
     */
 
-   if(0 == VLRingBuffer_IsEmpty(&rspVlRb)){
+   if(0 != VLRingBuffer_IsEmpty(&rspVlRb)){
+      return dummy;
+   }
 
-      rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
+   rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
 
-      /* Find the dot which separated command from parameter and separate the
-      /* raw response into command and parameter strings */
+   /* Find the dot which separated command from parameter and separate the
+   /* raw response into command and parameter strings */
 
-      uint8_t dotPos = 0;
-      uint8_t i;
+   uint8_t dotPos = 0;
+   uint8_t i;
 
-      for (i = 0; i < (TKN_CMD_SIZE+TKN_PAR_SIZE); i++){
-         if ('.' == rspAux[i]){
-            dotPos = i;
-            break;
-         }
+   for (i = 0; i < (TKN_CMD_SIZE+TKN_PAR_SIZE); i++){
+      if ('.' == rspAux[i]){
+         dotPos = i;
+         break;
       }
+   }
 
-      /* Copy the cmd and par strings in the respective parts of the dummy rsp
-       * variable.
-       */
+   /* Copy the cmd and par strings in the respective parts of the dummy rsp
+    * variable.
+    */
 
-      if(0 != dotPos){
+   if(0 != dotPos){
 
-         strncpy(dummy.cmd, rspAux, dotPos);
-         dummy.cmd[dotPos] = '\0';
-         strncpy(dummy.par, &rspAux[dotPos+1], rspSiz-dotPos-1);
-         dummy.par[rspSiz-dotPos-1] = '\0';
-
-      }
+      strncpy(dummy.cmd, rspAux, dotPos);
+      dummy.cmd[dotPos] = '\0';
+      strncpy(dummy.par, &rspAux[dotPos+1], rspSiz-dotPos-1);
+      dummy.par[rspSiz-dotPos-1] = '\0';
 
    }
 

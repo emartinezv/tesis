@@ -456,75 +456,82 @@ static void gsmGetSigQualF (void)
                if(',' == rsp.par[i]){commaPos = i; break;}
             }
 
-            /* Copy the string of RSSI and convert it into a integer. Then, use
-             * the table in the SIM808 manual to translate this number into an
-             * actual RSSI reading in dBm. The table goes as follows:
-             *
-             * RSSI = 0          -->   -115 dBm
-             * RSSI = 1          -->   -111 dBm
-             * 2 <= RSSI <= 30   -->   -110 + (RSSI-2)*2 dBm
-             * RSSI = 31         -->    -52 dBm
-             * RSSI = 99         -->    Error
-             *
-             */
+            if(commaPos != 0){
 
-            strncpy(auxStr,&rsp.par[0],commaPos);
-            auxStr[commaPos] = '\0';
+               /* Copy the string of RSSI and convert it into a integer. Then, use
+                * the table in the SIM808 manual to translate this number into an
+                * actual RSSI reading in dBm. The table goes as follows:
+                *
+                * RSSI = 0          -->   -115 dBm
+                * RSSI = 1          -->   -111 dBm
+                * 2 <= RSSI <= 30   -->   -110 + (RSSI-2)*2 dBm
+                * RSSI = 31         -->    -52 dBm
+                * RSSI = 99         -->    Error
+                *
+                */
 
-            ((sigQual_s *)frmOutput)->rssi = atoi(auxStr);
+               strncpy(auxStr,&rsp.par[0],commaPos);
+               auxStr[commaPos] = '\0';
 
-            if(0 == ((sigQual_s *)frmOutput)->rssi){
-               ((sigQual_s *)frmOutput)->rssi = -115;
+               ((sigQual_s *)frmOutput)->rssi = atoi(auxStr);
+
+               if(0 == ((sigQual_s *)frmOutput)->rssi){
+                  ((sigQual_s *)frmOutput)->rssi = -115;
+               }
+
+               else if(1 == ((sigQual_s *)frmOutput)->rssi){
+                  ((sigQual_s *)frmOutput)->rssi = -111;
+               }
+
+               else if((((sigQual_s *)frmOutput)->rssi) >= 2 &&
+                       (((sigQual_s *)frmOutput)->rssi) <= 30){
+                  ((sigQual_s *)frmOutput)->rssi = -110 +
+                                            (((sigQual_s *)frmOutput)->rssi -2)*2;
+               }
+
+               else if(31 == ((sigQual_s *)frmOutput)->rssi){
+                  ((sigQual_s *)frmOutput)->rssi = -52;
+               }
+
+               else if(99 == ((sigQual_s *)frmOutput)->rssi){
+                  ((sigQual_s *)frmOutput)->rssi = 99;
+               }
+
+               /* Copy the string of BER and convert it to a number. The module
+                * reports RXQUAL values as per table in GSM 05.08 [20] subclause
+                * 8.2.4
+                *
+                * RXQUAL = 0   -->
+                * RXQUAL = 1   -->   0.2%    < BER <   0.4%
+                * RXQUAL = 2   -->   0.4%    < BER <   0.8%
+                * RXQUAL = 3   -->   0.8%    < BER <   1.6%
+                * RXQUAL = 4   -->   1.6%    < BER <   3.2%
+                * RXQUAL = 5   -->   3.2%    < BER <   6.4%
+                * RXQUAL = 6   -->   6.4%    < BER <   12.8%
+                * RXQUAL = 7   -->   12.8%   < BER
+                *
+                * */
+
+               strncpy(auxStr,&rsp.par[commaPos+1],strlen(rsp.par)-commaPos-1);
+               auxStr[strlen(rsp.par)-commaPos-1] = '\0';
+
+               ((sigQual_s *)frmOutput)->ber = atoi(auxStr);
+
+               debug(">>>interf<<<   RSSI: ");
+               itoa(((sigQual_s *)frmOutput)->rssi, auxStr, 10);
+               debug(auxStr);
+               debug(", RXQUAL: ");
+               itoa(((sigQual_s *)frmOutput)->ber, auxStr, 10);
+               debug(auxStr);
+               debug(" \r\n");
+
+               }
+
+            else{
+
+               errorOut.errorFrm = ERR_WRAP;
+
             }
-
-            else if(1 == ((sigQual_s *)frmOutput)->rssi){
-               ((sigQual_s *)frmOutput)->rssi = -111;
-            }
-
-            else if((((sigQual_s *)frmOutput)->rssi) >= 2 &&
-                    (((sigQual_s *)frmOutput)->rssi) <= 30){
-               ((sigQual_s *)frmOutput)->rssi = -110 +
-                                         (((sigQual_s *)frmOutput)->rssi -2)*2;
-            }
-
-            else if(31 == ((sigQual_s *)frmOutput)->rssi){
-               ((sigQual_s *)frmOutput)->rssi = -52;
-            }
-
-            else if(99 == ((sigQual_s *)frmOutput)->rssi){
-               ((sigQual_s *)frmOutput)->rssi = 99;
-            }
-
-            /* Copy the string of BER and convert it to a number. The module
-             * reports RXQUAL values as per table in GSM 05.08 [20] subclause
-             * 8.2.4
-             *
-             * RXQUAL = 0   -->
-             * RXQUAL = 1   -->   0.2%    < BER <   0.4%
-             * RXQUAL = 2   -->   0.4%    < BER <   0.8%
-             * RXQUAL = 3   -->   0.8%    < BER <   1.6%
-             * RXQUAL = 4   -->   1.6%    < BER <   3.2%
-             * RXQUAL = 5   -->   3.2%    < BER <   6.4%
-             * RXQUAL = 6   -->   6.4%    < BER <   12.8%
-             * RXQUAL = 7   -->   12.8%   < BER
-             *
-             * */
-
-            strncpy(auxStr,&rsp.par[commaPos+1],strlen(rsp.par)-commaPos-1);
-            auxStr[strlen(rsp.par)-commaPos-1] = '\0';
-
-            ((sigQual_s *)frmOutput)->ber = atoi(auxStr);
-
-            debug(">>>interf<<<   RSSI: ");
-            itoa(((sigQual_s *)frmOutput)->rssi, auxStr, 10);
-            debug(auxStr);
-            debug(", RXQUAL: ");
-            itoa(((sigQual_s *)frmOutput)->ber, auxStr, 10);
-            debug(auxStr);
-            debug(" \r\n");
-
-            frmCback(errorOut, frmOutput);
-            frmState = IDLE;
 
          }
 

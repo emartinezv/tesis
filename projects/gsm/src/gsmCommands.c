@@ -102,7 +102,7 @@ uint16_t gsmCmdSearch(uint8_t const * const cmd)
       if(0 == strcmp(cmd, commands[i].name)){return i;}
    }
 
-   return 65535;
+   return UNKNOWN_CMD;
 }
 
 uint8_t gsmUrcSearch(uint8_t const * const urc)
