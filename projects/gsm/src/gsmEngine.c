@@ -158,11 +158,11 @@ static uint8_t gsmRecordUrc (uint8_t const * const cmd,
 /** The gsmUpdateFsm function updates the engine FSM which preserves the state
  *  of the current command execution. The input is always a token, either one
  *  received from the GSM module or an AT command the user is trying to send.
- *  The token is already processed by the gsmParseTkn function, so we have it's
+ *  The token is already processed by the gsmParseTkn function, so we have its
  *  type in detail. The output of the function is the event triggered by the
  *  processing of the input token. State is internal to the FSM, but the upper
  *  layer (Interface) gets the events to see what just happened. All executions
- *  of the function will return a fsmEvent_e type response of some sort.
+ *  of the function return a fsmEvent_e type response of some sort.
  */
 
 static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,

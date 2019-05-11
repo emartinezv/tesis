@@ -109,7 +109,10 @@ typedef enum _errorFrm_e {
    ERR_INIT,   /**< error during initialization */
    ERR_PROC,   /**< error during command processing */
    ERR_GSM,    /**< error from the GSM engine */
-   ERR_WRAP    /**< error during wrap process */
+   ERR_TOUT,   /**< error due to timeout */
+   ERR_FSM,    /**< error due to cmd FSM being out of range */
+   ERR_WRAP,   /**< error during wrap process */
+   ERR_UNK     /**< error of type unknown */
 } errorFrm_e;
 
 /** @brief Type for command level error code return */

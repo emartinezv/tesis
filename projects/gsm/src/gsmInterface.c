@@ -1,4 +1,4 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
  * This file is part of Workspace.
@@ -54,10 +54,20 @@
 
 /*==================[internal data declaration]==============================*/
 
-/** @brief State of the current formula being run
+/** @brief General state of the current formula being run
  */
 
 static frmStatus_e frmState = IDLE;
+
+/** @brief Processing state of the current formula being run
+ */
+
+static procStatus_e procState = NOCMD;
+
+/** @brief User-level error outputs (if any) of the current formula being run
+ */
+
+static errorUser_s errorOut;
 
 /** @brief Function pointer to formula function for the current formula
  */
@@ -101,7 +111,7 @@ static int32_t procCnt = DELAY_PROC;
 /*==================[internal functions declaration]=========================*/
 
 /*---------------------------------------------------------------------------*/
-/*                  General GSM library operation functions                  */
+/*              General GSM library operation formula functions              */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Formula to start up the GSM library
@@ -120,7 +130,7 @@ static void gsmGetSigQualF (void);
 static void gsmCheckConnF (void);
 
 /*---------------------------------------------------------------------------*/
-/*                              SMS functions                                */
+/*                          SMS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Formula to send an SMS
@@ -144,7 +154,7 @@ static void gsmSmsListF (void);
 static void gsmSmsDelF (void);
 
 /*---------------------------------------------------------------------------*/
-/*                             GPRS functions                                */
+/*                         GPRS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Formula to start the GPRS connection
@@ -163,7 +173,7 @@ static void gsmGprsOpenPortF (void);
 static void gsmGprsClosePortF (void);
 
 /*---------------------------------------------------------------------------*/
-/*                             GNSS functions                                */
+/*                         GNSS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
 /** @brief Formula to turn GNSS power on or off
@@ -175,6 +185,49 @@ static void gsmGnssPwrF (void);
  */
 
 static void gsmGnssGetDataF (void);
+
+/*---------------------------------------------------------------------------*/
+/*                     Formula-processing subroutines                        */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Initialize formula state variables and error structure
+
+ */
+
+void gsmFrmInit ();
+
+/** @brief Subroutine to send a cmd and check for the correct echo
+*
+* @param cmd       Pointer to cmd string
+* @param nextState Next procState to go to if echo is correct
+*
+* @return
+*/
+
+void gsmFrmSendCmdCheckEcho (uint8_t const * const cmd,
+                             procStatus_e nextState);
+
+/** @brief Subroutine to process all responses and check for a final result:
+ *         either a closing response, error response or timeout. The frm states
+ *         are adjusted accordingly
+*
+* @param closingState Next procstate to go to if final response was closing
+* @param closingWrap  Go to WRAP formula state after closing response?
+* @param errorState   Next procstate to go to if final response was error
+* @param errorWrap    Go to WRAP formula state after closing response?
+*
+* @return
+*/
+
+void gsmFrmProcRspsGetFinal (procStatus_e closingState, Bool closingWrap,
+                             procStatus_e errorState, Bool errorWrap);
+
+/** @brief If a GSM error has been detected, it recalls the last response and
+ *         extracts the cmd and par portions of the error message into the
+ *         errorOut variable
+ */
+
+void gsmFrmCopyGsmError ();
 
 /*==================[internal data definition]===============================*/
 
@@ -245,23 +298,15 @@ static void gsmGnssGetDataF (void);
 
 static void gsmStartUpF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    switch(frmState) {
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
          gsmInitEngine(); /* Initializes the GSM engine */
 
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -271,86 +316,50 @@ static void gsmStartUpF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd("AT+CMEE=2\r");
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CMEE=2\r", ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD3;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD3, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD3:
 
-               result = gsmSendCmd("AT+CSCS=\"GSM\"\r");
-               if(OK_CMD_SENT == result){procState = ATCMD3RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CSCS=\"GSM\"\r", ATCMD3RESP);
+
                break;
 
             case ATCMD3RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD4;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD4, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD4:
 
-               result = gsmSendCmd("AT+CMGF=1\r");
-               if(OK_CMD_SENT == result){procState = ATCMD4RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CMGF=1\r", ATCMD4RESP);
+
                break;
 
             case ATCMD4RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD4RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -361,17 +370,7 @@ static void gsmStartUpF (void)
 
          if(OK != errorOut.errorFrm){
 
-            if(ERR_GSM == errorOut.errorFrm){
-
-               rsp_t rsp;
-
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
          }
 
          frmCback(errorOut, 0);
@@ -388,21 +387,13 @@ static void gsmStartUpF (void)
 
 static void gsmGetSigQualF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    switch(frmState) {
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -412,23 +403,14 @@ static void gsmGetSigQualF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CSQ\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CSQ\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD1RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -443,7 +425,11 @@ static void gsmGetSigQualF (void)
             uint8_t auxStr[2+1];  /* auxiliary string for response parsing of
                                    * the RSSI and BER values
                                    * XX\0 --> max string length 3 */
+            int8_t auxVal;   /* auxiliary integer to store the RSSI value and
+                                make all the math below more readable */
+
             auxStr[0] = '\0';
+
             uint8_t i;
             uint8_t commaPos = 0; /* position of the comma in the response */
 
@@ -473,29 +459,22 @@ static void gsmGetSigQualF (void)
                strncpy(auxStr,&rsp.par[0],commaPos);
                auxStr[commaPos] = '\0';
 
-               ((sigQual_s *)frmOutput)->rssi = atoi(auxStr);
+               auxVal = atoi(auxStr); /* convert the RSSI string value into
+                                         an integer for the math below */
 
-               if(0 == ((sigQual_s *)frmOutput)->rssi){
-                  ((sigQual_s *)frmOutput)->rssi = -115;
+               if(0 == auxVal) {auxVal = -115;}
+
+               else if(1 == auxVal) {auxVal = -111;}
+
+               else if(auxVal >= 2 && auxVal <= 30){
+                  auxVal = -110 + (auxVal -2)*2;
                }
 
-               else if(1 == ((sigQual_s *)frmOutput)->rssi){
-                  ((sigQual_s *)frmOutput)->rssi = -111;
-               }
+               else if(31 == auxVal) {auxVal = -52;}
 
-               else if((((sigQual_s *)frmOutput)->rssi) >= 2 &&
-                       (((sigQual_s *)frmOutput)->rssi) <= 30){
-                  ((sigQual_s *)frmOutput)->rssi = -110 +
-                                            (((sigQual_s *)frmOutput)->rssi -2)*2;
-               }
+               else if(99 == auxVal) {auxVal = 99;}
 
-               else if(31 == ((sigQual_s *)frmOutput)->rssi){
-                  ((sigQual_s *)frmOutput)->rssi = -52;
-               }
-
-               else if(99 == ((sigQual_s *)frmOutput)->rssi){
-                  ((sigQual_s *)frmOutput)->rssi = 99;
-               }
+               ((sigQual_s *)frmOutput)->rssi = auxVal;
 
                /* Copy the string of BER and convert it to a number. The module
                 * reports RXQUAL values as per table in GSM 05.08 [20] subclause
@@ -535,17 +514,7 @@ static void gsmGetSigQualF (void)
 
          }
 
-         else if(ERR_GSM == errorOut.errorFrm){
-
-            rsp_t rsp;
-
-            rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-         }
+         else if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
          frmCback(errorOut, frmOutput);
          frmState = IDLE;
@@ -561,14 +530,11 @@ static void gsmGetSigQualF (void)
 
 void gsmCheckConnF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    /* We use two different rsp_t structure variables in this case because we
     * need the result of two successive commands. As the engine flushes the
-    * rspVlRb VLRB after each command is closed, we would loose the response
+    * rspVlRb VLRB after each command is closed, we would lose the response
     * of the first command. Therefore, we need to save it in a separate
     * variable. All other formula functions use the result of the last sent
     * command and therefore the rspVlRb is not yet flushed.
@@ -581,12 +547,7 @@ void gsmCheckConnF (void)
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -596,50 +557,37 @@ void gsmCheckConnF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CREG?\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CREG?\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){
-                     rspGsm = gsmGetCmdRsp(); /* store the GSM response */
-                     procState = ATCMD2;
-                  }
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
+               if(ATCMD2 == procState) {
+                  rspGsm = gsmGetCmdRsp(); /* if command was closed without
+                                              error, store the GSM response */;
                }
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd("AT+CGATT?\r");
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CGATT?\r", ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){
-                     rspGprs = gsmGetCmdRsp(); /* store the GPRS response */
-                     frmState = WRAP;
-                  }
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmProcRspsGetFinal(ATCMD2RESP, TRUE, NOCMD, TRUE);
+
+               if(ATCMD2RESP == procState) {
+                  rspGprs = gsmGetCmdRsp(); /* if command was closed without
+                                               error, store the GPRS response
+                                             */;
                }
+
                break;
 
          }
@@ -656,12 +604,7 @@ void gsmCheckConnF (void)
              * 3 of the parameter part of the response.
              * */
 
-            if('1' == rspGsm.par[3]){
-               ((connStatus_s *)frmOutput)->gsm = true;
-            }
-            else{
-               ((connStatus_s *)frmOutput)->gsm = false;
-            }
+            ((connStatus_s *)frmOutput)->gsm = ('1' == rspGsm.par[3]);
 
             /* Print out the GSM string */
 
@@ -674,12 +617,7 @@ void gsmCheckConnF (void)
              * 1 of the parameter part of the response.
              * */
 
-            if('1' == rspGprs.par[1]){
-               ((connStatus_s *)frmOutput)->gprs = true;
-            }
-            else{
-               ((connStatus_s *)frmOutput)->gprs = false;
-            }
+            ((connStatus_s *)frmOutput)->gprs = ('1' == rspGprs.par[1]);
 
             /* Print out the GPRS string */
 
@@ -689,17 +627,7 @@ void gsmCheckConnF (void)
 
          }
 
-         else if(ERR_GSM == errorOut.errorFrm){
-
-            rsp_t rsp;
-
-            rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-         }
+         else if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
          frmCback(errorOut, frmOutput);
          frmState = IDLE;
@@ -719,9 +647,6 @@ void gsmCheckConnF (void)
 
 static void gsmSmsSendF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    /* Maximum phone number length under the ITU-T standard E.164 is 15 digits
     * plus the "+" symbol if present.
     *
@@ -744,10 +669,6 @@ static void gsmSmsSendF (void)
 
          smsCmd[0] = '\0';
          smsText[0] = '\0';
-
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
 
          /* If the SMS text has '\r' or '\n' characters it could confuse the
           * tokenizer. Therefore, we check that neither of these chars are
@@ -777,8 +698,7 @@ static void gsmSmsSendF (void)
                  strlen(((smsOut_s *)frmInput)->text));
          smsText[strlen(((smsOut_s *)frmInput)->text)] = '\0';
 
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          debug(">>>interf<<<   SEND SMS CMD: ");
          debug(smsCmd);
@@ -794,44 +714,26 @@ static void gsmSmsSendF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd(smsCmd);
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(smsCmd, ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd(smsText);
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(smsText, ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -841,18 +743,11 @@ static void gsmSmsSendF (void)
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
+
          else{
 
                /* If the SMS is successfully sent we are given a <mr> number
@@ -886,9 +781,6 @@ static void gsmSmsSendF (void)
 
 static void gsmSmsReadF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    static uint8_t strSmsRead[8+5+1]; /* string for the SMS read command*/
@@ -900,13 +792,6 @@ static void gsmSmsReadF (void)
    switch(frmState) {
 
       case INIT:
-
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
 
          strSmsRead[0] = '\0';
 
@@ -926,6 +811,8 @@ static void gsmSmsReadF (void)
          debug(strSmsRead);
          debug("\r\n");
 
+         gsmFrmInit();
+
          break;
 
       case PROC:
@@ -934,44 +821,26 @@ static void gsmSmsReadF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CSDH=1\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CSDH=1\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd(strSmsRead);
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(strSmsRead, ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -998,17 +867,7 @@ static void gsmSmsReadF (void)
 
          }
 
-         else if(ERR_GSM == errorOut.errorFrm){
-
-            rsp_t rsp;
-
-            rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-         }
+         else if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
          smsListRet_s msgVector; /* Message vector includes the actual array
                                     and the number of messages; this is
@@ -1032,9 +891,6 @@ static void gsmSmsReadF (void)
 
 static void gsmSmsListF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    /* String to assemble the SMS list command
@@ -1051,13 +907,6 @@ static void gsmSmsListF (void)
    switch(frmState) {
 
       case INIT:
-
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
 
          strSmsList[0] = '\0';
 
@@ -1111,6 +960,8 @@ static void gsmSmsListF (void)
          debug(strSmsList);
          debug("\r\n");
 
+         gsmFrmInit();
+
          break;
 
       case PROC:
@@ -1119,44 +970,26 @@ static void gsmSmsListF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CSDH=1\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CSDH=1\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd(strSmsList);
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(strSmsList, ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1220,17 +1053,7 @@ static void gsmSmsListF (void)
 
          }
 
-         else if(ERR_GSM == errorOut.errorFrm){
-
-            rsp_t rsp;
-
-            rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-         }
+         else if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
          smsListRet_s msgVector; /* Message vector includes the actual array
                                     andnthe number of messages */
@@ -1252,9 +1075,6 @@ static void gsmSmsListF (void)
 
 static void gsmSmsDelF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    uint8_t auxStr[4]; /* auxiliary string */
                       /* XXX\0 --> max str length 4 */
 
@@ -1273,10 +1093,6 @@ static void gsmSmsDelF (void)
          auxStr[0] = '\0';
          smsDel[0] = '\0';
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
          /* We assemble the AT+CMGD command copying the idx and mode variables
           * into the string
           */
@@ -1289,8 +1105,7 @@ static void gsmSmsDelF (void)
          strncat(smsDel, auxStr, strlen(auxStr));
          strncat(smsDel, "\r", strlen("\r"));
 
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -1300,23 +1115,14 @@ static void gsmSmsDelF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd(smsDel);
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(smsDel, ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD1RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1326,17 +1132,9 @@ static void gsmSmsDelF (void)
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
 
          frmCback(errorOut, 0);
@@ -1353,9 +1151,6 @@ static void gsmSmsDelF (void)
 
 static void gsmGprsStartF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    /* String to assemble the GPRS start command
     *
     * apn, user and pwd are arbitrarely assumed to be no longer than 30 chars
@@ -1373,10 +1168,6 @@ static void gsmGprsStartF (void)
 
          APNstring[0] = '\0';
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
          /* We assemble the AT+CSTT command copying the apn, user and pwd
           * variables into the string
           */
@@ -1392,8 +1183,7 @@ static void gsmGprsStartF (void)
                              strlen(((apnUserPwd_s *)frmInput)->pwd));
          strncat(APNstring, "\"\r", strlen("\"\r"));
 
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -1403,107 +1193,62 @@ static void gsmGprsStartF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CIPSHUT\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIPSHUT\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd("AT+CIPMODE=1\r");
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIPMODE=1\r", ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD3;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD3, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD3:
 
-               result = gsmSendCmd(APNstring);
-               if(OK_CMD_SENT == result){procState = ATCMD3RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(APNstring, ATCMD3RESP);
+
                break;
 
             case ATCMD3RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD4;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD4, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD4:
 
-               result = gsmSendCmd("AT+CIICR\r");
-               if(OK_CMD_SENT == result){procState = ATCMD4RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIICR\r", ATCMD4RESP);
+
                break;
 
             case ATCMD4RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD5;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD5, FALSE, NOCMD, TRUE);
+
                break;
 
             case ATCMD5:
 
-               result = gsmSendCmd("AT+CIFSR\r");
-               if(OK_CMD_SENT == result){procState = ATCMD5RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIFSR\r", ATCMD5RESP);
+
                break;
 
             case ATCMD5RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD5RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1513,17 +1258,9 @@ static void gsmGprsStartF (void)
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
 
          frmCback(errorOut, 0);
@@ -1539,9 +1276,6 @@ static void gsmGprsStartF (void)
 
 static void gsmGprsOpenPortF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    /* String to assemble the TCP/UDP open port command
     *
     * IP/domain is arbitrarely assumed to be no longer than 50 chars
@@ -1564,10 +1298,6 @@ static void gsmGprsOpenPortF (void)
 
          portStr[0] = '\0';
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
          /* We assemble the AT+CIPSTART command copying the type, address and
           * port variables into the string
           */
@@ -1589,8 +1319,7 @@ static void gsmGprsOpenPortF (void)
          strncat(portStr, auxStr, strlen(auxStr));
          strncat(portStr, "\"\r", strlen("\"\r"));
 
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -1600,45 +1329,40 @@ static void gsmGprsOpenPortF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CIPCLOSE=0\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIPCLOSE\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){procState = ATCMD2;}
-                  else if(ERR_MSG_CLOSE == result){procState = ATCMD2;}
-                  /* Operation is not stopped if AT+CIPCLOSE returns an error
-                   * code, as there may simply be no open port to close.
-                   * The command is sent merely as a precaution. */
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD2, FALSE, ATCMD2, FALSE);
+
+               /* Clear the error variable since we do not care about the
+                * result of the CIPCLOSE command; it is there as a formality
+                */
+
+               errorOut.errorFrm = OK;
+               errorOut.errorCmd.cmd[0] = '\0';
+               errorOut.errorCmd.par[0] = '\0';
+
                break;
 
             case ATCMD2:
 
-               result = gsmSendCmd(portStr);
-               if(OK_CMD_SENT == result){procState = ATCMD2RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(portStr, ATCMD2RESP);
+
                break;
 
             case ATCMD2RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
+               gsmFrmProcRspsGetFinal(ATCMD2RESP, TRUE, NOCMD, TRUE);
 
                   /* CIPSTART has several closing responses, some of which
                    * indicate an error. Therefore, we need to further analyze
                    * the specific response in order to determine any possible
                    * error messages. */
 
-                  else if(OK_CLOSE == result){
+                  if(ATCMD2RESP == procState && WRAP == frmState){
 
                      uint8_t noRsp, i;
                      noRsp = gsmGetNoCmdRsp(); /* store number of responses */
@@ -1647,40 +1371,23 @@ static void gsmGprsOpenPortF (void)
                      for (i = 0; i < noRsp; i++){rsp = gsmGetCmdRsp();}
 
                      if (0 == strcmp(rsp.cmd, "CONNECT FAIL")) {
-                        errorOut.errorFrm = ERR_PROC; frmState = WRAP;
-                     }
-
-                     else {
-                        frmState = WRAP;
+                        errorOut.errorFrm = ERR_PROC;;
                      }
 
                   }
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+
                break;
 
-         }
+            }
 
-         break;
+            break;
 
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
 
          else{
@@ -1704,21 +1411,13 @@ static void gsmGprsOpenPortF (void)
 
 static void gsmGprsClosePortF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    switch(frmState) {
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -1728,23 +1427,14 @@ static void gsmGprsClosePortF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CIPCLOSE=0\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CIPCLOSE=0\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD1RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1754,17 +1444,9 @@ static void gsmGprsClosePortF (void)
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
 
          /* If the port is closed correctly we return to COMMAND_MODE */
@@ -1786,9 +1468,6 @@ static void gsmGprsClosePortF (void)
 
 static void gsmGnssPwrF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    /* String to assemble the GNSS on/off command
     *
     *
@@ -1802,13 +1481,6 @@ static void gsmGnssPwrF (void)
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
-
          /* We assemble the AT+CGNSPWR string depending on the value of the
           * input pwrGnss variable
           */
@@ -1820,6 +1492,8 @@ static void gsmGnssPwrF (void)
             strncpy(cmdStr,"AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"));
          }
 
+         gsmFrmInit();
+
          break;
 
       case PROC:
@@ -1828,23 +1502,14 @@ static void gsmGnssPwrF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd(cmdStr);
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho(cmdStr, ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD1RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1854,17 +1519,9 @@ static void gsmGnssPwrF (void)
       case WRAP:
 
          if(OK != errorOut.errorFrm){
-            if(ERR_GSM == errorOut.errorFrm){
 
-               rsp_t rsp;
+            if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
-               rsp = gsmGetCmdRsp();
-               strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-               errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-               strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-               errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-            }
          }
 
          frmCback(errorOut, 0);
@@ -1881,21 +1538,13 @@ static void gsmGnssPwrF (void)
 
 static void gsmGnssGetDataF (void)
 {
-   static procStatus_e procState = NOCMD;
-   static errorUser_s errorOut;
-
    fsmEvent_e result;
 
    switch(frmState) {
 
       case INIT:
 
-         errorOut.errorFrm = OK;
-         errorOut.errorCmd.cmd[0] = '\0';
-         errorOut.errorCmd.par[0] = '\0';
-
-         procState = ATCMD1;
-         frmState = PROC;
+         gsmFrmInit();
 
          break;
 
@@ -1905,23 +1554,14 @@ static void gsmGnssGetDataF (void)
 
             case ATCMD1:
 
-               result = gsmSendCmd("AT+CGNSINF\r");
-               if(OK_CMD_SENT == result){procState = ATCMD1RESP;}
-               else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
+               gsmFrmSendCmdCheckEcho("AT+CGNSINF\r", ATCMD1RESP);
+
                break;
 
             case ATCMD1RESP:
 
-               result = gsmProcessTkn();
-               if(NO_UPDATE != result){
-                  if(OK_CMD_ACK <= result && OK_URC >= result){;}
-                  else if(OK_CLOSE == result){frmState = WRAP;}
-                  else if(ERR_MSG_CLOSE == result){
-                     errorOut.errorFrm = ERR_GSM;
-                     frmState = WRAP;
-                  }
-                  else{errorOut.errorFrm = ERR_PROC; frmState = WRAP;}
-               }
+               gsmFrmProcRspsGetFinal(ATCMD1RESP, TRUE, NOCMD, TRUE);
+
                break;
 
          }
@@ -1950,17 +1590,7 @@ static void gsmGnssGetDataF (void)
 
          }
 
-         else if(ERR_GSM == errorOut.errorFrm){
-
-            rsp_t rsp;
-
-            rsp = gsmGetCmdRsp();
-            strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
-            errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-            strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
-            errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
-
-         }
+         else if(ERR_GSM == errorOut.errorFrm) {gsmFrmCopyGsmError();}
 
          frmCback(errorOut, frmOutput);
          frmState = IDLE;
@@ -1970,6 +1600,100 @@ static void gsmGnssGetDataF (void)
 
    return;
 
+}
+
+/*****************************************************************************/
+
+/*---------------------------------------------------------------------------*/
+/*                     Formula-processing subroutines                        */
+/*---------------------------------------------------------------------------*/
+
+void gsmFrmInit ()
+{
+   errorOut.errorFrm = OK;
+   errorOut.errorCmd.cmd[0] = '\0';
+   errorOut.errorCmd.par[0] = '\0';
+
+   procState = ATCMD1;
+   frmState = PROC;
+
+   return;
+}
+
+void gsmFrmSendCmdCheckEcho (uint8_t const * const cmd, procStatus_e nextState)
+{
+   fsmEvent_e result;
+   static Bool firstCall = TRUE;
+
+   /* If this is the first call of the function for the current cmd we send
+    * the str through the serial port; otherwise we pick up and process the
+    * response tokens.
+    */
+
+   if(firstCall){result = gsmSendCmd(cmd); firstCall = FALSE;}
+   else{result = gsmProcessTkn();}
+
+   if(NO_UPDATE != result){
+      if(OK_CMD_SENT == result){;}
+      else if(OK_CMD_ACK == result){procState = nextState; firstCall = TRUE;}
+      else{errorOut.errorFrm = ERR_PROC; frmState = WRAP; firstCall = TRUE;
+         debug(">>>interf<<< LOCURA!");
+      }
+   }
+
+   return;
+}
+
+void gsmFrmProcRspsGetFinal (procStatus_e closingState, Bool closingWrap,
+                             procStatus_e errorState, Bool errorWrap)
+{
+   fsmEvent_e result;
+
+   result = gsmProcessTkn();
+
+   if(NO_UPDATE != result){
+
+      if(OK_RSP <= result && OK_URC >= result){;}
+      else if(OK_CLOSE == result){
+         procState = closingState;
+         frmState = (closingWrap == TRUE ? WRAP : PROC );
+      }
+      else if(ERR_MSG_CLOSE == result){
+         errorOut.errorFrm = ERR_GSM;
+         procState = errorState;
+         frmState = (errorWrap == TRUE ? WRAP : PROC );
+      }
+      else if(ERR_TIMEOUT == result){
+         errorOut.errorFrm = ERR_TOUT;
+         procState = errorState;
+         frmState = (errorWrap == TRUE ? WRAP : PROC );
+      }
+      else if(ERR_FSM_OOR == result){
+         errorOut.errorFrm = ERR_FSM;
+         procState = errorState;
+         frmState = (errorWrap == TRUE ? WRAP : PROC );
+      }
+      else{
+         errorOut.errorFrm = ERR_UNK;
+         procState = errorState;
+         frmState = (errorWrap == TRUE ? WRAP : PROC );
+      }
+   }
+
+   return;
+}
+
+void gsmFrmCopyGsmError ()
+{
+   rsp_t rsp;
+
+   rsp = gsmGetCmdRsp();
+   strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+   errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
+   strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+   errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
+
+   return;
 }
 
 /*==================[external functions definition]==========================*/
