@@ -57,6 +57,16 @@ extern "C" {
 
 #define DELAY_PROC 10;
 
+/** @brief Number of commands which return the modem to data mode. See
+ *         gsmCheckDataMode function for more details */
+
+#define CMD_MODE_NO 2;
+
+/** @brief Max size of the commands which return the modem to data mode. See
+ *         gsmCheckDataMode function for more details */
+
+#define CMD_MODE_SIZE 9;
+
 /*==================[typedef]================================================*/
 
 /*---------------------------------------------------------------------------*/
@@ -402,15 +412,28 @@ void gsmSetDataCback (dataCback_t cback);
 /** @brief Writes and reads data from serial port in DATA_MODE
 *
 * @param write   Pointer to buffer with characters to be written
-* @param nwrite  Pointer to integer with number of characters to be written
+* @param nwrite  Pointer to integer with number of characters to be written;
+*                this number needs to be < RD_BUF_SIZE/2
 * @param read    Pointer to buffer to store characters to be read
-* @param nread   Pointer to integer with number of characters to be read
+* @param nread   Pointer to integer with number of characters to be read;
+*                this number needs to be < RD_BUF_SIZE/2
 *
 * @return
 */
 
 void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
                            uint8_t * nread);
+
+/** @brief Detects tokens from the GSM modem which indicate that we have left
+ *         data mode
+*
+* @param buf     Serial port read buffer
+* @param nch     Number of characters in the buffer
+*
+* @return
+*/
+
+void gsmCheckDataMode (uint8_t const * buf const, uint8_t * nch const);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */

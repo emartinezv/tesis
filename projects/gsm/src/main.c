@@ -373,6 +373,8 @@ void cbData (void)
 
    uint8_t n;
 
+   Bool retCmdMode = FALSE; /* flag to signal return to cmd mode */
+
    /* Read USB UART and store it */
 
    n = uartRecv(CIAA_UART_USB, usbReadBuf, 20);
@@ -383,6 +385,8 @@ void cbData (void)
    gsmWriteReadDataMode (usbReadBuf, &n, serialReadBuf, &nRead);
 
    serialReadBuf[nRead]='\0';
+
+   gsmCheckDataMode(&serialReadBuf, &nRead);
 
    /* Write data read from serial port to USB UART */
 

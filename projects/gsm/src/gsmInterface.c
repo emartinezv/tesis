@@ -1824,15 +1824,113 @@ void gsmSetDataCback (dataCback_t cback)
 /* This interface-level function executes a serial port write of n characters
  * followed by a serial port read of n characters. If used when in DATA_MODE
  * and calls upon two engine-level functions; this is done in order to respect
- * the abstraction layers and keep all serial commmunications with the modem
+ * the abstraction layers and keep all serial communications with the modem
  * at the level of engine or lower.
+ *
+ * To keep some coherence with the token-reading functions, the maximum read
+ * size is kept at RD_BUF_SIZ/2 (constant in the gsmTokenizer module). If a
+ * number larger than this is used, no read or write operation is made.
  */
 
 void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
                            uint8_t * nRead)
 {
-   *nWrite = gsmWriteData(write, *nWrite);
-   *nRead = gsmReadData(read, *nRead);
+
+   if((*nWrite > RD_BUF_SIZE/2) || (*nRead > RD_BUF_SIZE/2)){
+
+      *nWrite = 0;
+      *nRead = 0;
+
+   }
+
+   else{
+
+      *nWrite = gsmWriteData(write, *nWrite);
+      *nRead = gsmReadData(read, *nRead);
+
+   }
+
+   return;
+}
+
+/*****************************************************************************/
+
+void gsmCheckDataMode (uint8_t const * buf const, uint8_t * nch const){
+
+   /* List of commands which indicate that the modem has returned to cmd mode
+    * */
+
+   const uint8_t cmdList [] = {"\r\nOK\r\n", "\r\nCLOSE\r\n"};
+
+   uint8_t ch = '\0';               /* character being read */
+   static uint8_t pCh = '\0';       /* previous character read */
+   static uint8_t searchBuf[CMD_MODE_SIZE+1]; /* the size of this buffer needs to
+                                                 be the size of the largest
+                                                 string in the cmdList constant
+                                                 vector +1
+                                               */
+
+   static uint8_t searchBufCnt = 0  /* number of characters in searchBuf */
+
+   static Bool crLf = FALSE;        /* initial crLf sequence detected */
+   Bool cmdRet = FALSE;
+
+   uint8_t i = 0;
+   uint8_t j = 0;
+   uint8_t nchRetTemp = 0;
+
+   for(i = 0; i < *nch; i++){
+
+      ch = buf[i];
+      nchRetTemp++;
+
+      if(crLf){
+
+         /* If searchBufCnt is CMD_MODE_SIZE, unless the current and last
+          * chars are '\n' and '\r' respectively, none of the cmd mode commands
+          * are being sent, since the string is larger than the biggest one.
+          */
+
+         if( (('\r' != pCh) || ('\n' != Ch)) &&
+               CMD_MODE_SIZE == searchBufCnt){
+            searchBudCnt = 0;
+            crLf = 0;
+         }
+
+         if(('\r' == pCh) && ('\n' == ch)){
+
+            searchBuf[searchBufCnt] = 'n';
+            SearchBufCnt++;
+            searchBuf[searchBufCnt] = '\0';
+            searchBufCnt++;
+
+            for(j = 0; j < CMD_MODE_NO; j++){
+               if(0 != strstr(searchBuf, &cmdList[j])){
+                  gsmSetSerialMode(CMD_MODE);
+                  break;
+               }
+            }
+
+         }
+
+      }
+
+      if(crLf & searchBufPos < CMD_MODE_SIZE+1){
+         searchBuf[searchBufPos] = ch;
+         searchBufPos++;
+      }
+
+      /* Sets the CRLF prefix flag the last two chars are "\r\n" */
+
+      else if(('\r' == pCh) && ('\n' == ch) && !crLf){
+         crLf = TRUE;
+      }
+
+      pCh = ch;
+
+   }
+
+   *nch = nchRetTemp;
 
    return;
 }
