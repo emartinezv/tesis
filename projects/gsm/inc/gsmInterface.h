@@ -65,7 +65,7 @@ extern "C" {
 /** @brief Max size of the commands which return the modem to data mode. See
  *         gsmCheckDataMode function for more details */
 
-#define CMD_MODE_SIZE 5
+#define CMD_MODE_SIZE 6
 
 /*==================[typedef]================================================*/
 

@@ -1885,7 +1885,7 @@ void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
          if( ('\r' == pCh) && ('\n' == ch) ){
 
-            if (cmdChCnt < (CMD_MODE_SIZE +2)){
+            if (cmdChCnt <= (CMD_MODE_SIZE +2)){
 
                for(j = 0; j < CMD_MODE_NO; j++){
                   if(0 == strncmp(cmdList[j],&buf[i-(cmdChCnt-1)],
