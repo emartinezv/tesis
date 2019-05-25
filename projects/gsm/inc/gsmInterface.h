@@ -55,17 +55,17 @@ extern "C" {
 
 /** @brief Invocation period of gsmProcess in ms */
 
-#define DELAY_PROC 10;
+#define DELAY_PROC 10
 
 /** @brief Number of commands which return the modem to data mode. See
  *         gsmCheckDataMode function for more details */
 
-#define CMD_MODE_NO 2;
+#define CMD_MODE_NO 2
 
 /** @brief Max size of the commands which return the modem to data mode. See
  *         gsmCheckDataMode function for more details */
 
-#define CMD_MODE_SIZE 9;
+#define CMD_MODE_SIZE 5
 
 /*==================[typedef]================================================*/
 
@@ -433,7 +433,7 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
 * @return
 */
 
-void gsmCheckDataMode (uint8_t const * buf const, uint8_t * nch const);
+void gsmCheckDataMode (uint8_t const * const buf , uint8_t * const nch);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */

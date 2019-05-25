@@ -108,6 +108,12 @@ static dataCback_t dataCback;
 
 static int32_t procCnt = DELAY_PROC;
 
+/** @brief List of commands which indicate that the modem has returned to
+ *  cmd mode
+ */
+
+const uint8_t * const cmdList [] = {"OK", "CLOSED"};
+
 /*==================[internal functions declaration]=========================*/
 
 /*---------------------------------------------------------------------------*/
@@ -1393,7 +1399,6 @@ static void gsmGprsOpenPortF (void)
          else{
 
             /* If the port is opened correctly we enter DATA_MODE */
-
             gsmSetSerialMode(DATA_MODE);
 
          }
@@ -1836,7 +1841,7 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
                            uint8_t * nRead)
 {
 
-   if((*nWrite > RD_BUF_SIZE/2) || (*nRead > RD_BUF_SIZE/2)){
+   if((*nWrite > RD_BUF_SIZ/2) || (*nRead > RD_BUF_SIZ/2)){
 
       *nWrite = 0;
       *nRead = 0;
@@ -1855,82 +1860,60 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
 
 /*****************************************************************************/
 
-void gsmCheckDataMode (uint8_t const * buf const, uint8_t * nch const){
+void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
-   /* List of commands which indicate that the modem has returned to cmd mode
-    * */
-
-   const uint8_t cmdList [] = {"\r\nOK\r\n", "\r\nCLOSE\r\n"};
-
-   uint8_t ch = '\0';               /* character being read */
+   uint8_t ch = '\0';               /* character just read */
    static uint8_t pCh = '\0';       /* previous character read */
-   static uint8_t searchBuf[CMD_MODE_SIZE+1]; /* the size of this buffer needs to
-                                                 be the size of the largest
-                                                 string in the cmdList constant
-                                                 vector +1
-                                               */
 
-   static uint8_t searchBufCnt = 0  /* number of characters in searchBuf */
+   static uint8_t cmdChCnt = 0;     /* number of characters in cmd */
 
    static Bool crLf = FALSE;        /* initial crLf sequence detected */
-   Bool cmdRet = FALSE;
 
    uint8_t i = 0;
    uint8_t j = 0;
-   uint8_t nchRetTemp = 0;
+   uint8_t nChRet = 0;
 
    for(i = 0; i < *nch; i++){
 
+      pCh = ch;
       ch = buf[i];
-      nchRetTemp++;
+      nChRet++;
 
       if(crLf){
 
-         /* If searchBufCnt is CMD_MODE_SIZE, unless the current and last
-          * chars are '\n' and '\r' respectively, none of the cmd mode commands
-          * are being sent, since the string is larger than the biggest one.
-          */
+         cmdChCnt++;
 
-         if( (('\r' != pCh) || ('\n' != Ch)) &&
-               CMD_MODE_SIZE == searchBufCnt){
-            searchBudCnt = 0;
-            crLf = 0;
-         }
+         if( ('\r' == pCh) && ('\n' == ch) ){
 
-         if(('\r' == pCh) && ('\n' == ch)){
+            if (cmdChCnt < (CMD_MODE_SIZE +2)){
 
-            searchBuf[searchBufCnt] = 'n';
-            SearchBufCnt++;
-            searchBuf[searchBufCnt] = '\0';
-            searchBufCnt++;
-
-            for(j = 0; j < CMD_MODE_NO; j++){
-               if(0 != strstr(searchBuf, &cmdList[j])){
-                  gsmSetSerialMode(CMD_MODE);
-                  break;
+               for(j = 0; j < CMD_MODE_NO; j++){
+                  if(0 == strncmp(cmdList[j],&buf[i-(cmdChCnt-1)],
+                                  cmdChCnt-2)){
+                     gsmSetSerialMode(COMMAND_MODE);
+                     break;
+                  }
                }
+
             }
 
+            else{cmdChCnt = 0;}
+
          }
 
       }
 
-      if(crLf & searchBufPos < CMD_MODE_SIZE+1){
-         searchBuf[searchBufPos] = ch;
-         searchBufPos++;
+      else{
+
+         if( ('\r' == pCh) && ('\n' == ch) ){
+            crLf = TRUE;}
+
       }
 
-      /* Sets the CRLF prefix flag the last two chars are "\r\n" */
-
-      else if(('\r' == pCh) && ('\n' == ch) && !crLf){
-         crLf = TRUE;
-      }
-
-      pCh = ch;
 
    }
 
-   *nch = nchRetTemp;
+   *nch = nChRet;
 
    return;
 }

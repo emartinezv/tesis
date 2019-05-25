@@ -373,12 +373,14 @@ void cbData (void)
 
    uint8_t n;
 
-   Bool retCmdMode = FALSE; /* flag to signal return to cmd mode */
-
    /* Read USB UART and store it */
 
    n = uartRecv(CIAA_UART_USB, usbReadBuf, 20);
    usbReadBuf[n]='\0';
+
+   /* Echo USB UART to screen */
+
+   n = uartSend(CIAA_UART_USB, usbReadBuf, n);
 
    /* Write USB UART data to serial port and read from serial port */
 
@@ -386,7 +388,7 @@ void cbData (void)
 
    serialReadBuf[nRead]='\0';
 
-   gsmCheckDataMode(&serialReadBuf, &nRead);
+   gsmCheckDataMode(&serialReadBuf[0], &nRead);
 
    /* Write data read from serial port to USB UART */
 
@@ -540,19 +542,23 @@ void console_gprs (void)
          }
 
          while(DATA_MODE == gsmGetSerialMode()){
-
-            uint8_t data_char;
-
-            if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-               uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
-               uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-            }
-
-            if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-               uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-            }
-
+            gsmProcess();
          }
+
+         //while(DATA_MODE == gsmGetSerialMode()){
+
+            //uint8_t data_char;
+
+            //if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
+               //uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
+               //uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
+            //}
+
+            //if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
+               //uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
+            //}
+
+         //}
 
       }
 
