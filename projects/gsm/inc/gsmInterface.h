@@ -42,7 +42,7 @@
 #include "lpc_types.h"
 #include "string.h"
 #include "stdio.h"
-#include "ciaaUART.h"
+#include "gsmComms.h"
 #include "gsmEngine.h"
 
 /*==================[cplusplus]==============================================*/
@@ -428,7 +428,9 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
  *         data mode
 *
 * @param buf     Serial port read buffer
-* @param nch     Number of characters in the buffer
+* @param nch     Pointer to integer indicating number of characters in the read
+*                buffer. Function overwrites this to indicate how many chars
+*                to actually print
 *
 * @return
 */

@@ -43,9 +43,9 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_PARSER
-#ifdef DEBUG_PARSER
-   #define debug(msg) dbgPrint(msg)
+#define DEBUG_ENGINE
+#ifdef DEBUG_ENGINE
+   #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)
 #endif
@@ -434,7 +434,7 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                      */
       default:
 
-         /* Ee enter SMS_BODY as the cmd */
+         /* Enter SMS_BODY as the cmd */
          strncpy(cmd,"SMS_BODY",8);
          cmd[8]='\0';
          /* The whole token is the parameter */

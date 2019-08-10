@@ -43,9 +43,9 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_INTERF
-#ifdef DEBUG_INTERF
-   #define debug(msg) dbgPrint(msg)
+#define DEBUG_ENGINE
+#ifdef DEBUG_ENGINE
+   #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)
 #endif
@@ -108,11 +108,11 @@ static dataCback_t dataCback;
 
 static int32_t procCnt = DELAY_PROC;
 
-/** @brief List of commands which indicate that the modem has returned to
- *  cmd mode
+/** @brief List of commands which indicate that the modem has exited DATA MODE
+ *  and returned to COMMAND MODE
  */
 
-const uint8_t * const cmdList [] = {"OK", "CLOSED"};
+const uint8_t * const exitCmdList [] = {"OK", "CLOSED"};
 
 /*==================[internal functions declaration]=========================*/
 
@@ -1642,7 +1642,7 @@ void gsmFrmSendCmdCheckEcho (uint8_t const * const cmd, procStatus_e nextState)
       if(OK_CMD_SENT == result){;}
       else if(OK_CMD_ACK == result){procState = nextState; firstCall = TRUE;}
       else{errorOut.errorFrm = ERR_PROC; frmState = WRAP; firstCall = TRUE;
-         debug(">>>interf<<< LOCURA!");
+         debug(">>>interf<<< Echo error");
       }
    }
 
@@ -1827,10 +1827,8 @@ void gsmSetDataCback (dataCback_t cback)
 /*****************************************************************************/
 
 /* This interface-level function executes a serial port write of n characters
- * followed by a serial port read of n characters. If used when in DATA_MODE
- * and calls upon two engine-level functions; this is done in order to respect
- * the abstraction layers and keep all serial communications with the modem
- * at the level of engine or lower.
+ * followed by a serial port read of n characters. It is used when in DATA_MODE
+ * and calls upon two comms-level functions.
  *
  * To keep some coherence with the token-reading functions, the maximum read
  * size is kept at RD_BUF_SIZ/2 (constant in the gsmTokenizer module). If a
@@ -1850,8 +1848,8 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
 
    else{
 
-      *nWrite = gsmWriteData(write, *nWrite);
-      *nRead = gsmReadData(read, *nRead);
+      *nWrite = gsm232UartSend(write, *nWrite);
+      *nRead = gsm232UartRecv(read, *nRead);
 
    }
 
@@ -1860,18 +1858,30 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
 
 /*****************************************************************************/
 
+/* This interface-level function checks the read characters in a DATA MODE
+ * flow and detects any cmd in the exitCmdList vector, which are the ones used
+ * by the modem when in DATA MODE to indicate it has gone back to COMMAND MODE.
+ * If it finds any of these commands, it reverts to COMMAND MODE.
+ *
+ * It should be called periodically by the user in his dataCback function.*/
+
 void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
    uint8_t ch = '\0';               /* character just read */
    static uint8_t pCh = '\0';       /* previous character read */
 
-   static uint8_t cmdChCnt = 0;     /* number of characters in cmd */
+   static uint8_t cmdChCnt = 0;     /* number of characters in supposed cmd */
 
-   static Bool crLf = FALSE;        /* initial crLf sequence detected */
+   static Bool crLf = FALSE;        /* initial "\r\n" sequence flag */
 
    uint8_t i = 0;
    uint8_t j = 0;
-   uint8_t nChRet = 0;
+   uint8_t nChRet = 0;              /* how many characters of the sent buffer
+                                       should be printed out; if one of the
+                                       exit cmds is detected, everything after
+                                       it is ignored */
+
+   /* Start cycling through the characters in the buffer */
 
    for(i = 0; i < *nch; i++){
 
@@ -1879,17 +1889,32 @@ void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
       ch = buf[i];
       nChRet++;
 
+      /* If an opening "\r\n" sequence has been received, we might be in
+       * presence of a cmd by the modem, so we start counting the number of
+       * chars. */
+
       if(crLf){
 
          cmdChCnt++;
+
+         /* If a closing "\r\n" sequence is found, we check that the number
+          * of chars so far it not bigger than the size of the largest exit
+          * cmd. If this is not the case, we test with the vector of exit
+          * cmds to see if we need to go to COMMAND MODE.*/
 
          if( ('\r' == pCh) && ('\n' == ch) ){
 
             if (cmdChCnt <= (CMD_MODE_SIZE +2)){
 
+               /* Compare to all commands in the exitCmdList vector; if there
+                * is a match, go to COMMAND MODE and reset the char count and
+                * the crLf flag */
+
                for(j = 0; j < CMD_MODE_NO; j++){
-                  if(0 == strncmp(cmdList[j],&buf[i-(cmdChCnt-1)],
+                  if(0 == strncmp(exitCmdList[j],&buf[i-(cmdChCnt-1)],
                                   cmdChCnt-2)){
+                     cmdChCnt = 0;
+                     crLf = 0;
                      gsmSetSerialMode(COMMAND_MODE);
                      break;
                   }
@@ -1897,13 +1922,20 @@ void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
             }
 
-            else{cmdChCnt = 0;}
+            /* If the number of chars is too large for this to be an exit cmd,
+             * we reset the char count and crLf flag */
+
+            else{cmdChCnt = 0; crLf = FALSE;}
 
          }
 
       }
 
       else{
+
+         /* Raise the crLf flag if the "\r\n" opening sequence has just been
+          * received.
+          */
 
          if( ('\r' == pCh) && ('\n' == ch) ){
             crLf = TRUE;}
@@ -1912,6 +1944,8 @@ void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
 
    }
+
+   /* Return the number of chars to be printed out */
 
    *nch = nChRet;
 

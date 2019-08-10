@@ -1,7 +1,6 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2018, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,97 +30,91 @@
  *
  */
 
-/** @brief This is a simple UART example
+/** @brief This module handles the tokenizer function
  */
 
-/** \addtogroup uart Bare-metal example
+/** \addtogroup gsm
  ** @{ */
 
 /*==================[inclusions]=============================================*/
 
-#include "uart_echo.h"
-#include "board.h"
-#include "string.h"
-#include "ciaaUART.h"
+#include "gsmComms.h"
 
 /*==================[macros and definitions]=================================*/
+
+#define DEBUG_TKNZER
+#ifdef DEBUG_TKNZER
+   #define debug(msg) dbgPrint(msg)
+#else
+   #define debug(msg)
+#endif
+
+/*==================[global data]============================================*/
 
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
 
-/** @brief hardware initialization function
- * @return none
- */
-static void initHardware(void);
-
-/** @brief delay function
- * @param t desired milliseconds to wait
- */
-static void pausems(uint32_t t);
-
-
 /*==================[internal data definition]===============================*/
-
-/** @brief used for delay counter */
-static uint32_t pausems_count;
 
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
 
-static void initHardware(void)
-{
-   Board_Init();
-   SystemCoreClockUpdate();
-   SysTick_Config(SystemCoreClock / 1000);
-}
-
-static void pausems(uint32_t t)
-{
-   pausems_count = t;
-   while (pausems_count != 0) {
-      __WFI();
-   }
-}
-
 /*==================[external functions definition]==========================*/
 
-void SysTick_Handler(void)
+int gsm232UartRecv (uint8_t * const buffer, int n)
 {
-   if(pausems_count > 0) pausems_count--;
+   int recv = 0;
+
+   /* Call HAL 232-UART receive function here */
+
+   recv = uartRecv(CIAA_UART_232, buffer, n);
+
+   /**/
+
+   return recv;
 }
 
-int main(void)
+int gsm232UartSend (uint8_t const * const buffer, int n)
 {
-   uint8_t Buffer_232[BUF_SIZ]; /* UART 232 received messages buffer */
-   uint8_t Buffer_USB[BUF_SIZ]; /* UART USB received messages buffer */
-   int i;
-   int nRead; /* number of bytes read */
+   int sent = 0;
 
-   initHardware();
-   ciaaUARTInit();
+   /* Call HAL 232-UART send function here */
 
-   for (i = 0; i < BUF_SIZ; i++){
-      Buffer_232[i] = '\0';
-      Buffer_USB[i] = '\0';
-   }
+   sent = uartSend(CIAA_UART_232, buffer, n);
 
-   while (1){
+   /**/
 
-      /* read 232 and print to USB */
-
-      nRead = uartRecv(CIAA_UART_232, (void *) &Buffer_232, BUF_SIZ-1);
-      Buffer_232[nRead] = '\0'; /* terminate string */
-      dbgPrint(Buffer_232);
-
-      /* read USB and print to 232 */
-
-      nRead = uartRecv(CIAA_UART_USB, (void *) &Buffer_USB, BUF_SIZ-1);
-      Buffer_USB[nRead] = '\0'; /* terminate string */
-      rs232Print(Buffer_USB);
-   }
+   return sent;
 }
+
+int gsmTermUartRecv (uint8_t * const buffer, int n)
+{
+   int recv = 0;
+
+   /* Call HAL Term-UART receive function here */
+
+   recv = uartRecv(CIAA_UART_USB, buffer, n);
+
+   /**/
+
+   return recv;
+}
+
+int gsmTermUartSend (uint8_t const * const buffer, int n)
+{
+   int sent = 0;
+
+   /* Call HAL Term-UART send function here */
+
+   sent = uartSend(CIAA_UART_USB, buffer, n);
+
+   /**/
+
+   return sent;
+}
+
 
 /** @} doxygen end group definition */
 

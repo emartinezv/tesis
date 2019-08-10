@@ -45,7 +45,7 @@
 
 #define DEBUG_ENGINE
 #ifdef DEBUG_ENGINE
-   #define debug(msg) dbgPrint(msg)
+   #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)
 #endif
@@ -621,8 +621,8 @@ void gsmDecToutCnt(void){
 }
 
 /** When the serial port is in DATA_MODE, this function prints everything
- *  received through the 232-UART serial port to the USB-UART. This is
- *  merely a test function; the final version of the library needs to send
+ *  received through the 232-UART serial port to the Term-UART. This is
+ *  merely a test function; the user of the library needs to send
  *  these data to a user-defined buffer of some sort for processing.
  */
 
@@ -630,15 +630,15 @@ void gsmPrintData(void){
 
    uint8_t c = 0;
 
-   if(0 != uartRecv(CIAA_UART_232, &c, 1)){
+   if(0 != gsm232UartRecv(&c, 1)){
 
-      uartSend(CIAA_UART_USB, &c, 1);
+      gsmTermUartSend(&c, 1);
 
    }
 
-   if(0 != uartRecv(CIAA_UART_USB, &c, 1)){
+   if(0 != gsmTermUartRecv(&c, 1)){
 
-      uartSend(CIAA_UART_232, &c, 1);
+      gsm232UartSend(&c, 1);
 
    }
 
@@ -692,11 +692,11 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
    if((UNKNOWN_CMD != idx) && ((sending >= AUTOBAUD) &&
       (sending <= SMS_BODY_P))){
 
-      rs232Print(cmdStr); /* Send the cmd string through the serial port */
+      gsm232UartSend(cmdStr, strlen(cmdStr)); /* Send the cmd string through the serial port */
 
       if(SMS_BODY_P == sending){
 
-         rs232Print("\x1A"); /* If we are sending an SMS_BODY type token we
+         gsm232UartSend("\x1A", strlen("\x1A")); /* If we are sending an SMS_BODY type token we
                                 need to add the final Ctrl-Z char */
 
       }
@@ -839,28 +839,6 @@ void gsmSetSerialMode(serialMode_e mode)
 {
    serialMode = mode;
    return;
-}
-
-uint8_t gsmWriteData(uint8_t const * const write, uint8_t size)
-{
-   /* Write size chars to the UART */
-
-   uint8_t n = 0;
-
-   n = uartSend(CIAA_UART_232, write, size);
-
-   return n;
-}
-
-uint8_t gsmReadData(uint8_t * const read, uint8_t size)
-{
-   /* Read size chars from the UART */
-
-   uint8_t n = 0;
-
-   n = uartRecv(CIAA_UART_232, read, size);
-
-   return n;
 }
 
 /** @} doxygen end group definition */

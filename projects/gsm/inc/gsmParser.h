@@ -41,7 +41,7 @@
 
 #include "lpc_types.h"
 #include "string.h"
-#include "ciaaUART.h"
+#include "gsmComms.h"
 #include "gsmTokenizer.h"
 
 /*==================[cplusplus]==============================================*/

@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef _GSM_TOKENIZER_H_
-#define _GSM_TOKENIZER_H_
+#ifndef _GSM_COMMS_H_
+#define _GSM_COMMS_H_
 
 /** \addtogroup gsm
  ** @{ */
@@ -39,8 +39,11 @@
 
 #include "lpc_types.h"
 #include "string.h"
-#include "gsmComms.h"
-#include "vl_ring_buffer.h"
+
+/* Add the 232-UART and Term-UART HAL .h files here */
+
+#include "ciaaUART.h"
+
 
 /*==================[cplusplus]=============================================*/
 
@@ -50,50 +53,55 @@ extern "C" {
 
 /*==================[macros]================================================*/
 
-/** @brief Maximum size of tokens */
-#define TKN_LEN 300
-
-/** @brief Size in bytes of the UART read buffer */
-#define RD_BUF_SIZ TKN_LEN
-
-/** @brief Size in bytes of the UART swap buffer */
-#define SWAP_BUF_SIZ TKN_LEN
-
-/** @brief Size in bytes of the current token buffer (must be power of 2) */
-#define CURR_TKN_BUF_SIZ 512
-
 /*==================[typedef]===============================================*/
-
-/** @brief Token type enum for the tokenizer functionality */
-
-typedef enum {
-   NONE       = 0,   /**< No token detected yet */
-   ECHO       = 1,   /**< AT command echo */
-   RSP        = 2,   /**< AT command response */
-   DATA_BLOCK = 3,   /**< DATA block */
-   SMS_PROMPT = 4,   /**< SMS send prompt */
-   SMS_BODY   = 5,   /**< SMS send body */
-}
-tknTypeTknzer_e;
 
 /*==================[external data declaration]=============================*/
 
 /*==================[external functions declaration]========================*/
 
-/** @brief Initializes tokenizer and it's RB
+/** @brief Get at most n characters from the 232-UART into a local buffer
+ *
+ *  @param buffer   : Pointer to the reception char buffer
+ *  @param n        : Number of characters to get
+ *
+ *  @return Returns the number of chars actually read
+ *
+ */
+
+int gsm232UartRecv (uint8_t * const buffer, int n);
+
+/** @brief Send at most n characters to the 232-UART from a local buffer
+*
+*  @param  buffer   : Pointer to the reception char buffer
+*  @param  n        : Number of characters to send
+*
+*  @return Returns the number of chars actually written
 *
 */
 
-void gsmInitTokenizer(void);
+int gsm232UartSend (uint8_t const * const buffer, int n);
 
-/** @brief Get characters from the UART ring buffer into a local buffer, cycle
- *         though it and send detected tokens to the token VL ring buffer
+/** @brief Get at most n characters from the Term-UART into a local buffer
+ *
+ *  @param buffer   : Pointer to the reception char buffer
+ *  @param n        : Number of characters to get
+ *
+ *  @return Returns the number of chars actually read
+ *
+ */
+
+int gsmTermUartRecv (uint8_t * const buffer, int n);
+
+/** @brief Send at most n characters to the Term-UART from a local buffer
 *
-*  @param  tknVlRb   : Pointer to the token VL ring buffer
+*  @param  buffer   : Pointer to the reception char buffer
+*  @param  n        : Number of characters to send
+*
+*  @return Returns the number of chars actually written
 *
 */
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb);
+int gsmTermUartSend (uint8_t const * const buffer, int n);
 
 /*==================[cplusplus]=============================================*/
 

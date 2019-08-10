@@ -42,9 +42,9 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_TKNZER
-#ifdef DEBUG_TKNZER
-   #define debug(msg) dbgPrint(msg)
+#define DEBUG_ENGINE
+#ifdef DEBUG_ENGINE
+   #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)
 #endif
@@ -121,8 +121,9 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 
    /* Read chars from the UART up to free space in the current token rb or
     * swap buffer size, whichever is smaller */
-   n = uartRecv(CIAA_UART_232, &rdBuf,
-                (currTknRbFree < RD_BUF_SIZ) ? currTknRbFree : RD_BUF_SIZ);
+   n = gsm232UartRecv(&rdBuf,
+                     (currTknRbFree < RD_BUF_SIZ) ?
+                      currTknRbFree : RD_BUF_SIZ);
 
    if(RingBuffer_IsFull(&currTknRb)){
       debug(">>>tknzer<<<   CURRENT TOKEN RB FULL!\r\n");
@@ -148,7 +149,7 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
          currTkn = ECHO; smsIn = 0;
          debug(">>>tknzer<<<   AT command echo\r\n");
       } /* AT command echo */
-      else if(('\r' == pCh) && ('\n' == ch) && crLf){
+      else if(('\r' == pCh) && ('\n' == ch) && crLf && !empty){
          currTkn = RSP; smsIn = 0;
          debug(">>>tknzer<<<   AT command response\r\n");
       } /* AT command response */
