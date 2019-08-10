@@ -75,7 +75,7 @@ atCmd_t const commands [] = {
                     , "-ERROR-CME ERROR-"                       , 160000},
       {"CIPCLOSE"   , "-CLOSE OK-", "-ERROR-CME ERROR-"         , TOUT_DEF}, //P
       {"CIPSHUT"    , "-SHUT OK-" , "-ERROR-CME ERROR-"         , 65000},
-      {"CIFSR"      , "-OK-"  , "-ERROR-CME ERROR-"             , TOUT_DEF},
+      {"CIFSR"      , ""     , "-ERROR-CME ERROR-"             , TOUT_DEF},
       {"CIPMODE"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CGNSPWR"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CGNSINF"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},

@@ -394,36 +394,32 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug(rspAux);
                debug("\r\n");
 
-               /* CORNER CASE: Since AT+CIFSR does not return an OK after
-                * reporting the IP, we check the response and change it to OK
-                * if it is not ERROR. Note that the actual response (the IP)
-                * has already been stored in the rspVlRb.
-                */
-
-               if(0 == strncmp("CIFSR", currCmd, 5)){
-                  if(0 == strstr(cmd,"ERROR")){
-
-                     debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
-
-                     fsmState = WAITING;
-                     return OK_CLOSE;
-                  }
-               }
-
-               /* Compare current response with the string of valid          */
-               /* successful end responses for the current command. If a     */
-               /* match is detected, close command and report OK_CLOSE.      */
-
                uint8_t auxCmd[22]; /* aux variable to format the cmd so that
-                                      it includes the closing response
-                                      separator characters */
+                                                     it includes the closing response
+                                                     separator characters */
 
                auxCmd[0]='-';
                auxCmd[1]='\0';
                strncat(auxCmd, cmd, strlen(cmd));
                strncat(auxCmd, "-", strlen("-"));
 
-               if(NULL != strstr(commands[idxSave].sucRsp,auxCmd)){
+               /* Compare current response with the string of valid error    */
+               /* end responses for the current command. If a match is       */
+               /* detected, close command and report ERR_MSG_CLOSE           */
+
+               if(NULL != strstr(commands[idxSave].errRsp,auxCmd)){
+
+                  debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
+
+                  fsmState = WAITING;
+                  return ERR_MSG_CLOSE;
+               }
+
+               /* Compare current response with the string of valid          */
+               /* successful end responses for the current command. If a     */
+               /* match is detected, close command and report OK_CLOSE.      */
+
+               else if(NULL != strstr(commands[idxSave].sucRsp,auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -431,16 +427,21 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                   return OK_CLOSE;
                }
 
-               /* Compare current response with the string of valid error    */
-               /* end responses for the current command. If a match is       */
-               /* detected, close command and report ERR_MSG_CLOSE           */
+               /* CORNER CASE: AT+CIFSR does not return an OK after
+                * reporting its response. To handle this and other commands
+                * with this non-standard behavior, we make the sucRsp string
+                * in it's command definition empty and we check for that here.
+                * If the sucRsp string is empty, we consider that the single
+                * response of the command (already saved in rspVlRb) to also
+                * be a closing response.
+                */
 
-               else if(NULL != strstr(commands[idxSave].errRsp,auxCmd)){
+               else if(0 == strlen(commands[idxSave].sucRsp)){
 
-                  debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
+                  debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
                   fsmState = WAITING;
-                  return ERR_MSG_CLOSE;
+                  return OK_CLOSE;
                }
 
                /* If the response is not an end response, just report
