@@ -1,0 +1,26 @@
+---
+:source:
+  :path: test
+  :file: test_gsmComms.c
+:successes:
+- :test: test_gsm232UartRecv
+  :line: 48
+  :message: ''
+- :test: test_gsm232UartSend
+  :line: 61
+  :message: ''
+- :test: test_gsmTermUartRecv
+  :line: 74
+  :message: ''
+- :test: test_gsmTermUartSend
+  :line: 87
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 4
+  :passed: 4
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.00245284

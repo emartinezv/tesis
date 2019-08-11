@@ -32,6 +32,7 @@
  */
 
 #include "ciaaUART.h"
+#include "ring_buffer.h"
 
 uint8_t rxbuf[3][UART_BUF_SIZE];
 uint8_t txbuf[3][UART_BUF_SIZE];
