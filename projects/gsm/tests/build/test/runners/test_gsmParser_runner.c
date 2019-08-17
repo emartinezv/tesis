@@ -6,6 +6,8 @@
   Unity.CurrentTestName = #TestFunc; \
   Unity.CurrentTestLineNumber = TestLineNum; \
   Unity.NumberOfTests++; \
+  CMock_Init(); \
+  UNITY_CLR_DETAILS(); \
   if (TEST_PROTECT()) \
   { \
       setUp(); \
@@ -14,7 +16,9 @@
   if (TEST_PROTECT()) \
   { \
     tearDown(); \
+    CMock_Verify(); \
   } \
+  CMock_Destroy(); \
   UnityConcludeTest(); \
 }
 
@@ -23,10 +27,13 @@
 #define UNITY_INCLUDE_SETUP_STUBS
 #endif
 #include "unity.h"
+#include "cmock.h"
 #ifndef UNITY_EXCLUDE_SETJMP_H
 #include <setjmp.h>
 #endif
 #include <stdio.h>
+#include "mock_gsmComms.h"
+#include "mock_gsmTokenizer.h"
 
 int GlobalExpectCount;
 int GlobalVerifyOrder;
@@ -35,9 +42,28 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_gsmCmdSearch(void);
-extern void test_gsmUrcSearch(void);
+extern void test_gsmParseTkn(void);
 
+
+/*=======Mock Management=====*/
+static void CMock_Init(void)
+{
+  GlobalExpectCount = 0;
+  GlobalVerifyOrder = 0;
+  GlobalOrderError = NULL;
+  mock_gsmComms_Init();
+  mock_gsmTokenizer_Init();
+}
+static void CMock_Verify(void)
+{
+  mock_gsmComms_Verify();
+  mock_gsmTokenizer_Verify();
+}
+static void CMock_Destroy(void)
+{
+  mock_gsmComms_Destroy();
+  mock_gsmTokenizer_Destroy();
+}
 
 /*=======Suite Setup=====*/
 static void suite_setup(void)
@@ -61,7 +87,10 @@ static int suite_teardown(int num_failures)
 void resetTest(void);
 void resetTest(void)
 {
+  CMock_Verify();
+  CMock_Destroy();
   tearDown();
+  CMock_Init();
   setUp();
 }
 
@@ -70,9 +99,9 @@ void resetTest(void)
 int main(void)
 {
   suite_setup();
-  UnityBegin("test_gsmCommands.c");
-  RUN_TEST(test_gsmCmdSearch, 46);
-  RUN_TEST(test_gsmUrcSearch, 78);
+  UnityBegin("test_gsmParser.c");
+  RUN_TEST(test_gsmParseTkn, 50);
 
+  CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());
 }

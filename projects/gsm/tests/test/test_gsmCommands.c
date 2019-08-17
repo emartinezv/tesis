@@ -7,7 +7,6 @@
 
 //-- module being tested
 #include "gsmCommands.h"
-#include "string.h"
 
 /*******************************************************************************
  *    DEFINITIONS

@@ -138,6 +138,7 @@ void test_gsmDetectTkns_1(void)
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
    TEST_ASSERT_EQUAL_STRING_LEN("AT\r", token, strlen("AT\r"));
+   TEST_ASSERT_EQUAL_INT8(ECHO, token[strlen("AT\r")]);
 
    /* 2nd Call: Testing RSP token */
 
@@ -146,14 +147,16 @@ void test_gsmDetectTkns_1(void)
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
    TEST_ASSERT_EQUAL_STRING_LEN("\r\nOK\r\n", token, strlen("\r\nOK\r\n"));
+   TEST_ASSERT_EQUAL_INT8(RSP, token[strlen("\r\nOK\r\n")]);
 
-   /* 3rd Call: Testing DATA BLOCK */
+   /* 3rd Call: Testing DATA_BLOCK */
 
    gsmDetectTkns(&tknVlRb);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
    TEST_ASSERT_EQUAL_STRING_LEN("abcde\r\n", token, strlen("abcde\r\n"));
+   TEST_ASSERT_EQUAL_INT8(DATA_BLOCK, token[strlen("abcde\r\n")]);
 
    /* 4th Call: Testing SMS_PROMPT */
 
@@ -162,6 +165,7 @@ void test_gsmDetectTkns_1(void)
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
    TEST_ASSERT_EQUAL_STRING_LEN("\r\n> ", token, strlen("\r\n> "));
+   TEST_ASSERT_EQUAL_INT8(SMS_PROMPT, token[strlen("\r\n> ")]);
 
    /* 5th Call: Testing SMS_BODY */
 
@@ -170,6 +174,7 @@ void test_gsmDetectTkns_1(void)
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
    TEST_ASSERT_EQUAL_STRING_LEN("abcde", token, strlen("abcde"));
+   TEST_ASSERT_EQUAL_INT8(SMS_BODY, token[strlen("abcde")]);
 
 }
 
