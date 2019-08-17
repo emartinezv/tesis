@@ -6,4 +6,5 @@ tags
 .settings
 *anjuta*
 *kdev4*
+projects/gsm/tests/vendor/*
 

@@ -42,8 +42,8 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_ENGINE
-#ifdef DEBUG_ENGINE
+//#define DEBUG_TOKENIZER
+#ifdef DEBUG_TOKENIZER
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)

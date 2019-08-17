@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_ENGINE
+//#define DEBUG_ENGINE
 #ifdef DEBUG_ENGINE
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else

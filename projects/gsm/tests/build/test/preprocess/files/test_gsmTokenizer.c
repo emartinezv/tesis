@@ -20,19 +20,101 @@
 
 
 
-uint8_t gsm232UartRecv_Callback1 (uint8_t * const buffer, int n, int ncalls)
+
+
+uint8_t gsm232UartRecv_Callback1 (uint8_t * const buffer, int n, int NumCalls)
 
 {
-
-   strncpy(buffer, "AT\rOK", 5);
-
-
 
    uint8_t res = 0;
 
 
 
-   res = 4;
+   switch(NumCalls){
+
+
+
+      case 0:
+
+
+
+         strncpy(buffer, "AT\r\r\nOK", strlen("AT\r\r\nOK"));
+
+         res = strlen("AT\r\r\nOK");
+
+
+
+         break;
+
+
+
+      case 1:
+
+
+
+         strncpy(buffer, "\r\nabcde", strlen("\r\nabcde"));
+
+         res = strlen("\r\nabcde");
+
+
+
+         break;
+
+
+
+      case 2:
+
+
+
+         strncpy(buffer, "\r\n", strlen("\r\n"));
+
+         res = strlen("\r\n");
+
+
+
+         break;
+
+
+
+      case 3:
+
+
+
+         strncpy(buffer, "\r\n> ", strlen("\r\n> "));
+
+         res = strlen("\r\n> ");
+
+
+
+         break;
+
+
+
+      case 4:
+
+
+
+         strncpy(buffer, "abcde\r\n", strlen("abcde\r\n"));
+
+         res = strlen("abcde\r\n");
+
+
+
+         break;
+
+
+
+      default:
+
+
+
+         UnityFail( (("Demasiadas llamadas!")), (UNITY_UINT)(77));
+
+
+
+         break;
+
+   }
 
 
 
@@ -90,7 +172,7 @@ void test_gsmInitTokenizer(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((1)), (UNITY_INT)((n)), (((void *)0)), (UNITY_UINT)(68), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((1)), (UNITY_INT)((n)), (((void *)0)), (UNITY_UINT)(109), UNITY_DISPLAY_STYLE_INT);
 
 }
 
@@ -152,6 +234,72 @@ void test_gsmDetectTkns_1(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("AT\r")), (const char*)((token)), (UNITY_UINT32)((3)), (((void *)0)), (UNITY_UINT)(99));
+   UnityAssertEqualStringLen((const char*)(("AT\r")), (const char*)((token)), (UNITY_UINT32)((strlen("AT\r"))), (((void *)0)), (UNITY_UINT)(140));
+
+
+
+
+
+
+
+   gsmDetectTkns(&tknVlRb);
+
+
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+
+
+   UnityAssertEqualStringLen((const char*)(("\r\nOK\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\nOK\r\n"))), (((void *)0)), (UNITY_UINT)(148));
+
+
+
+
+
+
+
+   gsmDetectTkns(&tknVlRb);
+
+
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+
+
+   UnityAssertEqualStringLen((const char*)(("abcde\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde\r\n"))), (((void *)0)), (UNITY_UINT)(156));
+
+
+
+
+
+
+
+   gsmDetectTkns(&tknVlRb);
+
+
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+
+
+   UnityAssertEqualStringLen((const char*)(("\r\n> ")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\n> "))), (((void *)0)), (UNITY_UINT)(164));
+
+
+
+
+
+
+
+   gsmDetectTkns(&tknVlRb);
+
+
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+
+
+   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde"))), (((void *)0)), (UNITY_UINT)(172));
+
+
 
 }

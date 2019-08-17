@@ -7,6 +7,7 @@
 
 //-- module being tested
 #include "gsmTokenizer.h"
+#include "string.h"
 #include "mock_gsmComms.h" /* VER */
 #include "ring_buffer.h" /* VER */
 #include "vl_ring_buffer.h" /* VER */
@@ -30,13 +31,53 @@
  *    PRIVATE FUNCTIONS
  ******************************************************************************/
 
-uint8_t gsm232UartRecv_Callback1 (uint8_t * const buffer, int n, int ncalls)
+uint8_t gsm232UartRecv_Callback1 (uint8_t * const buffer, int n, int NumCalls)
 {
-   strncpy(buffer, "AT\rOK", 5);
-
    uint8_t res = 0;
 
-   res = 4;
+   switch(NumCalls){
+
+      case 0:
+
+         strncpy(buffer, "AT\r\r\nOK", strlen("AT\r\r\nOK"));
+         res = strlen("AT\r\r\nOK");
+
+         break;
+
+      case 1:
+
+         strncpy(buffer, "\r\nabcde", strlen("\r\nabcde"));
+         res = strlen("\r\nabcde");
+
+         break;
+
+      case 2:
+
+         strncpy(buffer, "\r\n", strlen("\r\n"));
+         res = strlen("\r\n");
+
+         break;
+
+      case 3:
+
+         strncpy(buffer, "\r\n> ", strlen("\r\n> "));
+         res = strlen("\r\n> ");
+
+         break;
+
+      case 4:
+
+         strncpy(buffer, "abcde\r\n", strlen("abcde\r\n"));
+         res = strlen("abcde\r\n");
+
+         break;
+
+      default:
+
+         TEST_FAIL_MESSAGE("Demasiadas llamadas!");
+
+         break;
+   }
 
    return res;
 }
@@ -90,13 +131,46 @@ void test_gsmDetectTkns_1(void)
 
    gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback1);
 
-   /* Testing routine */
+   /* 1st Call: Testing ECHO token */
 
    gsmDetectTkns(&tknVlRb);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
-   TEST_ASSERT_EQUAL_STRING_LEN("AT\r", token, 3);
+   TEST_ASSERT_EQUAL_STRING_LEN("AT\r", token, strlen("AT\r"));
+
+   /* 2nd Call: Testing RSP token */
+
+   gsmDetectTkns(&tknVlRb);
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("\r\nOK\r\n", token, strlen("\r\nOK\r\n"));
+
+   /* 3rd Call: Testing DATA BLOCK */
+
+   gsmDetectTkns(&tknVlRb);
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("abcde\r\n", token, strlen("abcde\r\n"));
+
+   /* 4th Call: Testing SMS_PROMPT */
+
+   gsmDetectTkns(&tknVlRb);
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("\r\n> ", token, strlen("\r\n> "));
+
+   /* 5th Call: Testing SMS_BODY */
+
+   gsmDetectTkns(&tknVlRb);
+
+   res = VLRingBuffer_Pop(&tknVlRb, token, 10);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("abcde", token, strlen("abcde"));
+
 }
 
 

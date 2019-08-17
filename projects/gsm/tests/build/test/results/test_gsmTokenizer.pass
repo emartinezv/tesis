@@ -4,10 +4,10 @@
   :file: test_gsmTokenizer.c
 :successes:
 - :test: test_gsmInitTokenizer
-  :line: 62
+  :line: 103
   :message: ''
 - :test: test_gsmDetectTkns_1
-  :line: 71
+  :line: 112
   :message: ''
 :failures: []
 :ignores: []
@@ -17,4 +17,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.003139857
+:time: 0.002698589
