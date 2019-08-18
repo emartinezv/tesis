@@ -97,8 +97,8 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmTokenizer.c");
-  RUN_TEST(test_gsmInitTokenizer, 103);
-  RUN_TEST(test_gsmDetectTkns_1, 112);
+  RUN_TEST(test_gsmInitTokenizer, 70);
+  RUN_TEST(test_gsmDetectTkns_1, 79);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

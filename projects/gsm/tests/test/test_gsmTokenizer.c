@@ -26,58 +26,25 @@
  *    PRIVATE DATA
  ******************************************************************************/
 
+uint8_t const * const uartRecvMock [] = {
+
+      "AT\r\r\nOK", "\r\nabcde", "\r\n", "\r\n> ", "abcde\r\n"
+};
 
 /*******************************************************************************
  *    PRIVATE FUNCTIONS
  ******************************************************************************/
 
-uint8_t gsm232UartRecv_Callback1 (uint8_t * const buffer, int n, int NumCalls)
+uint8_t gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
 {
    uint8_t res = 0;
 
-   switch(NumCalls){
-
-      case 0:
-
-         strncpy(buffer, "AT\r\r\nOK", strlen("AT\r\r\nOK"));
-         res = strlen("AT\r\r\nOK");
-
-         break;
-
-      case 1:
-
-         strncpy(buffer, "\r\nabcde", strlen("\r\nabcde"));
-         res = strlen("\r\nabcde");
-
-         break;
-
-      case 2:
-
-         strncpy(buffer, "\r\n", strlen("\r\n"));
-         res = strlen("\r\n");
-
-         break;
-
-      case 3:
-
-         strncpy(buffer, "\r\n> ", strlen("\r\n> "));
-         res = strlen("\r\n> ");
-
-         break;
-
-      case 4:
-
-         strncpy(buffer, "abcde\r\n", strlen("abcde\r\n"));
-         res = strlen("abcde\r\n");
-
-         break;
-
-      default:
-
-         TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-
-         break;
+   if(NumCalls > 4){
+      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
    }
+
+   strncpy(buffer, uartRecvMock[NumCalls], strlen(uartRecvMock[NumCalls]));
+   res = strlen(uartRecvMock[NumCalls]);
 
    return res;
 }
@@ -129,7 +96,7 @@ void test_gsmDetectTkns_1(void)
 
    /* Mock definitions */
 
-   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback1);
+   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
 
    /* 1st Call: Testing ECHO token */
 

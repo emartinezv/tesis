@@ -44,11 +44,11 @@
 - :rake_columns: '120'
 :defines:
   :test:
-  - &18171800
+  - &16513220
     - CORE_M4
   - TEST
   :test_preprocess:
-  - *18171800
+  - *16513220
   - TEST
   :release: []
   :release_preprocess: []
@@ -57,10 +57,10 @@
   - CORE_M4
 :libraries:
   :test:
-  - &18226260 []
+  - &16567860 []
   :test_preprocess: []
   :release:
-  - *18226260
+  - *16567860
   :release_preprocess: []
   :placement: :end
   :flag: ${1}
@@ -176,6 +176,91 @@
     - -DGNU_COMPILER
     - -w
     - ! '"${1}"'
+  :gcov_compiler:
+    :executable: gcc
+    :arguments:
+    - -g
+    - -fprofile-arcs
+    - -ftest-coverage
+    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+    - -DGCOV_COMPILER
+    - -c "${1}"
+    - -o "${2}"
+    :name: gcov_compiler
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+  :gcov_fixture:
+    :executable: ${1}
+    :name: gcov_fixture
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+  :gcov_linker:
+    :executable: gcc
+    :arguments:
+    - -fprofile-arcs
+    - -ftest-coverage
+    - ${1}
+    - -o ${2}
+    :name: gcov_linker
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+  :gcov_post_report:
+    :executable: gcovr
+    :optional: true
+    :arguments:
+    - -p
+    - -b
+    - -e "${1}"
+    - --html
+    - -r .
+    - -o GcovCoverageResults.html
+    :name: gcov_post_report
+    :stderr_redirect: :none
+    :background_exec: :none
+  :gcov_post_report_advanced:
+    :executable: gcovr
+    :optional: true
+    :arguments:
+    - -p
+    - -b
+    - -e "${1}"
+    - --html
+    - --html-details
+    - -r .
+    - -o  "$": GCOV_ARTIFACTS_FILE
+    :name: gcov_post_report_advanced
+    :stderr_redirect: :none
+    :background_exec: :none
+  :gcov_post_report_basic:
+    :executable: gcovr
+    :optional: true
+    :arguments:
+    - -p
+    - -b
+    - -e "${1}"
+    - --html
+    - -r .
+    - -o  "$": GCOV_ARTIFACTS_FILE
+    :name: gcov_post_report_basic
+    :stderr_redirect: :none
+    :background_exec: :none
+  :gcov_report:
+    :executable: gcov
+    :arguments:
+    - -n
+    - -p
+    - -b
+    - -o "$": GCOV_BUILD_OUTPUT_PATH
+    - ! '"${1}"'
+    :name: gcov_report
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
 :test_compiler:
   :arguments: []
 :test_linker:
@@ -205,10 +290,12 @@
   - stdout_pretty_tests_report
   - module_generator
   - raw_output_report
+  - gcov
   :display_raw_test_results: false
   :stdout_pretty_tests_report_path: vendor/ceedling/plugins/stdout_pretty_tests_report
   :module_generator_path: vendor/ceedling/plugins/module_generator
   :raw_output_report_path: vendor/ceedling/plugins/raw_output_report
+  :gcov_path: vendor/ceedling/plugins/gcov
 :gcov:
   :html_report_type: basic
 :module_generator:

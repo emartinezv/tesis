@@ -133,7 +133,6 @@ typedef enum _fsmEvent
 
 void gsmInitEngine(void);
 
-
 /** @brief Processes a single token
 *
 *  @return Returns the event triggered by the gsmUpdateFsm call

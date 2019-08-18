@@ -616,7 +616,9 @@ uint8_t gsmToutCntZero(void){
 
 void gsmDecToutCnt(void){
 
-   toutCnt--;
+   if(toutCnt > 0){
+      toutCnt--;
+   }
 
    return;
 }
