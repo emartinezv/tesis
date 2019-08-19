@@ -95,7 +95,7 @@ void test_gsmParseTkn(void)
    TEST_ASSERT_EQUAL_INT(0, strlen(par));
    TEST_ASSERT_EQUAL_INT8(AUTOBAUD, tknType);
 
-   /* Testing BASIC_CMD token */
+   /* Testing BASIC_CMD token no parameters */
 
    tknType = INVALID;
 
@@ -106,6 +106,19 @@ void test_gsmParseTkn(void)
 
    TEST_ASSERT_EQUAL_STRING_LEN("X", cmd, strlen(cmd));
    TEST_ASSERT_EQUAL_INT(0, strlen(par));
+   TEST_ASSERT_EQUAL_INT8(BASIC_CMD, tknType);
+
+   /* Testing BASIC_CMD token with parameters */
+
+   tknType = INVALID;
+
+   strncpy(tkn,"ATX123\r",strlen("ATX123\r"));
+   tkn[strlen("ATX123\r")] = ECHO;
+
+   tknType = gsmParseTkn(tkn, cmd, par, strlen("ATX123\r")+1);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("X", cmd, strlen(cmd));
+   TEST_ASSERT_EQUAL_STRING_LEN("123", par, strlen(par));
    TEST_ASSERT_EQUAL_INT8(BASIC_CMD, tknType);
 
    /* Testing BASIC_CMD_AMP token */
@@ -225,7 +238,20 @@ void test_gsmParseTkn(void)
    TEST_ASSERT_EQUAL_INT(0, strlen(par));
    TEST_ASSERT_EQUAL_INT8(SMS_PROMPT_P, tknType);
 
-   /* Testing EXT_RSP token */
+   /* Testing EXT_RSP token without parameters */
+
+   tknType = INVALID;
+
+   strncpy(tkn,"\r\n+X\r\n",strlen("\r\n+X\r\n"));
+   tkn[strlen("\r\n+X\r\n")] = RSP;
+
+   tknType = gsmParseTkn(tkn, cmd, par, strlen("\r\n+X\r\n")+1);
+
+   TEST_ASSERT_EQUAL_STRING_LEN("X", cmd, strlen(cmd));
+   TEST_ASSERT_EQUAL_INT(0, strlen(par));
+   TEST_ASSERT_EQUAL_INT8(EXT_RSP, tknType);
+
+   /* Testing EXT_RSP token with parameters */
 
    tknType = INVALID;
 

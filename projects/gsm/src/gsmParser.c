@@ -283,8 +283,8 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
 
                if('\r' != tkn[3]){
                   /* If present, everything after the cmd char is the par */
-                  strncpy(par,&tkn[3],tknLen-3);
-                  par[tknLen-3] = '\0';
+                  strncpy(par,&tkn[3],tknLen-4);
+                  par[tknLen-4] = '\0';
 
                   debug("(");
                   debug(par);

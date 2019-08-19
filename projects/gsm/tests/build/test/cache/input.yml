@@ -44,11 +44,11 @@
 - :rake_columns: '120'
 :defines:
   :test:
-  - &23104380
+  - &22845100
     - CORE_M4
   - TEST
   :test_preprocess:
-  - *23104380
+  - *22845100
   - TEST
   :release: []
   :release_preprocess: []
@@ -57,10 +57,10 @@
   - CORE_M4
 :libraries:
   :test:
-  - &23158700 []
+  - &22899460 []
   :test_preprocess: []
   :release:
-  - *23158700
+  - *22899460
   :release_preprocess: []
   :placement: :end
   :flag: ${1}
@@ -297,7 +297,8 @@
   :raw_output_report_path: vendor/ceedling/plugins/raw_output_report
   :gcov_path: vendor/ceedling/plugins/gcov
 :gcov:
-  :html_report_type: basic
+  :html_report: true
+  :html_report_type: detailed
 :module_generator:
   :project_root: ./
   :source_root: src/

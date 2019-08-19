@@ -71,7 +71,8 @@
     bool:     UINT8
 
 :gcov:
-    :html_report_type: basic
+    :html_report: true
+    :html_report_type: detailed
 
 #:tools:
 # Ceedling defaults to using gcc for compiling, linking, etc.
