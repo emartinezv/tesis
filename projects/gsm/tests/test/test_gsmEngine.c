@@ -74,7 +74,10 @@ static uint8_t const * const uartRecvMock [] = {
       "AT\rA","TI\r\r","\n+CMTI:abcde\r\n",
 
       /* AT echo + invalid + urc */
-      "AT\rT","A\r\r","\n+CMTI:abcde\r\n"
+      "AT\rT","A\r\r","\n+CMTI:abcde\r\n",
+
+      /* AT+CMGS=num echo + sms prompt + sms body + OK */
+      "AT+CMGS=num\r\r","\n> ","hola\r\n","OK\r\n"
 };
 
 /*******************************************************************************
@@ -118,9 +121,19 @@ void tearDown(void)
  *    TESTS
  ******************************************************************************/
 
-/* This tests the gsmProcessTkn function as well as the private gsmSendCmd and
- * gsmUpdateFsm functions. The mutiple cmd-rsp sequences included are meant to
- * completely cover the code of gsmUpdateFsm.
+/* test_gsmFsm
+ *
+ * Tests the following functions:
+ *
+ * - gsmInitEngine
+ * - gsmProcessTkn
+ * - gsmSendCmd
+ * - gsmUpdateFsm
+ * - gsmToutCntZero
+ * - gsmDecToutCnt
+ *
+ * The mutiple cmd-rsp sequences included are meant to completely cover the
+ * code of gsmUpdateFsm.
  *
  * The gsmUpdateFsm function has a FSM wih 3 states, each of which has several
  * return points. These are labeled in the function code as 1.1, 1.2,...,
@@ -129,7 +142,7 @@ void tearDown(void)
  *
  * */
 
-void test_gsmProcessTkn(void)
+void test_gsmFsm(void)
 {
    /* Mock definitions */
 
@@ -315,6 +328,24 @@ void test_gsmProcessTkn(void)
 
    fsmEvent = gsmProcessTkn(); /* mock mimics urc */
    TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
+
+   /* AT+CMGS=num sent + AT+CMGS=num echo + sms prompt + sms body */
+   /* included to test uncovered code in gsmSendCmd */
+
+   fsmEvent = gsmSendCmd("AT+CMGS=sum\r"); /* mock mimics AT+CMGS cmd sent */
+   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
+
+   fsmEvent = gsmProcessTkn(); /* mock mimics AT+CMGS cmd echo */
+   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
+
+   fsmEvent = gsmProcessTkn(); /* mock mimics sms prompt response */
+   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
+
+   fsmEvent = gsmSendCmd("hola"); /* mock mimics sms text sent */
+   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
+
+   fsmEvent = gsmProcessTkn(); /* mock mimics sms prompt response */
+   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
 
    return;
 }

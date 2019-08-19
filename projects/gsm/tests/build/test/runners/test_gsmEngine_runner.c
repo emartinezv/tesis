@@ -41,7 +41,7 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_gsmProcessTkn(void);
+extern void test_gsmFsm(void);
 
 
 /*=======Mock Management=====*/
@@ -96,7 +96,7 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmProcessTkn, 132);
+  RUN_TEST(test_gsmFsm, 124);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());
