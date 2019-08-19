@@ -212,7 +212,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             debug(par);
             debug(")\r\n");
 
-            return OK_CMD_SENT;
+            return OK_CMD_SENT; /* return 1.1 */
 
          }
 
@@ -230,13 +230,13 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc (cmd, par);
 
-               return OK_URC;
+               return OK_URC; /* return 1.2 */
             }
 
             else{
                debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND EXPECTED\r\n");
 
-               return ERR_OOO;
+               return ERR_OOO; /* return 1.3 */
             }
 
          }
@@ -246,7 +246,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
          else{
             debug(">>>engine<<<   INVALID TOKEN\r\n");
 
-            return ERR_TKN_INV;
+            return ERR_TKN_INV; /* return 1.4 */
 
          }
 
@@ -283,7 +283,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                debug(">>>engine<<<   COMMAND ACK\r\n");
 
-               return OK_CMD_ACK;
+               return OK_CMD_ACK; /* return 2.1 */
             }
 
             /* If the echo is incorrect, report error and go back to WAITING
@@ -294,7 +294,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                debug(">>>engine<<<   COMMAND ECHO ERROR\r\n");
 
-               return ERR_CMD_ECHO;
+               return ERR_CMD_ECHO; /* return 2.2 */
             }
          }
 
@@ -311,7 +311,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc (cmd, par);
 
-               return OK_URC;
+               return OK_URC; /* return 2.3 */
             }
 
             else{
@@ -319,7 +319,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND ECHO EXPECTED\r\n");
 
-               return ERR_CMD_ECHO;
+               return ERR_CMD_ECHO; /* return 2.4 */
             }
 
          }
@@ -333,7 +333,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
-               return ERR_TIMEOUT;
+               return ERR_TIMEOUT; /* return 2.5 */
          }
 
          /* Any other sort of token is considered invalid */
@@ -347,7 +347,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             debug(par);
             debug(")\r\n");
 
-            return ERR_TKN_INV;
+            return ERR_TKN_INV; /* return 2.6 */
          }
 
          break;
@@ -374,7 +374,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc(cmd, par);
 
-               return OK_URC;
+               return OK_URC; /* return 3.1 */
             }
 
             else{
@@ -395,8 +395,8 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                debug("\r\n");
 
                uint8_t auxCmd[22]; /* aux variable to format the cmd so that
-                                                     it includes the closing response
-                                                     separator characters */
+                                      it includes the closing response
+                                      separator characters */
 
                auxCmd[0]='-';
                auxCmd[1]='\0';
@@ -412,7 +412,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
                   fsmState = WAITING;
-                  return ERR_MSG_CLOSE;
+                  return ERR_MSG_CLOSE; /* return 3.2 */
                }
 
                /* Compare current response with the string of valid          */
@@ -424,7 +424,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
                   fsmState = WAITING;
-                  return OK_CLOSE;
+                  return OK_CLOSE; /* return 3.3 */
                }
 
                /* CORNER CASE: AT+CIFSR does not return an OK after
@@ -441,7 +441,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
                   fsmState = WAITING;
-                  return OK_CLOSE;
+                  return OK_CLOSE; /* return 3.4 */
                }
 
                /* If the response is not an end response, just report
@@ -449,7 +449,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                else{
 
-                  return OK_RSP;
+                  return OK_RSP; /* return 3.5 */
                }
             }
 
@@ -463,7 +463,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
             debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
 
-            return ERR_OOO;
+            return ERR_OOO; /* return 3.6 */
          }
 
          /* If the token type is TIMEOUT, the maximum response time for this
@@ -475,7 +475,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
-               return ERR_TIMEOUT;
+               return ERR_TIMEOUT; /* return 3.7 */
          }
 
          /* Any other sort of token is considered invalid */
@@ -488,7 +488,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             debug(par);
             debug(")\r\n");
 
-            return ERR_TKN_INV;
+            return ERR_TKN_INV; /* return 3.8 */
          }
 
          break;
@@ -501,7 +501,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
          debug(">>>engine<<<   ERROR: FSM OUT OF RANGE");
 
          fsmState = WAITING;
-         return ERR_FSM_OOR;
+         return ERR_FSM_OOR; /* return 3.9 */
 
          break;
    }
