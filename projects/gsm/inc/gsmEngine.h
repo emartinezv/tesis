@@ -85,39 +85,6 @@ typedef struct _rsp_t
    uint8_t par[TKN_PAR_SIZE];
 } rsp_t;
 
-/** @brief GSM engine type */
-
-typedef struct _gsmEngine_t
-{
-   /* State */
-
-   fsmState_e fsmState;
-   serialMode_e serialMode;
-
-   /* Counters */
-
-   uint32_t toutCnt;
-
-   /* VL ring buffers */
-
-   VLRINGBUFF_T tknVlRb;
-   VLRINGBUFF_T rspVlRb;
-   VLRINGBUFF_T urcVlRb;
-
-   /* Ring buffers */
-
-   RINGBUFF_T tknRb;
-   RINGBUFF_T rspRb;
-   RINGBUFF_T urcRb;
-
-   /* Ring buffer storage arrays */
-
-   uint8_t tknRbBuf[TKN_BUF_SIZE];
-   uint8_t rspRbBuf[RSP_BUF_SIZE];
-   uint8_t urcRbBuf[URC_BUF_SIZE];
-
-} gsmEngine_t;
-
 /** @brief Modes for the serial port */
 
 typedef enum _serialMode_e
@@ -153,6 +120,39 @@ typedef enum _fsmEvent
    ERR_TIMEOUT,       /**< AT command timeout */
    ERR_FSM_OOR        /**< FSM out of range */
 } fsmEvent_e;
+
+/** @brief GSM engine type */
+
+typedef struct _gsmEngine_t
+{
+   /* State */
+
+   fsmState_e fsmState;
+   serialMode_e serialMode;
+
+   /* Counters */
+
+   uint32_t toutCnt;
+
+   /* VL ring buffers */
+
+   VLRINGBUFF_T tknVlRb;
+   VLRINGBUFF_T rspVlRb;
+   VLRINGBUFF_T urcVlRb;
+
+   /* Ring buffers */
+
+   RINGBUFF_T tknRb;
+   RINGBUFF_T rspRb;
+   RINGBUFF_T urcRb;
+
+   /* Ring buffer storage arrays */
+
+   uint8_t tknRbBuf[TKN_BUF_SIZE];
+   uint8_t rspRbBuf[RSP_BUF_SIZE];
+   uint8_t urcRbBuf[URC_BUF_SIZE];
+
+} gsmEngine_t;
 
 /*==================[typedef]================================================*/
 

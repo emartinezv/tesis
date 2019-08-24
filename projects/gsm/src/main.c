@@ -388,11 +388,11 @@ void cbData (void)
 
    serialReadBuf[nRead]='\0';
 
-   gsmCheckDataMode(&serialReadBuf[0], &nRead);
+   n = gsmCheckDataMode(&interface, &serialReadBuf[0], &nRead);
 
    /* Write data read from serial port to USB UART */
 
-   n = uartSend(CIAA_UART_USB, serialReadBuf, nRead);
+   uartSend(CIAA_UART_USB, serialReadBuf, n);
 
    return;
 }
@@ -401,7 +401,7 @@ void cbData (void)
 /*                         Testing console functions                         */
 /*---------------------------------------------------------------------------*/
 
-void console_sms (void)
+void console_sms (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
@@ -415,7 +415,7 @@ void console_sms (void)
 
    while ('S' != instruction){
 
-      if(gsmIsIdle()){
+      if(gsmIsIdle(interface)){
 
          dbgPrint("\r\n\r\n>>> CONSOLA SMS <<< \r\n\r\n");
 
@@ -426,31 +426,33 @@ void console_sms (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
+            gsmProcess(interface);
+         }
 
          switch (instruction) {
 
             case '1':
 
-            gsmSmsSend(&msg, &conf, cbempty);
+            gsmSmsSend(interface, &msg, &conf, cbempty);
 
             break;
 
             case '2':
 
-            gsmSmsList(&msgList[0], &parList, cbprint);
+            gsmSmsList(interface, &msgList[0], &parList, cbprint);
 
             break;
 
             case '3':
 
-            gsmSmsDel(&msgDel, cbempty);
+            gsmSmsDel(interface, &msgDel, cbempty);
 
             break;
 
             case '4':
 
-            gsmSmsRead(&recMsg, &parRead, cbprint);
+            gsmSmsRead(interface, &recMsg, &parRead, cbprint);
 
             break;
 
@@ -465,8 +467,8 @@ void console_sms (void)
 
          }
 
-         while(!gsmIsIdle()){
-            gsmProcess();
+         while(!gsmIsIdle(interface)){
+            gsmProcess(interface);
          }
 
       }
@@ -477,7 +479,7 @@ void console_sms (void)
 
 }
 
-void console_gprs (void)
+void console_gprs (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
@@ -487,7 +489,7 @@ void console_gprs (void)
 
    while ('S' != instruction){
 
-      if(gsmIsIdle()){
+      if(gsmIsIdle(interface)){
 
          dbgPrint("\r\n\r\n>>> CONSOLA GPRS <<< \r\n\r\n");
 
@@ -498,31 +500,33 @@ void console_gprs (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
+            gsmProcess(interface);
+         }
 
          switch (instruction) {
 
             case '1':
 
-            gsmGprsStart(&APN, cbempty);
+            gsmGprsStart(interface, &APN, cbempty);
 
             break;
 
             case '2':
 
-            gsmGprsOpenPort(&port1, cbempty);
+            gsmGprsOpenPort(interface, &port1, cbempty);
 
             break;
 
             case '3':
 
-            gsmGprsOpenPort(&port2, cbempty);
+            gsmGprsOpenPort(interface, &port2, cbempty);
 
             break;
 
             case '4':
 
-            gsmGprsClosePort(cbempty);
+            gsmGprsClosePort(interface, cbempty);
 
             break;
 
@@ -537,12 +541,12 @@ void console_gprs (void)
 
          }
 
-         while(!gsmIsIdle()){
-            gsmProcess();
+         while(!gsmIsIdle(interface)){
+            gsmProcess(interface);
          }
 
-         while(DATA_MODE == gsmGetSerialMode()){
-            gsmProcess();
+         while(DATA_MODE == gsmGetSerialMode(interface)){
+            gsmProcess(interface);
          }
 
          //while(DATA_MODE == gsmGetSerialMode()){
@@ -567,7 +571,7 @@ void console_gprs (void)
    return;
 }
 
-void console_gnss (void)
+void console_gnss (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
@@ -576,7 +580,7 @@ void console_gnss (void)
 
    while ('S' != instruction){
 
-      if(gsmIsIdle()){
+      if(gsmIsIdle(interface)){
 
          dbgPrint("\r\n\r\n>>> CONSOLA GNSS <<< \r\n\r\n");
 
@@ -586,7 +590,9 @@ void console_gnss (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
+            gsmProcess(interface);
+         }
 
          switch (instruction) {
 
@@ -594,7 +600,7 @@ void console_gnss (void)
 
             powerGNSS = ON;
 
-            gsmGnssPwr(&powerGNSS, cbempty);
+            gsmGnssPwr(interface, &powerGNSS, cbempty);
 
             break;
 
@@ -602,13 +608,13 @@ void console_gnss (void)
 
             powerGNSS = OFF;
 
-            gsmGnssPwr(&powerGNSS, cbempty);
+            gsmGnssPwr(interface, &powerGNSS, cbempty);
 
             break;
 
             case '3':
 
-            gsmGnssGetData(&navInfo, cbempty);
+            gsmGnssGetData(interface, &navInfo, cbempty);
 
             break;
 
@@ -623,8 +629,8 @@ void console_gnss (void)
 
          }
 
-         while(!gsmIsIdle()){
-            gsmProcess();
+         while(!gsmIsIdle(interface)){
+            gsmProcess(interface);
          }
 
       }
@@ -634,7 +640,7 @@ void console_gnss (void)
    return;
 }
 
-void console_urc (void)
+void console_urc (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
@@ -642,7 +648,7 @@ void console_urc (void)
 
    while ('S' != instruction){
 
-      if(gsmIsIdle()){
+      if(gsmIsIdle(interface)){
 
          dbgPrint("\r\n\r\n>>> CONSOLA URC <<< \r\n\r\n");
 
@@ -652,13 +658,15 @@ void console_urc (void)
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
-         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){gsmProcess();}
+         while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
+            gsmProcess(interface);
+         }
 
          switch (instruction) {
 
             case '1':
 
-            urc = gsmGetUrc();
+            urc = gsmGetUrc(interface);
 
             if(urc.cmd[0] != '\0'){
                dbgPrint("\r\nURC: ");
@@ -675,13 +683,13 @@ void console_urc (void)
 
             case '2':
 
-            gsmSetUrcMode(CBACK_MODE);
+            gsmSetUrcMode(interface, CBACK_MODE);
 
             break;
 
             case '3':
 
-            gsmSetUrcMode(MANUAL_MODE);
+            gsmSetUrcMode(interface, MANUAL_MODE);
 
             break;
 
@@ -696,8 +704,8 @@ void console_urc (void)
 
          }
 
-         while(!gsmIsIdle()){
-            gsmProcess();
+         while(!gsmIsIdle(interface)){
+            gsmProcess(interface);
          }
 
       }
@@ -726,22 +734,24 @@ int main(void)
    sigQual_s sigqual;
    connStatus_s status;
 
-   gsmSetUrcCback(cbUrc);
-   gsmSetDataCback(cbData);
+   gsmInterface_t interface;
+
+   gsmSetUrcCback(&interface, cbUrc);
+   gsmSetDataCback(&interface, cbData);
 
    pausems(DELAY_INIT);
 
    dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
 
-   gsmStartUp(cbempty);
+   gsmStartUp(&interface, cbempty);
 
-   while(!gsmIsIdle()){
-      gsmProcess();
+   while(!gsmIsIdle(&interface)){
+      gsmProcess(&interface);
    }
 
    while (1){
 
-      if(gsmIsIdle()){
+      if(gsmIsIdle(&interface)){
 
          dbgPrint("\r\n>>> CONSOLA PRINCIPAL <<< \r\n\r\n");
 
@@ -759,37 +769,37 @@ int main(void)
 
             case '1':
 
-            console_sms();
+            console_sms(&interface);
 
             break;
 
             case '2':
 
-            console_gprs();
+            console_gprs(&interface);
 
             break;
 
             case '3':
 
-            console_gnss();
+            console_gnss(&interface);
 
             break;
 
             case '4':
 
-            console_urc();
+            console_urc(&interface);
 
             break;
 
             case '5':
 
-            gsmGetSigQual (&sigqual, cbempty);
+            gsmGetSigQual (&interface, &sigqual, cbempty);
 
             break;
 
             case '6':
 
-            gsmCheckConn(&status, cbgsmgprs);
+            gsmCheckConn(&interface, &status, cbgsmgprs);
 
             break;
 
@@ -801,13 +811,13 @@ int main(void)
 
          }
 
-         while(!gsmIsIdle()){
-            gsmProcess();
+         while(!gsmIsIdle(&interface)){
+            gsmProcess(&interface);
          }
 
       }
 
-      gsmProcess();
+      gsmProcess(&interface);
 
    }
 

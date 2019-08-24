@@ -187,13 +187,13 @@ typedef struct _gsmInterface_t
    /* DATA mode */
 
    dataCback_t dataCback;
-   const uint8_t * const exitCmdList [] = {"OK", "CLOSED"};
+   uint8_t* exitCmdList;
 
    /* Formula */
 
-   void (*frm) (void); /* Pointer to formula function */
-   void * frmInput;    /* Pointer to formula inputs */
-   void * frmOutput;   /* Pointer to formula outputs */
+   frm_t frm;            /* Pointer to formula function */
+   void * frmInput;      /* Pointer to formula inputs */
+   void * frmOutput;     /* Pointer to formula outputs */
    frmCback_t frmCback;
    errorUser_s errorOut;
 
@@ -202,6 +202,10 @@ typedef struct _gsmInterface_t
    gsmEngine_t engine;
 
 } gsmInterface_t;
+
+/** @brief Type for formula function pointer */
+
+typedef void * (*frm_t) (gsmInterface_t *);
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGetSigQual function               */
@@ -384,12 +388,10 @@ void gsmStartUp (gsmInterface_t * interface, frmCback_t cback);
 
 /** @brief Handles AT command timeout and gsmProcess function timing
 *
-* @param interface : Pointer to interface
-*
 * @return
 */
 
-void gsmSysTickHandler (gsmInterface_t * interface);
+void gsmSysTickHandler (void);
 
 /** @brief Processes commands, responded and URCs at the rate of one token
 *   per invocation
@@ -435,30 +437,33 @@ void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
 
 /** @brief Sets URC handling either cback mode or manual mode
 *
-* @param mode   URC handling mode
+* @param interface : Pointer to interface
+* @param mode      : URC handling mode
 *
 * @return
 */
 
-void gsmSetUrcMode (urcMode_e mode);
+bool gsmSetUrcMode (gsmInterface_t * interface, urcMode_e mode);
 
 /** @brief Sets URC cback function
 *
-* @param cback  Function pointer to callback function
+* @param interface : Pointer to interface
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSetUrcCback (urcCback_t cback);
+bool gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback);
 
 /** @brief Sets DATA_MODE cback
 *
-* @param cback  Function pointer to callback function
+* @param interface : Pointer to interface
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSetDataCback (dataCback_t cback);
+void gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);
 
 /** @brief Writes and reads data from serial port in DATA_MODE
 *
@@ -480,13 +485,14 @@ void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
 *
 * @param buf     Serial port read buffer
 * @param nch     Pointer to integer indicating number of characters in the read
-*                buffer. Function overwrites this to indicate how many chars
-*                to actually print
+*                buffer.
 *
-* @return
+* @return Returns number of chars that should be printed
 */
 
-void gsmCheckDataMode (uint8_t const * const buf , uint8_t * const nch);
+uint8_t gsmCheckDataMode (gsmInterface_t * interface,
+                          uint8_t const * const buf,
+                          uint8_t const * const nch);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */
@@ -494,46 +500,54 @@ void gsmCheckDataMode (uint8_t const * const buf , uint8_t * const nch);
 
 /** @brief Sends an SMS
 *
-* @param msg   Pointer to SMS message to be sent
-* @param conf  Pointer to confirmation of SMS being sent
-* @param cback Function pointer to callback function
+* @param interface : Pointer to interface
+* @param msg       : Pointer to SMS message to be sent
+* @param conf      : Pointer to confirmation of SMS being sent
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsSend (smsOut_s * msg, smsConf_s * conf, frmCback_t cback);
+void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
+                 frmCback_t cback);
 
 /** @brief Reads a single received SMS
 *
-* @param msg    Pointer to storage variable for SMS to be read
-* @param pars   SMS read parameters (index and mode)
-* @param cback  Function pointer to callback function
+* @param interface : Pointer to interface
+* @param msg       : Pointer to storage variable for SMS to be read
+* @param pars      : SMS read parameters (index and mode)
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsRead (smsRec_s * msg, smsReadPars_s * pars, frmCback_t cback);
+void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
+                 smsReadPars_s * pars, frmCback_t cback);
 
 /** @brief Lists received SMSs in a vector
 *
-* @param list     Pointer to storage vector for SMSs to be read
-* @param pars     SMS list parameters (status, mode and number of messages)
-* @param cback    Function pointer to callback function
+* @param interface : Pointer to interface
+* @param list      : Pointer to storage vector for SMSs to be read
+* @param pars      : SMS list parameters (status, mode and number of messages)
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsList (smsRec_s * list, smsListPars_s * pars, frmCback_t cback);
+void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
+                 smsListPars_s * pars, frmCback_t cback);
 
 /** @brief Deletes a single SMS from memory
 *
-* @param msgdel Pointer to SMS delete structure (indicated index and mode)
-* @param cback  Function pointer to callback function
+* @param interface : Pointer to interface
+* @param msgdel    : Pointer to SMS delete structure (indicated index and mode)
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmSmsDel (smsDelPars_s * msgdel, frmCback_t cback);
+void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
+                frmCback_t cback);
 
 /*---------------------------------------------------------------------------*/
 /*                             GPRS functions                                */
@@ -541,32 +555,36 @@ void gsmSmsDel (smsDelPars_s * msgdel, frmCback_t cback);
 
 /** @brief Starts up GPRS connection in the modem
 *
-* @param apn    Pointer to struct containing APN, user and password
-* @param cback  Function pointer to callback function
+* @param interface : Pointer to interface
+* @param apn       : Pointer to struct containing APN, user and password
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGprsStart (apnUserPwd_s * apn, frmCback_t cback);
+void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
+                   frmCback_t cback);
 
 /** @brief Opens TCP or UDP port
 *
-* @param port      Pointer to struct containing the type of port, IP address and port #
-* @param cback     Function pointer to callback function
+* @param interface : Pointer to interface
+* @param port      : Pointer to struct containing the type of port, IP address and port #
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGprsOpenPort (port_s * port, frmCback_t cback);
+void gsmGprsOpenPort (gsmInterface_t * interface, port_s * port, frmCback_t cback);
 
 /** @brief Closes open TCP or UDP port
 *
-* @param cback     Function pointer to callback function
+* @param interface : Pointer to interface
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGprsClosePort (frmCback_t cback);
+void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback);
 
 /*---------------------------------------------------------------------------*/
 /*                             GNSS functions                                */
@@ -574,23 +592,27 @@ void gsmGprsClosePort (frmCback_t cback);
 
 /** @brief Turns GNSS on or off
 *
-* @param cmd      ON or OFF command
-* @param cback    Function pointer to callback function
+* @param interface : Pointer to interface
+* @param cmd       : ON or OFF command
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGnssPwr (pwrGnss_e * cmd, frmCback_t cback);
+void gsmGnssPwr (gsmInterface_t * interface,
+                 pwrGnss_e * cmd, frmCback_t cback);
 
 /** @brief Get GNSS data
 *
-* @param gnssData  GNSS data vector; must be of size 95 at least
-* @param cback     Function pointer to callback function
+* @param interface : Pointer to interface
+* @param gnssData  : GNSS data vector; must be of size 95 at least
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGnssGetData (dataGnss_s * dataGnss, frmCback_t cback);
+void gsmGnssGetData (gsmInterface_t * interface,
+                     dataGnss_s * dataGnss, frmCback_t cback);
 
 /*==================[cplusplus]==============================================*/
 

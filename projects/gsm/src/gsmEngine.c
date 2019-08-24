@@ -134,9 +134,10 @@ static VLRINGBUFF_T urcVlRb;
 *  @return Returns the event triggered by the updateFSM call
 */
 
-static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
-                              uint8_t const * const cmd,
-                              uint8_t const * const par, uint8_t const index);
+static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine, tknTypeParser_e tknType,
+                                uint8_t const * const cmd,
+                                uint8_t const * const par,
+                                uint8_t const index);
 
 /** @brief Records a new URC in the URC vector
 *
@@ -146,7 +147,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 *  @return Returns 1 if successful or 0 if VLRB is full
 */
 
-static uint8_t gsmRecordUrc (uint8_t const * const cmd,
+static uint8_t gsmRecordUrc (gsmEngine_t * engine , uint8_t const * const cmd,
                              uint8_t const * const par);
 
 /*==================[internal data definition]===============================*/
@@ -165,7 +166,7 @@ static uint8_t gsmRecordUrc (uint8_t const * const cmd,
  *  of the function return a fsmEvent_e type response of some sort.
  */
 
-static fsmEvent_e gsmUpdateFsm (gsmEngine_t engine,
+static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                                 tknTypeParser_e tknType,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
@@ -373,7 +374,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t engine,
 
             if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               gsmRecordUrc(cmd, par);
+               gsmRecordUrc(engine, cmd, par);
 
                return OK_URC; /* return 3.1 */
             }
@@ -512,7 +513,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t engine,
 
 /** The gsmRecordUrc function records received URCs in a VLRB */
 
-static uint8_t gsmRecordUrc (gsmEngine_t engine,
+static uint8_t gsmRecordUrc (gsmEngine_t * engine,
                              uint8_t const * const command,
                              uint8_t const * const parameter)
 {
@@ -735,7 +736,7 @@ fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr)
 
 }
 
-rsp_t gsmGetCmdRsp (gsmEngine_t engine)
+rsp_t gsmGetCmdRsp (gsmEngine_t * engine)
 {
    /* fetches the next command response; returns empty response if there are no more
       responses left */
@@ -755,7 +756,7 @@ rsp_t gsmGetCmdRsp (gsmEngine_t engine)
       return dummy;
    }
 
-   rspSiz = VLRingBuffer_Pop((engine->rspVlRb), (void *) rspAux,
+   rspSiz = VLRingBuffer_Pop(&(engine->rspVlRb), (void *) rspAux,
                              TKN_CMD_SIZE+TKN_PAR_SIZE);
 
    /* Find the dot which separated command from parameter and separate the
@@ -812,7 +813,7 @@ rsp_t gsmGetUrc (gsmEngine_t * engine)
 
    if(0 == VLRingBuffer_IsEmpty(&(engine->urcVlRb))){
 
-      urcSiz = VLRingBuffer_Pop((engine->urcVlRb),
+      urcSiz = VLRingBuffer_Pop(&(engine->urcVlRb),
                                 (void *) urcAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
 
       /* Find the dot which separates command from parameter and separate the
