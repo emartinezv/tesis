@@ -165,7 +165,8 @@ static uint8_t gsmRecordUrc (uint8_t const * const cmd,
  *  of the function return a fsmEvent_e type response of some sort.
  */
 
-static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
+static fsmEvent_e gsmUpdateFsm (gsmEngine_t engine,
+                                tknTypeParser_e tknType,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
 {
@@ -176,7 +177,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
    uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1];  /* auxiliary buffer for storing
                                                   the latest response */
 
-   switch(fsmState){
+   switch(engine->fsmState){
 
       /* This is the initial state of the FSM when the engine is initialized or
        * after a command has been closed.
@@ -189,10 +190,10 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            toutCnt = commands[idx].timeout; /* load timeout counter for the
-                                                specific command */
+            engine->toutCnt = commands[idx].timeout; /* load timeout counter
+                                                        for the current cmd */
 
-            idxSave = idx;                   /* save command index */
+            idxSave = idx;                           /* save cmd index */
 
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
@@ -204,7 +205,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             strncpy(currPar,par,strlen(par));
             currPar[strlen(par)] = '\0';
 
-            fsmState = CMD_SENT;
+            engine->fsmState = CMD_SENT;
 
             debug(">>>engine<<<   COMMAND SENT: ");
             debug(cmd);
@@ -228,7 +229,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
             if(1 == gsmUrcSearch(cmd)){
 
                debug(">>>engine<<<   URC detected\r\n");
-               gsmRecordUrc (cmd, par);
+               gsmRecordUrc (engine, cmd, par);
 
                return OK_URC; /* return 1.2 */
             }
@@ -277,9 +278,9 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
              * CMD_ACK state */
 
             if ((0 == eqCmd) && (0 == eqPar)){
-               VLRingBuffer_Flush(&rspVlRb); /* flush response VLRB since we
-                                                have a new command */
-               fsmState = CMD_ACK;
+               VLRingBuffer_Flush(&(engine->rspVlRb)); /* flush rsp VLRB since
+                                                          we have a new cmd */
+               engine->fsmState = CMD_ACK;
 
                debug(">>>engine<<<   COMMAND ACK\r\n");
 
@@ -290,7 +291,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
              * state */
 
             else{
-               fsmState = WAITING;
+               engine->fsmState = WAITING;
 
                debug(">>>engine<<<   COMMAND ECHO ERROR\r\n");
 
@@ -309,13 +310,13 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
             if(1 == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
-               gsmRecordUrc (cmd, par);
+               gsmRecordUrc(engine, cmd, par);
 
                return OK_URC; /* return 2.3 */
             }
 
             else{
-               fsmState = WAITING;
+               engine->fsmState = WAITING;
 
                debug(">>>engine<<<   RECEIVED RESPONSE, COMMAND ECHO EXPECTED\r\n");
 
@@ -329,7 +330,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
           * to the WAITING state */
 
          else if (TIMEOUT == tknType){
-               fsmState = WAITING;
+               engine->fsmState = WAITING;
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
@@ -339,7 +340,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
          /* Any other sort of token is considered invalid */
 
          else{
-            fsmState = WAITING;
+            engine->fsmState = WAITING;
 
             debug(">>>engine<<<   INVALID TOKEN RECEIVED: ");
             debug(cmd);
@@ -388,7 +389,8 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
                strncat(rspAux, ".", 1);
                strncat(rspAux, par, strlen(par));
 
-               VLRingBuffer_Insert(&rspVlRb, rspAux, (uint16_t) (strlen(rspAux)));
+               VLRingBuffer_Insert(&(engine->rspVlRb), rspAux,
+                                   (uint16_t) (strlen(rspAux)));
 
                debug(">>>engine<<<   rspAux: ");
                debug(rspAux);
@@ -411,7 +413,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
-                  fsmState = WAITING;
+                  engine->fsmState = WAITING;
                   return ERR_MSG_CLOSE; /* return 3.2 */
                }
 
@@ -423,7 +425,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
-                  fsmState = WAITING;
+                  engine->fsmState = WAITING;
                   return OK_CLOSE; /* return 3.3 */
                }
 
@@ -440,7 +442,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
-                  fsmState = WAITING;
+                  engine->fsmState = WAITING;
                   return OK_CLOSE; /* return 3.4 */
                }
 
@@ -459,7 +461,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
           * go back to the WAITING state */
 
          else if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
-            fsmState = WAITING;
+            engine->fsmState = WAITING;
 
             debug(">>>engine<<<   RECEIVED COMMAND, RESPONSE EXPECTED\r\n");
 
@@ -471,7 +473,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
           * to the WAITING state */
 
          else if (TIMEOUT == tknType){
-               fsmState = WAITING;
+               engine->fsmState = WAITING;
 
                debug(">>>engine<<<   AT COMMAND TIMEOUT\r\n");
 
@@ -500,7 +502,7 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
          debug(">>>engine<<<   ERROR: FSM OUT OF RANGE");
 
-         fsmState = WAITING;
+         engine->fsmState = WAITING;
          return ERR_FSM_OOR; /* return 3.9 */
 
          break;
@@ -510,10 +512,11 @@ static fsmEvent_e gsmUpdateFsm (tknTypeParser_e tknType,
 
 /** The gsmRecordUrc function records received URCs in a VLRB */
 
-static uint8_t gsmRecordUrc (uint8_t const * const command,
-                    uint8_t const * const parameter)
+static uint8_t gsmRecordUrc (gsmEngine_t engine,
+                             uint8_t const * const command,
+                             uint8_t const * const parameter)
 {
-   if(0 == VLRingBuffer_IsFull(&urcVlRb)){
+   if(0 == VLRingBuffer_IsFull(&(engine->urcVlRb))){
 
      uint8_t urcAux[TKN_LEN]; /* auxiliary vector */
 
@@ -523,7 +526,8 @@ static uint8_t gsmRecordUrc (uint8_t const * const command,
      strncat(urcAux, ".", 1);
      strncat(urcAux, parameter, strlen(parameter));
 
-     VLRingBuffer_Insert(&urcVlRb, urcAux, (uint16_t) (strlen(urcAux)));
+     VLRingBuffer_Insert(&(engine->urcVlRb), urcAux,
+                         (uint16_t) (strlen(urcAux)));
 
      debug(">>>engine<<<   urcAux: ");
      debug(urcAux);
@@ -547,17 +551,23 @@ static uint8_t gsmRecordUrc (uint8_t const * const command,
  * comms and all three variable-length ring buffers.
  */
 
-void gsmInitEngine(void){
+bool gsmInitEngine(gsmEngine_t * engine){
 
-   gsmInitTokenizer();
+   bool ok = FALSE;
 
-   gsmSetSerialMode(COMMAND_MODE); /* start serial comms in command mode */
+   ok = gsmInitTokenizer();
 
-   VLRingBuffer_Init(&tknVlRb, &tknRb, &tknRbBuf, 1, TKN_BUF_SIZE);
-   VLRingBuffer_Init(&rspVlRb, &rspRb, &rspRbBuf, 1, RSP_BUF_SIZE);
-   VLRingBuffer_Init(&urcVlRb, &urcRb, &urcRbBuf, 1, URC_BUF_SIZE);
+   /* start serial comms in command mode */
+   ok = ok && gsmSetSerialMode(engine, COMMAND_MODE);
 
-   return;
+   ok = ok && VLRingBuffer_Init(&(engine->tknVlRb), &(engine->tknRb),
+                                &(engine->tknRbBuf), 1, TKN_BUF_SIZE);
+   ok = ok && VLRingBuffer_Init(&(engine->rspVlRb), &(engine->rspRb),
+                                &(engine->rspRbBuf), 1, RSP_BUF_SIZE);
+   ok = ok && VLRingBuffer_Init(&(engine->urcVlRb), &(engine->urcRb),
+                                &(engine->urcRbBuf), 1, URC_BUF_SIZE);
+
+   return ok;
 
 }
 
@@ -567,9 +577,9 @@ void gsmInitEngine(void){
  *  then passes along the return value of the gsmUpdateFsm call.
  */
 
-fsmEvent_e gsmProcessTkn(void)
+fsmEvent_e gsmProcessTkn(gsmEngine_t * engine)
 {
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&(engine->tknVlRb));
 
    tknTypeParser_e received;       /* stores the received token type */
    fsmEvent_e result = NO_UPDATE;  /* stores the resulting event of the
@@ -583,11 +593,12 @@ fsmEvent_e gsmProcessTkn(void)
    /* If the tknVlRb is not empty, pop the latest token, parse ir and send it
     * as an argument to the gsmUpdateFsm function to update the FSM. */
 
-   if(0 == VLRingBuffer_IsEmpty(&tknVlRb)){
+   if(0 == VLRingBuffer_IsEmpty(&(engine->tknVlRb))){
 
-      tknSize = VLRingBuffer_Pop(&tknVlRb, &tkn, TKN_LEN);/* pop latest tkn */
-      received = gsmParseTkn(tkn, cmd, par, tknSize);     /* parse the tkn */
-      result = gsmUpdateFsm(received, cmd, par, 0);       /* update FSM */
+      tknSize = VLRingBuffer_Pop(&(engine->tknVlRb),
+                                 &tkn, TKN_LEN);           /* pop latest tkn */
+      received = gsmParseTkn(tkn, cmd, par, tknSize);      /* parse the tkn */
+      result = gsmUpdateFsm(engine, received, cmd, par, 0);/* update FSM */
 
    }
 
@@ -596,9 +607,9 @@ fsmEvent_e gsmProcessTkn(void)
    /* If the timeout counter has dropped to 0, call the gsmUpdateFsm function
     * with a TIMEOUT token type. */
 
-   else if((fsmState != WAITING) && (toutCnt == 0)){
+   else if((engine->fsmState != WAITING) && (0 == engine->toutCnt)){
 
-      result = gsmUpdateFsm(TIMEOUT, 0, 0, 0);     /* update FSM */
+      result = gsmUpdateFsm(engine, TIMEOUT, 0, 0, 0);     /* update FSM */
 
    }
 
@@ -608,16 +619,16 @@ fsmEvent_e gsmProcessTkn(void)
 
 }
 
-uint8_t gsmToutCntZero(void){
+bool gsmToutCntZero(gsmEngine_t * engine){
 
-   return(toutCnt == 0);
+   return(engine->toutCnt == 0);
 
 }
 
-void gsmDecToutCnt(void){
+void gsmDecToutCnt(gsmEngine_t * engine){
 
-   if(toutCnt > 0){
-      toutCnt--;
+   if(engine->toutCnt > 0){
+      engine->toutCnt--;
    }
 
    return;
@@ -656,7 +667,7 @@ void gsmPrintData(void){
  *  serial port. Afterwards, gsmUpdateFsm is called.
  */
 
-fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
+fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr)
 {
    tknTypeParser_e sending;   /* classifies the command being sent */
    fsmEvent_e result;         /* result of the updateFSM invocation */
@@ -708,7 +719,7 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
       debug(cmdStr);
       debug("\r\n");
 
-      result = gsmUpdateFsm(sending,cmd,par,idx); /* update FSM */
+      result = gsmUpdateFsm(engine, sending, cmd, par, idx); /* update FSM */
 
    }
 
@@ -724,7 +735,7 @@ fsmEvent_e gsmSendCmd (const uint8_t * cmdStr)
 
 }
 
-rsp_t gsmGetCmdRsp (void)
+rsp_t gsmGetCmdRsp (gsmEngine_t engine)
 {
    /* fetches the next command response; returns empty response if there are no more
       responses left */
@@ -740,11 +751,12 @@ rsp_t gsmGetCmdRsp (void)
     * par strings by looking for the '.' char which acts as a separator.
     */
 
-   if(0 != VLRingBuffer_IsEmpty(&rspVlRb)){
+   if(0 != VLRingBuffer_IsEmpty(&(engine->rspVlRb))){
       return dummy;
    }
 
-   rspSiz = VLRingBuffer_Pop(&rspVlRb, (void *) rspAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
+   rspSiz = VLRingBuffer_Pop((engine->rspVlRb), (void *) rspAux,
+                             TKN_CMD_SIZE+TKN_PAR_SIZE);
 
    /* Find the dot which separated command from parameter and separate the
    /* raw response into command and parameter strings */
@@ -775,14 +787,14 @@ rsp_t gsmGetCmdRsp (void)
    return dummy;
 }
 
-uint8_t gsmGetNoCmdRsp (void)
+uint8_t gsmGetNoCmdRsp (gsmEngine_t * engine)
 {
    /* returns number of total command responses for the last command */
 
-   return (VLRingBuffer_GetCount(&rspVlRb));
+   return (VLRingBuffer_GetCount(&(engine->rspVlRb)));
 }
 
-rsp_t gsmGetUrc (void)
+rsp_t gsmGetUrc (gsmEngine_t * engine)
 {
    /* fetches the next URC; returns empty response if there are no more
       responses left */
@@ -798,9 +810,10 @@ rsp_t gsmGetUrc (void)
     * strings by looking for the '.' char which acts as a separator.
     */
 
-   if(0 == VLRingBuffer_IsEmpty(&urcVlRb)){
+   if(0 == VLRingBuffer_IsEmpty(&(engine->urcVlRb))){
 
-      urcSiz = VLRingBuffer_Pop(&urcVlRb, (void *) urcAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
+      urcSiz = VLRingBuffer_Pop((engine->urcVlRb),
+                                (void *) urcAux, TKN_CMD_SIZE+TKN_PAR_SIZE);
 
       /* Find the dot which separates command from parameter and separate the
       /* raw urc into command and parameter strings */
@@ -833,15 +846,15 @@ rsp_t gsmGetUrc (void)
    return dummy;
 }
 
-serialMode_e gsmGetSerialMode(void)
+serialMode_e gsmGetSerialMode(gsmEngine_t * engine)
 {
-   return serialMode;
+   return engine->serialMode;
 }
 
-void gsmSetSerialMode(serialMode_e mode)
+bool gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode)
 {
-   serialMode = mode;
-   return;
+   engine->serialMode = mode;
+   return (mode == getSerialMode());
 }
 
 /** @} doxygen end group definition */

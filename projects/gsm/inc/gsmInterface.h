@@ -165,6 +165,45 @@ typedef void (*urcCback_t) (uint8_t const * const cmd,
 typedef void (*dataCback_t) (void);
 
 /*---------------------------------------------------------------------------*/
+/*                    Data structures for the interface                      */
+/*---------------------------------------------------------------------------*/
+
+typedef struct _gsmInterface_t
+{
+   /* State */
+
+   frmStatus_e frmState;
+   procStatus_e procState;
+
+   /* Counters */
+
+   uint32_t procCnt; /* Period counter for GSM processing */
+
+   /* URC handling */
+
+   urcMode_e urcMode;
+   urcCback_t urcCback;
+
+   /* DATA mode */
+
+   dataCback_t dataCback;
+   const uint8_t * const exitCmdList [] = {"OK", "CLOSED"};
+
+   /* Formula */
+
+   void (*frm) (void); /* Pointer to formula function */
+   void * frmInput;    /* Pointer to formula inputs */
+   void * frmOutput;   /* Pointer to formula outputs */
+   frmCback_t frmCback;
+   errorUser_s errorOut;
+
+   /* Engine */
+
+   gsmEngine_t engine;
+
+} gsmInterface_t;
+
+/*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGetSigQual function               */
 /*---------------------------------------------------------------------------*/
 
@@ -298,11 +337,11 @@ typedef enum _portType_e {
 
 /** @brief Type for address and port */
 
-typedef struct _port_s {
+typedef struct _socket_s {
    portType_e type;      /**< TCP or UDP port */
    uint8_t *  address;   /**< address (domain or IP) */
    uint16_t   port;      /**< port number */
-} port_s;
+} socket_s;
 
 /*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmGnssPwr function                */
@@ -335,52 +374,64 @@ typedef struct _dataGnss_s {
 
 /** @brief Starts up the GSM engine
 *
-* @param cback  Function pointer to callback function
+* @param cback     : Function pointer to callback function
+* @param interface : Pointer to interface
 *
 * @return
 */
 
-void gsmStartUp (frmCback_t cback);
+void gsmStartUp (gsmInterface_t * interface, frmCback_t cback);
 
 /** @brief Handles AT command timeout and gsmProcess function timing
 *
+* @param interface : Pointer to interface
+*
 * @return
 */
 
-void gsmSysTickHandler (void);
+void gsmSysTickHandler (gsmInterface_t * interface);
 
 /** @brief Processes commands, responded and URCs at the rate of one token
-*  per invocation
+*   per invocation
+*
+* @param interface : Pointer to interface
+*
 */
 
-void gsmProcess (void);
+void gsmProcess (gsmInterface_t * interface);
 
-/** @brief Indicates if the GSM engine is currently idle
+/** @brief Indicates if the GSM interface is currently idle
  *
- * @return Returns 1 if no formula is being run, 0 otherwise
+ * @param interface : Pointer to interface
+ *
+ * @return Returns true if no formula is being run
 */
 
-uint8_t gsmIsIdle (void);
+bool gsmIsIdle (gsmInterface_t * interface);
 
 /** @brief Gets signal quality values (RSSI and BER)
 *
-* @param signal_quality Pointer to signal quality struct
-* @param cback          Function pointer to callback function
+* @param interface      : Pointer to interface
+* @param signal_quality : Pointer to signal quality struct
+* @param cback          : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGetSigQual (sigQual_s * sigQual, frmCback_t cback);
+void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
+                    frmCback_t cback);
 
 /** @brief Check status of GSM and GPRS connection
 *
-* @param status   Pointer to GSM & GPRS status struct
-* @param cback    Function pointer to callback function
+* @param interface : Pointer to interface
+* @param status    : Pointer to GSM & GPRS status struct
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmCheckConn (connStatus_s * status, frmCback_t cback);
+void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
+                   frmCback_t cback);
 
 /** @brief Sets URC handling either cback mode or manual mode
 *

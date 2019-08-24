@@ -71,14 +71,11 @@ static RINGBUFF_T currTknRb;
 
 /*==================[external functions definition]==========================*/
 
-uint8_t gsmInitTokenizer(void)
+bool gsmInitTokenizer(void)
 {
-   uint8_t res = 0;
+   /* Initialize current token ring buffer and return result */
 
-   /* Initialize current token ring buffer */
-   res = RingBuffer_Init(&currTknRb, &currTknBuf, 1, CURR_TKN_BUF_SIZ);
-
-   return res;
+   return RingBuffer_Init(&currTknRb, &currTknBuf, 1, CURR_TKN_BUF_SIZ);
 }
 
 /* gsmDetectTkns takes the raw serial input and turns it into discrete parts we

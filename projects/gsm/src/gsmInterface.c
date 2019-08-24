@@ -54,65 +54,15 @@
 
 /*==================[internal data declaration]==============================*/
 
-/** @brief General state of the current formula being run
- */
-
-static frmStatus_e frmState = IDLE;
-
-/** @brief Processing state of the current formula being run
- */
-
-static procStatus_e procState = NOCMD;
-
 /** @brief User-level error outputs (if any) of the current formula being run
  */
 
-static errorUser_s errorOut;
 
-/** @brief Function pointer to formula function for the current formula
- */
 
-static void (*frm) (void);
 
-/** @brief Pointer to inputs for the current formula being run
- */
 
-static void * frmInput;
 
-/** @brief Pointer to outputs for the current formula being run
- */
 
-static void * frmOutput;
-
-/** @brief Function pointer to callback for the current formula being run
- */
-
-static frmCback_t frmCback;
-
-/** @brief Mode variable for URC handling
- */
-
-static urcMode_e urcMode = MANUAL_MODE;
-
-/** @brief Function pointer to callback for URCs
- */
-
-static urcCback_t urcCback;
-
-/** @brief Function pointer to callback for DATA_MODE
- */
-
-static dataCback_t dataCback;
-
-/** @brief Period counter for GSM processing */
-
-static int32_t procCnt = DELAY_PROC;
-
-/** @brief List of commands which indicate that the modem has exited DATA MODE
- *  and returned to COMMAND MODE
- */
-
-const uint8_t * const exitCmdList [] = {"OK", "CLOSED"};
 
 /*==================[internal functions declaration]=========================*/
 
@@ -1717,10 +1667,10 @@ void gsmFrmCopyGsmError ()
  * in interface.
  */
 
-void gsmSysTickHandler (void)
+void gsmSysTickHandler (gsmInterface_t * interface)
 {
-   if(!gsmToutCntZero) gsmDecToutCnt();
-   if(procCnt > 0) procCnt--;
+   gsmDecToutCnt(&(interface->engine));
+   if(interface->procCnt > 0) interface->procCnt--;
 
    return;
 }
@@ -1739,29 +1689,29 @@ void gsmSysTickHandler (void)
  *  serial mode. The comments below detail the behaviour.
  */
 
-void gsmProcess (void)
+void gsmProcess (gsmInterface_t * interface)
 {
-   if(0 == procCnt){
+   if(0 == interface->procCnt){
 
-      if (IDLE == frmState){ /* no formula currently being run */
+      if (IDLE == interface->frmState){ /* no formula currently being run */
 
          /* If we are in COMMAND_MODE, we first process a single token. */
 
-         if(COMMAND_MODE == gsmGetSerialMode()){
-            gsmProcessTkn();
+         if(COMMAND_MODE == gsmGetSerialMode(&(interface->engine))){
+            gsmProcessTkn(&(interface->engine));
 
             /* If the URC handling mode is CBACK_MODE, we check if there any
              * unprocessed URCs; if so, we get them and fire the user-defined
              * URC callback function.
              */
 
-            if(CBACK_MODE == urcMode){
+            if(CBACK_MODE == interface->urcMode){
 
                rsp_t dummy;
-               dummy = gsmGetUrc();
+               dummy = gsmGetUrc(&(interface->engine));
 
                if('\0' != dummy.cmd[0]){
-                  urcCback(dummy.cmd, dummy.par);
+                  interface->urcCback(dummy.cmd, dummy.par);
                }
             }
 
@@ -1771,15 +1721,15 @@ void gsmProcess (void)
           * callback function.
           */
 
-         else if (DATA_MODE == gsmGetSerialMode()){
-            dataCback();
+         else if (DATA_MODE == gsmGetSerialMode(&(interface->engine))){
+            interface->dataCback();
          }
 
       }
 
-      else {frm();} /* there is a formula being run; execute the formula */
+      else {interface->frm();} /* there is a formula being run; execute the formula */
 
-      procCnt = DELAY_PROC; /* reset gsmProcess counter */
+      interface->procCnt = DELAY_PROC; /* reset gsmProcess counter */
 
       return;
 
@@ -1795,9 +1745,9 @@ void gsmProcess (void)
 
 /*****************************************************************************/
 
-uint8_t gsmIsIdle (void)
+bool gsmIsIdle (gsmInterface_t * interface)
 {
-   return(frmState == IDLE); /* determines if a formula is being run */
+   return(IDLE == interface->frmState);
 }
 
 /*****************************************************************************/
@@ -1976,35 +1926,37 @@ void gsmCheckDataMode (uint8_t const * const buf, uint8_t * const nch){
 
 /*****************************************************************************/
 
-void gsmStartUp (frmCback_t cback)
+void gsmStartUp (gsmInterface_t * interface, frmCback_t cback)
 {
-   frm = gsmStartUpF;
-   frmCback = cback;
-   frmState = INIT;
+   interface->frm = gsmStartUpF;
+   interface->frmCback = cback;
+   interface->frmState = INIT;
 
    return;
 }
 
 /*****************************************************************************/
 
-void gsmGetSigQual (sigQual_s * sigQual, frmCback_t cback)
+void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
+                    frmCback_t cback)
 {
-   frm = gsmGetSigQualF;
-   frmOutput = sigQual;
-   frmCback = cback;
-   frmState = INIT;
+   interface->frm = gsmGetSigQualF;
+   interface->frmOutput = sigQual;
+   interface->frmCback = cback;
+   interface->frmState = INIT;
 
    return;
 }
 
 /*****************************************************************************/
 
-void gsmCheckConn (connStatus_s * status, frmCback_t cback)
+void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
+                   frmCback_t cback)
 {
-   frm = gsmCheckConnF;
-   frmOutput = status;
-   frmCback = cback;
-   frmState = INIT;
+   interface->frm = gsmCheckConnF;
+   interface->frmOutput = status;
+   interface->frmCback = cback;
+   interface->frmState = INIT;
 
    return;
 }

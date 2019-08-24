@@ -82,10 +82,10 @@ tknTypeTknzer_e;
 
 /** @brief Initializes tokenizer and it's RB
 *
-*  @return Returns 1 is successful
+*  @return Returns true if successful
 */
 
-uint8_t gsmInitTokenizer(void);
+bool gsmInitTokenizer(void);
 
 /** @brief Get characters from the UART ring buffer into a local buffer, cycle
  *         though it and send detected tokens to the token VL ring buffer
