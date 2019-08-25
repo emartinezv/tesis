@@ -222,15 +222,15 @@ static bool gsmInitInterface(gsmInterface_t * interface)
    interface->urcCback = NULL;
 
    interface->dataCback = NULL;
-   interface->exitCmdList = exitCmds;
+   interface->exitCmdList = &exitCmds;
 
    interface->frm = NULL;
    interface->frmInput = NULL;
    interface->frmOutput = NULL;
    interface->frmCback = NULL;
-   interface->errorOut.errorFrd = OK;
+   interface->errorOut.errorFrm = OK;
 
-   return ok
+   return ok;
 }
 
 
@@ -377,7 +377,7 @@ static void gsmStartUpF (gsmInterface_t * interface)
             }
          }
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
 
          break;
@@ -524,7 +524,7 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
             gsmFrmCopyGsmError(interface);
          }
 
-         interface->frmCback(errorOut, frmOutput);
+         interface->frmCback(interface->errorOut, interface->frmOutput);
          interface->frmState = IDLE;
 
          break;
@@ -640,7 +640,7 @@ void gsmCheckConnF (gsmInterface_t * interface)
             gsmFrmCopyGsmError(interface);
          }
 
-         interface->frmCback(errorOut, frmOutput);
+         interface->frmCback(interface->errorOut, interface->frmOutput);
          interface->frmState = IDLE;
 
          break;
@@ -726,7 +726,7 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
             case ATCMD1:
 
-               gsmFrmSendCmdCheckEcho(interface, interface, smsCmd, ATCMD1RESP);
+               gsmFrmSendCmdCheckEcho(interface, smsCmd, ATCMD1RESP);
 
                break;
 
@@ -782,7 +782,7 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(errorOut, frmOutput);
+         interface->frmCback(interface->errorOut, interface->frmOutput);
          interface->frmState = IDLE;
 
          break;
@@ -897,7 +897,7 @@ static void gsmSmsReadF (gsmInterface_t * interface)
          msgVector.msgs = interface->frmOutput;
          msgVector.noMsgs = 1;
 
-         interface->frmCback(errorOut, &msgVector);
+         interface->frmCback(interface->errorOut, &msgVector);
          interface->frmState = IDLE;
 
          break;
@@ -1082,10 +1082,10 @@ static void gsmSmsListF (gsmInterface_t * interface)
          smsListRet_s msgVector; /* Message vector includes the actual array
                                     andnthe number of messages */
 
-         msgVector.msgs = frmOutput;
+         msgVector.msgs = interface->frmOutput;
          msgVector.noMsgs = (rspNo-1)/2;
 
-         interface->frmCback(errorOut, &msgVector);
+         interface->frmCback(interface->errorOut, &msgVector);
          interface->frmState = IDLE;
 
          break;
@@ -1164,7 +1164,7 @@ static void gsmSmsDelF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
          break;
    }
@@ -1293,7 +1293,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
 
          break;
@@ -1334,17 +1334,17 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
 
          strncat(socketStr, "AT+CIPSTART=\"", strlen("AT+CIPSTART=\""));
 
-         if(TCP == ((port_s *)interface->frmInput)->type){
+         if(TCP == ((socket_s *)interface->frmInput)->type){
             strncat(socketStr, "TCP\",\"", strlen("TCP\",\""));
          }
-         else if(UDP == ((port_s *)interface->frmInput)->type){
+         else if(UDP == ((socket_s *)interface->frmInput)->type){
             strncat(socketStr, "UDP\",\"", strlen("UDP\",\""));
          }
 
-         strncat(socketStr, ((port_s *)interface->frmInput)->address,
-                 strlen(((port_s *)interface->frmInput)->address));
+         strncat(socketStr, ((socket_s *)interface->frmInput)->address,
+                 strlen(((socket_s *)interface->frmInput)->address));
 
-         itoa(((port_s *)interface->frmInput)->port, auxStr, 10);
+         itoa(((socket_s *)interface->frmInput)->port, auxStr, 10);
          strncat(socketStr, "\",\"", strlen("\",\""));
          strncat(socketStr, auxStr, strlen(auxStr));
          strncat(socketStr, "\"\r", strlen("\"\r"));
@@ -1371,9 +1371,9 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
                 * result of the CIPCLOSE command; it is there as a formality
                 */
 
-               errorOut.errorFrm = OK;
-               errorOut.errorCmd.cmd[0] = '\0';
-               errorOut.errorCmd.par[0] = '\0';
+               interface->errorOut.errorFrm = OK;
+               interface->errorOut.errorCmd.cmd[0] = '\0';
+               interface->errorOut.errorCmd.par[0] = '\0';
 
                break;
 
@@ -1433,7 +1433,7 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
 
          break;
@@ -1492,7 +1492,7 @@ static void gsmGprsClosePortF (gsmInterface_t * interface)
 
          gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
 
          break;
@@ -1566,7 +1566,7 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(errorOut, 0);
+         interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
 
          break;
@@ -1636,7 +1636,7 @@ static void gsmGnssGetDataF (gsmInterface_t * interface)
             gsmFrmCopyGsmError(interface);
          }
 
-         interface->frmCback(errorOut, frmOutput);
+         interface->frmCback(interface->errorOut, interface->frmOutput);
          interface->frmState = IDLE;
 
          break;
@@ -1659,7 +1659,7 @@ void gsmFrmInit (gsmInterface_t * interface)
    interface->errorOut.errorCmd.par[0] = '\0';
 
    interface->procState = ATCMD1;
-   interface->interface->frmState = PROC;
+   interface->frmState = PROC;
 
    return;
 }
@@ -1676,7 +1676,7 @@ void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
     */
 
    if(firstCall){
-      result = gsmSendCmd(&(interface->engine), cmd));
+      result = gsmSendCmd(&(interface->engine), cmd);
       firstCall = FALSE;
    }
    else{result = gsmProcessTkn(&(interface->engine));}
@@ -1689,7 +1689,7 @@ void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
       }
       else{
          interface->errorOut.errorFrm = ERR_PROC;
-         interface->interface->frmState = WRAP;
+         interface->frmState = WRAP;
          firstCall = TRUE;
          debug(">>>interf<<< Echo error");
       }
@@ -1711,27 +1711,27 @@ void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
       if(OK_RSP <= result && OK_URC >= result){;}
       else if(OK_CLOSE == result){
          interface->procState = closingState;
-         interface->interface->frmState = (closingWrap == TRUE ? WRAP : PROC );
+         interface->frmState = (closingWrap == TRUE ? WRAP : PROC );
       }
       else if(ERR_MSG_CLOSE == result){
          interface->errorOut.errorFrm = ERR_GSM;
          interface->procState = errorState;
-         interface->interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
+         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
       }
       else if(ERR_TIMEOUT == result){
          interface->errorOut.errorFrm = ERR_TOUT;
          interface->procState = errorState;
-         interface->interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
+         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
       }
       else if(ERR_FSM_OOR == result){
          interface->errorOut.errorFrm = ERR_FSM;
          interface->procState = errorState;
-         interface->interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
+         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
       }
       else{
          interface->errorOut.errorFrm = ERR_UNK;
          interface->procState = errorState;
-         interface->interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
+         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );
       }
    }
 
@@ -1743,9 +1743,9 @@ void gsmFrmCopyGsmError (gsmInterface_t * interface)
    rsp_t rsp;
 
    rsp = gsmGetCmdRsp(&(interface->engine));
-   strncpy(errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
+   strncpy(interface->errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
    interface->errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
-   strncpy(errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
+   strncpy(interface->errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);
    interface->errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';
 
    return;
@@ -2030,7 +2030,7 @@ void gsmStartUp (gsmInterface_t * interface, frmCback_t cback)
 {
    interface->frm = gsmStartUpF;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2043,7 +2043,7 @@ void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
    interface->frm = gsmGetSigQualF;
    interface->frmOutput = sigQual;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2056,7 +2056,7 @@ void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
    interface->frm = gsmCheckConnF;
    interface->frmOutput = status;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2072,7 +2072,7 @@ void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
    interface->frmInput = msg;
    interface->frmOutput = conf;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2086,7 +2086,7 @@ void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
    interface->frmInput = pars;
    interface->frmOutput = msg;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2100,7 +2100,7 @@ void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
    interface->frmInput = pars;
    interface->frmOutput = list;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2113,7 +2113,7 @@ void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
    interface->frm = gsmSmsDelF;
    interface->frmInput = msgdel;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2128,7 +2128,7 @@ void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
    interface->frm = gsmGprsStartF;
    interface->frmInput = apn;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2141,7 +2141,7 @@ void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * socket,
    interface->frm = gsmGprsOpenPortF;
    interface->frmInput = socket;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2152,7 +2152,7 @@ void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback)
 {
    interface->frm = gsmGprsClosePortF;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2167,7 +2167,7 @@ void gsmGnssPwr (gsmInterface_t * interface,
    interface->frm = gsmGnssPwrF;
    interface->frmInput = cmd;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }
@@ -2180,7 +2180,7 @@ void gsmGnssGetData (gsmInterface_t * interface,
    interface->frm = gsmGnssGetDataF;
    interface->frmOutput = dataGnss;
    interface->frmCback = cback;
-   interface->interface->frmState = INIT;
+   interface->frmState = INIT;
 
    return;
 }

@@ -164,6 +164,13 @@ typedef void (*urcCback_t) (uint8_t const * const cmd,
 
 typedef void (*dataCback_t) (void);
 
+/* Preemptive definition of gsmInterface_t to solve interlinked definitions */
+typedef struct _gsmInterface_t gsmInterface_t;
+
+/** @brief Type for formula function pointer */
+
+typedef void (*frm_t) (gsmInterface_t *);
+
 /*---------------------------------------------------------------------------*/
 /*                    Data structures for the interface                      */
 /*---------------------------------------------------------------------------*/
@@ -187,7 +194,7 @@ typedef struct _gsmInterface_t
    /* DATA mode */
 
    dataCback_t dataCback;
-   uint8_t* exitCmdList;
+   uint8_t const * const *exitCmdList;
 
    /* Formula */
 
@@ -202,10 +209,6 @@ typedef struct _gsmInterface_t
    gsmEngine_t engine;
 
 } gsmInterface_t;
-
-/** @brief Type for formula function pointer */
-
-typedef void * (*frm_t) (gsmInterface_t *);
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGetSigQual function               */
@@ -460,10 +463,10 @@ bool gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback);
 * @param interface : Pointer to interface
 * @param cback     : Function pointer to callback function
 *
-* @return
+* @return Returns true
 */
 
-void gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);
+bool gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);
 
 /** @brief Writes and reads data from serial port in DATA_MODE
 *
@@ -574,7 +577,7 @@ void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
 * @return
 */
 
-void gsmGprsOpenPort (gsmInterface_t * interface, port_s * port, frmCback_t cback);
+void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * port, frmCback_t cback);
 
 /** @brief Closes open TCP or UDP port
 *
