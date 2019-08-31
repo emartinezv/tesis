@@ -24,10 +24,10 @@ void mock_gsmTokenizer_Verify(void);
 
 
 #define gsmInitTokenizer_IgnoreAndReturn(cmock_retval) gsmInitTokenizer_CMockIgnoreAndReturn(__LINE__, cmock_retval)
-void gsmInitTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
+void gsmInitTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmInitTokenizer_ExpectAndReturn(cmock_retval) gsmInitTokenizer_CMockExpectAndReturn(__LINE__, cmock_retval)
-void gsmInitTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
-typedef uint8_t (* CMOCK_gsmInitTokenizer_CALLBACK)(int cmock_num_calls);
+void gsmInitTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+typedef _Bool (* CMOCK_gsmInitTokenizer_CALLBACK)(int cmock_num_calls);
 void gsmInitTokenizer_StubWithCallback(CMOCK_gsmInitTokenizer_CALLBACK Callback);
 #define gsmDetectTkns_Ignore() gsmDetectTkns_CMockIgnore()
 void gsmDetectTkns_CMockIgnore(void);

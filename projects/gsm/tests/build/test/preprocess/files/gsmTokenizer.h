@@ -19,6 +19,6 @@ typedef enum {
 
 tknTypeTknzer_e;
 
-uint8_t gsmInitTokenizer(void);
+_Bool gsmInitTokenizer(void);
 
 void gsmDetectTkns(VLRINGBUFF_T * tknVlRb);

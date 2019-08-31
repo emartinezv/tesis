@@ -7,13 +7,18 @@
 
 //-- module being tested
 #include "gsmEngine.h"
-#include "gsmParser.h"
-#include "gsmCommands.h"
-#include "gsmTokenizer.h"
-#include "string.h"
+
+//-- mocks
+#include "mock_gsmTokenizer.h"
 #include "mock_gsmComms.h"
+#include "mock_gsmParser.h"
+#include "mock_vl_ring_buffer.h"
+
+//-- other includes
+#include "gsmCommands.h"
 #include "ring_buffer.h"
-#include "vl_ring_buffer.h"
+#include "string.h"
+
 
 /*******************************************************************************
  *    DEFINITIONS
@@ -25,14 +30,21 @@
  *    PRIVATE TYPES
  ******************************************************************************/
 
+typedef struct _tknTypeSize {
+   uint8_t const * tkn;
+   uint8_t const * cmd;
+   uint8_t const * par;
+   tknTypeParser_e type;
+   int size
+} tknTypeSize_s;
+
 /*******************************************************************************
  *    PRIVATE DATA
  ******************************************************************************/
 
-static uint8_t const * const uartRecvMock [] = {
+static tknTypeSize_s tknTypeSizeV [] = {
 
-      /* urc */
-      "\r\n+CMTI:abcde\r\n",
+   {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
 
       /* ooo rsp */
       "\r\nOK\r\n",
@@ -84,24 +96,34 @@ static uint8_t const * const uartRecvMock [] = {
  *    PRIVATE FUNCTIONS
  ******************************************************************************/
 
-uint8_t gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
+int VLRingBuffer_Pop_Callback (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
+                               int NumCalls)
 {
-   uint8_t res = 0;
-
-   if(NumCalls > (sizeof(uartRecvMock)/sizeof(uint8_t *))){
+   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
       TEST_FAIL_MESSAGE("Demasiadas llamadas!");
    }
 
-   strncpy(buffer, uartRecvMock[NumCalls], strlen(uartRecvMock[NumCalls]));
-   res = strlen(uartRecvMock[NumCalls]);
+   strncpy(data, tknTypeSizeV[NumCalls].tkn,
+           strlen(tknTypeSizeV[NumCalls].tkn));
 
-   return res;
+   return (strlen(tknTypeSizeV[NumCalls].tkn);
 }
 
-uint8_t gsm232UartSend_Callback (uint8_t * const buffer, int n, int NumCalls)
+tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
+                                      uint8_t * par, uint16_t tknLen,
+                                      int NumCalls)
 {
-   return n;
+   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
+      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
+   }
+
+   strncpy(data, tknTypeSizeV[NumCalls].tkn,
+           strlen(tknTypeSizeV[NumCalls].tkn));
+
+   return (strlen(tknTypeSizeV[NumCalls].tkn);
 }
+
+
 
 /*******************************************************************************
  *    SETUP, TEARDOWN
@@ -121,232 +143,56 @@ void tearDown(void)
  *    TESTS
  ******************************************************************************/
 
-/* test_gsmFsm
+/* test_gsmInitEngine
  *
- * Tests the following functions:
+ * Functions tested:
  *
  * - gsmInitEngine
- * - gsmProcessTkn
- * - gsmSendCmd
- * - gsmUpdateFsm
- * - gsmToutCntZero
- * - gsmDecToutCnt
- *
- * The mutiple cmd-rsp sequences included are meant to completely cover the
- * code of gsmUpdateFsm.
- *
- * The gsmUpdateFsm function has a FSM wih 3 states, each of which has several
- * return points. These are labeled in the function code as 1.1, 1.2,...,
- * 2.1, 2.2,... etc. so as to reference what parts of the code we are covering
- * with each test.
  *
  * */
 
-void test_gsmFsm(void)
+void test_gsmInitEngine(void)
 {
-   /* Mock definitions */
+   /* Variables */
 
-   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
-   gsm232UartSend_StubWithCallback(gsm232UartSend_Callback);
+   gsmEngine_t engine;
+   bool result;
 
-   /* Initializations */
+   /* Mocks */
 
-   gsmInitEngine();
+   gsmInitTokenizer_IgnoreAndReturn(true);
+   VLRingBuffer_Init_IgnoreAndReturn(1);
 
-   fsmEvent_e fsmEvent;
+   /* Test sequence */
 
-   /* urc received */
-   /* tests 1.2 */
+   result = gsmInitEngine(&engine);
 
-   fsmEvent = gsmProcessTkn(); /* mock mimics urc */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
+   TEST_ASSERT_TRUE(result);
+}
 
-   /* response received */
-   /* tests 1.3 */
+/* test_gsmProcessTkn
+ *
+ * Functions tested:
+ *
+ * - gsmProcessTkn
+ * - gsmUpdateFsm (static)
+ *
+ * */
 
-   fsmEvent = gsmProcessTkn(); /* mock mimics ooo response */
-   TEST_ASSERT_EQUAL_INT(ERR_OOO, fsmEvent);
+void test_gsmProcessTkn(void)
+{
+   /* Variables */
 
-   /* data block received */
-   /* tests 1.4 */
+   gsmEngine_t engine;
+   fsmEvent_e event;
 
-   fsmEvent = gsmProcessTkn(); /* mock mimics ooo data block */
-   TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, fsmEvent);
+   /* Mocks */
 
-   /* AT sent + AT echo received + OK received */
-   /* tests 1.1, 2.1, 3.3 */
+   gsmDetectTkns_Ignore();
+   VLRingBuffer_IsEmpty_IgnoreAndReturn(0);
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback)
 
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
 
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics OK response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   /* AT sent + echo error + urc */
-   /* tests 1.1, 2.2, 1.2 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics cmd echo error */
-   TEST_ASSERT_EQUAL_INT(ERR_CMD_ECHO, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics URC */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
-
-   /* AT sent + AT echo + urc + OK  */
-   /* tests 1.1, 2.1, 3.1, 3.3 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics URC */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics OK response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   /* AT sent + ooo rsp */
-   /* tests 1.1, 2.4 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics ooo response error */
-   TEST_ASSERT_EQUAL_INT(ERR_CMD_ECHO, fsmEvent);
-
-   /* AT sent + timeout */
-   /* tests 1.1, 2.5 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   int i = 0;
-
-   for(i = 0; i < TOUT_DEF; i++) {gsmDecToutCnt();} /* mimic timeout */
-   TEST_ASSERT_EQUAL_INT(1, gsmToutCntZero()); /* check that toutCnt == 0*/
-   fsmEvent = gsmProcessTkn(); /* mock mimics no chars received event */
-   TEST_ASSERT_EQUAL_INT(ERR_TIMEOUT, fsmEvent);
-
-   /* AT sent + AT echo + rsp + timeout */
-   /* tests 1.1, 2.1, 3.5, 3.7 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics OK response */
-   TEST_ASSERT_EQUAL_INT(OK_RSP, fsmEvent);
-
-   for(i = 0; i < TOUT_DEF; i++) {gsmDecToutCnt();} /* mimic timeout */
-   TEST_ASSERT_EQUAL_INT(1, gsmToutCntZero()); /* check that toutCnt == 0*/
-   fsmEvent = gsmProcessTkn(); /* mock mimics no chars received */
-   TEST_ASSERT_EQUAL_INT(ERR_TIMEOUT, fsmEvent);
-
-   /* AT sent + ooo data block */
-   /* tests 1.1, 2.6 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics ooo data block */
-   TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, fsmEvent);
-
-   /* AT sent + AT echo + ERROR */
-   /* tests 1.1, 2.1, 3.2 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics ERROR response */
-   TEST_ASSERT_EQUAL_INT(ERR_MSG_CLOSE, fsmEvent);
-
-   /* CIFSR sent + CIFSR echo + ip */
-   /* tests 1.1, 2.1, 3.4 */
-
-   fsmEvent = gsmSendCmd("AT+CIFSR\r"); /* mock mimics CIFSR cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics CIFSR cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics IP response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   /* AT sent + urc + AT echo + OK */
-   /* tests 1.1, 2.3, 2.1, 3.3 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics URC */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics OK response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   /* AT sent + AT echo + ATI echo + urc */
-   /* tests 1.1, 2.1, 3.6, 1.2 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics ATI cmd echo error */
-   TEST_ASSERT_EQUAL_INT(ERR_OOO, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics urc */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
-
-   /* AT sent + AT echo + invalid + urc */
-   /* tests 1.1, 2.1, 3.8, 1.2 */
-
-   fsmEvent = gsmSendCmd("AT\r"); /* mock mimics AT cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics invalid tkn error */
-   TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics urc */
-   TEST_ASSERT_EQUAL_INT(OK_URC, fsmEvent);
-
-   /* AT+CMGS=num sent + AT+CMGS=num echo + sms prompt + sms body */
-   /* included to test uncovered code in gsmSendCmd */
-
-   fsmEvent = gsmSendCmd("AT+CMGS=sum\r"); /* mock mimics AT+CMGS cmd sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics AT+CMGS cmd echo */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics sms prompt response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   fsmEvent = gsmSendCmd("hola"); /* mock mimics sms text sent */
-   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, fsmEvent);
-
-   fsmEvent = gsmProcessTkn(); /* mock mimics sms prompt response */
-   TEST_ASSERT_EQUAL_INT(OK_CLOSE, fsmEvent);
-
-   return;
 }
 

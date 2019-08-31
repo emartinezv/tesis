@@ -559,7 +559,7 @@ bool gsmInitEngine(gsmEngine_t * engine){
    ok = gsmInitTokenizer();
 
    /* start serial comms in command mode */
-   ok = ok && gsmSetSerialMode(engine, COMMAND_MODE);
+   engine->serialMode = COMMAND_MODE;
 
    ok = ok && VLRingBuffer_Init(&(engine->tknVlRb), &(engine->tknRb),
                                 &(engine->tknRbBuf), 1, TKN_BUF_SIZE);
