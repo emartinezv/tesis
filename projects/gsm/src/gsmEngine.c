@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_ENGINE
+#define DEBUG_ENGINE
 #ifdef DEBUG_ENGINE
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
@@ -855,7 +855,7 @@ serialMode_e gsmGetSerialMode(gsmEngine_t * engine)
 bool gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode)
 {
    engine->serialMode = mode;
-   return (mode == getSerialMode());
+   return (mode == gsmGetSerialMode(engine));
 }
 
 /** @} doxygen end group definition */

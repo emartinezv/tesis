@@ -143,6 +143,9 @@ typedef struct _errorUser_s {
 /*                              Misc. data structures                        */
 /*---------------------------------------------------------------------------*/
 
+/* Preemptive definition of gsmInterface_t to solve interlinked definitions */
+typedef struct _gsmInterface_t gsmInterface_t;
+
 /** @brief Type for formula callback */
 
 typedef void * (*frmCback_t) (errorUser_s, void *);
@@ -162,10 +165,7 @@ typedef void (*urcCback_t) (uint8_t const * const cmd,
 
 /** @brief Type for DATA_MODE callback */
 
-typedef void (*dataCback_t) (void);
-
-/* Preemptive definition of gsmInterface_t to solve interlinked definitions */
-typedef struct _gsmInterface_t gsmInterface_t;
+typedef void (*dataCback_t) (gsmInterface_t * interface);
 
 /** @brief Type for formula function pointer */
 
@@ -185,6 +185,7 @@ typedef struct _gsmInterface_t
    /* Counters */
 
    uint32_t procCnt; /* Period counter for GSM processing */
+   uint32_t auxCnt;  /* Auxiliary counter */
 
    /* URC handling */
 
@@ -379,6 +380,15 @@ typedef struct _dataGnss_s {
 /*                  General GSM library operation functions                  */
 /*---------------------------------------------------------------------------*/
 
+/** @brief Formula to initialize up the GSM interface
+ *
+ * @param interface : Pointer to interface
+ *
+ * @return Returns true if initialization successful
+ */
+
+bool gsmInitInterface (gsmInterface_t * interface);
+
 /** @brief Starts up the GSM engine
 *
 * @param cback     : Function pointer to callback function
@@ -388,6 +398,16 @@ typedef struct _dataGnss_s {
 */
 
 void gsmStartUp (gsmInterface_t * interface, frmCback_t cback);
+
+/** @brief Sends the '+++' timed sequence to exit DATA MODE
+*
+* @param cback     : Function pointer to callback function
+* @param interface : Pointer to interface
+*
+* @return
+*/
+
+void gsmExitDataMode (gsmInterface_t * interface, frmCback_t cback);
 
 /** @brief Handles AT command timeout and gsmProcess function timing
 *
@@ -467,21 +487,6 @@ bool gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback);
 */
 
 bool gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);
-
-/** @brief Writes and reads data from serial port in DATA_MODE
-*
-* @param write   Pointer to buffer with characters to be written
-* @param nwrite  Pointer to integer with number of characters to be written;
-*                this number needs to be < RD_BUF_SIZE/2
-* @param read    Pointer to buffer to store characters to be read
-* @param nread   Pointer to integer with number of characters to be read;
-*                this number needs to be < RD_BUF_SIZE/2
-*
-* @return
-*/
-
-void gsmWriteReadDataMode (uint8_t * write, uint8_t * nwrite, uint8_t * read,
-                           uint8_t * nread);
 
 /** @brief Detects tokens from the GSM modem which indicate that we have left
  *         data mode

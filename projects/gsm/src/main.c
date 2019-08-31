@@ -364,7 +364,7 @@ void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
    return;
 }
 
-void cbData (void)
+void cbData (gsmInterface_t * interface)
 {
    uint8_t usbReadBuf[21];
    uint8_t serialReadBuf[21];
@@ -372,6 +372,9 @@ void cbData (void)
    uint8_t nRead = 20;
 
    uint8_t n;
+   static uint8_t nCalls = 0;
+
+   nCalls++;
 
    /* Read USB UART and store it */
 
@@ -382,13 +385,20 @@ void cbData (void)
 
    n = uartSend(CIAA_UART_USB, usbReadBuf, n);
 
+   /* If we type an uppercase X, call the gsmExitDataMode function */
+
+   if(strstr(usbReadBuf,"X")){
+      gsmExitDataMode(interface, cbempty);
+   }
+
    /* Write USB UART data to serial port and read from serial port */
 
-   gsmWriteReadDataMode (usbReadBuf, &n, serialReadBuf, &nRead);
+   n = gsm232UartSend (usbReadBuf, n);
+   nRead = gsm232UartRecv (serialReadBuf, nRead);
 
    serialReadBuf[nRead]='\0';
 
-   n = gsmCheckDataMode(&interface, &serialReadBuf[0], &nRead);
+   n = gsmCheckDataMode(interface, &serialReadBuf[0], &nRead);
 
    /* Write data read from serial port to USB UART */
 
@@ -484,8 +494,8 @@ void console_gprs (gsmInterface_t * interface)
    uint8_t instruction = 0;
 
    apnUserPwd_s APN = {"datos.personal.com","datos","datos"};
-   port_s port1 = {TCP, "104.236.225.217",2399};
-   port_s port2 = {UDP, "104.236.225.217",2399};
+   socket_s port1 = {TCP, "104.236.225.217",2399};
+   socket_s port2 = {UDP, "104.236.225.217",2399};
 
    while ('S' != instruction){
 
@@ -545,25 +555,14 @@ void console_gprs (gsmInterface_t * interface)
             gsmProcess(interface);
          }
 
-         while(DATA_MODE == gsmGetSerialMode(interface)){
+         while(DATA_MODE == gsmGetSerialMode(&interface->engine)){
             gsmProcess(interface);
          }
 
-         //while(DATA_MODE == gsmGetSerialMode()){
+      }
 
-            //uint8_t data_char;
-
-            //if(0 != uartRecv(CIAA_UART_USB, &data_char, 1)){
-               //uartSend(CIAA_UART_232, &data_char, 1); /* mando lo que escribo a 232 */
-               //uartSend(CIAA_UART_USB, &data_char, 1); /* eco */
-            //}
-
-            //if(0 != uartRecv(CIAA_UART_232, &data_char, 1)){
-               //uartSend(CIAA_UART_USB, &data_char, 1); /* mando lo recibido a terminal */
-            //}
-
-         //}
-
+      else{
+         gsmProcess(interface);
       }
 
    }
@@ -666,7 +665,7 @@ void console_urc (gsmInterface_t * interface)
 
             case '1':
 
-            urc = gsmGetUrc(interface);
+            urc = gsmGetUrc(&interface->engine);
 
             if(urc.cmd[0] != '\0'){
                dbgPrint("\r\nURC: ");
@@ -729,25 +728,26 @@ int main(void)
    initHardware();
    ciaaUARTInit();
 
+   pausems(DELAY_INIT);
+
    uint8_t instruction;
 
    sigQual_s sigqual;
    connStatus_s status;
 
    gsmInterface_t interface;
+   gsmInitInterface(&interface); /* Initializes the GSM interface */
 
    gsmSetUrcCback(&interface, cbUrc);
    gsmSetDataCback(&interface, cbData);
-
-   pausems(DELAY_INIT);
-
-   dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
 
    gsmStartUp(&interface, cbempty);
 
    while(!gsmIsIdle(&interface)){
       gsmProcess(&interface);
    }
+
+   dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
 
    while (1){
 

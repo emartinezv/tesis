@@ -38,9 +38,11 @@
 
 #include "lpc_types.h"
 #include "board.h"
+#include "stdlib.h"
 #include "string.h"
 #include "ciaaUART.h"
 #include "gsmInterface.h"
+#include "gsmComms.h"
 
 /*==================[cplusplus]==============================================*/
 

@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-//#define DEBUG_INTERFACE
+#define DEBUG_INTERFACE
 #ifdef DEBUG_INTERFACE
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
@@ -54,22 +54,13 @@
 
 static uint8_t const * const exitCmds [] = {"OK", "CLOSED"};
 
-static gsmInterface_t * SysTickInterface;
+static gsmInterface_t * SysTickInterface = NULL;
 
 /*==================[internal functions declaration]=========================*/
 
 /*---------------------------------------------------------------------------*/
 /*              General GSM library operation formula functions              */
 /*---------------------------------------------------------------------------*/
-
-/** @brief Formula to start up the GSM interface
- *
- * @param interface : Pointer to interface
- *
- * @return Returns true if initialization successful
- */
-
-static bool gsmInitInterface (gsmInterface_t * interface);
 
 /** @brief Formula to start up the GSM library
  */
@@ -202,39 +193,6 @@ void gsmFrmCopyGsmError (gsmInterface_t * interface);
 /*==================[internal functions definition]==========================*/
 
 /*---------------------------------------------------------------------------*/
-/*                  General GSM library operation functions                  */
-/*---------------------------------------------------------------------------*/
-
-static bool gsmInitInterface(gsmInterface_t * interface)
-{
-   bool ok = FALSE;
-
-   SysTickInterface = interface;
-
-   ok = gsmInitEngine(&(interface->engine)); /* Initializes the GSM engine */
-
-   interface->frmState = IDLE;
-   interface->procState = NOCMD;
-
-   interface->procCnt = DELAY_PROC;
-
-   interface->urcMode = MANUAL_MODE;
-   interface->urcCback = NULL;
-
-   interface->dataCback = NULL;
-   interface->exitCmdList = &exitCmds;
-
-   interface->frm = NULL;
-   interface->frmInput = NULL;
-   interface->frmOutput = NULL;
-   interface->frmCback = NULL;
-   interface->errorOut.errorFrm = OK;
-
-   return ok;
-}
-
-
-/*---------------------------------------------------------------------------*/
 /*                  General structure of formula functions                   */
 /*---------------------------------------------------------------------------*/
 
@@ -302,9 +260,6 @@ static void gsmStartUpF (gsmInterface_t * interface)
    switch(interface->frmState) {
 
       case INIT:
-
-
-         gsmInitInterface(interface);      /* Initializes the GSM interface */
 
          gsmFrmInit(interface);
 
@@ -385,6 +340,44 @@ static void gsmStartUpF (gsmInterface_t * interface)
 
    return;
 
+}
+
+/*****************************************************************************/
+
+static void gsmExitDataModeF (gsmInterface_t * interface)
+{
+   switch(interface->frmState) {
+
+      case INIT:
+
+         /* The "+++" sequence must be preceeded and followed by a 1s no
+          * transmission period. */
+
+         if(interface->auxCnt == 0){
+            gsm232UartSend("+++",strlen("+++"));
+            interface->auxCnt = 1000;
+            interface->frmState = PROC;
+         }
+
+         break;
+
+      case PROC:
+
+         if(interface->auxCnt == 0){
+            interface->frmState = WRAP;
+         }
+
+         break;
+
+      case WRAP:
+
+         interface->frmCback(interface->errorOut,NULL);
+         interface->frmState = IDLE;
+
+         break;
+   }
+
+   return;
 }
 
 /*****************************************************************************/
@@ -1220,19 +1213,19 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
             case ATCMD1:
 
-               gsmFrmSendCmdCheckEcho(interface, "AT+CIPSHUT\r", ATCMD1RESP);
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIPCLOSE\r", ATCMD1RESP);
 
                break;
 
             case ATCMD1RESP:
 
-               gsmFrmProcRspsGetFinal(interface, ATCMD2, FALSE, NOCMD, TRUE);
+               gsmFrmProcRspsGetFinal(interface, ATCMD2, FALSE, ATCMD2, FALSE);
 
                break;
 
             case ATCMD2:
 
-               gsmFrmSendCmdCheckEcho(interface, "AT+CIPMODE=1\r", ATCMD2RESP);
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIPSHUT\r", ATCMD2RESP);
 
                break;
 
@@ -1244,7 +1237,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
             case ATCMD3:
 
-               gsmFrmSendCmdCheckEcho(interface, APNstring, ATCMD3RESP);
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIPMODE=1\r", ATCMD3RESP);
 
                break;
 
@@ -1256,7 +1249,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
             case ATCMD4:
 
-               gsmFrmSendCmdCheckEcho(interface, "AT+CIICR\r", ATCMD4RESP);
+               gsmFrmSendCmdCheckEcho(interface, APNstring, ATCMD4RESP);
 
                break;
 
@@ -1268,13 +1261,25 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
             case ATCMD5:
 
-               gsmFrmSendCmdCheckEcho(interface, "AT+CIFSR\r", ATCMD5RESP);
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIICR\r", ATCMD5RESP);
 
                break;
 
             case ATCMD5RESP:
 
-               gsmFrmProcRspsGetFinal(interface, ATCMD5RESP, TRUE, NOCMD,
+               gsmFrmProcRspsGetFinal(interface, ATCMD6, FALSE, NOCMD, TRUE);
+
+               break;
+
+            case ATCMD6:
+
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIFSR\r", ATCMD6RESP);
+
+               break;
+
+            case ATCMD6RESP:
+
+               gsmFrmProcRspsGetFinal(interface, ATCMD6RESP, TRUE, NOCMD,
                                       TRUE);
 
                break;
@@ -1759,6 +1764,37 @@ void gsmFrmCopyGsmError (gsmInterface_t * interface)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+bool gsmInitInterface(gsmInterface_t * interface)
+{
+   bool ok = FALSE;
+
+   ok = gsmInitEngine(&(interface->engine)); /* Initializes the GSM engine */
+
+   interface->frmState = IDLE;
+   interface->procState = NOCMD;
+
+   interface->procCnt = DELAY_PROC;
+   interface->auxCnt = 0;
+
+   interface->urcMode = MANUAL_MODE;
+   interface->urcCback = NULL;
+
+   interface->dataCback = NULL;
+   interface->exitCmdList = exitCmds;
+
+   interface->frm = NULL;
+   interface->frmInput = NULL;
+   interface->frmOutput = NULL;
+   interface->frmCback = NULL;
+   interface->errorOut.errorFrm = OK;
+
+   SysTickInterface = interface;
+
+   return ok;
+}
+
+/*****************************************************************************/
+
 /* This function needs to be called from the basic ARM SysTick_Handler function
  * to handle gsmProcess calls and AT command timeouts. When called, it
  * decrements both procCnt and toutCnt. It must be mentioned that procCnt is
@@ -1769,8 +1805,17 @@ void gsmFrmCopyGsmError (gsmInterface_t * interface)
 
 void gsmSysTickHandler (void)
 {
-   gsmDecToutCnt(&(SysTickInterface->engine));
-   if(SysTickInterface->procCnt > 0) SysTickInterface->procCnt--;
+   if(NULL != SysTickInterface){
+
+      gsmDecToutCnt(&(SysTickInterface->engine));
+      if((SysTickInterface->procCnt) > 0) {
+         (SysTickInterface->procCnt)--;
+      }
+      if((SysTickInterface->auxCnt) > 0) {
+         (SysTickInterface->auxCnt)--;
+      }
+
+   }
 
    return;
 }
@@ -1791,7 +1836,7 @@ void gsmSysTickHandler (void)
 
 void gsmProcess (gsmInterface_t * interface)
 {
-   if(0 == interface->procCnt){
+   if(0 == (interface->procCnt)){
 
       if (IDLE == interface->frmState){ /* no formula currently being run */
 
@@ -1822,7 +1867,7 @@ void gsmProcess (gsmInterface_t * interface)
           */
 
          else if (DATA_MODE == gsmGetSerialMode(&(interface->engine))){
-            interface->dataCback();
+            interface->dataCback(interface);
          }
 
       }
@@ -1844,7 +1889,7 @@ void gsmProcess (gsmInterface_t * interface)
 
 }
 
-/*****************************************************************************/
+/******************************************************************************/
 
 bool gsmIsIdle (gsmInterface_t * interface)
 {
@@ -1873,38 +1918,6 @@ bool gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback)
 {
    interface->dataCback = cback;
    return true;
-}
-
-/*****************************************************************************/
-
-/* This interface-level function executes a serial port write of n characters
- * followed by a serial port read of n characters. It is used when in DATA_MODE
- * and calls upon two comms-level functions.
- *
- * To keep some coherence with the token-reading functions, the maximum read
- * size is kept at RD_BUF_SIZ/2 (constant in the gsmTokenizer module). If a
- * number larger than this is used, no read or write operation is made.
- */
-
-void gsmWriteReadDataMode (uint8_t * write, uint8_t * nWrite, uint8_t * read,
-                           uint8_t * nRead)
-{
-
-   if((*nWrite > RD_BUF_SIZ/2) || (*nRead > RD_BUF_SIZ/2)){
-
-      *nWrite = 0;
-      *nRead = 0;
-
-   }
-
-   else{
-
-      *nWrite = gsm232UartSend(write, *nWrite);
-      *nRead = gsm232UartRecv(read, *nRead);
-
-   }
-
-   return;
 }
 
 /*****************************************************************************/
@@ -1969,6 +1982,7 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
                                   cmdChCnt-2)){
                      cmdChCnt = 0;
                      crLf = 0;
+                     debug(">>>interf<<< Exiting DATA MODE!");
                      gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
                      break;
                   }
@@ -2031,6 +2045,19 @@ void gsmStartUp (gsmInterface_t * interface, frmCback_t cback)
    interface->frm = gsmStartUpF;
    interface->frmCback = cback;
    interface->frmState = INIT;
+
+   return;
+}
+
+/*****************************************************************************/
+
+void gsmExitDataMode (gsmInterface_t * interface, frmCback_t cback)
+{
+   interface->frm = gsmExitDataModeF;
+   interface->frmCback = cback;
+   interface->frmState = INIT;
+
+   SysTickInterface->auxCnt = 1000; /* initialize auxiliary counter */
 
    return;
 }
