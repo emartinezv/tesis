@@ -573,6 +573,16 @@ void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
 void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
                    frmCback_t cback);
 
+/** @brief Stops GPRS connection in the modem
+*
+* @param interface : Pointer to interface
+* @param cback     : Function pointer to callback function
+*
+* @return
+*/
+
+void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback);
+
 /** @brief Opens TCP or UDP port
 *
 * @param interface : Pointer to interface

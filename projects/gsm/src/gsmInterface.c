@@ -1309,6 +1309,60 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
 /*****************************************************************************/
 
+static void gsmGprsStopF (gsmInterface_t * interface)
+{
+   fsmEvent_e result;
+
+   switch(interface->frmState) {
+
+      case INIT:
+
+         gsmFrmInit(interface);
+
+         break;
+
+      case PROC:
+
+         switch(interface->procState){
+
+            case ATCMD1:
+
+               gsmFrmSendCmdCheckEcho(interface, "AT+CIPSHUT\r", ATCMD1RESP);
+
+               break;
+
+            case ATCMD1RESP:
+
+               gsmFrmProcRspsGetFinal(interface, ATCMD1RESP, TRUE, NOCMD,
+                                      TRUE);
+
+               break;
+
+         }
+
+         break;
+
+      case WRAP:
+
+         if(OK != interface->errorOut.errorFrm){
+
+            if(ERR_GSM == interface->errorOut.errorFrm){
+               gsmFrmCopyGsmError(interface);
+            }
+
+         }
+
+         interface->frmCback(interface->errorOut, 0);
+         interface->frmState = IDLE;
+
+         break;
+   }
+
+   return;
+}
+
+/*****************************************************************************/
+
 static void gsmGprsOpenPortF (gsmInterface_t * interface)
 {
    /* String to assemble the TCP/UDP open port command
@@ -2159,6 +2213,18 @@ void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
 
    return;
 }
+
+/*****************************************************************************/
+
+void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback)
+{
+   interface->frm = gsmGprsStopF;
+   interface->frmCback = cback;
+   interface->frmState = INIT;
+
+   return;
+}
+
 
 /*****************************************************************************/
 

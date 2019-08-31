@@ -506,7 +506,8 @@ void console_gprs (gsmInterface_t * interface)
          dbgPrint("1) Prender GPRS \r\n");
          dbgPrint("2) Abrir puerto TCP \r\n");
          dbgPrint("3) Abrir puerto UDP \r\n");
-         dbgPrint("4) Cerrar puerto TCP o UDP \r\n\r\n");
+         dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
+         dbgPrint("5) Apagar GPRS \r\n\r\n");
 
          dbgPrint("S) Salir a la consola principal \r\n");
 
@@ -537,6 +538,12 @@ void console_gprs (gsmInterface_t * interface)
             case '4':
 
             gsmGprsClosePort(interface, cbempty);
+
+            break;
+
+            case '5':
+
+            gsmGprsStop(interface, cbempty);
 
             break;
 
