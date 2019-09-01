@@ -95,6 +95,36 @@ extern urc_t const urcs [];
 
 uint16_t gsmCmdSearch(uint8_t const * const cmd);
 
+/** @brief Given a cmd idx, it returns the string of successful close responses
+ *         for the corresponding command
+ *
+ *  @param idx : Index of the command in the commands vector
+ *
+ *  @return String of successful close responses
+ */
+
+const uint8_t const * gsmGetCmdSucRsp (uint16_t idx);
+
+/** @brief Given a cmd idx, it returns the string of error close responses for
+ *         the corresponding command
+ *
+ *  @param idx : Index of the command in the commands vector
+ *
+ *  @return String of error close responses
+ */
+
+const uint8_t const * gsmGetCmdErrRsp (uint16_t idx);
+
+/** @brief Given a cmd idx, it returns the timeout for the corresponding
+ *         command
+ *
+ *  @param idx : Index of the command in the commands vector
+ *
+ *  @return Timeout
+ */
+
+uint32_t gsmGetCmdTimeout (uint16_t idx);
+
 /** @brief Searches for an URC and returns 1 if recognized, 0 otherwise
  *
  *  @param  urc Pointer to str with the name of the URC to search

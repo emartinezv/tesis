@@ -10,4 +10,4 @@ build/test/out/c/test_gsmEngine.o: test/test_gsmEngine.c \
  build/test/mocks/mock_gsmComms.h ../inc/gsmComms.h \
  build/test/mocks/mock_gsmParser.h ../inc/gsmParser.h \
  build/test/mocks/mock_vl_ring_buffer.h ../inc/vl_ring_buffer.h \
- ../inc/gsmCommands.h
+ build/test/mocks/mock_gsmCommands.h ../inc/gsmCommands.h

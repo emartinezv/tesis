@@ -105,6 +105,33 @@ uint16_t gsmCmdSearch(uint8_t const * const cmd)
    return UNKNOWN_CMD;
 }
 
+const uint8_t const *  gsmGetCmdSucRsp (uint16_t idx)
+{
+   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
+      return commands[idx].sucRsp;
+   }
+
+   return NULL;
+}
+
+const uint8_t const * gsmGetCmdErrRsp (uint16_t idx)
+{
+   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
+      return commands[idx].errRsp;
+   }
+
+   return NULL;
+}
+
+uint32_t gsmGetCmdTimeout (uint16_t idx)
+{
+   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
+      return commands[idx].timeout;
+   }
+
+   return 0;
+}
+
 uint8_t gsmUrcSearch(uint8_t const * const urc)
 {
    int i = 0;

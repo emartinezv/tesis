@@ -43,7 +43,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_ENGINE
+//#define DEBUG_ENGINE
 #ifdef DEBUG_ENGINE
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
@@ -187,7 +187,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            engine->toutCnt = commands[idx].timeout; /* load timeout counter
+            engine->toutCnt = gsmGetCmdTimeout(idx); /* load timeout counter
                                                         for the current cmd */
 
             engine->currIdx = idx;                           /* save cmd index */
@@ -406,7 +406,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               if(NULL != strstr(commands[engine->currIdx].errRsp,auxCmd)){
+               if(NULL != strstr(gsmGetCmdErrRsp(engine->currIdx),auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
@@ -418,7 +418,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               else if(NULL != strstr(commands[engine->currIdx].sucRsp,auxCmd)){
+               else if(NULL != strstr(gsmGetCmdSucRsp(engine->currIdx),auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -435,7 +435,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                 * be a closing response.
                 */
 
-               else if(0 == strlen(commands[engine->currIdx].sucRsp)){
+               else if(0 == strlen(gsmGetCmdSucRsp(engine->currIdx))){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -633,32 +633,6 @@ void gsmDecToutCnt(gsmEngine_t * engine){
 
    return;
 }
-
-/** When the serial port is in DATA_MODE, this function prints everything
- *  received through the 232-UART serial port to the Term-UART. This is
- *  merely a test function; the user of the library needs to send
- *  these data to a user-defined buffer of some sort for processing.
- */
-
-void gsmPrintData(void){
-
-   uint8_t c = 0;
-
-   if(0 != gsm232UartRecv(&c, 1)){
-
-      gsmTermUartSend(&c, 1);
-
-   }
-
-   if(0 != gsmTermUartRecv(&c, 1)){
-
-      gsm232UartSend(&c, 1);
-
-   }
-
-   return;
-}
-
 
 /** The gsmSendCmd function first parses cmdStr in the same way as we would do
  *  with a token received from the GSM module. This is needed since we are

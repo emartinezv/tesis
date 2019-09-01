@@ -198,12 +198,6 @@ bool gsmToutCntZero(gsmEngine_t * engine);
 
 void gsmDecToutCnt(gsmEngine_t * engine);
 
-/** @brief Prints data to the USB UART when serial port is in DATA_MODE
-*
-*/
-
-void gsmPrintData(void);
-
 /** @brief Sends an AT command to the GSM module
 *
 *  @param engine : Pointer to engine

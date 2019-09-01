@@ -36,6 +36,7 @@
 #include "mock_gsmComms.h"
 #include "mock_gsmParser.h"
 #include "mock_vl_ring_buffer.h"
+#include "mock_gsmCommands.h"
 
 int GlobalExpectCount;
 int GlobalVerifyOrder;
@@ -46,6 +47,9 @@ extern void setUp(void);
 extern void tearDown(void);
 extern void test_gsmInitEngine(void);
 extern void test_gsmProcessTkn(void);
+extern void test_gsmToutCntZero(void);
+extern void test_gsmDecToutCnt(void);
+extern void test_gsmSendCmd(void);
 
 
 /*=======Mock Management=====*/
@@ -58,6 +62,7 @@ static void CMock_Init(void)
   mock_gsmComms_Init();
   mock_gsmParser_Init();
   mock_vl_ring_buffer_Init();
+  mock_gsmCommands_Init();
 }
 static void CMock_Verify(void)
 {
@@ -65,6 +70,7 @@ static void CMock_Verify(void)
   mock_gsmComms_Verify();
   mock_gsmParser_Verify();
   mock_vl_ring_buffer_Verify();
+  mock_gsmCommands_Verify();
 }
 static void CMock_Destroy(void)
 {
@@ -72,6 +78,7 @@ static void CMock_Destroy(void)
   mock_gsmComms_Destroy();
   mock_gsmParser_Destroy();
   mock_vl_ring_buffer_Destroy();
+  mock_gsmCommands_Destroy();
 }
 
 /*=======Suite Setup=====*/
@@ -109,8 +116,11 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 170);
-  RUN_TEST(test_gsmProcessTkn, 197);
+  RUN_TEST(test_gsmInitEngine, 317);
+  RUN_TEST(test_gsmProcessTkn, 344);
+  RUN_TEST(test_gsmToutCntZero, 573);
+  RUN_TEST(test_gsmDecToutCnt, 601);
+  RUN_TEST(test_gsmSendCmd, 641);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

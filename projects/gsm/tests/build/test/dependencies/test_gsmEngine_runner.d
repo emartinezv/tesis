@@ -12,4 +12,5 @@ build/test/out/c/test_gsmEngine_runner.o: \
  build/test/mocks/mock_gsmComms.h ../inc/gsmComms.h \
  build/test/mocks/mock_gsmParser.h ../inc/gsmParser.h \
  ../inc/gsmTokenizer.h build/test/mocks/mock_vl_ring_buffer.h \
- ../inc/vl_ring_buffer.h
+ ../inc/vl_ring_buffer.h build/test/mocks/mock_gsmCommands.h \
+ ../inc/gsmCommands.h

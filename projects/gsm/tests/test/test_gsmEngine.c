@@ -13,9 +13,9 @@
 #include "mock_gsmComms.h"
 #include "mock_gsmParser.h"
 #include "mock_vl_ring_buffer.h"
+#include "mock_gsmCommands.h"
 
 //-- other includes
-#include "gsmCommands.h"
 #include "ring_buffer.h"
 #include "string.h"
 
@@ -95,6 +95,19 @@ static tknTypeSize_s tknTypeSizeV [] = {
 
 };
 
+static tknTypeSize_s tknTypeV [] = {
+
+   /* AT command */
+   {"AT\r","AT","",AUTOBAUD,0},
+
+   /* SMS text */
+   {"texto sms","SMS_BODY","texto sms",SMS_BODY_P,0},
+
+   /* UKN command */
+   {"ATB\r","B","",BASIC_CMD,0}
+
+};
+
 static int bufEmptyV [] = {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0};
 
 /*******************************************************************************
@@ -147,7 +160,141 @@ tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
    return (tknTypeSizeV[NumCalls].type);
 }
 
+uint8_t gsmUrcSearch_Callback (uint8_t const * const urc, int NumCalls)
+{
+   if(0 == strcmp(urc,"CMTI")){return 1;}
 
+   return 0;
+}
+
+const uint8_t const * gsmGetCmdErrRsp_Callback (uint16_t idx, int Numcalls)
+{
+   return ("-ERROR-CMS ERROR-");
+}
+
+const uint8_t const * gsmGetCmdSucRsp_Callback (uint16_t idx, int Numcalls)
+{
+   if(0 == idx){
+      return ("-OK-");
+   }
+   else if(19 == idx){
+      return ("");
+   }
+   else{
+      TEST_FAIL_MESSAGE("gsmGetCmdSucRsp_Callback called incorrectly");
+   }
+}
+
+tknTypeParser_e gsmParseTkn_Callback2 (uint8_t const * const tkn,
+                                       uint8_t * cmd, uint8_t * par,
+                                       uint16_t tknLen, int NumCalls)
+{
+   if(NumCalls > (sizeof(tknTypeV)/sizeof(tknTypeSize_s))){
+      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
+   }
+
+   strncpy(cmd, tknTypeV[NumCalls].cmd,
+           strlen(tknTypeV[NumCalls].cmd));
+   cmd[strlen(tknTypeV[NumCalls].cmd)] = '\0';
+
+   if(strlen(tknTypeV[NumCalls].par) > 0){
+      strncpy(par, tknTypeV[NumCalls].par,
+              strlen(tknTypeV[NumCalls].par));
+      par[strlen(tknTypeV[NumCalls].par)] = '\0';
+   }
+   else{
+      par[0]='\0';
+   }
+
+   return (tknTypeV[NumCalls].type);
+}
+
+uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
+{
+   if(0 == strcmp(cmd,"AT")){return 0;}
+   else if(0 == strcmp(cmd,"SMS_BODY")){return 23;}
+
+   return UNKNOWN_CMD;
+}
+
+int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
+{
+   switch(NumCalls){
+
+      case 0:
+
+         if(0 != strcmp(buffer,"AT\r")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
+         else{
+            return 3;
+         }
+
+         break;
+
+      case 1:
+
+         if(0 != strcmp(buffer,"texto sms")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
+         else{
+            return 9;
+         }
+
+         break;
+
+      case 2:
+
+         if(0 != strcmp(buffer,"\x1A")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
+         else{
+            return 1;
+         }
+
+         break;
+
+      default:
+
+         TEST_FAIL_MESSAGE("gsm232UartSend_Callback called to many times");
+
+         break;
+   }
+}
+
+uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
+{
+   switch(NumCalls){
+
+      case 0:
+
+         if(0 != idx){
+            TEST_FAIL_MESSAGE("Incorrect command index");
+         }
+         else{
+            return TOUT_DEF;
+         }
+
+         break;
+
+      case 1:
+
+         if(23 != idx){
+            TEST_FAIL_MESSAGE("Incorrect command index");
+         }
+         else{
+            return 60000;
+         }
+
+         break;
+
+      default:
+
+         TEST_FAIL_MESSAGE("gsmGetCmdTimeout_Callback called to many times");
+
+         break;
+   }
+}
 
 /*******************************************************************************
  *    SETUP, TEARDOWN
@@ -199,7 +346,7 @@ void test_gsmInitEngine(void)
  * Functions tested:
  *
  * - gsmProcessTkn
- * - gsmUpdateFsm (static)
+ * - gsmUpdateFsm (all return points except 1.1)
  *
  *
  * */
@@ -225,6 +372,9 @@ void test_gsmProcessTkn(void)
    VLRingBuffer_Flush_Ignore();
    VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
    gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
+   gsmUrcSearch_StubWithCallback(gsmUrcSearch_Callback);
+   gsmGetCmdErrRsp_StubWithCallback(gsmGetCmdErrRsp_Callback);
+   gsmGetCmdSucRsp_StubWithCallback(gsmGetCmdSucRsp_Callback);
 
    /* Test sequence */
 
@@ -420,3 +570,110 @@ void test_gsmProcessTkn(void)
 
 }
 
+/* test_gsmToutCntZero
+ *
+ * Functions tested:
+ *
+ * - gsmToutCntZero
+ *
+ *
+ * */
+
+void test_gsmToutCntZero(void)
+{
+   /* Variables */
+
+   gsmEngine_t engine;
+   bool result;
+
+   /* Test sequence */
+
+   engine.toutCnt = 1000;
+   result = gsmToutCntZero(&engine);
+   TEST_ASSERT_FALSE(result);
+
+   engine.toutCnt = 0;
+   result = gsmToutCntZero(&engine);
+   TEST_ASSERT_TRUE(result);
+
+}
+
+/* test_gsmDecToutCnt
+ *
+ * Functions tested:
+ *
+ * - gsmDecToutCnt
+ *
+ *
+ * */
+
+void test_gsmDecToutCnt(void)
+{
+   /* Variables */
+
+   gsmEngine_t engine;
+   bool result;
+
+   /* Test sequence */
+
+   engine.toutCnt = 100;
+
+   gsmDecToutCnt(&engine);
+
+   TEST_ASSERT_TRUE(99 == engine.toutCnt);
+
+   int i;
+
+   for(i = 0; i <10; i++){
+      gsmDecToutCnt(&engine);
+   }
+
+   TEST_ASSERT_TRUE(89 == engine.toutCnt);
+
+   engine.toutCnt = 0;
+
+   gsmDecToutCnt(&engine);
+
+   TEST_ASSERT_TRUE(0 == engine.toutCnt);
+
+}
+
+/* test_gsmSendCmd
+ *
+ * Functions tested:
+ *
+ * - gsmSendCmd
+ * - gsmUpdateFsm (all return points except 1.1)
+ *
+ *
+ * */
+
+void test_gsmSendCmd(void)
+{
+   /* Variables */
+
+   gsmEngine_t engine;
+   fsmEvent_e event;
+
+   /* Mocks */
+
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback2);
+   gsmCmdSearch_StubWithCallback(gsmCmdSearch_Callback);
+   gsm232UartSend_StubWithCallback(gsm232UartSend_Callback);
+   gsmGetCmdTimeout_StubWithCallback(gsmGetCmdTimeout_Callback);
+
+   /* Test sequence */
+
+   engine.fsmState = WAITING;
+   event = gsmSendCmd(&engine, "AT\r");
+   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, event);
+
+   engine.fsmState = WAITING;
+   event = gsmSendCmd(&engine, "texto sms");
+   TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, event);
+
+   engine.fsmState = WAITING;
+   event = gsmSendCmd(&engine, "ATB\r");
+   TEST_ASSERT_EQUAL_INT(ERR_CMD_UKN, event);
+
+}

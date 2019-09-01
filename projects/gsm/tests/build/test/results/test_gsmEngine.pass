@@ -4,17 +4,26 @@
   :file: test_gsmEngine.c
 :successes:
 - :test: test_gsmInitEngine
-  :line: 170
+  :line: 317
   :message: ''
 - :test: test_gsmProcessTkn
-  :line: 197
+  :line: 344
+  :message: ''
+- :test: test_gsmToutCntZero
+  :line: 573
+  :message: ''
+- :test: test_gsmDecToutCnt
+  :line: 601
+  :message: ''
+- :test: test_gsmSendCmd
+  :line: 641
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 2
-  :passed: 2
+  :total: 5
+  :passed: 5
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002203975
+:time: 0.003710334

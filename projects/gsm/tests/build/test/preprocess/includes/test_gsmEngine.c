@@ -5,6 +5,6 @@
 - mock_gsmComms.h
 - mock_gsmParser.h
 - mock_vl_ring_buffer.h
-- gsmCommands.h
+- mock_gsmCommands.h
 - ring_buffer.h
 - build/temp/_test_gsmEngine.c
