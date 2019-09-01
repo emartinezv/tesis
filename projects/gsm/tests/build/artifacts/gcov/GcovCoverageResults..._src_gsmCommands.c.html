@@ -275,7 +275,7 @@
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-08-19 16:29:04</td>
+            <td class="headerValue">2019-09-01 15:17:57</td>
             <td></td>
             <td class="headerName">Branches:</td>
             <td class="headerTableEntry">8</td>
@@ -974,7 +974,7 @@
     <tr>
     <td align="right" class="lineno"><pre>97</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>64</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>68</pre></td>
     <td align="left" class="src coveredLine"><pre>uint16_t gsmCmdSearch(uint8_t const * const cmd)</pre></td>
     </tr>
 
@@ -988,7 +988,7 @@
     <tr>
     <td align="right" class="lineno"><pre>99</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>64</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>68</pre></td>
     <td align="left" class="src coveredLine"><pre>   int i = 0;</pre></td>
     </tr>
 
@@ -1001,15 +1001,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>101</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 316 times">&check;</span><span class="takenBranch" title="Branch 1 taken 4 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>320</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 364 times">&check;</span><span class="takenBranch" title="Branch 1 taken 5 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>369</pre></td>
     <td align="left" class="src coveredLine"><pre>   for(i = 0; 0 != commands[i].name; i++){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>102</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 60 times">&check;</span><span class="takenBranch" title="Branch 1 taken 256 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>316</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 63 times">&check;</span><span class="takenBranch" title="Branch 1 taken 301 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>364</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(0 == strcmp(cmd, commands[i].name)){return i;}</pre></td>
     </tr>
 
@@ -1030,7 +1030,7 @@
     <tr>
     <td align="right" class="lineno"><pre>105</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>5</pre></td>
     <td align="left" class="src coveredLine"><pre>   return UNKNOWN_CMD;</pre></td>
     </tr>
 
@@ -1051,7 +1051,7 @@
     <tr>
     <td align="right" class="lineno"><pre>108</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>64</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>77</pre></td>
     <td align="left" class="src coveredLine"><pre>uint8_t gsmUrcSearch(uint8_t const * const urc)</pre></td>
     </tr>
 
@@ -1065,7 +1065,7 @@
     <tr>
     <td align="right" class="lineno"><pre>110</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>64</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>77</pre></td>
     <td align="left" class="src coveredLine"><pre>   int i = 0;</pre></td>
     </tr>
 
@@ -1078,15 +1078,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>112</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 64 times">&check;</span><span class="takenBranch" title="Branch 1 taken 36 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>100</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 77 times">&check;</span><span class="takenBranch" title="Branch 1 taken 45 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>122</pre></td>
     <td align="left" class="src coveredLine"><pre>   for(i = 0; 0 != urcs[i].name; i++){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>113</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 28 times">&check;</span><span class="takenBranch" title="Branch 1 taken 36 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>64</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 32 times">&check;</span><span class="takenBranch" title="Branch 1 taken 45 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>77</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(0 == strcmp(urc, urcs[i].name)){return 1;}</pre></td>
     </tr>
 
@@ -1107,7 +1107,7 @@
     <tr>
     <td align="right" class="lineno"><pre>116</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>36</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>45</pre></td>
     <td align="left" class="src coveredLine"><pre>   return 0;</pre></td>
     </tr>
 

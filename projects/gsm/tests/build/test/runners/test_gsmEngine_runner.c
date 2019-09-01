@@ -109,8 +109,8 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 122);
-  RUN_TEST(test_gsmProcessTkn, 149);
+  RUN_TEST(test_gsmInitEngine, 170);
+  RUN_TEST(test_gsmProcessTkn, 197);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

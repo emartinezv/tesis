@@ -275,7 +275,7 @@
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-08-19 16:29:04</td>
+            <td class="headerValue">2019-09-01 15:17:57</td>
             <td></td>
             <td class="headerName">Branches:</td>
             <td class="headerTableEntry">0</td>
@@ -1016,7 +1016,7 @@
     <tr>
     <td align="right" class="lineno"><pre>103</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>3568</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2337</pre></td>
     <td align="left" class="src coveredLine"><pre>STATIC INLINE int RingBuffer_GetCount(RINGBUFF_T *RingBuff)</pre></td>
     </tr>
 
@@ -1030,7 +1030,7 @@
     <tr>
     <td align="right" class="lineno"><pre>105</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>3568</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2337</pre></td>
     <td align="left" class="src coveredLine"><pre>	return RB_VHEAD(RingBuff) - RB_VTAIL(RingBuff);</pre></td>
     </tr>
 
@@ -1086,7 +1086,7 @@
     <tr>
     <td align="right" class="lineno"><pre>113</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>688</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>572</pre></td>
     <td align="left" class="src coveredLine"><pre>STATIC INLINE int RingBuffer_GetFree(RINGBUFF_T *RingBuff)</pre></td>
     </tr>
 
@@ -1100,7 +1100,7 @@
     <tr>
     <td align="right" class="lineno"><pre>115</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>688</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>572</pre></td>
     <td align="left" class="src coveredLine"><pre>	return RingBuff->count - RingBuffer_GetCount(RingBuff);</pre></td>
     </tr>
 
@@ -1156,7 +1156,7 @@
     <tr>
     <td align="right" class="lineno"><pre>123</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2368</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1361</pre></td>
     <td align="left" class="src coveredLine"><pre>STATIC INLINE int RingBuffer_IsFull(RINGBUFF_T *RingBuff)</pre></td>
     </tr>
 
@@ -1170,7 +1170,7 @@
     <tr>
     <td align="right" class="lineno"><pre>125</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2368</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1361</pre></td>
     <td align="left" class="src coveredLine"><pre>	return (RingBuffer_GetCount(RingBuff) >= RingBuff->count);</pre></td>
     </tr>
 
@@ -1226,7 +1226,7 @@
     <tr>
     <td align="right" class="lineno"><pre>133</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>628</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>648</pre></td>
     <td align="left" class="src coveredLine"><pre>STATIC INLINE int RingBuffer_IsEmpty(RINGBUFF_T *RingBuff)</pre></td>
     </tr>
 
@@ -1240,7 +1240,7 @@
     <tr>
     <td align="right" class="lineno"><pre>135</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>628</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>648</pre></td>
     <td align="left" class="src coveredLine"><pre>	return RB_VHEAD(RingBuff) == RB_VTAIL(RingBuff);</pre></td>
     </tr>
 
