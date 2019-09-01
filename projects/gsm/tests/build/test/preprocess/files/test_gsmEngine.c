@@ -1,8 +1,8 @@
 #include "build/temp/_test_gsmEngine.c"
 #include "ring_buffer.h"
-#include "gsmParser.h"
 #include "gsmCommands.h"
 #include "mock_vl_ring_buffer.h"
+#include "mock_gsmParser.h"
 #include "mock_gsmComms.h"
 #include "mock_gsmTokenizer.h"
 #include "gsmEngine.h"
@@ -29,103 +29,57 @@
 
 
 
-static uint8_t const * const uartRecvMock [] = {
+typedef struct _tknTypeSize {
 
+   uint8_t const * tkn;
 
+   uint8_t const * cmd;
 
+   uint8_t const * par;
 
+   tknTypeParser_e type;
 
-      "\r\n+CMTI:abcde\r\n",
+   int size;
 
+} tknTypeSize_s;
 
 
 
 
-      "\r\nOK\r\n",
 
 
 
 
 
-      "abcde\r\n",
 
 
+static tknTypeSize_s tknTypeSizeV [] = {
 
 
 
-      "AT\r\r","\nOK\r\n",
 
 
+   {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
 
 
 
-      "ATI\r\r","\n+CMTI:adcde\r\n",
 
 
+   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
 
 
 
-      "AT\r\r","\n+CMTI:abcde\r\n","\r\nOK\r\n",
 
 
+   {"abcde\r\n","DATA","abcde",DATA_BLOCK_P,8},
 
 
 
-      "\r\nOK\r\n",
 
 
+   {"AT\r","AT","",AUTOBAUD,4},
 
-
-
-      "",
-
-
-
-
-
-      "AT\r\r","\nabcde\r\n","",
-
-
-
-
-
-      "abcde\r\n",
-
-
-
-
-
-      "AT\r\r","\nERROR\r\n",
-
-
-
-
-
-      "AT+CIFSR\r\r","\n192.168.0.1\r\n",
-
-
-
-
-
-      "\r\n+CMTI:abcde\r\n","AT\r\r","\nOK\r\n",
-
-
-
-
-
-      "AT\rA","TI\r\r","\n+CMTI:abcde\r\n",
-
-
-
-
-
-      "AT\rT","A\r\r","\n+CMTI:abcde\r\n",
-
-
-
-
-
-      "AT+CMGS=num\r\r","\n> ","hola\r\n","OK\r\n"
+   {"\r\nOK\r\n","OK","",BASIC_RSP,7}
 
 };
 
@@ -139,41 +93,81 @@ static uint8_t const * const uartRecvMock [] = {
 
 
 
-uint8_t gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
+int VLRingBuffer_Pop_Callback (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
+
+                               int NumCalls)
 
 {
 
-   uint8_t res = 0;
+   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
 
-
-
-   if(NumCalls > (sizeof(uartRecvMock)/sizeof(uint8_t *))){
-
-      UnityFail( (("Demasiadas llamadas!")), (UNITY_UINT)(97));
+      UnityFail( (("Demasiadas llamadas!")), (UNITY_UINT)(69));
 
    }
 
 
 
-   strncpy(buffer, uartRecvMock[NumCalls], strlen(uartRecvMock[NumCalls]));
+   strncpy(data, tknTypeSizeV[NumCalls].tkn,
 
-   res = strlen(uartRecvMock[NumCalls]);
+           strlen(tknTypeSizeV[NumCalls].tkn));
 
 
 
-   return res;
+   return (tknTypeSizeV[NumCalls].size);
 
 }
 
 
 
-uint8_t gsm232UartSend_Callback (uint8_t * const buffer, int n, int NumCalls)
+tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
+
+                                      uint8_t * par, uint16_t tknLen,
+
+                                      int NumCalls)
 
 {
 
-   return n;
+   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
+
+      UnityFail( (("Demasiadas llamadas!")), (UNITY_UINT)(83));
+
+   }
+
+
+
+   strncpy(cmd, tknTypeSizeV[NumCalls].cmd,
+
+           strlen(tknTypeSizeV[NumCalls].cmd));
+
+   cmd[strlen(tknTypeSizeV[NumCalls].cmd)] = '\0';
+
+
+
+   if(strlen(tknTypeSizeV[NumCalls].par) > 0){
+
+      strncpy(par, tknTypeSizeV[NumCalls].par,
+
+              strlen(tknTypeSizeV[NumCalls].par));
+
+      par[strlen(tknTypeSizeV[NumCalls].par)] = '\0';
+
+   }
+
+   else{
+
+      par[0]='\0';
+
+   }
+
+
+
+   return (tknTypeSizeV[NumCalls].type);
 
 }
+
+
+
+
 
 
 
@@ -207,6 +201,10 @@ void test_gsmInitEngine(void)
 
 {
 
+
+
+
+
    gsmEngine_t engine;
 
    _Bool result;
@@ -217,9 +215,9 @@ void test_gsmInitEngine(void)
 
 
 
-   gsmInitTokenizer_CMockIgnoreAndReturn(140, 1);
+   gsmInitTokenizer_CMockIgnoreAndReturn(139, 1);
 
-   VLRingBuffer_Init_CMockIgnoreAndReturn(141, 1);
+   VLRingBuffer_Init_CMockIgnoreAndReturn(140, 1);
 
 
 
@@ -231,6 +229,120 @@ void test_gsmInitEngine(void)
 
 
 
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(147)));};
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(146)));};
+
+}
+
+void test_gsmProcessTkn(void)
+
+{
+
+
+
+
+
+   gsmEngine_t engine;
+
+   fsmEvent_e event;
+
+
+
+
+
+
+
+   engine.fsmState = WAITING;
+
+
+
+
+
+
+
+   gsmTermUartSend_CMockIgnoreAndReturn(172, 0);
+
+   gsmDetectTkns_CMockIgnore();
+
+   VLRingBuffer_IsEmpty_CMockIgnoreAndReturn(174, 0);
+
+   VLRingBuffer_IsFull_CMockIgnoreAndReturn(175, 0);
+
+   VLRingBuffer_Insert_CMockIgnoreAndReturn(176, 0);
+
+   VLRingBuffer_Flush_CMockIgnore();
+
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
+
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
+
+
+
+
+
+
+
+
+
+
+
+   event = gsmProcessTkn(&engine);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(187), UNITY_DISPLAY_STYLE_INT);
+
+
+
+
+
+
+
+   event = gsmProcessTkn(&engine);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)((ERR_OOO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(193), UNITY_DISPLAY_STYLE_INT);
+
+
+
+
+
+
+
+   event = gsmProcessTkn(&engine);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(199), UNITY_DISPLAY_STYLE_INT);
+
+
+
+
+
+
+
+   engine.fsmState = CMD_SENT;
+
+   strncpy(engine.currCmd, "AT", strlen("AT")+1);
+
+   engine.currPar[0]='\0';
+
+   engine.currIdx = 0;
+
+
+
+   event = gsmProcessTkn(&engine);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_ACK)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(210), UNITY_DISPLAY_STYLE_INT);
+
+
+
+   event = gsmProcessTkn(&engine);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(214), UNITY_DISPLAY_STYLE_INT);
 
 }

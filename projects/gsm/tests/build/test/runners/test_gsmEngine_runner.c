@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include "mock_gsmTokenizer.h"
 #include "mock_gsmComms.h"
+#include "mock_gsmParser.h"
 #include "mock_vl_ring_buffer.h"
 
 int GlobalExpectCount;
@@ -44,6 +45,7 @@ char* GlobalOrderError;
 extern void setUp(void);
 extern void tearDown(void);
 extern void test_gsmInitEngine(void);
+extern void test_gsmProcessTkn(void);
 
 
 /*=======Mock Management=====*/
@@ -54,18 +56,21 @@ static void CMock_Init(void)
   GlobalOrderError = NULL;
   mock_gsmTokenizer_Init();
   mock_gsmComms_Init();
+  mock_gsmParser_Init();
   mock_vl_ring_buffer_Init();
 }
 static void CMock_Verify(void)
 {
   mock_gsmTokenizer_Verify();
   mock_gsmComms_Verify();
+  mock_gsmParser_Verify();
   mock_vl_ring_buffer_Verify();
 }
 static void CMock_Destroy(void)
 {
   mock_gsmTokenizer_Destroy();
   mock_gsmComms_Destroy();
+  mock_gsmParser_Destroy();
   mock_vl_ring_buffer_Destroy();
 }
 
@@ -104,7 +109,8 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 129);
+  RUN_TEST(test_gsmInitEngine, 122);
+  RUN_TEST(test_gsmProcessTkn, 149);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

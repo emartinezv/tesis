@@ -171,10 +171,6 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
 {
-   static uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
-   static uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
-   static uint8_t idxSave;               /* save index of current command */
-
    uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1];  /* auxiliary buffer for storing
                                                   the latest response */
 
@@ -194,17 +190,17 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
             engine->toutCnt = commands[idx].timeout; /* load timeout counter
                                                         for the current cmd */
 
-            idxSave = idx;                           /* save cmd index */
+            engine->currIdx = idx;                           /* save cmd index */
 
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
 
             /* Initialize current command buffers cmd and par and progress
              * to CMD_SENT state*/
 
-            strncpy(currCmd,cmd,strlen(cmd));
-            currCmd[strlen(cmd)] = '\0';
-            strncpy(currPar,par,strlen(par));
-            currPar[strlen(par)] = '\0';
+            strncpy(engine->currCmd,cmd,strlen(cmd));
+            engine->currCmd[strlen(cmd)] = '\0';
+            strncpy(engine->currPar,par,strlen(par));
+            engine->currPar[strlen(par)] = '\0';
 
             engine->fsmState = CMD_SENT;
 
@@ -272,8 +268,8 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
             /* Compare the cmd and par part of the current command with the
              * received echo */
 
-            eqCmd = strncmp(cmd, currCmd, strlen(currCmd));
-            eqPar = strncmp(par, currPar, strlen(currPar));
+            eqCmd = strncmp(cmd, engine->currCmd, strlen(engine->currCmd));
+            eqPar = strncmp(par, engine->currPar, strlen(engine->currPar));
 
             /* If the echo is congruent, flush the rspVlRb and progress to
              * CMD_ACK state */
@@ -410,7 +406,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
 
-               if(NULL != strstr(commands[idxSave].errRsp,auxCmd)){
+               if(NULL != strstr(commands[engine->currIdx].errRsp,auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
@@ -422,7 +418,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                /* successful end responses for the current command. If a     */
                /* match is detected, close command and report OK_CLOSE.      */
 
-               else if(NULL != strstr(commands[idxSave].sucRsp,auxCmd)){
+               else if(NULL != strstr(commands[engine->currIdx].sucRsp,auxCmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -439,7 +435,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
                 * be a closing response.
                 */
 
-               else if(0 == strlen(commands[idxSave].sucRsp)){
+               else if(0 == strlen(commands[engine->currIdx].sucRsp)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -557,6 +553,9 @@ bool gsmInitEngine(gsmEngine_t * engine){
    bool ok = FALSE;
 
    ok = gsmInitTokenizer();
+
+   /* start FSM in WAITING state */
+   engine->fsmState = WAITING;
 
    /* start serial comms in command mode */
    engine->serialMode = COMMAND_MODE;

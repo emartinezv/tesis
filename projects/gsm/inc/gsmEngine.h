@@ -129,6 +129,9 @@ typedef struct _gsmEngine_t
 
    fsmState_e fsmState;
    serialMode_e serialMode;
+   uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
+   uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
+   uint8_t currIdx;               /* save index of current command */
 
    /* Counters */
 

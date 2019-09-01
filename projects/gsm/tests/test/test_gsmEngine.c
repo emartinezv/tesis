@@ -35,7 +35,7 @@ typedef struct _tknTypeSize {
    uint8_t const * cmd;
    uint8_t const * par;
    tknTypeParser_e type;
-   int size
+   int size;
 } tknTypeSize_s;
 
 /*******************************************************************************
@@ -44,52 +44,18 @@ typedef struct _tknTypeSize {
 
 static tknTypeSize_s tknTypeSizeV [] = {
 
+   /* URC */
    {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
 
-      /* ooo rsp */
-      "\r\nOK\r\n",
+   /* ooo rsp */
+   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
 
-      /* ooo data block */
-      "abcde\r\n",
+   /* ooo data block */
+   {"abcde\r\n","DATA","abcde",DATA_BLOCK_P,8},
 
-      /* AT echo + OK */
-      "AT\r\r","\nOK\r\n",
-
-      /* echo error + urc*/
-      "ATI\r\r","\n+CMTI:adcde\r\n",
-
-      /* AT echo + urc + OK */
-      "AT\r\r","\n+CMTI:abcde\r\n","\r\nOK\r\n",
-
-      /* ooo rsp */
-      "\r\nOK\r\n",
-
-      /* timeout */
-      "",
-
-      /* AT echo + rsp + timeout */
-      "AT\r\r","\nabcde\r\n","",
-
-      /* ooo data block */
-      "abcde\r\n",
-
-      /* AT echo + ERROR */
-      "AT\r\r","\nERROR\r\n",
-
-      /* CIFSR echo + ip */
-      "AT+CIFSR\r\r","\n192.168.0.1\r\n",
-
-      /* urc + AT echo + OK */
-      "\r\n+CMTI:abcde\r\n","AT\r\r","\nOK\r\n",
-
-      /* AT echo + ATI echo + urc */
-      "AT\rA","TI\r\r","\n+CMTI:abcde\r\n",
-
-      /* AT echo + invalid + urc */
-      "AT\rT","A\r\r","\n+CMTI:abcde\r\n",
-
-      /* AT+CMGS=num echo + sms prompt + sms body + OK */
-      "AT+CMGS=num\r\r","\n> ","hola\r\n","OK\r\n"
+   /* AT echo + OK */
+   {"AT\r","AT","",AUTOBAUD,4},
+   {"\r\nOK\r\n","OK","",BASIC_RSP,7}
 };
 
 /*******************************************************************************
@@ -106,7 +72,7 @@ int VLRingBuffer_Pop_Callback (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
    strncpy(data, tknTypeSizeV[NumCalls].tkn,
            strlen(tknTypeSizeV[NumCalls].tkn));
 
-   return (strlen(tknTypeSizeV[NumCalls].tkn);
+   return (tknTypeSizeV[NumCalls].size);
 }
 
 tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
@@ -117,10 +83,20 @@ tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
       TEST_FAIL_MESSAGE("Demasiadas llamadas!");
    }
 
-   strncpy(data, tknTypeSizeV[NumCalls].tkn,
-           strlen(tknTypeSizeV[NumCalls].tkn));
+   strncpy(cmd, tknTypeSizeV[NumCalls].cmd,
+           strlen(tknTypeSizeV[NumCalls].cmd));
+   cmd[strlen(tknTypeSizeV[NumCalls].cmd)] = '\0';
 
-   return (strlen(tknTypeSizeV[NumCalls].tkn);
+   if(strlen(tknTypeSizeV[NumCalls].par) > 0){
+      strncpy(par, tknTypeSizeV[NumCalls].par,
+              strlen(tknTypeSizeV[NumCalls].par));
+      par[strlen(tknTypeSizeV[NumCalls].par)] = '\0';
+   }
+   else{
+      par[0]='\0';
+   }
+
+   return (tknTypeSizeV[NumCalls].type);
 }
 
 
@@ -177,6 +153,7 @@ void test_gsmInitEngine(void)
  * - gsmProcessTkn
  * - gsmUpdateFsm (static)
  *
+ *
  * */
 
 void test_gsmProcessTkn(void)
@@ -186,13 +163,54 @@ void test_gsmProcessTkn(void)
    gsmEngine_t engine;
    fsmEvent_e event;
 
+   /* Initialization */
+
+   engine.fsmState = WAITING;
+
    /* Mocks */
 
+   gsmTermUartSend_IgnoreAndReturn(0);
    gsmDetectTkns_Ignore();
    VLRingBuffer_IsEmpty_IgnoreAndReturn(0);
+   VLRingBuffer_IsFull_IgnoreAndReturn(0);
+   VLRingBuffer_Insert_IgnoreAndReturn(0);
+   VLRingBuffer_Flush_Ignore();
    VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
-   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback)
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
 
+   /* Test sequence */
 
+   /* URC */
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_URC, event);
+
+   /* ooo rsp */
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(ERR_OOO, event);
+
+   /* ooo data block */
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, event);
+
+   /* AT sent + AT echo + OK */
+
+   engine.fsmState = CMD_SENT;
+   strncpy(engine.currCmd, "AT", strlen("AT")+1);
+   engine.currPar[0]='\0';
+   engine.currIdx = 0;
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, event);
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_CLOSE, event);
 }
 
