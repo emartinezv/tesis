@@ -1330,3 +1330,57 @@ void test_gsmGetCmdRsp(void)
 
 
 }
+
+void test_gsmGetNoCmdRsp (void)
+
+{
+
+
+
+
+
+   gsmEngine_t engine;
+
+   VLRINGBUFF_T * buffer;
+
+   int noRsp;
+
+
+
+
+
+
+
+   buffer = &(engine.rspVlRb);
+
+
+
+
+
+
+
+   VLRingBuffer_GetCount_CMockExpectAndReturn(775, buffer, 2);
+
+   noRsp = gsmGetNoCmdRsp(&engine);
+
+   UnityAssertEqualNumber((UNITY_INT)((2)), (UNITY_INT)((noRsp)), (((void *)0)), (UNITY_UINT)(777), UNITY_DISPLAY_STYLE_INT);
+
+
+
+   VLRingBuffer_GetCount_CMockExpectAndReturn(779, buffer, 10);
+
+   noRsp = gsmGetNoCmdRsp(&engine);
+
+   UnityAssertEqualNumber((UNITY_INT)((10)), (UNITY_INT)((noRsp)), (((void *)0)), (UNITY_UINT)(781), UNITY_DISPLAY_STYLE_INT);
+
+
+
+   VLRingBuffer_GetCount_CMockExpectAndReturn(783, buffer, 0);
+
+   noRsp = gsmGetNoCmdRsp(&engine);
+
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((noRsp)), (((void *)0)), (UNITY_UINT)(785), UNITY_DISPLAY_STYLE_INT);
+
+
+
+}

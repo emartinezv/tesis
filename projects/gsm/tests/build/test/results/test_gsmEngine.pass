@@ -21,12 +21,15 @@
 - :test: test_gsmGetCmdRsp
   :line: 708
   :message: ''
+- :test: test_gsmGetNoCmdRsp
+  :line: 761
+  :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 6
-  :passed: 6
+  :total: 7
+  :passed: 7
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002934337
+:time: 0.002766185

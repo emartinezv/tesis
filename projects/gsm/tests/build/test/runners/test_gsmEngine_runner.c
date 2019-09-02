@@ -51,6 +51,7 @@ extern void test_gsmToutCntZero(void);
 extern void test_gsmDecToutCnt(void);
 extern void test_gsmSendCmd(void);
 extern void test_gsmGetCmdRsp(void);
+extern void test_gsmGetNoCmdRsp (void);
 
 
 /*=======Mock Management=====*/
@@ -123,6 +124,7 @@ int main(void)
   RUN_TEST(test_gsmDecToutCnt, 628);
   RUN_TEST(test_gsmSendCmd, 668);
   RUN_TEST(test_gsmGetCmdRsp, 708);
+  RUN_TEST(test_gsmGetNoCmdRsp , 761);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

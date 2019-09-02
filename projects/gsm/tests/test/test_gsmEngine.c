@@ -749,4 +749,39 @@ void test_gsmGetCmdRsp(void)
 
 }
 
+/* test_gsmGetNoCmdRsp
+ *
+ * Functions tested:
+ *
+ * - gsmGetNoCmdRsp
+ *
+ *
+ * */
 
+void test_gsmGetNoCmdRsp (void)
+{
+   /* Variables */
+
+   gsmEngine_t engine;
+   VLRINGBUFF_T * buffer;
+   int noRsp;
+
+   /* Initializations */
+
+   buffer = &(engine.rspVlRb);
+
+   /* Test sequence */
+
+   VLRingBuffer_GetCount_ExpectAndReturn(buffer,2);
+   noRsp = gsmGetNoCmdRsp(&engine);
+   TEST_ASSERT_EQUAL_INT(2,noRsp);
+
+   VLRingBuffer_GetCount_ExpectAndReturn(buffer,10);
+   noRsp = gsmGetNoCmdRsp(&engine);
+   TEST_ASSERT_EQUAL_INT(10,noRsp);
+
+   VLRingBuffer_GetCount_ExpectAndReturn(buffer,0);
+   noRsp = gsmGetNoCmdRsp(&engine);
+   TEST_ASSERT_EQUAL_INT(0,noRsp);
+
+}
