@@ -50,6 +50,7 @@ extern void test_gsmProcessTkn(void);
 extern void test_gsmToutCntZero(void);
 extern void test_gsmDecToutCnt(void);
 extern void test_gsmSendCmd(void);
+extern void test_gsmGetCmdRsp(void);
 
 
 /*=======Mock Management=====*/
@@ -116,11 +117,12 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 317);
-  RUN_TEST(test_gsmProcessTkn, 344);
-  RUN_TEST(test_gsmToutCntZero, 573);
-  RUN_TEST(test_gsmDecToutCnt, 601);
-  RUN_TEST(test_gsmSendCmd, 641);
+  RUN_TEST(test_gsmInitEngine, 344);
+  RUN_TEST(test_gsmProcessTkn, 371);
+  RUN_TEST(test_gsmToutCntZero, 600);
+  RUN_TEST(test_gsmDecToutCnt, 628);
+  RUN_TEST(test_gsmSendCmd, 668);
+  RUN_TEST(test_gsmGetCmdRsp, 708);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

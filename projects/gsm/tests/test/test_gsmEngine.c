@@ -296,6 +296,33 @@ uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
    }
 }
 
+int VLRingBuffer_Pop_Callback2 (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
+                               int NumCalls)
+{
+   switch(NumCalls){
+
+      case 0:
+
+         strncpy(data,"RESP1.parametros1",strlen("RESP1.parametros1"));
+         return(17);
+
+         break;
+
+      case 1:
+
+         strncpy(data,"RESP2.",strlen("RESP2."));
+         return(6);
+
+         break;
+
+      default:
+
+         TEST_FAIL_MESSAGE("VLRingBuffer_Pop_Callback2 called to many times");
+
+         break;
+   }
+}
+
 /*******************************************************************************
  *    SETUP, TEARDOWN
  ******************************************************************************/
@@ -643,7 +670,7 @@ void test_gsmDecToutCnt(void)
  * Functions tested:
  *
  * - gsmSendCmd
- * - gsmUpdateFsm (all return points except 1.1)
+ * - gsmUpdateFsm (return point 1.1)
  *
  *
  * */
@@ -677,3 +704,49 @@ void test_gsmSendCmd(void)
    TEST_ASSERT_EQUAL_INT(ERR_CMD_UKN, event);
 
 }
+
+/* test_gsmGetCmdRsp
+ *
+ * Functions tested:
+ *
+ * - gsmGetCmdRsp
+ *
+ *
+ * */
+
+void test_gsmGetCmdRsp(void)
+{
+   /* Variables */
+
+   gsmEngine_t engine;
+   rsp_t rsp;
+   VLRINGBUFF_T * buffer;
+
+   /* Initializations */
+
+   buffer = &(engine.rspVlRb);
+
+   /* Mocks */
+
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback2);
+
+   /* Test sequence */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   rsp = gsmGetCmdRsp(&engine);
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP1"));
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.par,"parametros1"));
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   rsp = gsmGetCmdRsp(&engine);
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP2"));
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,1);
+   rsp = gsmGetCmdRsp(&engine);
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,""));
+   TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
+
+}
+
+

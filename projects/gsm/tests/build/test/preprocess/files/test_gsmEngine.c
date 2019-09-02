@@ -557,6 +557,60 @@ uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
 
 
 
+int VLRingBuffer_Pop_Callback2 (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
+
+                               int NumCalls)
+
+{
+
+   switch(NumCalls){
+
+
+
+      case 0:
+
+
+
+         strncpy(data,"RESP1.parametros1",strlen("RESP1.parametros1"));
+
+         return(17);
+
+
+
+         break;
+
+
+
+      case 1:
+
+
+
+         strncpy(data,"RESP2.",strlen("RESP2."));
+
+         return(6);
+
+
+
+         break;
+
+
+
+      default:
+
+
+
+         UnityFail( (("VLRingBuffer_Pop_Callback2 called to many times")), (UNITY_UINT)(320));
+
+
+
+         break;
+
+   }
+
+}
+
+
+
 
 
 
@@ -601,9 +655,9 @@ void test_gsmInitEngine(void)
 
 
 
-   gsmInitTokenizer_CMockIgnoreAndReturn(334, 1);
+   gsmInitTokenizer_CMockIgnoreAndReturn(361, 1);
 
-   VLRingBuffer_Init_CMockIgnoreAndReturn(335, 1);
+   VLRingBuffer_Init_CMockIgnoreAndReturn(362, 1);
 
 
 
@@ -615,7 +669,7 @@ void test_gsmInitEngine(void)
 
 
 
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(341)));};
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(368)));};
 
 }
 
@@ -645,15 +699,15 @@ void test_gsmProcessTkn(void)
 
 
 
-   gsmTermUartSend_CMockIgnoreAndReturn(367, 0);
+   gsmTermUartSend_CMockIgnoreAndReturn(394, 0);
 
    gsmDetectTkns_CMockIgnore();
 
    VLRingBuffer_IsEmpty_StubWithCallback(VLRingBuffer_IsEmpty_Callback);
 
-   VLRingBuffer_IsFull_CMockIgnoreAndReturn(370, 0);
+   VLRingBuffer_IsFull_CMockIgnoreAndReturn(397, 0);
 
-   VLRingBuffer_Insert_CMockIgnoreAndReturn(371, 0);
+   VLRingBuffer_Insert_CMockIgnoreAndReturn(398, 0);
 
    VLRingBuffer_Flush_CMockIgnore();
 
@@ -681,7 +735,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(385), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(412), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -693,7 +747,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_OOO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(391), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_OOO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(418), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -705,7 +759,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(397), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(424), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -727,7 +781,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_ACK)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(408), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_ACK)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(435), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -735,7 +789,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(412), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(439), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -757,7 +811,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_ECHO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(423), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_ECHO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(450), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -779,7 +833,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_ACK)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(434), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_ACK)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(461), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -787,7 +841,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(438), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(465), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -795,7 +849,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(442), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(469), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -817,7 +871,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_ECHO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(453), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_ECHO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(480), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -839,7 +893,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(464), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_URC)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(491), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -865,7 +919,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_TIMEOUT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(477), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TIMEOUT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(504), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -887,7 +941,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(488), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(515), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -909,7 +963,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_MSG_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(499), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_MSG_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(526), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -931,7 +985,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(510), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(537), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -953,7 +1007,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_RSP)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(521), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_RSP)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(548), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -961,7 +1015,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(525), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CLOSE)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(552), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -983,7 +1037,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_OOO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(536), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_OOO)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(563), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1009,7 +1063,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_TIMEOUT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(549), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TIMEOUT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(576), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1031,7 +1085,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(560), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_TKN_INV)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(587), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1049,7 +1103,7 @@ void test_gsmProcessTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_FSM_OOR)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(569), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_FSM_OOR)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(596), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1077,7 +1131,7 @@ void test_gsmToutCntZero(void)
 
    result = gsmToutCntZero(&engine);
 
-   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(593)));};
+   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(620)));};
 
 
 
@@ -1085,7 +1139,7 @@ void test_gsmToutCntZero(void)
 
    result = gsmToutCntZero(&engine);
 
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(597)));};
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(624)));};
 
 
 
@@ -1117,7 +1171,7 @@ void test_gsmDecToutCnt(void)
 
 
 
-   if ((99 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(623)));};
+   if ((99 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(650)));};
 
 
 
@@ -1133,7 +1187,7 @@ void test_gsmDecToutCnt(void)
 
 
 
-   if ((89 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(631)));};
+   if ((89 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(658)));};
 
 
 
@@ -1145,7 +1199,7 @@ void test_gsmDecToutCnt(void)
 
 
 
-   if ((0 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(637)));};
+   if ((0 == engine.toutCnt)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(664)));};
 
 
 
@@ -1187,7 +1241,7 @@ void test_gsmSendCmd(void)
 
    event = gsmSendCmd(&engine, "AT\r");
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_SENT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(669), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_SENT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(696), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1195,7 +1249,7 @@ void test_gsmSendCmd(void)
 
    event = gsmSendCmd(&engine, "texto sms");
 
-   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_SENT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(673), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((OK_CMD_SENT)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(700), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -1203,7 +1257,75 @@ void test_gsmSendCmd(void)
 
    event = gsmSendCmd(&engine, "ATB\r");
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_UKN)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(677), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_CMD_UKN)), (UNITY_INT)((event)), (((void *)0)), (UNITY_UINT)(704), UNITY_DISPLAY_STYLE_INT);
+
+
+
+}
+
+void test_gsmGetCmdRsp(void)
+
+{
+
+
+
+
+
+   gsmEngine_t engine;
+
+   rsp_t rsp;
+
+   VLRINGBUFF_T * buffer;
+
+
+
+
+
+
+
+   buffer = &(engine.rspVlRb);
+
+
+
+
+
+
+
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback2);
+
+
+
+
+
+
+
+   VLRingBuffer_IsEmpty_CMockExpectAndReturn(735, buffer, 0);
+
+   rsp = gsmGetCmdRsp(&engine);
+
+   if ((0 == strcmp(rsp.cmd,"RESP1"))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(737)));};
+
+   if ((0 == strcmp(rsp.par,"parametros1"))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(738)));};
+
+
+
+   VLRingBuffer_IsEmpty_CMockExpectAndReturn(740, buffer, 0);
+
+   rsp = gsmGetCmdRsp(&engine);
+
+   if ((0 == strcmp(rsp.cmd,"RESP2"))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(742)));};
+
+   if ((0 == strcmp(rsp.par,""))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(743)));};
+
+
+
+   VLRingBuffer_IsEmpty_CMockExpectAndReturn(745, buffer, 1);
+
+   rsp = gsmGetCmdRsp(&engine);
+
+   if ((0 == strcmp(rsp.cmd,""))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(747)));};
+
+   if ((0 == strcmp(rsp.par,""))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(748)));};
 
 
 
