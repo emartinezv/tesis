@@ -103,6 +103,12 @@ typedef struct _gsmEngine_t
 
    serialMode_e serialMode;
 
+   uint8_t currCmd[20];
+
+   uint8_t currPar[300];
+
+   uint8_t currIdx;
+
 
 
 
@@ -172,18 +178,6 @@ _Bool gsmToutCntZero(gsmEngine_t * engine);
 
 
 void gsmDecToutCnt(gsmEngine_t * engine);
-
-
-
-
-
-
-
-
-
-
-
-void gsmPrintData(void);
 
 fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr);
 

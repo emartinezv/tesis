@@ -828,7 +828,7 @@ serialMode_e gsmGetSerialMode(gsmEngine_t * engine)
 bool gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode)
 {
    engine->serialMode = mode;
-   return (mode == gsmGetSerialMode(engine));
+   return (mode == engine->serialMode);
 }
 
 /** @} doxygen end group definition */

@@ -1,0 +1,32 @@
+---
+:source:
+  :path: test
+  :file: test_gsmInterface.c
+:successes:
+- :test: test_gsmInitInterface
+  :line: 82
+  :message: ''
+- :test: test_gsmStartUp
+  :line: 128
+  :message: ''
+- :test: test_gsmExitDataMode
+  :line: 152
+  :message: ''
+- :test: test_gsmSysTickHandler
+  :line: 176
+  :message: ''
+- :test: test_gsmProcess
+  :line: 218
+  :message: ''
+- :test: test_gsmIsIdle
+  :line: 297
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 6
+  :passed: 6
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.002479745

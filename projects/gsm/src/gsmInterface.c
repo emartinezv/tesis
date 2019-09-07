@@ -43,12 +43,14 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_INTERFACE
+//#define DEBUG_INTERFACE
 #ifdef DEBUG_INTERFACE
    #define debug(msg) gsmTermUartSend(msg, strlen(msg))
 #else
    #define debug(msg)
 #endif
+
+#define UNIT_TESTING
 
 /*==================[global data]============================================*/
 
@@ -57,6 +59,68 @@ static uint8_t const * const exitCmds [] = {"OK", "CLOSED"};
 static gsmInterface_t * SysTickInterface = NULL;
 
 /*==================[internal functions declaration]=========================*/
+
+#ifdef UNIT_TESTING
+
+/* Local itoa function version for compilation in unit testing under strict
+ * gcc. Taken from https://github.com/wsq003/itoa_for_linux/blob/master/itoa.c
+ * under GNU Lesser General Public License v3.0
+ *
+ * Modified code to include a dummy input variable even if it is not used (no
+ * functional difference).
+ *
+ * */
+
+int itoa(int val, char* buf, int dummy)
+{
+    const unsigned int radix = 10;
+
+    char* p;
+    unsigned int a;        //every digit
+    int len;
+    char* b;            //start of the digit char
+    char temp;
+    unsigned int u;
+
+    p = buf;
+
+    if (val < 0)
+    {
+        *p++ = '-';
+        val = 0 - val;
+    }
+    u = (unsigned int)val;
+
+    b = p;
+
+    do
+    {
+        a = u % radix;
+        u /= radix;
+
+        *p++ = a + '0';
+
+    } while (u > 0);
+
+    len = (int)(p - buf);
+
+    *p-- = 0;
+
+    //swap
+    do
+    {
+        temp = *p;
+        *p = *b;
+        *b = temp;
+        --p;
+        ++b;
+
+    } while (b < p);
+
+    return len;
+}
+
+#endif
 
 /*---------------------------------------------------------------------------*/
 /*              General GSM library operation formula functions              */
@@ -2038,7 +2102,7 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
                      crLf = 0;
                      debug(">>>interf<<< Exiting DATA MODE!");
                      gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
-                     break;
+                     return nChRet;
                   }
                }
 

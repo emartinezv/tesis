@@ -47,12 +47,6 @@ void gsmDecToutCnt_CMockIgnore(void);
 void gsmDecToutCnt_CMockExpect(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine);
 typedef void (* CMOCK_gsmDecToutCnt_CALLBACK)(gsmEngine_t* engine, int cmock_num_calls);
 void gsmDecToutCnt_StubWithCallback(CMOCK_gsmDecToutCnt_CALLBACK Callback);
-#define gsmPrintData_Ignore() gsmPrintData_CMockIgnore()
-void gsmPrintData_CMockIgnore(void);
-#define gsmPrintData_Expect() gsmPrintData_CMockExpect(__LINE__)
-void gsmPrintData_CMockExpect(UNITY_LINE_TYPE cmock_line);
-typedef void (* CMOCK_gsmPrintData_CALLBACK)(int cmock_num_calls);
-void gsmPrintData_StubWithCallback(CMOCK_gsmPrintData_CALLBACK Callback);
 #define gsmSendCmd_IgnoreAndReturn(cmock_retval) gsmSendCmd_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmSendCmd_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_e cmock_to_return);
 #define gsmSendCmd_ExpectAndReturn(engine, cmdStr, cmock_retval) gsmSendCmd_CMockExpectAndReturn(__LINE__, engine, cmdStr, cmock_retval)

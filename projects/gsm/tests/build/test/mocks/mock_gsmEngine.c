@@ -14,7 +14,6 @@ static const char* CMockString_gsmGetNoCmdRsp = "gsmGetNoCmdRsp";
 static const char* CMockString_gsmGetSerialMode = "gsmGetSerialMode";
 static const char* CMockString_gsmGetUrc = "gsmGetUrc";
 static const char* CMockString_gsmInitEngine = "gsmInitEngine";
-static const char* CMockString_gsmPrintData = "gsmPrintData";
 static const char* CMockString_gsmProcessTkn = "gsmProcessTkn";
 static const char* CMockString_gsmSendCmd = "gsmSendCmd";
 static const char* CMockString_gsmSetSerialMode = "gsmSetSerialMode";
@@ -55,13 +54,6 @@ typedef struct _CMOCK_gsmDecToutCnt_CALL_INSTANCE
   gsmEngine_t* Expected_engine;
 
 } CMOCK_gsmDecToutCnt_CALL_INSTANCE;
-
-typedef struct _CMOCK_gsmPrintData_CALL_INSTANCE
-{
-  UNITY_LINE_TYPE LineNumber;
-  int CallOrder;
-
-} CMOCK_gsmPrintData_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmSendCmd_CALL_INSTANCE
 {
@@ -140,10 +132,6 @@ static struct mock_gsmEngineInstance
   CMOCK_gsmDecToutCnt_CALLBACK gsmDecToutCnt_CallbackFunctionPointer;
   int gsmDecToutCnt_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE gsmDecToutCnt_CallInstance;
-  int gsmPrintData_IgnoreBool;
-  CMOCK_gsmPrintData_CALLBACK gsmPrintData_CallbackFunctionPointer;
-  int gsmPrintData_CallbackCalls;
-  CMOCK_MEM_INDEX_TYPE gsmPrintData_CallInstance;
   int gsmSendCmd_IgnoreBool;
   fsmEvent_e gsmSendCmd_FinalReturn;
   CMOCK_gsmSendCmd_CALLBACK gsmSendCmd_CallbackFunctionPointer;
@@ -207,12 +195,6 @@ void mock_gsmEngine_Verify(void)
   UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.gsmDecToutCnt_CallInstance, cmock_line, CMockStringCalledLess);
   if (Mock.gsmDecToutCnt_CallbackFunctionPointer != NULL)
     Mock.gsmDecToutCnt_CallInstance = CMOCK_GUTS_NONE;
-  if (Mock.gsmPrintData_IgnoreBool)
-    Mock.gsmPrintData_CallInstance = CMOCK_GUTS_NONE;
-  UNITY_SET_DETAIL(CMockString_gsmPrintData);
-  UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.gsmPrintData_CallInstance, cmock_line, CMockStringCalledLess);
-  if (Mock.gsmPrintData_CallbackFunctionPointer != NULL)
-    Mock.gsmPrintData_CallInstance = CMOCK_GUTS_NONE;
   if (Mock.gsmSendCmd_IgnoreBool)
     Mock.gsmSendCmd_CallInstance = CMOCK_GUTS_NONE;
   UNITY_SET_DETAIL(CMockString_gsmSendCmd);
@@ -268,8 +250,6 @@ void mock_gsmEngine_Destroy(void)
   Mock.gsmToutCntZero_CallbackCalls = 0;
   Mock.gsmDecToutCnt_CallbackFunctionPointer = NULL;
   Mock.gsmDecToutCnt_CallbackCalls = 0;
-  Mock.gsmPrintData_CallbackFunctionPointer = NULL;
-  Mock.gsmPrintData_CallbackCalls = 0;
   Mock.gsmSendCmd_CallbackFunctionPointer = NULL;
   Mock.gsmSendCmd_CallbackCalls = 0;
   Mock.gsmGetCmdRsp_CallbackFunctionPointer = NULL;
@@ -560,56 +540,6 @@ void gsmDecToutCnt_StubWithCallback(CMOCK_gsmDecToutCnt_CALLBACK Callback)
 {
   Mock.gsmDecToutCnt_IgnoreBool = (int)0;
   Mock.gsmDecToutCnt_CallbackFunctionPointer = Callback;
-}
-
-void gsmPrintData(void)
-{
-  UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
-  CMOCK_gsmPrintData_CALL_INSTANCE* cmock_call_instance;
-  UNITY_SET_DETAIL(CMockString_gsmPrintData);
-  cmock_call_instance = (CMOCK_gsmPrintData_CALL_INSTANCE*)CMock_Guts_GetAddressFor(Mock.gsmPrintData_CallInstance);
-  Mock.gsmPrintData_CallInstance = CMock_Guts_MemNext(Mock.gsmPrintData_CallInstance);
-  if (Mock.gsmPrintData_IgnoreBool)
-  {
-    UNITY_CLR_DETAILS();
-    return;
-  }
-  if (Mock.gsmPrintData_CallbackFunctionPointer != NULL)
-  {
-    Mock.gsmPrintData_CallbackFunctionPointer(Mock.gsmPrintData_CallbackCalls++);
-    return;
-  }
-  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
-  cmock_line = cmock_call_instance->LineNumber;
-  if (cmock_call_instance->CallOrder > ++GlobalVerifyOrder)
-    UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
-  if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
-    UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
-  UNITY_CLR_DETAILS();
-}
-
-void gsmPrintData_CMockIgnore(void)
-{
-  Mock.gsmPrintData_IgnoreBool = (int)1;
-}
-
-void gsmPrintData_CMockExpect(UNITY_LINE_TYPE cmock_line)
-{
-  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmPrintData_CALL_INSTANCE));
-  CMOCK_gsmPrintData_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmPrintData_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
-  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
-  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
-  Mock.gsmPrintData_CallInstance = CMock_Guts_MemChain(Mock.gsmPrintData_CallInstance, cmock_guts_index);
-  Mock.gsmPrintData_IgnoreBool = (int)0;
-  cmock_call_instance->LineNumber = cmock_line;
-  cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  UNITY_CLR_DETAILS();
-}
-
-void gsmPrintData_StubWithCallback(CMOCK_gsmPrintData_CALLBACK Callback)
-{
-  Mock.gsmPrintData_IgnoreBool = (int)0;
-  Mock.gsmPrintData_CallbackFunctionPointer = Callback;
 }
 
 fsmEvent_e gsmSendCmd(gsmEngine_t* engine, const uint8_t* cmdStr)

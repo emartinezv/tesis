@@ -52,6 +52,10 @@ extern void test_gsmDecToutCnt(void);
 extern void test_gsmSendCmd(void);
 extern void test_gsmGetCmdRsp(void);
 extern void test_gsmGetNoCmdRsp (void);
+extern void test_gsmGetUrc(void);
+extern void test_gsmGetSerialMode(void);
+extern void test_gsmSetSerialMode(void);
+extern void test_gsmRecordUrc(void);
 
 
 /*=======Mock Management=====*/
@@ -118,13 +122,17 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 344);
-  RUN_TEST(test_gsmProcessTkn, 371);
-  RUN_TEST(test_gsmToutCntZero, 600);
-  RUN_TEST(test_gsmDecToutCnt, 628);
-  RUN_TEST(test_gsmSendCmd, 668);
-  RUN_TEST(test_gsmGetCmdRsp, 708);
-  RUN_TEST(test_gsmGetNoCmdRsp , 761);
+  RUN_TEST(test_gsmInitEngine, 329);
+  RUN_TEST(test_gsmProcessTkn, 356);
+  RUN_TEST(test_gsmToutCntZero, 585);
+  RUN_TEST(test_gsmDecToutCnt, 613);
+  RUN_TEST(test_gsmSendCmd, 653);
+  RUN_TEST(test_gsmGetCmdRsp, 693);
+  RUN_TEST(test_gsmGetNoCmdRsp , 746);
+  RUN_TEST(test_gsmGetUrc, 774);
+  RUN_TEST(test_gsmGetSerialMode, 818);
+  RUN_TEST(test_gsmSetSerialMode, 846);
+  RUN_TEST(test_gsmRecordUrc, 874);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());
