@@ -39,12 +39,42 @@
 - :test: test_gsmCheckDataMode
   :line: 452
   :message: ''
+- :test: test_gsmSmsSend
+  :line: 508
+  :message: ''
+- :test: test_gsmSmsRead
+  :line: 536
+  :message: ''
+- :test: test_gsmSmsList
+  :line: 564
+  :message: ''
+- :test: test_gsmSmsDel
+  :line: 592
+  :message: ''
+- :test: test_gsmGprsStart
+  :line: 618
+  :message: ''
+- :test: test_gsmGprsStop
+  :line: 644
+  :message: ''
+- :test: test_gsmGprsOpenPort
+  :line: 668
+  :message: ''
+- :test: test_gsmGprsClosePort
+  :line: 694
+  :message: ''
+- :test: test_gsmGnssPwr
+  :line: 718
+  :message: ''
+- :test: test_gsmGnssGetData
+  :line: 744
+  :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 12
-  :passed: 12
+  :total: 22
+  :passed: 22
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002423905
+:time: 0.002665802

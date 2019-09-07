@@ -467,6 +467,7 @@ void test_gsmCheckDataMode(void)
 
    uint8_t const * const testBuf1 = "blablabla123123123";
    uint8_t const * const testBuf2 = "blablabla\r\nOK\r\n123123123";
+   uint8_t const * const testBuf3 = "bla\r\nCLOSED\r\n123123123";
 
    /* Initialization */
 
@@ -491,6 +492,278 @@ void test_gsmCheckDataMode(void)
    nchTest = gsmCheckDataMode(&interface, testBuf2, &nchInput);
 
    TEST_ASSERT_EQUAL_UINT8(15, nchTest);
+
+   /* "CLOSED" exit cmd detected */
+
+   nchInput = strlen(testBuf3);
+
+   gsmSetSerialMode_ExpectAndReturn(&(interface.engine), COMMAND_MODE, true);
+
+   nchTest = gsmCheckDataMode(&interface, testBuf3, &nchInput);
+
+   TEST_ASSERT_EQUAL_UINT8(13, nchTest);
+
+}
+
+/* test_gsmSmsSend
+ *
+ * Functions tested:
+ *
+ * - gsmSmsSend
+ *
+ * */
+
+void test_gsmSmsSend(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   smsOut_s * msgTest;
+   smsConf_s * confTest;
+
+   /* Test sequence */
+
+   gsmSmsSend(&interface, &msgTest, &confTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&msgTest == interface.frmInput);
+   TEST_ASSERT_TRUE(&confTest == interface.frmOutput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmSmsRead
+ *
+ * Functions tested:
+ *
+ * - gsmSmsRead
+ *
+ * */
+
+void test_gsmSmsRead(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   smsRec_s * msgTest;
+   smsReadPars_s * parsTest;
+
+   /* Test sequence */
+
+   gsmSmsRead(&interface, &msgTest, &parsTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&parsTest == interface.frmInput);
+   TEST_ASSERT_TRUE(&msgTest == interface.frmOutput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmSmsList
+ *
+ * Functions tested:
+ *
+ * - gsmSmsList
+ *
+ * */
+
+void test_gsmSmsList(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   smsRec_s listTest;
+   smsListPars_s parsTest;
+
+   /* Test sequence */
+
+   gsmSmsList(&interface, &listTest, &parsTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&parsTest == interface.frmInput);
+   TEST_ASSERT_TRUE(&listTest == interface.frmOutput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmSmsDel
+ *
+ * Functions tested:
+ *
+ * - gsmSmsDel
+ *
+ * */
+
+void test_gsmSmsDel(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   smsDelPars_s msgdelTest;
+
+   /* Test sequence */
+
+   gsmSmsDel(&interface, &msgdelTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&msgdelTest == interface.frmInput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGprsStart
+ *
+ * Functions tested:
+ *
+ * - gsmGprsStart
+ *
+ * */
+
+void test_gsmGprsStart(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   apnUserPwd_s apnTest;
+
+   /* Test sequence */
+
+   gsmGprsStart(&interface, &apnTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&apnTest == interface.frmInput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGprsStop
+ *
+ * Functions tested:
+ *
+ * - gsmGprsStop
+ *
+ * */
+
+void test_gsmGprsStop(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+
+   /* Test sequence */
+
+   gsmGprsStop(&interface, cbackTest);
+
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGprsOpenPort
+ *
+ * Functions tested:
+ *
+ * - gsmGprsOpenPort
+ *
+ * */
+
+void test_gsmGprsOpenPort(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   socket_s portTest;
+
+   /* Test sequence */
+
+   gsmGprsOpenPort(&interface, &portTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&portTest == interface.frmInput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGprsClosePort
+ *
+ * Functions tested:
+ *
+ * - gsmGprsClosePort
+ *
+ * */
+
+void test_gsmGprsClosePort(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+
+   /* Test sequence */
+
+   gsmGprsClosePort(&interface, cbackTest);
+
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGnssPwr
+ *
+ * Functions tested:
+ *
+ * - gsmGprsGnssPwr
+ *
+ * */
+
+void test_gsmGnssPwr(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   pwrGnss_e cmdTest;
+
+   /* Test sequence */
+
+   gsmGnssPwr(&interface, &cmdTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&cmdTest == interface.frmInput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
+
+}
+
+/* test_gsmGnssGetData
+ *
+ * Functions tested:
+ *
+ * - gsmGprsGnssGetData
+ *
+ * */
+
+void test_gsmGnssGetData(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   frmCback_t cbackTest;
+   dataGnss_s dataGnssTest;
+
+   /* Test sequence */
+
+   gsmGnssGetData(&interface, &dataGnssTest, cbackTest);
+
+   TEST_ASSERT_TRUE(&dataGnssTest == interface.frmOutput);
+   TEST_ASSERT_TRUE(cbackTest == interface.frmCback);
+   TEST_ASSERT_TRUE(INIT == interface.frmState);
 
 }
 

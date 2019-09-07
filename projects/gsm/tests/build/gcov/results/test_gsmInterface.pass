@@ -4,29 +4,50 @@
   :file: test_gsmInterface.c
 :successes:
 - :test: test_gsmInitInterface
-  :line: 82
+  :line: 84
   :message: ''
 - :test: test_gsmStartUp
-  :line: 128
+  :line: 130
   :message: ''
 - :test: test_gsmExitDataMode
-  :line: 152
+  :line: 154
   :message: ''
 - :test: test_gsmSysTickHandler
-  :line: 176
+  :line: 178
   :message: ''
 - :test: test_gsmProcess
-  :line: 218
+  :line: 220
   :message: ''
 - :test: test_gsmIsIdle
-  :line: 297
+  :line: 299
+  :message: ''
+- :test: test_gsmGetSigQual
+  :line: 330
+  :message: ''
+- :test: test_gsmCheckConn
+  :line: 356
+  :message: ''
+- :test: test_gsmSetUrcMode
+  :line: 382
+  :message: ''
+- :test: test_gsmSetUrcCback
+  :line: 408
+  :message: ''
+- :test: test_gsmSetDataCback
+  :line: 430
+  :message: ''
+- :test: test_gsmCheckDataMode
+  :line: 452
+  :message: ''
+- :test: test_gsmSmsSend
+  :line: 508
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 6
-  :passed: 6
+  :total: 13
+  :passed: 13
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002479745
+:time: 0.002234265

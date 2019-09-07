@@ -58,6 +58,16 @@ extern void test_gsmSetUrcMode(void);
 extern void test_gsmSetUrcCback(void);
 extern void test_gsmSetDataCback(void);
 extern void test_gsmCheckDataMode(void);
+extern void test_gsmSmsSend(void);
+extern void test_gsmSmsRead(void);
+extern void test_gsmSmsList(void);
+extern void test_gsmSmsDel(void);
+extern void test_gsmGprsStart(void);
+extern void test_gsmGprsStop(void);
+extern void test_gsmGprsOpenPort(void);
+extern void test_gsmGprsClosePort(void);
+extern void test_gsmGnssPwr(void);
+extern void test_gsmGnssGetData(void);
 
 
 /*=======Mock Management=====*/
@@ -139,6 +149,16 @@ int main(void)
   RUN_TEST(test_gsmSetUrcCback, 408);
   RUN_TEST(test_gsmSetDataCback, 430);
   RUN_TEST(test_gsmCheckDataMode, 452);
+  RUN_TEST(test_gsmSmsSend, 508);
+  RUN_TEST(test_gsmSmsRead, 536);
+  RUN_TEST(test_gsmSmsList, 564);
+  RUN_TEST(test_gsmSmsDel, 592);
+  RUN_TEST(test_gsmGprsStart, 618);
+  RUN_TEST(test_gsmGprsStop, 644);
+  RUN_TEST(test_gsmGprsOpenPort, 668);
+  RUN_TEST(test_gsmGprsClosePort, 694);
+  RUN_TEST(test_gsmGnssPwr, 718);
+  RUN_TEST(test_gsmGnssGetData, 744);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

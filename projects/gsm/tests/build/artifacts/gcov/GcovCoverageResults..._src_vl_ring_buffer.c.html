@@ -275,7 +275,7 @@
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-09-07 16:11:33</td>
+            <td class="headerValue">2019-09-07 17:23:41</td>
             <td></td>
             <td class="headerName">Branches:</td>
             <td class="headerTableEntry">4</td>
@@ -477,7 +477,7 @@
     <tr>
     <td align="right" class="lineno"><pre>26</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>int VLRingBuffer_Insert(VLRINGBUFF_T * vlrb, const void * data, uint16_t num)</pre></td>
     </tr>
 
@@ -491,7 +491,7 @@
     <tr>
     <td align="right" class="lineno"><pre>28</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>   int free = 0;</pre></td>
     </tr>
 
@@ -505,7 +505,7 @@
     <tr>
     <td align="right" class="lineno"><pre>30</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>   free = RingBuffer_GetFree(vlrb->rb); /* check for free space in the rb */</pre></td>
     </tr>
 
@@ -518,36 +518,36 @@
 
     <tr>
     <td align="right" class="lineno"><pre>32</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 206 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 216 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(free >= num +2){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>33</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>      RingBuffer_InsertMult(vlrb->rb, (void *) &amp;num, 2); /* insert size tag */</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>34</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>      RingBuffer_InsertMult(vlrb->rb, data, num); /* insert data */</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>35</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>      vlrb->vlcount++;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>36</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>206</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>216</pre></td>
     <td align="left" class="src coveredLine"><pre>      return 1;</pre></td>
     </tr>
 
@@ -603,7 +603,7 @@
     <tr>
     <td align="right" class="lineno"><pre>44</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>int VLRingBuffer_Pop(VLRINGBUFF_T * vlrb, void * data, uint16_t cap)</pre></td>
     </tr>
 
@@ -616,8 +616,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>46</pre></td>
-    <td align="right" class="linebranch"><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 158 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linebranch"><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 168 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(RingBuffer_IsEmpty(vlrb->rb)){ /* if buffer is empty return 0 */</pre></td>
     </tr>
 
@@ -645,7 +645,7 @@
     <tr>
     <td align="right" class="lineno"><pre>50</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>   uint16_t size = 0;</pre></td>
     </tr>
 
@@ -659,7 +659,7 @@
     <tr>
     <td align="right" class="lineno"><pre>52</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>   RingBuffer_PopMult(vlrb->rb, (void *) &amp;size, 2); /* pop size tag of latest entry */</pre></td>
     </tr>
 
@@ -672,29 +672,29 @@
 
     <tr>
     <td align="right" class="lineno"><pre>54</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 158 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 168 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(cap >= size){ /* if size of last entry is less than memory capacity, pop all data */</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>55</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>      RingBuffer_PopMult(vlrb->rb, data, (int) size);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>56</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>      vlrb->vlcount--;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>57</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>158</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>168</pre></td>
     <td align="left" class="src coveredLine"><pre>      return (int) size;</pre></td>
     </tr>
 
@@ -764,7 +764,7 @@
     <tr>
     <td align="right" class="lineno"><pre>67</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>22</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
     <td align="left" class="src coveredLine"><pre>int VLRingBuffer_Init(VLRINGBUFF_T * vlrb, RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count){</pre></td>
     </tr>
 
@@ -778,14 +778,14 @@
     <tr>
     <td align="right" class="lineno"><pre>69</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>22</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
     <td align="left" class="src coveredLine"><pre>   vlrb->vlcount = 0;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>70</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>22</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
     <td align="left" class="src coveredLine"><pre>   vlrb->rb = RingBuff;</pre></td>
     </tr>
 
@@ -799,7 +799,7 @@
     <tr>
     <td align="right" class="lineno"><pre>72</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>22</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
     <td align="left" class="src coveredLine"><pre>   return RingBuffer_Init(RingBuff, buffer, itemSize, count);</pre></td>
     </tr>
 
