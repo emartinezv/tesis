@@ -1000,11 +1000,14 @@ void test_gsmGetSigQualF(void)
    gsmInterface_t interface;
    sigQual_s sigQualTest;
 
+
    /* Initialization */
 
    frmCbackFlag = false;
 
    /* Test sequence */
+
+   /* Middle RRSI value */
 
    gsmGetSigQual(&interface, &sigQualTest, frmCbackTest);
 
@@ -1026,19 +1029,144 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   rsp_t rspTest;
+   rsp_t rspTest1 = {"CSQ"," 2,1"};
 
-   strncpy(rspTest.cmd, "CSQ", strlen("CSQ"));
-   rspTest.cmd[strlen("CSQ")] = '\0';
-   strncpy(rspTest.par, "2,1", strlen("2,1"));
-   rspTest.par[strlen("2,1")] = '\0';
-
-   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
 
    interface.frm(&interface);
 
    TEST_ASSERT_EQUAL_INT8(-110, sigQualTest.rssi);
    TEST_ASSERT_EQUAL_UINT8(1, sigQualTest.ber);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Lower limit RRSI value */
+
+   gsmGetSigQual(&interface, &sigQualTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_RSP);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest2 = {"CSQ"," 99,7"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest2);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT8(99, sigQualTest.rssi);
+   TEST_ASSERT_EQUAL_UINT8(7, sigQualTest.ber);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Upper limit RRSI value */
+
+   gsmGetSigQual(&interface, &sigQualTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_RSP);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest3 = {"CSQ"," 31,1"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest3);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT8(-52, sigQualTest.rssi);
+   TEST_ASSERT_EQUAL_UINT8(1, sigQualTest.ber);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Incorrectly formated response (no comma) */
+
+   gsmGetSigQual(&interface, &sigQualTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_RSP);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest4 = {"CSQ","abcde"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest4);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_WRAP, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_INT8(-52, sigQualTest.rssi);
+   TEST_ASSERT_EQUAL_UINT8(1, sigQualTest.ber);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error response from modem */
+
+   gsmGetSigQual(&interface, &sigQualTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest5 = {"ERROR","params"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest5);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("params", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -1080,6 +1208,8 @@ void test_gsmCheckConnF(void)
    rspGprsTest.par[strlen(" 1")] = '\0';
 
    /* Test sequence */
+
+   /* Normal functioning */
 
    gsmCheckConn(&interface, &connStateTest, frmCbackTest);
 
@@ -1126,6 +1256,36 @@ void test_gsmCheckConnF(void)
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
+   /* Error response from modem */
+
+   gsmCheckConn(&interface, &connStateTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CREG?\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest5 = {"ERROR","params"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest5);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("params", interface.errorOut.errorCmd.par);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
 }
 
 /* test_gsmSmsSendF
@@ -1156,18 +1316,6 @@ void test_gsmSmsSendF(void)
    frmCbackFlag = false;
 
    /* Test sequence */
-
-   /* SMS text has forbidden characters; goes to WRAP with error */
-
-   gsmSmsSend(&interface, &msgTest1, &confTest, frmCbackTest);
-
-   interface.frm(&interface);
-
-   interface.frm(&interface);
-
-   TEST_ASSERT_EQUAL_INT(ERR_INIT, interface.errorOut.errorFrm);
-   TEST_ASSERT_TRUE(frmCbackFlag);
-   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
    /* Normal functioning */
 
@@ -1214,6 +1362,49 @@ void test_gsmSmsSendF(void)
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
+   /* SMS text has forbidden characters; goes to WRAP with error */
+
+   gsmSmsSend(&interface, &msgTest1, &confTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_INIT, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error response from modem */
+
+   gsmSmsSend(&interface, &msgTest2, &confTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),
+                              "AT+CMGS=\"+5491151751809\"\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest5 = {"ERROR","params"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest5);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("params", interface.errorOut.errorCmd.par);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
 }
 
 /* test_gsmSmsReadF
@@ -1243,6 +1434,8 @@ void test_gsmSmsReadF(void)
    frmCbackFlag = false;
 
    /* Test sequence */
+
+   /* Normal functioning */
 
    gsmSmsRead(&interface, &msgTest, &parsTest, frmCbackTest);
 
@@ -1280,6 +1473,36 @@ void test_gsmSmsReadF(void)
 
    TEST_ASSERT_EQUAL_STRING("meta", msgTest.meta);
    TEST_ASSERT_EQUAL_STRING("text", msgTest.text);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error response from modem */
+
+   gsmSmsRead(&interface, &msgTest, &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+
+   interface.frm(&interface);
+
+   rsp_t rspTest5 = {"ERROR","params"};
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest5);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_INT(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("params", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -1423,6 +1646,23 @@ void test_gsmSmsListF(void)
    TEST_ASSERT_EQUAL_UINT8(ERR_WRAP, interface.errorOut.errorFrm);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Test just for different options in smsListPars_s */
+
+   smsListPars_s parsTest2 = {REC_READ,NOCHANGE,3};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest2, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.procState = ATCMD2;
+
+   //gsmSendCmd_ExpectAndReturn(&(interface.engine),
+   //                           "AT+CMGL=\"REC READ\",1\r", OK_CMD_SENT);
+
+   //interface.frm(&interface);
+
+   //return;
 
 }
 

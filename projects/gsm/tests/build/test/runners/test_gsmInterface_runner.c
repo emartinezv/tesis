@@ -176,17 +176,17 @@ int main(void)
   RUN_TEST(test_gsmStartUpF, 776);
   RUN_TEST(test_gsmExitDataModeF, 929);
   RUN_TEST(test_gsmGetSigQualF, 984);
-  RUN_TEST(test_gsmCheckConnF, 1047);
-  RUN_TEST(test_gsmSmsSendF, 1131);
-  RUN_TEST(test_gsmSmsReadF, 1219);
-  RUN_TEST(test_gsmSmsListF, 1288);
-  RUN_TEST(test_gsmSmsDelF, 1429);
-  RUN_TEST(test_gsmGprsStartF, 1481);
-  RUN_TEST(test_gsmGprsStopF, 1599);
-  RUN_TEST(test_gsmGprsOpenPortF, 1649);
-  RUN_TEST(test_gsmGprsClosePortF, 1721);
-  RUN_TEST(test_gsmGnssPwrF, 1773);
-  RUN_TEST(test_gsmGnssGetDataF, 1852);
+  RUN_TEST(test_gsmCheckConnF, 1175);
+  RUN_TEST(test_gsmSmsSendF, 1291);
+  RUN_TEST(test_gsmSmsReadF, 1410);
+  RUN_TEST(test_gsmSmsListF, 1511);
+  RUN_TEST(test_gsmSmsDelF, 1669);
+  RUN_TEST(test_gsmGprsStartF, 1721);
+  RUN_TEST(test_gsmGprsStopF, 1839);
+  RUN_TEST(test_gsmGprsOpenPortF, 1889);
+  RUN_TEST(test_gsmGprsClosePortF, 1961);
+  RUN_TEST(test_gsmGnssPwrF, 2013);
+  RUN_TEST(test_gsmGnssGetDataF, 2092);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

@@ -79,37 +79,37 @@
   :line: 984
   :message: ''
 - :test: test_gsmCheckConnF
-  :line: 1047
+  :line: 1175
   :message: ''
 - :test: test_gsmSmsSendF
-  :line: 1131
+  :line: 1291
   :message: ''
 - :test: test_gsmSmsReadF
-  :line: 1219
+  :line: 1410
   :message: ''
 - :test: test_gsmSmsListF
-  :line: 1288
+  :line: 1511
   :message: ''
 - :test: test_gsmSmsDelF
-  :line: 1429
+  :line: 1669
   :message: ''
 - :test: test_gsmGprsStartF
-  :line: 1481
-  :message: ''
-- :test: test_gsmGprsStopF
-  :line: 1599
-  :message: ''
-- :test: test_gsmGprsOpenPortF
-  :line: 1649
-  :message: ''
-- :test: test_gsmGprsClosePortF
   :line: 1721
   :message: ''
+- :test: test_gsmGprsStopF
+  :line: 1839
+  :message: ''
+- :test: test_gsmGprsOpenPortF
+  :line: 1889
+  :message: ''
+- :test: test_gsmGprsClosePortF
+  :line: 1961
+  :message: ''
 - :test: test_gsmGnssPwrF
-  :line: 1773
+  :line: 2013
   :message: ''
 - :test: test_gsmGnssGetDataF
-  :line: 1852
+  :line: 2092
   :message: ''
 :failures: []
 :ignores: []
@@ -119,4 +119,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002515499
+:time: 0.002951457
