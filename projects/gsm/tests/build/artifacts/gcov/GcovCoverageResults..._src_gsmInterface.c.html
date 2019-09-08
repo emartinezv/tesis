@@ -269,18 +269,18 @@
             <td class="headerValue">../src/gsmInterface.c</td>
             <td></td>
             <td class="headerName">Lines:</td>
-            <td class="headerTableEntry">105</td>
+            <td class="headerTableEntry">228</td>
             <td class="headerTableEntry">668</td>
-            <td class="headerTableEntry" style="background-color:LightPink">15.7 %</td>
+            <td class="headerTableEntry" style="background-color:LightPink">34.1 %</td>
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-09-07 17:23:41</td>
+            <td class="headerValue">2019-09-08 09:42:53</td>
             <td></td>
             <td class="headerName">Branches:</td>
-            <td class="headerTableEntry">27</td>
+            <td class="headerTableEntry">58</td>
             <td class="headerTableEntry">305</td>
-            <td class="headerTableEntry" style="background-color:LightPink">8.9 %</td>
+            <td class="headerTableEntry" style="background-color:LightPink">19.0 %</td>
           </tr>
         </table>
       </td>
@@ -1773,7 +1773,7 @@
     <td align="right" class="lineno"><pre>211</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>void gsmFrmInit (gsmInterface_t * interface);</pre></td>
+    <td align="left" class="src "><pre>static void gsmFrmInit (gsmInterface_t * interface);</pre></td>
     </tr>
 
     <tr>
@@ -1850,7 +1850,7 @@
     <td align="right" class="lineno"><pre>222</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,</pre></td>
+    <td align="left" class="src "><pre>static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -1969,7 +1969,7 @@
     <td align="right" class="lineno"><pre>239</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,</pre></td>
+    <td align="left" class="src "><pre>static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -2053,7 +2053,7 @@
     <td align="right" class="lineno"><pre>251</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>void gsmFrmCopyGsmError (gsmInterface_t * interface);</pre></td>
+    <td align="left" class="src "><pre>static void gsmFrmCopyGsmError (gsmInterface_t * interface);</pre></td>
     </tr>
 
     <tr>
@@ -2535,8 +2535,8 @@
     <tr>
     <td align="right" class="lineno"><pre>320</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>static void gsmStartUpF (gsmInterface_t * interface)</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>46</pre></td>
+    <td align="left" class="src coveredLine"><pre>static void gsmStartUpF (gsmInterface_t * interface)</pre></td>
     </tr>
 
     <tr>
@@ -2562,9 +2562,9 @@
 
     <tr>
     <td align="right" class="lineno"><pre>324</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   switch(interface->frmState) {</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 6 times">&check;</span><span class="takenBranch" title="Branch 1 taken 34 times">&check;</span><span class="takenBranch" title="Branch 2 taken 6 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>46</pre></td>
+    <td align="left" class="src coveredLine"><pre>   switch(interface->frmState) {</pre></td>
     </tr>
 
     <tr>
@@ -2591,8 +2591,8 @@
     <tr>
     <td align="right" class="lineno"><pre>328</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         gsmFrmInit(interface);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         gsmFrmInit(interface);</pre></td>
     </tr>
 
     <tr>
@@ -2605,8 +2605,8 @@
     <tr>
     <td align="right" class="lineno"><pre>330</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         break;</pre></td>
     </tr>
 
     <tr>
@@ -2632,9 +2632,9 @@
 
     <tr>
     <td align="right" class="lineno"><pre>334</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         switch(interface->procState){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 12 times">&check;</span><span class="takenBranch" title="Branch 1 taken 4 times">&check;</span><span class="takenBranch" title="Branch 2 taken 4 times">&check;</span><span class="takenBranch" title="Branch 3 taken 2 times">&check;</span><br/><span class="takenBranch" title="Branch 4 taken 4 times">&check;</span><span class="takenBranch" title="Branch 5 taken 2 times">&check;</span><span class="takenBranch" title="Branch 6 taken 4 times">&check;</span><span class="takenBranch" title="Branch 7 taken 2 times">&check;</span><br/><span class="notTakenBranch" title="Branch 8 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>34</pre></td>
+    <td align="left" class="src coveredLine"><pre>         switch(interface->procState){</pre></td>
     </tr>
 
     <tr>
@@ -2661,8 +2661,8 @@
     <tr>
     <td align="right" class="lineno"><pre>338</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT\r", ATCMD1RESP);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT\r", ATCMD1RESP);</pre></td>
     </tr>
 
     <tr>
@@ -2675,8 +2675,8 @@
     <tr>
     <td align="right" class="lineno"><pre>340</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2703,8 +2703,8 @@
     <tr>
     <td align="right" class="lineno"><pre>344</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD2, FALSE, NOCMD, TRUE);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD2, FALSE, NOCMD, TRUE);</pre></td>
     </tr>
 
     <tr>
@@ -2717,8 +2717,8 @@
     <tr>
     <td align="right" class="lineno"><pre>346</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2745,8 +2745,8 @@
     <tr>
     <td align="right" class="lineno"><pre>350</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CMEE=2\r", ATCMD2RESP);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CMEE=2\r", ATCMD2RESP);</pre></td>
     </tr>
 
     <tr>
@@ -2759,8 +2759,8 @@
     <tr>
     <td align="right" class="lineno"><pre>352</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2787,8 +2787,8 @@
     <tr>
     <td align="right" class="lineno"><pre>356</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD3, FALSE, NOCMD, TRUE);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD3, FALSE, NOCMD, TRUE);</pre></td>
     </tr>
 
     <tr>
@@ -2801,8 +2801,8 @@
     <tr>
     <td align="right" class="lineno"><pre>358</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2829,8 +2829,8 @@
     <tr>
     <td align="right" class="lineno"><pre>362</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CSCS=\"GSM\"\r",</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CSCS=\"GSM\"\r",</pre></td>
     </tr>
 
     <tr>
@@ -2850,8 +2850,8 @@
     <tr>
     <td align="right" class="lineno"><pre>365</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2878,8 +2878,8 @@
     <tr>
     <td align="right" class="lineno"><pre>369</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD4, FALSE, NOCMD, TRUE);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD4, FALSE, NOCMD, TRUE);</pre></td>
     </tr>
 
     <tr>
@@ -2892,8 +2892,8 @@
     <tr>
     <td align="right" class="lineno"><pre>371</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2920,8 +2920,8 @@
     <tr>
     <td align="right" class="lineno"><pre>375</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CMGF=1\r", ATCMD4RESP);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmSendCmdCheckEcho(interface, "AT+CMGF=1\r", ATCMD4RESP);</pre></td>
     </tr>
 
     <tr>
@@ -2934,8 +2934,8 @@
     <tr>
     <td align="right" class="lineno"><pre>377</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -2962,8 +2962,8 @@
     <tr>
     <td align="right" class="lineno"><pre>381</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD4RESP, TRUE, NOCMD,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmProcRspsGetFinal(interface, ATCMD4RESP, TRUE, NOCMD,</pre></td>
     </tr>
 
     <tr>
@@ -2983,8 +2983,8 @@
     <tr>
     <td align="right" class="lineno"><pre>384</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               break;</pre></td>
     </tr>
 
     <tr>
@@ -3011,8 +3011,8 @@
     <tr>
     <td align="right" class="lineno"><pre>388</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>34</pre></td>
+    <td align="left" class="src coveredLine"><pre>         break;</pre></td>
     </tr>
 
     <tr>
@@ -3038,9 +3038,9 @@
 
     <tr>
     <td align="right" class="lineno"><pre>392</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         if(OK != interface->errorOut.errorFrm){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 4 times">&check;</span><span class="takenBranch" title="Branch 1 taken 2 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         if(OK != interface->errorOut.errorFrm){</pre></td>
     </tr>
 
     <tr>
@@ -3052,16 +3052,16 @@
 
     <tr>
     <td align="right" class="lineno"><pre>394</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>            if(ERR_GSM == interface->errorOut.errorFrm){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 2 times">&check;</span><span class="takenBranch" title="Branch 1 taken 2 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>4</pre></td>
+    <td align="left" class="src coveredLine"><pre>            if(ERR_GSM == interface->errorOut.errorFrm){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>395</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>               gsmFrmCopyGsmError(interface);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>               gsmFrmCopyGsmError(interface);</pre></td>
     </tr>
 
     <tr>
@@ -3088,15 +3088,15 @@
     <tr>
     <td align="right" class="lineno"><pre>399</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->frmCback(interface->errorOut, 0);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->frmCback(interface->errorOut, 0);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>400</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->frmState = IDLE;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->frmState = IDLE;</pre></td>
     </tr>
 
     <tr>
@@ -3109,8 +3109,8 @@
     <tr>
     <td align="right" class="lineno"><pre>402</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         break;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>         break;</pre></td>
     </tr>
 
     <tr>
@@ -3130,8 +3130,8 @@
     <tr>
     <td align="right" class="lineno"><pre>405</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>46</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -12741,8 +12741,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1778</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmFrmInit (gsmInterface_t * interface)</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>static void gsmFrmInit (gsmInterface_t * interface)</pre></td>
     </tr>
 
     <tr>
@@ -12755,22 +12755,22 @@
     <tr>
     <td align="right" class="lineno"><pre>1780</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->errorOut.errorFrm = OK;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->errorOut.errorFrm = OK;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1781</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->errorOut.errorCmd.cmd[0] = '\0';</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->errorOut.errorCmd.cmd[0] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1782</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->errorOut.errorCmd.par[0] = '\0';</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->errorOut.errorCmd.par[0] = '\0';</pre></td>
     </tr>
 
     <tr>
@@ -12783,15 +12783,15 @@
     <tr>
     <td align="right" class="lineno"><pre>1784</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->procState = ATCMD1;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->procState = ATCMD1;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1785</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = PROC;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = PROC;</pre></td>
     </tr>
 
     <tr>
@@ -12804,8 +12804,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1787</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>6</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -12825,8 +12825,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1790</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
+    <td align="left" class="src coveredLine"><pre>static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -12901,23 +12901,23 @@
 
     <tr>
     <td align="right" class="lineno"><pre>1801</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   if(firstCall){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 12 times">&check;</span><span class="takenBranch" title="Branch 1 taken 12 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
+    <td align="left" class="src coveredLine"><pre>   if(firstCall){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1802</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      result = gsmSendCmd(&amp;(interface->engine), cmd);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>      result = gsmSendCmd(&amp;(interface->engine), cmd);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1803</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      firstCall = FALSE;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>      firstCall = FALSE;</pre></td>
     </tr>
 
     <tr>
@@ -12930,8 +12930,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1805</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   else{result = gsmProcessTkn(&amp;(interface->engine));}</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>   else{result = gsmProcessTkn(&amp;(interface->engine));}</pre></td>
     </tr>
 
     <tr>
@@ -12943,37 +12943,37 @@
 
     <tr>
     <td align="right" class="lineno"><pre>1807</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   if(NO_UPDATE != result){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 24 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
+    <td align="left" class="src coveredLine"><pre>   if(NO_UPDATE != result){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1808</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      if(OK_CMD_SENT == result){;}</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 12 times">&check;</span><span class="takenBranch" title="Branch 1 taken 12 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
+    <td align="left" class="src coveredLine"><pre>      if(OK_CMD_SENT == result){;}</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1809</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      else if(OK_CMD_ACK == result){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 10 times">&check;</span><span class="takenBranch" title="Branch 1 taken 2 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>12</pre></td>
+    <td align="left" class="src coveredLine"><pre>      else if(OK_CMD_ACK == result){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1810</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface-> procState = nextState;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface-> procState = nextState;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1811</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         firstCall = TRUE;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>         firstCall = TRUE;</pre></td>
     </tr>
 
     <tr>
@@ -12993,22 +12993,22 @@
     <tr>
     <td align="right" class="lineno"><pre>1814</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->errorOut.errorFrm = ERR_PROC;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->errorOut.errorFrm = ERR_PROC;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1815</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->frmState = WRAP;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->frmState = WRAP;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1816</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         firstCall = TRUE;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         firstCall = TRUE;</pre></td>
     </tr>
 
     <tr>
@@ -13042,8 +13042,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1821</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>24</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -13063,8 +13063,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1824</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -13105,8 +13105,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1830</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   result = gsmProcessTkn(&amp;(interface->engine));</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>   result = gsmProcessTkn(&amp;(interface->engine));</pre></td>
     </tr>
 
     <tr>
@@ -13118,9 +13118,9 @@
 
     <tr>
     <td align="right" class="lineno"><pre>1832</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   if(NO_UPDATE != result){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 10 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>   if(NO_UPDATE != result){</pre></td>
     </tr>
 
     <tr>
@@ -13132,30 +13132,30 @@
 
     <tr>
     <td align="right" class="lineno"><pre>1834</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      if(OK_RSP &lt;= result &amp;&amp; OK_URC >= result){;}</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 10 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="notTakenBranch" title="Branch 2 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 10 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>      if(OK_RSP &lt;= result &amp;&amp; OK_URC >= result){;}</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1835</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      else if(OK_CLOSE == result){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 8 times">&check;</span><span class="takenBranch" title="Branch 1 taken 2 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>      else if(OK_CLOSE == result){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1836</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->procState = closingState;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->procState = closingState;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1837</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->frmState = (closingWrap == TRUE ? WRAP : PROC );</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 2 times">&check;</span><span class="takenBranch" title="Branch 1 taken 6 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->frmState = (closingWrap == TRUE ? WRAP : PROC );</pre></td>
     </tr>
 
     <tr>
@@ -13167,30 +13167,30 @@
 
     <tr>
     <td align="right" class="lineno"><pre>1839</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>      else if(ERR_MSG_CLOSE == result){</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 2 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>      else if(ERR_MSG_CLOSE == result){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1840</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->errorOut.errorFrm = ERR_GSM;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->errorOut.errorFrm = ERR_GSM;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1841</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->procState = errorState;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->procState = errorState;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1842</pre></td>
-    <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 2 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>         interface->frmState = (errorWrap == TRUE ? WRAP : PROC );</pre></td>
     </tr>
 
     <tr>
@@ -13322,8 +13322,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1861</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>10</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -13343,8 +13343,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1864</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmFrmCopyGsmError (gsmInterface_t * interface)</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>static void gsmFrmCopyGsmError (gsmInterface_t * interface)</pre></td>
     </tr>
 
     <tr>
@@ -13371,36 +13371,36 @@
     <tr>
     <td align="right" class="lineno"><pre>1868</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   rsp = gsmGetCmdRsp(&amp;(interface->engine));</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   rsp = gsmGetCmdRsp(&amp;(interface->engine));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1869</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   strncpy(interface->errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   strncpy(interface->errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1870</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1871</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   strncpy(interface->errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   strncpy(interface->errorOut.errorCmd.par, rsp.par, (TKN_PAR_SIZE/2)-1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1872</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->errorOut.errorCmd.par[TKN_PAR_SIZE/2] = '\0';</pre></td>
     </tr>
 
     <tr>
@@ -13413,8 +13413,8 @@
     <tr>
     <td align="right" class="lineno"><pre>1874</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -15422,7 +15422,7 @@
     <tr>
     <td align="right" class="lineno"><pre>2161</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
     <td align="left" class="src coveredLine"><pre>void gsmStartUp (gsmInterface_t * interface, frmCback_t cback)</pre></td>
     </tr>
 
@@ -15436,21 +15436,21 @@
     <tr>
     <td align="right" class="lineno"><pre>2163</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frm = gsmStartUpF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2164</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2165</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
@@ -15464,7 +15464,7 @@
     <tr>
     <td align="right" class="lineno"><pre>2167</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>8</pre></td>
     <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
@@ -15786,7 +15786,7 @@
     <tr>
     <td align="right" class="lineno"><pre>2213</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,</pre></td>
     </tr>
 
@@ -15807,35 +15807,35 @@
     <tr>
     <td align="right" class="lineno"><pre>2216</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frm = gsmSmsSendF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2217</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmInput = msg;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2218</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmOutput = conf;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2219</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2220</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
@@ -15849,7 +15849,7 @@
     <tr>
     <td align="right" class="lineno"><pre>2222</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>1</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
     <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
@@ -15884,8 +15884,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2227</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,</pre></td>
     </tr>
 
     <tr>
@@ -15905,36 +15905,36 @@
     <tr>
     <td align="right" class="lineno"><pre>2230</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmSmsReadF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmSmsReadF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2231</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = pars;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = pars;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2232</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmOutput = msg;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmOutput = msg;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2233</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2234</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -15947,8 +15947,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2236</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -15982,8 +15982,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2241</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,</pre></td>
     </tr>
 
     <tr>
@@ -16003,36 +16003,36 @@
     <tr>
     <td align="right" class="lineno"><pre>2244</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmSmsListF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmSmsListF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2245</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = pars;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = pars;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2246</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmOutput = list;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmOutput = list;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2247</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2248</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16045,8 +16045,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2250</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16080,8 +16080,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2255</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,</pre></td>
     </tr>
 
     <tr>
@@ -16101,29 +16101,29 @@
     <tr>
     <td align="right" class="lineno"><pre>2258</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmSmsDelF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmSmsDelF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2259</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = msgdel;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = msgdel;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2260</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2261</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16136,8 +16136,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2263</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16185,8 +16185,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2270</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,</pre></td>
     </tr>
 
     <tr>
@@ -16206,29 +16206,29 @@
     <tr>
     <td align="right" class="lineno"><pre>2273</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGprsStartF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGprsStartF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2274</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = apn;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = apn;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2275</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2276</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16241,8 +16241,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2278</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16276,8 +16276,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2283</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback)</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback)</pre></td>
     </tr>
 
     <tr>
@@ -16290,22 +16290,22 @@
     <tr>
     <td align="right" class="lineno"><pre>2285</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGprsStopF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGprsStopF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2286</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2287</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16318,8 +16318,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2289</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16360,8 +16360,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2295</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * socket,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * socket,</pre></td>
     </tr>
 
     <tr>
@@ -16381,29 +16381,29 @@
     <tr>
     <td align="right" class="lineno"><pre>2298</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGprsOpenPortF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGprsOpenPortF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2299</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = socket;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = socket;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2300</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2301</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16416,8 +16416,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2303</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16451,8 +16451,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2308</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback)</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback)</pre></td>
     </tr>
 
     <tr>
@@ -16465,22 +16465,22 @@
     <tr>
     <td align="right" class="lineno"><pre>2310</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGprsClosePortF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGprsClosePortF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2311</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2312</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16493,8 +16493,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2314</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16542,8 +16542,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2321</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGnssPwr (gsmInterface_t * interface,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGnssPwr (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -16563,29 +16563,29 @@
     <tr>
     <td align="right" class="lineno"><pre>2324</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGnssPwrF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGnssPwrF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2325</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmInput = cmd;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmInput = cmd;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2326</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2327</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16598,8 +16598,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2329</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>
@@ -16633,8 +16633,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2334</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>void gsmGnssGetData (gsmInterface_t * interface,</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGnssGetData (gsmInterface_t * interface,</pre></td>
     </tr>
 
     <tr>
@@ -16654,29 +16654,29 @@
     <tr>
     <td align="right" class="lineno"><pre>2337</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frm = gsmGnssGetDataF;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frm = gsmGnssGetDataF;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2338</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmOutput = dataGnss;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmOutput = dataGnss;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2339</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmCback = cback;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmCback = cback;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>2340</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   interface->frmState = INIT;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   interface->frmState = INIT;</pre></td>
     </tr>
 
     <tr>
@@ -16689,8 +16689,8 @@
     <tr>
     <td align="right" class="lineno"><pre>2342</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>   return;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
     <tr>

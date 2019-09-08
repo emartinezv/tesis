@@ -4,77 +4,95 @@
   :file: test_gsmInterface.c
 :successes:
 - :test: test_gsmInitInterface
-  :line: 84
+  :line: 90
   :message: ''
 - :test: test_gsmStartUp
-  :line: 130
+  :line: 136
   :message: ''
 - :test: test_gsmExitDataMode
-  :line: 154
+  :line: 160
   :message: ''
 - :test: test_gsmSysTickHandler
-  :line: 178
+  :line: 184
   :message: ''
 - :test: test_gsmProcess
-  :line: 220
+  :line: 226
   :message: ''
 - :test: test_gsmIsIdle
-  :line: 299
+  :line: 305
   :message: ''
 - :test: test_gsmGetSigQual
-  :line: 330
+  :line: 336
   :message: ''
 - :test: test_gsmCheckConn
-  :line: 356
+  :line: 362
   :message: ''
 - :test: test_gsmSetUrcMode
-  :line: 382
+  :line: 388
   :message: ''
 - :test: test_gsmSetUrcCback
-  :line: 408
+  :line: 414
   :message: ''
 - :test: test_gsmSetDataCback
-  :line: 430
+  :line: 436
   :message: ''
 - :test: test_gsmCheckDataMode
-  :line: 452
+  :line: 458
   :message: ''
 - :test: test_gsmSmsSend
-  :line: 508
+  :line: 514
   :message: ''
 - :test: test_gsmSmsRead
-  :line: 536
+  :line: 542
   :message: ''
 - :test: test_gsmSmsList
-  :line: 564
+  :line: 570
   :message: ''
 - :test: test_gsmSmsDel
-  :line: 592
+  :line: 598
   :message: ''
 - :test: test_gsmGprsStart
-  :line: 618
+  :line: 624
   :message: ''
 - :test: test_gsmGprsStop
-  :line: 644
+  :line: 650
   :message: ''
 - :test: test_gsmGprsOpenPort
-  :line: 668
+  :line: 674
   :message: ''
 - :test: test_gsmGprsClosePort
-  :line: 694
+  :line: 700
   :message: ''
 - :test: test_gsmGnssPwr
-  :line: 718
+  :line: 724
   :message: ''
 - :test: test_gsmGnssGetData
-  :line: 744
+  :line: 750
+  :message: ''
+- :test: test_gsmStartUpF
+  :line: 776
+  :message: ''
+- :test: test_gsmExitDataModeF
+  :line: 929
+  :message: ''
+- :test: test_gsmGetSigQualF
+  :line: 984
+  :message: ''
+- :test: test_gsmCheckConnF
+  :line: 1047
+  :message: ''
+- :test: test_gsmSmsSendF
+  :line: 1131
+  :message: ''
+- :test: test_gsmSmsReadF
+  :line: 1219
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 22
-  :passed: 22
+  :total: 28
+  :passed: 28
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002665802
+:time: 0.002871251

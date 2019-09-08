@@ -4,50 +4,80 @@
   :file: test_gsmInterface.c
 :successes:
 - :test: test_gsmInitInterface
-  :line: 84
+  :line: 90
   :message: ''
 - :test: test_gsmStartUp
-  :line: 130
+  :line: 136
   :message: ''
 - :test: test_gsmExitDataMode
-  :line: 154
+  :line: 160
   :message: ''
 - :test: test_gsmSysTickHandler
-  :line: 178
+  :line: 184
   :message: ''
 - :test: test_gsmProcess
-  :line: 220
+  :line: 226
   :message: ''
 - :test: test_gsmIsIdle
-  :line: 299
+  :line: 305
   :message: ''
 - :test: test_gsmGetSigQual
-  :line: 330
+  :line: 336
   :message: ''
 - :test: test_gsmCheckConn
-  :line: 356
+  :line: 362
   :message: ''
 - :test: test_gsmSetUrcMode
-  :line: 382
+  :line: 388
   :message: ''
 - :test: test_gsmSetUrcCback
-  :line: 408
+  :line: 414
   :message: ''
 - :test: test_gsmSetDataCback
-  :line: 430
+  :line: 436
   :message: ''
 - :test: test_gsmCheckDataMode
-  :line: 452
+  :line: 458
   :message: ''
 - :test: test_gsmSmsSend
-  :line: 508
+  :line: 514
+  :message: ''
+- :test: test_gsmSmsRead
+  :line: 542
+  :message: ''
+- :test: test_gsmSmsList
+  :line: 570
+  :message: ''
+- :test: test_gsmSmsDel
+  :line: 598
+  :message: ''
+- :test: test_gsmGprsStart
+  :line: 624
+  :message: ''
+- :test: test_gsmGprsStop
+  :line: 650
+  :message: ''
+- :test: test_gsmGprsOpenPort
+  :line: 674
+  :message: ''
+- :test: test_gsmGprsClosePort
+  :line: 700
+  :message: ''
+- :test: test_gsmGnssPwr
+  :line: 724
+  :message: ''
+- :test: test_gsmGnssGetData
+  :line: 750
+  :message: ''
+- :test: test_gsmStartUpF
+  :line: 776
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 13
-  :passed: 13
+  :total: 23
+  :passed: 23
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002234265
+:time: 0.004484553

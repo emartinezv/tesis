@@ -208,7 +208,7 @@ static void gsmGnssGetDataF (gsmInterface_t * interface);
 *
 */
 
-void gsmFrmInit (gsmInterface_t * interface);
+static void gsmFrmInit (gsmInterface_t * interface);
 
 /** @brief Subroutine to send a cmd and check for the correct echo
 *
@@ -219,7 +219,7 @@ void gsmFrmInit (gsmInterface_t * interface);
 * @return
 */
 
-void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
+static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
                              uint8_t const * const cmd,
                              procStatus_e nextState);
 
@@ -236,7 +236,7 @@ void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
 * @return
 */
 
-void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
+static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
                              procStatus_e closingState, Bool closingWrap,
                              procStatus_e errorState, Bool errorWrap);
 
@@ -248,7 +248,7 @@ void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
 *
 */
 
-void gsmFrmCopyGsmError (gsmInterface_t * interface);
+static void gsmFrmCopyGsmError (gsmInterface_t * interface);
 
 /*==================[internal data definition]===============================*/
 
@@ -647,7 +647,8 @@ void gsmCheckConnF (gsmInterface_t * interface)
 
                gsmFrmProcRspsGetFinal(interface, ATCMD2RESP, TRUE, NOCMD, TRUE);
 
-               if(ATCMD2RESP == interface->procState) {
+               if(ATCMD2RESP == interface->procState &&
+                  WRAP == interface->frmState) {
                   rspGprs = gsmGetCmdRsp(&(interface->engine));
                   /* if command was closed without error, store the GPRS rsp */
                }
@@ -744,13 +745,15 @@ static void gsmSmsSendF (gsmInterface_t * interface)
           */
 
          if ( (strchr(((smsOut_s *)interface->frmInput)->text, '\n') != NULL)
-               &&
+               ||
               (strchr(((smsOut_s *)interface->frmInput)->text, '\r') != NULL)){
 
             debug(">>>interf<<<   ERROR: The SMS text contains the \\r and/or "
                                          "\\n characters\r\n");
             interface->errorOut.errorFrm = ERR_INIT;
             interface->frmState = WRAP;
+
+            return;
 
          }
 
@@ -835,7 +838,7 @@ static void gsmSmsSendF (gsmInterface_t * interface)
                /* Convert the <mr> number string into an integer type  and
                 * store it for reference */
 
-               atoi(((smsConf_s *)interface->frmOutput)->mr, rsp.par, 10);
+               ((smsConf_s *)interface->frmOutput)->mr = atoi(rsp.par);
 
          }
 
@@ -1775,7 +1778,7 @@ static void gsmGnssGetDataF (gsmInterface_t * interface)
 /*                     Formula-processing subroutines                        */
 /*---------------------------------------------------------------------------*/
 
-void gsmFrmInit (gsmInterface_t * interface)
+static void gsmFrmInit (gsmInterface_t * interface)
 {
    interface->errorOut.errorFrm = OK;
    interface->errorOut.errorCmd.cmd[0] = '\0';
@@ -1787,7 +1790,7 @@ void gsmFrmInit (gsmInterface_t * interface)
    return;
 }
 
-void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
+static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
                              uint8_t const * const cmd, procStatus_e nextState)
 {
    fsmEvent_e result;
@@ -1821,7 +1824,7 @@ void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
    return;
 }
 
-void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
+static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
                              procStatus_e closingState, Bool closingWrap,
                              procStatus_e errorState, Bool errorWrap)
 {
@@ -1861,7 +1864,7 @@ void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
    return;
 }
 
-void gsmFrmCopyGsmError (gsmInterface_t * interface)
+static void gsmFrmCopyGsmError (gsmInterface_t * interface)
 {
    rsp_t rsp;
 
