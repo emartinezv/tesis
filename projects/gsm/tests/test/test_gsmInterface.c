@@ -1718,6 +1718,189 @@ void test_gsmGprsOpenPortF(void)
 
 }
 
+/* test_gsmGprsClosePortF
+ *
+ * Functions tested:
+ *
+ * - gsmGprsClosePortF
+ * - gsmGprsClosePort
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGprsClosePortF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmGprsClosePort(&interface, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE=0\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSetSerialMode_ExpectAndReturn(&(interface.engine), COMMAND_MODE, true);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmGnssPwrF
+ *
+ * Functions tested:
+ *
+ * - gsmGnssPwrF
+ * - gsmGnssPwr
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGnssPwrF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   pwrGnss_e cmdTest;
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Turn on */
+
+   cmdTest = ON;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSPWR=1\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Turn off */
+
+   cmdTest = OFF;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSPWR=0\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmGnssGetDataF
+ *
+ * Functions tested:
+ *
+ * - gsmGnssGetDataF
+ * - gsmGnssGetData
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGnssGetDataF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   dataGnss_s dataGnssTest;
+   rsp_t rspTest = {"CGNSINF","data"};
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   gsmGnssGetData(&interface, &dataGnssTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSINF\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_STRING("data", dataGnssTest.data);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
 
 
 

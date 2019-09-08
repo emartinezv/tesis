@@ -102,12 +102,21 @@
 - :test: test_gsmGprsOpenPortF
   :line: 1649
   :message: ''
+- :test: test_gsmGprsClosePortF
+  :line: 1721
+  :message: ''
+- :test: test_gsmGnssPwrF
+  :line: 1773
+  :message: ''
+- :test: test_gsmGnssGetDataF
+  :line: 1852
+  :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 33
-  :passed: 33
+  :total: 36
+  :passed: 36
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.00348303
+:time: 0.002515499

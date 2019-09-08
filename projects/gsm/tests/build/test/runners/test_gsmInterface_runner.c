@@ -79,6 +79,9 @@ extern void test_gsmSmsDelF(void);
 extern void test_gsmGprsStartF(void);
 extern void test_gsmGprsStopF(void);
 extern void test_gsmGprsOpenPortF(void);
+extern void test_gsmGprsClosePortF(void);
+extern void test_gsmGnssPwrF(void);
+extern void test_gsmGnssGetDataF(void);
 
 
 /*=======Mock Management=====*/
@@ -181,6 +184,9 @@ int main(void)
   RUN_TEST(test_gsmGprsStartF, 1481);
   RUN_TEST(test_gsmGprsStopF, 1599);
   RUN_TEST(test_gsmGprsOpenPortF, 1649);
+  RUN_TEST(test_gsmGprsClosePortF, 1721);
+  RUN_TEST(test_gsmGnssPwrF, 1773);
+  RUN_TEST(test_gsmGnssGetDataF, 1852);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

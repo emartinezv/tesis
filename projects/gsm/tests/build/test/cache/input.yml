@@ -44,11 +44,11 @@
 - :rake_columns: '120'
 :defines:
   :test:
-  - &13620900
+  - &9279700
     - CORE_M4
   - TEST
   :test_preprocess:
-  - *13620900
+  - *9279700
   - TEST
   :release: []
   :release_preprocess: []
@@ -57,10 +57,10 @@
   - CORE_M4
 :libraries:
   :test:
-  - &13675380 []
+  - &9334220 []
   :test_preprocess: []
   :release:
-  - *13675380
+  - *9334220
   :release_preprocess: []
   :placement: :end
   :flag: ${1}
