@@ -72,12 +72,27 @@
 - :test: test_gsmStartUpF
   :line: 776
   :message: ''
+- :test: test_gsmExitDataModeF
+  :line: 929
+  :message: ''
+- :test: test_gsmGetSigQualF
+  :line: 984
+  :message: ''
+- :test: test_gsmCheckConnF
+  :line: 1047
+  :message: ''
+- :test: test_gsmSmsSendF
+  :line: 1131
+  :message: ''
+- :test: test_gsmSmsReadF
+  :line: 1219
+  :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 23
-  :passed: 23
+  :total: 28
+  :passed: 28
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.004484553
+:time: 0.002969733

@@ -1285,5 +1285,439 @@ void test_gsmSmsReadF(void)
 
 }
 
+/* test_gsmSmsListF
+ *
+ * Functions tested:
+ *
+ * - gsmSmsListF
+ * - gsmSmsList
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmSmsListF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   smsRec_s listTest[3];
+   smsListPars_s parsTest = {REC_UNREAD,NOCHANGE,3};
+   rsp_t rspTest1 = {"CMGR","meta1"};
+   rsp_t rspTest2 = {"SMS_BODY","text1"};
+   rsp_t rspTest3 = {"CMGR","meta2"};
+   rsp_t rspTest4 = {"SMS_BODY","text2"};
+   rsp_t rspTest5 = {"CMGR","meta3"};
+   rsp_t rspTest6 = {"SMS_BODY","text3"};
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmSmsList(&interface, &listTest[0], &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),
+                              "AT+CMGL=\"REC_UNREAD\",1\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   /* The real execution would have n non-closing responses here for the
+    * messages in store, but we need not test that part so we simply go to
+    * the closing response */
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   /* We asume that there there are exactly three SMSs in store, so we have
+    * two responses per SMS plus the OK response for a total of 7*/
+
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 7);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest2);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest3);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest4);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest5);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest6);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_STRING("meta1", listTest[0].meta);
+   TEST_ASSERT_EQUAL_STRING("text1", listTest[0].text);
+   TEST_ASSERT_EQUAL_STRING("meta2", listTest[1].meta);
+   TEST_ASSERT_EQUAL_STRING("text2", listTest[1].text);
+   TEST_ASSERT_EQUAL_STRING("meta3", listTest[2].meta);
+   TEST_ASSERT_EQUAL_STRING("text3", listTest[2].text);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Space in message vector < number of SMSs read */
+
+   frmCbackFlag = false;
+
+   gsmSmsList(&interface, &listTest[0], &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),
+                              "AT+CMGL=\"REC_UNREAD\",1\r", OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   /* The real execution would have n non-closing responses here for the
+    * messages in store, but we need not test that part so we simply go to
+    * the closing response */
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   /* We asume that there there are four SMSs in store, so we have
+    * two responses per SMS plus the OK response for a total of 9. The list
+    * vector only has space for three and thus will raise an error during the
+    * WRAP process. */
+
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 9);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_WRAP, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmSmsDelF
+ *
+ * Functions tested:
+ *
+ * - gsmSmsDelF
+ * - gsmSmsDel
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmSmsDelF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   smsDelPars_s parsTest = {1,INDEX};
+   rsp_t rspTest1 = {"cmd","par"};
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmSmsDel(&interface, &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CMGD=1,0\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmGprsStartF
+ *
+ * Functions tested:
+ *
+ * - gsmGprsStartF
+ * - gsmGprsStart
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGprsStartF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   apnUserPwd_s apnTest = {"apn","user","password"};
+   rsp_t rspTest1 = {"cmd","par"};
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmGprsStart(&interface, &apnTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPSHUT\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPMODE=1\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),
+                              "AT+CSTT=\"apn\",\"user\",\"password\"\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIICR\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIFSR\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmGprsStopF
+ *
+ * Functions tested:
+ *
+ * - gsmGprsStopF
+ * - gsmGprsStop
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGprsStopF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmGprsStop(&interface, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPSHUT\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+/* test_gsmGprsOpenPortF
+ *
+ * Functions tested:
+ *
+ * - gsmGprsOpenPortF
+ * - gsmGprsOpenPort
+ * - gsmFrmInit
+ * - gsmFrmSendCmdCheckEcho
+ * - gsmFrmProcRspsGetFinal
+ *
+ * */
+
+void test_gsmGprsOpenPortF(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   socket_s socketTest = {TCP, "192.168.0.1", 80};
+   rsp_t rspTest1 = {"OK",""};
+   rsp_t rspTest2 = {"CONNECT OK",""};
+
+   /* Initialization */
+
+   frmCbackFlag = false;
+
+   /* Test sequence */
+
+   /* Normal functioning */
+
+   gsmGprsOpenPort(&interface, &socketTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE\r",
+                              OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectAndReturn(&(interface.engine),
+                              "AT+CIPSTART=\"TCP\",\"192.168.0.1\",\"80\"\r",
+                             OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 2);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest2);
+
+   interface.frm(&interface);
+
+   gsmSetSerialMode_ExpectAndReturn(&(interface.engine), DATA_MODE, true);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+}
+
+
 
 
