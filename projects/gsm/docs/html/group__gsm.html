@@ -83,17 +83,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>This module handles the tokenizer function.  
+<p>This module handles the internal engine of the library.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gafcbad189e5936ce88d1ebc89fa50a64a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gafcbad189e5936ce88d1ebc89fa50a64a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_TKNZER</b></td></tr>
-<tr class="separator:gafcbad189e5936ce88d1ebc89fa50a64a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)&#160;&#160;&#160;dbgPrint(msg)</td></tr>
-<tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)</td></tr>
 <tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,18 +169,6 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gac77f18789c0bca28313b6b43e3d248ef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#gac77f18789c0bca28313b6b43e3d248ef">gsm232UartRecv</a> (uint8_t *const buffer, int n)</td></tr>
-<tr class="memdesc:gac77f18789c0bca28313b6b43e3d248ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get at most n characters from the 232-UART into a local buffer.  <a href="#gac77f18789c0bca28313b6b43e3d248ef">More...</a><br/></td></tr>
-<tr class="separator:gac77f18789c0bca28313b6b43e3d248ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf3c6311b6e81b41dc9462cdf219599f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#gaf3c6311b6e81b41dc9462cdf219599f9">gsm232UartSend</a> (uint8_t const *const buffer, int n)</td></tr>
-<tr class="memdesc:gaf3c6311b6e81b41dc9462cdf219599f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send at most n characters to the 232-UART from a local buffer.  <a href="#gaf3c6311b6e81b41dc9462cdf219599f9">More...</a><br/></td></tr>
-<tr class="separator:gaf3c6311b6e81b41dc9462cdf219599f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1479aeb785e7f02b87abbab8bc7b2150"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#ga1479aeb785e7f02b87abbab8bc7b2150">gsmTermUartRecv</a> (uint8_t *const buffer, int n)</td></tr>
-<tr class="memdesc:ga1479aeb785e7f02b87abbab8bc7b2150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get at most n characters from the Term-UART into a local buffer.  <a href="#ga1479aeb785e7f02b87abbab8bc7b2150">More...</a><br/></td></tr>
-<tr class="separator:ga1479aeb785e7f02b87abbab8bc7b2150"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga487f0a6281a8743c5eaab81ec950db32"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#ga487f0a6281a8743c5eaab81ec950db32">gsmTermUartSend</a> (uint8_t const *const buffer, int n)</td></tr>
-<tr class="memdesc:ga487f0a6281a8743c5eaab81ec950db32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send at most n characters to the Term-UART from a local buffer.  <a href="#ga487f0a6281a8743c5eaab81ec950db32">More...</a><br/></td></tr>
-<tr class="separator:ga487f0a6281a8743c5eaab81ec950db32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8cd88fd0ba86d82faf88b249e054bac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae8cd88fd0ba86d82faf88b249e054bac"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmInitEngine</b> (gsmEngine_t *engine)</td></tr>
 <tr class="separator:gae8cd88fd0ba86d82faf88b249e054bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -214,9 +196,9 @@ rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gs
 <tr class="separator:gae4c91439a1b17ade3ea038c0e1fb471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>This module handles the tokenizer function. </p>
+<p>This module handles the internal engine of the library. </p>
+<p>This module handles the tokenizer function.</p>
 <p>This module handles AT token parsing.</p>
-<p>This module handles the internal engine of the library.</p>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="gafc423741f0c92519323ce7d70d6aa1d1"></a>
 <div class="memitem">
@@ -311,78 +293,6 @@ rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gs
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="gac77f18789c0bca28313b6b43e3d248ef"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int gsm232UartRecv </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *const&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get at most n characters from the 232-UART into a local buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buffer</td><td>: Pointer to the reception char buffer </td></tr>
-    <tr><td class="paramname">n</td><td>: Number of characters to get</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the number of chars actually read </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="gaf3c6311b6e81b41dc9462cdf219599f9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int gsm232UartSend </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t const *const&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Send at most n characters to the 232-UART from a local buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buffer</td><td>: Pointer to the reception char buffer </td></tr>
-    <tr><td class="paramname">n</td><td>: Number of characters to send</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the number of chars actually written </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="gae4c91439a1b17ade3ea038c0e1fb471b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -522,82 +432,10 @@ rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gs
 
 </div>
 </div>
-<a class="anchor" id="ga1479aeb785e7f02b87abbab8bc7b2150"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int gsmTermUartRecv </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t *const&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get at most n characters from the Term-UART into a local buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buffer</td><td>: Pointer to the reception char buffer </td></tr>
-    <tr><td class="paramname">n</td><td>: Number of characters to get</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the number of chars actually read </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga487f0a6281a8743c5eaab81ec950db32"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int gsmTermUartSend </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t const *const&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>n</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Send at most n characters to the Term-UART from a local buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buffer</td><td>: Pointer to the reception char buffer </td></tr>
-    <tr><td class="paramname">n</td><td>: Number of characters to send</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the number of chars actually written </dd></dl>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 14 2019 15:27:30 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 14 2019 16:18:45 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -29,7 +29,7 @@
  *
  */
 
-/** \addtogroup commands
+/** \addtogroup commands commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/

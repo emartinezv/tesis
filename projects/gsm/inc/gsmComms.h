@@ -32,7 +32,10 @@
 #ifndef _GSM_COMMS_H_
 #define _GSM_COMMS_H_
 
-/** \addtogroup gsm
+/** @brief This module handles UART communications.
+ */
+
+/** \addtogroup comms comms
  ** @{ */
 
 /*==================[inclusions]============================================*/
@@ -40,7 +43,7 @@
 #include "lpc_types.h"
 #include "string.h"
 
-/* Add the 232-UART and Term-UART HAL .h files here */
+/* Add the corresponding 232 UART and terminal UART HAL .h files here */
 
 #include "ciaaUART.h"
 
@@ -58,45 +61,45 @@ extern "C" {
 
 /*==================[external functions declaration]========================*/
 
-/** @brief Get at most n characters from the 232-UART into a local buffer
+/** @brief Get at most n characters from the 232 UART into a local buffer
  *
- *  @param buffer   : Pointer to the reception char buffer
- *  @param n        : Number of characters to get
+ *  @param buffer : Pointer to the reception char buffer
+ *  @param n      : Number of characters to get
  *
- *  @return Returns the number of chars actually read
+ *  @return Number of chars actually read
  *
  */
 
 int gsm232UartRecv (uint8_t * const buffer, int n);
 
-/** @brief Send at most n characters to the 232-UART from a local buffer
+/** @brief Send at most n characters to the 232 UART from a local buffer
 *
-*  @param  buffer   : Pointer to the reception char buffer
-*  @param  n        : Number of characters to send
+*  @param  buffer : Pointer to the reception char buffer
+*  @param  n      : Number of characters to send
 *
-*  @return Returns the number of chars actually written
+*  @return Number of chars actually written
 *
 */
 
 int gsm232UartSend (uint8_t const * const buffer, int n);
 
-/** @brief Get at most n characters from the Term-UART into a local buffer
+/** @brief Get at most n characters from the terminal UART into a local buffer
  *
- *  @param buffer   : Pointer to the reception char buffer
- *  @param n        : Number of characters to get
+ *  @param buffer : Pointer to the reception char buffer
+ *  @param n      : Number of characters to get
  *
- *  @return Returns the number of chars actually read
+ *  @return Number of chars actually read
  *
  */
 
 int gsmTermUartRecv (uint8_t * const buffer, int n);
 
-/** @brief Send at most n characters to the Term-UART from a local buffer
+/** @brief Send at most n characters to the terminal UART from a local buffer
 *
-*  @param  buffer   : Pointer to the reception char buffer
-*  @param  n        : Number of characters to send
+*  @param  buffer : Pointer to the reception char buffer
+*  @param  n      : Number of characters to send
 *
-*  @return Returns the number of chars actually written
+*  @return Number of chars actually written
 *
 */
 

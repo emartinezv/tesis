@@ -121,53 +121,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef _GSM_COMMS_H_</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _GSM_COMMS_H_</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">/*==================[inclusions]============================================*/</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;lpc_types.h&quot;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;string.h&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/*==================[inclusions]============================================*/</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">/* Add the 232-UART and Term-UART HAL .h files here */</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;ciaaUART.h&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">/*==================[cplusplus]=============================================*/</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*==================[macros]================================================*/</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">/*==================[typedef]===============================================*/</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/*==================[external data declaration]=============================*/</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/*==================[external functions declaration]========================*/</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__gsm.html#gac77f18789c0bca28313b6b43e3d248ef">gsm232UartRecv</a> (uint8_t * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__gsm.html#gaf3c6311b6e81b41dc9462cdf219599f9">gsm232UartSend</a> (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__gsm.html#ga1479aeb785e7f02b87abbab8bc7b2150">gsmTermUartRecv</a> (uint8_t * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__gsm.html#ga487f0a6281a8743c5eaab81ec950db32">gsmTermUartSend</a> (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">/*==================[cplusplus]=============================================*/</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">/*==================[end of file]===========================================*/</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="group__gsm_html_ga487f0a6281a8743c5eaab81ec950db32"><div class="ttname"><a href="group__gsm.html#ga487f0a6281a8743c5eaab81ec950db32">gsmTermUartSend</a></div><div class="ttdeci">int gsmTermUartSend(uint8_t const *const buffer, int n)</div><div class="ttdoc">Send at most n characters to the Term-UART from a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:105</div></div>
-<div class="ttc" id="group__gsm_html_gaf3c6311b6e81b41dc9462cdf219599f9"><div class="ttname"><a href="group__gsm.html#gaf3c6311b6e81b41dc9462cdf219599f9">gsm232UartSend</a></div><div class="ttdeci">int gsm232UartSend(uint8_t const *const buffer, int n)</div><div class="ttdoc">Send at most n characters to the 232-UART from a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:79</div></div>
-<div class="ttc" id="group__gsm_html_gac77f18789c0bca28313b6b43e3d248ef"><div class="ttname"><a href="group__gsm.html#gac77f18789c0bca28313b6b43e3d248ef">gsm232UartRecv</a></div><div class="ttdeci">int gsm232UartRecv(uint8_t *const buffer, int n)</div><div class="ttdoc">Get at most n characters from the 232-UART into a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:66</div></div>
-<div class="ttc" id="group__gsm_html_ga1479aeb785e7f02b87abbab8bc7b2150"><div class="ttname"><a href="group__gsm.html#ga1479aeb785e7f02b87abbab8bc7b2150">gsmTermUartRecv</a></div><div class="ttdeci">int gsmTermUartRecv(uint8_t *const buffer, int n)</div><div class="ttdoc">Get at most n characters from the Term-UART into a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:92</div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;lpc_types.h&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;string.h&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/* Add the corresponding 232 UART and terminal UART HAL .h files here */</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;ciaaUART.h&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">/*==================[cplusplus]=============================================*/</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">/*==================[macros]================================================*/</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/*==================[typedef]===============================================*/</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/*==================[external data declaration]=============================*/</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">/*==================[external functions declaration]========================*/</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__comms.html#gac77f18789c0bca28313b6b43e3d248ef">gsm232UartRecv</a> (uint8_t * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__comms.html#gaf3c6311b6e81b41dc9462cdf219599f9">gsm232UartSend</a> (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__comms.html#ga1479aeb785e7f02b87abbab8bc7b2150">gsmTermUartRecv</a> (uint8_t * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group__comms.html#ga487f0a6281a8743c5eaab81ec950db32">gsmTermUartSend</a> (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buffer, <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">/*==================[cplusplus]=============================================*/</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">/*==================[end of file]===========================================*/</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="group__comms_html_ga1479aeb785e7f02b87abbab8bc7b2150"><div class="ttname"><a href="group__comms.html#ga1479aeb785e7f02b87abbab8bc7b2150">gsmTermUartRecv</a></div><div class="ttdeci">int gsmTermUartRecv(uint8_t *const buffer, int n)</div><div class="ttdoc">Get at most n characters from the terminal UART into a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:89</div></div>
+<div class="ttc" id="group__comms_html_ga487f0a6281a8743c5eaab81ec950db32"><div class="ttname"><a href="group__comms.html#ga487f0a6281a8743c5eaab81ec950db32">gsmTermUartSend</a></div><div class="ttdeci">int gsmTermUartSend(uint8_t const *const buffer, int n)</div><div class="ttdoc">Send at most n characters to the terminal UART from a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:102</div></div>
+<div class="ttc" id="group__comms_html_gac77f18789c0bca28313b6b43e3d248ef"><div class="ttname"><a href="group__comms.html#gac77f18789c0bca28313b6b43e3d248ef">gsm232UartRecv</a></div><div class="ttdeci">int gsm232UartRecv(uint8_t *const buffer, int n)</div><div class="ttdoc">Get at most n characters from the 232 UART into a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:63</div></div>
+<div class="ttc" id="group__comms_html_gaf3c6311b6e81b41dc9462cdf219599f9"><div class="ttname"><a href="group__comms.html#gaf3c6311b6e81b41dc9462cdf219599f9">gsm232UartSend</a></div><div class="ttdeci">int gsm232UartSend(uint8_t const *const buffer, int n)</div><div class="ttdoc">Send at most n characters to the 232 UART from a local buffer. </div><div class="ttdef"><b>Definition:</b> gsmComms.c:76</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 14 2019 15:27:30 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 14 2019 16:18:45 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

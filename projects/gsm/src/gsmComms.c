@@ -30,10 +30,7 @@
  *
  */
 
-/** @brief This module handles the tokenizer function
- */
-
-/** \addtogroup gsm
+/** \addtogroup comms comms
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -42,8 +39,8 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_TKNZER
-#ifdef DEBUG_TKNZER
+#define DEBUG_COMMS
+#ifdef DEBUG_COMMS
    #define debug(msg) dbgPrint(msg)
 #else
    #define debug(msg)
@@ -67,11 +64,11 @@ int gsm232UartRecv (uint8_t * const buffer, int n)
 {
    int recv = 0;
 
-   /* Call HAL 232-UART receive function here */
+   /* Call HAL 232-UART receive function here so that at most n characters are
+      read into buffer. We assume that the function returns the number of
+      read characters. */
 
    recv = uartRecv(CIAA_UART_232, buffer, n);
-
-   /**/
 
    return recv;
 }
@@ -80,11 +77,11 @@ int gsm232UartSend (uint8_t const * const buffer, int n)
 {
    int sent = 0;
 
-   /* Call HAL 232-UART send function here */
+   /* Call HAL 232-UART send function here so that at most n characters are
+      written from buffer. We assume that the function returns the number of
+      written characters. */
 
    sent = uartSend(CIAA_UART_232, buffer, n);
-
-   /**/
 
    return sent;
 }
@@ -93,11 +90,11 @@ int gsmTermUartRecv (uint8_t * const buffer, int n)
 {
    int recv = 0;
 
-   /* Call HAL Term-UART receive function here */
+   /* Call HAL Term-UART receive function here so that at most n characters are
+      read into buffer. We assume that the function returns the number of
+      read characters. */
 
    recv = uartRecv(CIAA_UART_USB, buffer, n);
-
-   /**/
 
    return recv;
 }
@@ -106,11 +103,11 @@ int gsmTermUartSend (uint8_t const * const buffer, int n)
 {
    int sent = 0;
 
-   /* Call HAL Term-UART send function here */
+   /* Call HAL Term-UART send function here so that at most n characters are
+      written from buffer. We assume that the function returns the number of
+      written characters. */
 
    sent = uartSend(CIAA_UART_USB, buffer, n);
-
-   /**/
 
    return sent;
 }

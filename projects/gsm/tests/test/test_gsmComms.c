@@ -7,6 +7,8 @@
 
 //-- module being tested
 #include "gsmComms.h"
+
+//-- mocks
 #include "mock_ciaaUART.h"
 
 /*******************************************************************************
@@ -47,7 +49,11 @@ void tearDown(void)
 
 void test_gsm232UartRecv(void)
 {
+   /* Variables */
+
    uint8_t buffer[10];
+
+   /* Test sequence */
 
    uartRecv_ExpectAndReturn(CIAA_UART_232, buffer, 10, 8);
 
@@ -60,7 +66,11 @@ void test_gsm232UartRecv(void)
 
 void test_gsm232UartSend(void)
 {
+   /* Variables */
+
    uint8_t buffer[10];
+
+   /* Test sequence */
 
    uartSend_ExpectAndReturn(CIAA_UART_232, buffer, 10, 8);
 
@@ -73,7 +83,11 @@ void test_gsm232UartSend(void)
 
 void test_gsmTermUartRecv(void)
 {
+   /* Variables */
+
    uint8_t buffer[10];
+
+   /* Test sequence */
 
    uartRecv_ExpectAndReturn(CIAA_UART_USB, buffer, 10, 8);
 
@@ -86,7 +100,11 @@ void test_gsmTermUartRecv(void)
 
 void test_gsmTermUartSend(void)
 {
+   /* Variables */
+
    uint8_t buffer[10];
+
+   /* Test sequence */
 
    uartSend_ExpectAndReturn(CIAA_UART_USB, buffer, 10, 8);
 

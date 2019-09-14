@@ -37,7 +37,7 @@
  *         as storage and search functions for both.
  */
 
-/** \addtogroup commands
+/** \addtogroup commands commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/

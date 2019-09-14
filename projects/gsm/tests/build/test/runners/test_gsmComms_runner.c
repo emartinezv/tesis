@@ -99,10 +99,10 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmComms.c");
-  RUN_TEST(test_gsm232UartRecv, 48);
-  RUN_TEST(test_gsm232UartSend, 61);
-  RUN_TEST(test_gsmTermUartRecv, 74);
-  RUN_TEST(test_gsmTermUartSend, 87);
+  RUN_TEST(test_gsm232UartRecv, 50);
+  RUN_TEST(test_gsm232UartSend, 67);
+  RUN_TEST(test_gsmTermUartRecv, 84);
+  RUN_TEST(test_gsmTermUartSend, 101);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

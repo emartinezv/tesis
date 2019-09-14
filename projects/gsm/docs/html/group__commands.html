@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>gsm: Commands</title>
+<title>gsm: commands</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -79,7 +79,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Commands</div>  </div>
+<div class="title">commands</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -89,10 +89,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structatCmd__t.html">atCmd_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for the internal catalog of AT commands. Stores the name, successful and error end responses and timeout in ms.  <a href="structatCmd__t.html#details">More...</a><br/></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for the private vector of AT commands. Stores the name, successful and error end responses and timeout in ms.  <a href="structatCmd__t.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structurc__t.html">urc_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for the internal catalog of URCs. Stores the name of the URC.  <a href="structurc__t.html#details">More...</a><br/></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for the private vector of URCs. Stores the name of the URC.  <a href="structurc__t.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -108,19 +108,19 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga367f8e60e72341004625fda5603434df"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__commands.html#ga367f8e60e72341004625fda5603434df">gsmCmdSearch</a> (uint8_t const *const cmd)</td></tr>
-<tr class="memdesc:ga367f8e60e72341004625fda5603434df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for a cmd and returns its position in the atCmds vector.  <a href="#ga367f8e60e72341004625fda5603434df">More...</a><br/></td></tr>
+<tr class="memdesc:ga367f8e60e72341004625fda5603434df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for a cmd and returns its index.  <a href="#ga367f8e60e72341004625fda5603434df">More...</a><br/></td></tr>
 <tr class="separator:ga367f8e60e72341004625fda5603434df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga12204cbe11a48505b3225a1e6df29637"><td class="memItemLeft" align="right" valign="top">const uint8_t const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__commands.html#ga12204cbe11a48505b3225a1e6df29637">gsmGetCmdSucRsp</a> (uint16_t idx)</td></tr>
-<tr class="memdesc:ga12204cbe11a48505b3225a1e6df29637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd idx, returns the string of successful close responses for the corresponding command.  <a href="#ga12204cbe11a48505b3225a1e6df29637">More...</a><br/></td></tr>
+<tr class="memdesc:ga12204cbe11a48505b3225a1e6df29637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd index, returns the string of successful close responses for the corresponding command.  <a href="#ga12204cbe11a48505b3225a1e6df29637">More...</a><br/></td></tr>
 <tr class="separator:ga12204cbe11a48505b3225a1e6df29637"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad4bd83d134b8d0ed0e76987deb5a3f28"><td class="memItemLeft" align="right" valign="top">const uint8_t const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__commands.html#gad4bd83d134b8d0ed0e76987deb5a3f28">gsmGetCmdErrRsp</a> (uint16_t idx)</td></tr>
-<tr class="memdesc:gad4bd83d134b8d0ed0e76987deb5a3f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd idx, returns the string of error close responses for the corresponding command.  <a href="#gad4bd83d134b8d0ed0e76987deb5a3f28">More...</a><br/></td></tr>
+<tr class="memdesc:gad4bd83d134b8d0ed0e76987deb5a3f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd index, returns the string of error close responses for the corresponding command.  <a href="#gad4bd83d134b8d0ed0e76987deb5a3f28">More...</a><br/></td></tr>
 <tr class="separator:gad4bd83d134b8d0ed0e76987deb5a3f28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4ae400036ca5607336e6e62c492557f7"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__commands.html#ga4ae400036ca5607336e6e62c492557f7">gsmGetCmdTimeout</a> (uint16_t idx)</td></tr>
-<tr class="memdesc:ga4ae400036ca5607336e6e62c492557f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd idx, returns the timeout for the corresponding command.  <a href="#ga4ae400036ca5607336e6e62c492557f7">More...</a><br/></td></tr>
+<tr class="memdesc:ga4ae400036ca5607336e6e62c492557f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given a cmd index, returns the timeout in ms for the corresponding command.  <a href="#ga4ae400036ca5607336e6e62c492557f7">More...</a><br/></td></tr>
 <tr class="separator:ga4ae400036ca5607336e6e62c492557f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad13734a104d039634d8c42d1238fe2b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__commands.html#gad13734a104d039634d8c42d1238fe2b5">gsmUrcSearch</a> (uint8_t const *const urc)</td></tr>
-<tr class="memdesc:gad13734a104d039634d8c42d1238fe2b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches for an URC in vector urcs and returns true if present.  <a href="#gad13734a104d039634d8c42d1238fe2b5">More...</a><br/></td></tr>
+<tr class="memdesc:gad13734a104d039634d8c42d1238fe2b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the urc is recognized.  <a href="#gad13734a104d039634d8c42d1238fe2b5">More...</a><br/></td></tr>
 <tr class="separator:gad13734a104d039634d8c42d1238fe2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -158,14 +158,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Searches for a cmd and returns its position in the atCmds vector. </p>
+<p>Searches for a cmd and returns its index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cmd</td><td>: Pointer to str with the name of the command to search</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Position of the cmd in the atCmds vector (UNKNOWN_CMD if unknown) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Index number of the cmd (UNKNOWN_CMD if unknown) </dd></dl>
 
 </div>
 </div>
@@ -183,10 +183,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Given a cmd idx, returns the string of error close responses for the corresponding command. </p>
+<p>Given a cmd index, returns the string of error close responses for the corresponding command. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">idx</td><td>: Index of the command in the atCmds vector</td></tr>
+    <tr><td class="paramname">idx</td><td>: Index of the command as reported by gsmCmdSearch</td></tr>
   </table>
   </dd>
 </dl>
@@ -208,10 +208,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Given a cmd idx, returns the string of successful close responses for the corresponding command. </p>
+<p>Given a cmd index, returns the string of successful close responses for the corresponding command. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">idx</td><td>: Index of the command in the atCmds vector</td></tr>
+    <tr><td class="paramname">idx</td><td>: Index of the command as reported by gsmCmdSearch</td></tr>
   </table>
   </dd>
 </dl>
@@ -233,10 +233,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Given a cmd idx, returns the timeout for the corresponding command. </p>
+<p>Given a cmd index, returns the timeout in ms for the corresponding command. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">idx</td><td>: Index of the command in the commands vector</td></tr>
+    <tr><td class="paramname">idx</td><td>: Index of the command as reported by gsmCmdSearch</td></tr>
   </table>
   </dd>
 </dl>
@@ -258,21 +258,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Searches for an URC in vector urcs and returns true if present. </p>
+<p>Returns true if the urc is recognized. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">urc</td><td>: Pointer to str with the name of the URC to search</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if URC present in vector urcs </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if URC is recognized </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 14 2019 15:27:30 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 14 2019 16:18:45 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
