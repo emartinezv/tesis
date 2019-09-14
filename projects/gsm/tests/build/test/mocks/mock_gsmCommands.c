@@ -54,7 +54,7 @@ typedef struct _CMOCK_gsmGetCmdTimeout_CALL_INSTANCE
 typedef struct _CMOCK_gsmUrcSearch_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
-  uint8_t ReturnVal;
+  _Bool ReturnVal;
   int CallOrder;
   uint8_t const* Expected_urc;
 
@@ -83,7 +83,7 @@ static struct mock_gsmCommandsInstance
   int gsmGetCmdTimeout_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE gsmGetCmdTimeout_CallInstance;
   int gsmUrcSearch_IgnoreBool;
-  uint8_t gsmUrcSearch_FinalReturn;
+  _Bool gsmUrcSearch_FinalReturn;
   CMOCK_gsmUrcSearch_CALLBACK gsmUrcSearch_CallbackFunctionPointer;
   int gsmUrcSearch_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE gsmUrcSearch_CallInstance;
@@ -442,7 +442,7 @@ void gsmGetCmdTimeout_StubWithCallback(CMOCK_gsmGetCmdTimeout_CALLBACK Callback)
   Mock.gsmGetCmdTimeout_CallbackFunctionPointer = Callback;
 }
 
-uint8_t gsmUrcSearch(uint8_t const* const urc)
+_Bool gsmUrcSearch(uint8_t const* const urc)
 {
   UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
   CMOCK_gsmUrcSearch_CALL_INSTANCE* cmock_call_instance;
@@ -454,7 +454,7 @@ uint8_t gsmUrcSearch(uint8_t const* const urc)
     UNITY_CLR_DETAILS();
     if (cmock_call_instance == NULL)
       return Mock.gsmUrcSearch_FinalReturn;
-    Mock.gsmUrcSearch_FinalReturn = cmock_call_instance->ReturnVal;
+    memcpy(&Mock.gsmUrcSearch_FinalReturn, &cmock_call_instance->ReturnVal, sizeof(_Bool));
     return cmock_call_instance->ReturnVal;
   }
   if (Mock.gsmUrcSearch_CallbackFunctionPointer != NULL)
@@ -483,7 +483,7 @@ void CMockExpectParameters_gsmUrcSearch(CMOCK_gsmUrcSearch_CALL_INSTANCE* cmock_
   cmock_call_instance->Expected_urc = urc;
 }
 
-void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return)
+void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmUrcSearch_CALL_INSTANCE));
   CMOCK_gsmUrcSearch_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmUrcSearch_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -496,7 +496,7 @@ void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock
   Mock.gsmUrcSearch_IgnoreBool = (int)1;
 }
 
-void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, uint8_t cmock_to_return)
+void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, _Bool cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmUrcSearch_CALL_INSTANCE));
   CMOCK_gsmUrcSearch_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmUrcSearch_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -507,7 +507,7 @@ void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
   CMockExpectParameters_gsmUrcSearch(cmock_call_instance, urc);
-  cmock_call_instance->ReturnVal = cmock_to_return;
+  memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(_Bool));
   UNITY_CLR_DETAILS();
 }
 

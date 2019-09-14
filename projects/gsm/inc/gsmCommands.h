@@ -33,7 +33,11 @@
 #ifndef _GSM_COMMANDS_H_
 #define _GSM_COMMANDS_H_
 
-/** \addtogroup commands commands
+/** @brief This module handles the AT command catalog and URC catalog, as well
+ *         as storage and search functions for both.
+ */
+
+/** \addtogroup commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -49,90 +53,59 @@ extern "C" {
 
 /*==================[macros]=================================================*/
 
- /** @brief Default timeout for AT commands in ms */
-
-#define TOUT_DEF 100   /* SIMCOM modules do not specify a default timeout
-                          period, but looking at other manufacturers the
-                          suggested value seems to be around 100 ms */
-
-#define UNKNOWN_CMD 65535  /* Value returned by gsmCmdSearch when cmd is not
-                              found */
-
 /*==================[typedef]================================================*/
-
-/** @brief Used for the internal catalog of AT commands; stores the name,
- *         successful and error end responses and timeout in ms */
-
-typedef struct {
-   uint8_t const * const name;     /**< pointer to str with command name */
-   uint8_t const * const sucRsp;   /**< pointer to str with successful end
-                                        responses */
-   uint8_t const * const errRsp;   /**< pointer to str with error end
-                                        responses */
-   uint32_t timeout;               /**< command timeout in ms */
-} atCmd_t;
-
-/** @brief Used for the internal catalog of URCs; stores the name of the URC */
-
-typedef struct {
-   uint8_t const * const name;     /**< pointer to str with URC name */
-} urc_t;
 
 /*==================[external data declaration]==============================*/
 
-extern atCmd_t const commands [];
-
-extern urc_t const urcs [];
-
 /*==================[external functions declaration]=========================*/
 
-/** @brief Searches for a cmd and returns its position in the commands vector
+/** @brief Searches for a cmd and returns its index
  *
- *  @param cmd Pointer to str with the name of the command to search
+ *  @param cmd : Pointer to str with the name of the command to search
  *
- *  @return Position of the cmd in the commands vector (65535 if unknown)
+ *  @return Index number of the cmd (UNKNOWN_CMD if unknown)
  */
 
 uint16_t gsmCmdSearch(uint8_t const * const cmd);
 
-/** @brief Given a cmd idx, it returns the string of successful close responses
+/** @brief Given a cmd index, returns the string of successful close responses
  *         for the corresponding command
  *
- *  @param idx : Index of the command in the commands vector
+ *  @param idx : Index of the command as reported by gsmCmdSearch
  *
  *  @return String of successful close responses
  */
 
 const uint8_t const * gsmGetCmdSucRsp (uint16_t idx);
 
-/** @brief Given a cmd idx, it returns the string of error close responses for
+/** @brief Given a cmd index, returns the string of error close responses for
  *         the corresponding command
  *
- *  @param idx : Index of the command in the commands vector
+ *  @param idx : Index of the command as reported by gsmCmdSearch
  *
  *  @return String of error close responses
  */
 
 const uint8_t const * gsmGetCmdErrRsp (uint16_t idx);
 
-/** @brief Given a cmd idx, it returns the timeout for the corresponding
+/** @brief Given a cmd index, returns the timeout in ms for the corresponding
  *         command
  *
- *  @param idx : Index of the command in the commands vector
+ *  @param idx : Index of the command as reported by gsmCmdSearch
  *
- *  @return Timeout
+ *  @return Timeout in ms
  */
 
 uint32_t gsmGetCmdTimeout (uint16_t idx);
 
-/** @brief Searches for an URC and returns 1 if recognized, 0 otherwise
+/** @brief Returns true if the urc is recognized
  *
- *  @param  urc Pointer to str with the name of the URC to search
+ *  @param urc : Pointer to str with the name of the URC to search
  *
- *  @return 1 if URC recognized, 0 otherwise
+ *  @return True if URC is recognized
  */
 
-uint8_t gsmUrcSearch(uint8_t const * const urc);
+bool gsmUrcSearch(uint8_t const * const urc);
 
 /*==================[cplusplus]==============================================*/
 

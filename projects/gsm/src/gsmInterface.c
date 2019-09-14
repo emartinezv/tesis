@@ -708,6 +708,22 @@ void gsmCheckConnF (gsmInterface_t * interface)
 
 }
 
+bool gsmReadUrc (gsmInterface_t * interface, urc_s * urc)
+{
+   rsp_t temp;
+
+   temp = gsmGetUrc(&(interface->engine));
+
+   if('\0' != temp.cmd[0]){
+      strncpy(urc->cmd, temp.cmd, strlen(temp.cmd));
+      strncpy(urc->par, temp.par, strlen(temp.par));
+
+      return true;
+   }
+
+   return false;
+}
+
 /*---------------------------------------------------------------------------*/
 /*                          SMS formula functions                            */
 /*---------------------------------------------------------------------------*/

@@ -650,7 +650,7 @@ void console_urc (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   rsp_t urc;
+   urc_s urc = {"\0","\0"};
 
    while ('S' != instruction){
 
@@ -672,15 +672,16 @@ void console_urc (gsmInterface_t * interface)
 
             case '1':
 
-            urc = gsmGetUrc(&interface->engine);
+            if (gsmReadUrc(interface, &urc)){
 
-            if(urc.cmd[0] != '\0'){
                dbgPrint("\r\nURC: ");
                dbgPrint(urc.cmd);
                dbgPrint("(");
                dbgPrint(urc.par);
                dbgPrint(")\r\n");
+
             }
+
             else{
                dbgPrint("\r\nNo hay URCs pendientes\r\n");
             }

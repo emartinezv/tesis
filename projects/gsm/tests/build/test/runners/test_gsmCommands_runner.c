@@ -36,6 +36,9 @@ char* GlobalOrderError;
 extern void setUp(void);
 extern void tearDown(void);
 extern void test_gsmCmdSearch(void);
+extern void test_gsmGetCmdSucRsp(void);
+extern void test_gsmGetCmdErrRsp(void);
+extern void test_gsmGetCmdtimeout(void);
 extern void test_gsmUrcSearch(void);
 
 
@@ -72,7 +75,10 @@ int main(void)
   suite_setup();
   UnityBegin("test_gsmCommands.c");
   RUN_TEST(test_gsmCmdSearch, 46);
-  RUN_TEST(test_gsmUrcSearch, 78);
+  RUN_TEST(test_gsmGetCmdSucRsp, 82);
+  RUN_TEST(test_gsmGetCmdErrRsp, 110);
+  RUN_TEST(test_gsmGetCmdtimeout, 132);
+  RUN_TEST(test_gsmUrcSearch, 160);
 
   return suite_teardown(UnityEnd());
 }

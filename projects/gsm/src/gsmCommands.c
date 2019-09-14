@@ -29,9 +29,7 @@
  *
  */
 
-/** @brief AT command catalog and URC catalog storage and search functions */
-
-/** \addtogroup commands commands
+/** \addtogroup commands
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -40,7 +38,35 @@
 
 /*==================[macros and definitions]=================================*/
 
+/** @brief Default timeout for AT commands in ms */
+
+#define TOUT_DEF 100   /* SIMCOM modules do not specify a default timeout
+                          period, but looking at other manufacturers the
+                          suggested value seems to be around 100 ms */
+
+/** @brief Value returned by gsmCmdSearch when cmd is not found */
+
+#define UNKNOWN_CMD UINT16_MAX
+
 /*==================[internal data declaration]==============================*/
+
+/** @brief Used for the private vector of AT commands. Stores the name,
+ *         successful and error end responses and timeout in ms */
+
+typedef struct {
+   uint8_t const * const name;     /**< pointer to str with command name */
+   uint8_t const * const sucRsp;   /**< pointer to str with successful end
+                                        responses */
+   uint8_t const * const errRsp;   /**< pointer to str with error end
+                                        responses */
+   uint32_t timeout;               /**< command timeout in ms */
+} atCmd_t;
+
+/** @brief Used for the private vector of URCs. Stores the name of the URC */
+
+typedef struct {
+   uint8_t const * const name;     /**< pointer to str with URC name */
+} urc_t;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -50,44 +76,43 @@
 
 /** @brief Vector of known AT commands */
 
-atCmd_t const commands [] = {
+static atCmd_t const atCmds [] = {
+
       {"AT"         , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
       {"I"          , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
       {"CMEE"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
-      {"CMGL"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , 20000},
-      {"CMGR"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , 5000},
-      {"CMGF"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , TOUT_DEF},
-      {"CMGS"       , "-> -" , "-ERROR-CME ERROR-CMS ERROR-"   , 60000},
-      {"CSDH"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"   , TOUT_DEF},
+      {"CMGL"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"    , 20000},
+      {"CMGR"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"    , 5000},
+      {"CMGF"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"    , TOUT_DEF},
+      {"CMGS"       , "-> -" , "-ERROR-CME ERROR-CMS ERROR-"    , 60000},
+      {"CSDH"       , "-OK-" , "-ERROR-CME ERROR-CMS ERROR-"    , TOUT_DEF},
       {"CSCS"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
       {"CREG"       , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
       {"CSQ"        , "-OK-" , "-ERROR-CMS ERROR-"              , TOUT_DEF},
-      {"CNMI"       , "-OK-" , "-ERROR-"                         , TOUT_DEF},
-      {"CMGD"       , "-OK-" , "-ERROR-"                         , 25000},
+      {"CNMI"       , "-OK-" , "-ERROR-"                        , TOUT_DEF},
+      {"CMGD"       , "-OK-" , "-ERROR-"                        , 25000},
       {"CGATT"      , "-OK-" , "-ERROR-CME ERROR-"              , 10000},
       {"CSTT"       , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CIICR"      , "-OK-" , "-ERROR-CME ERROR-"              , 85000},
-      {"CIPSTART"   , "-CONNECT OK-ALREADY CONNECT-CONNECT FAIL-CONNECT-"
+      {"CIPSTART"   , "-CONNECT OK-ALREADY CONNECT-CONNECT FAIL-CONNECT-",
                             /* "CONNECT" is not listed as a closing response
                              * in the SIM808 manual, but actual experiments
                              * indicate that it appears occasionally when
                              * connecting to an UDP port. */
-                    , "-ERROR-CME ERROR-"                       , 160000},
-      {"CIPCLOSE"   , "-CLOSE OK-", "-ERROR-CME ERROR-"         , TOUT_DEF}, //P
+                               "-ERROR-CME ERROR-"              , 160000},
+      {"CIPCLOSE"   , "-CLOSE OK-", "-ERROR-CME ERROR-"         , TOUT_DEF},
       {"CIPSHUT"    , "-SHUT OK-" , "-ERROR-CME ERROR-"         , 65000},
-      {"CIFSR"      , ""     , "-ERROR-CME ERROR-"             , TOUT_DEF},
+      {"CIFSR"      , ""     , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CIPMODE"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CGNSPWR"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
       {"CGNSINF"    , "-OK-" , "-ERROR-CME ERROR-"              , TOUT_DEF},
-      {"SMS_BODY"   , "-OK-" , "-ERROR-"                         , 60000},
-      {0 , 0 , 0}
+      {"SMS_BODY"   , "-OK-" , "-ERROR-"                        , 60000},
 };
 
 /** @brief Vector of known URCs */
 
-urc_t const urcs [] = {
+static urc_t const urcs [] = {
       {"CMTI"},
-      {0}
 };
 
 /*==================[internal functions definition]==========================*/
@@ -96,10 +121,10 @@ urc_t const urcs [] = {
 
 uint16_t gsmCmdSearch(uint8_t const * const cmd)
 {
-   int i = 0;
+   uint16_t i = 0;
 
-   for(i = 0; 0 != commands[i].name; i++){
-      if(0 == strcmp(cmd, commands[i].name)){return i;}
+   for(i = 0; i < (sizeof(atCmds)/sizeof(atCmd_t)); i++){
+      if(0 == strcmp(cmd, atCmds[i].name)){return i;}
    }
 
    return UNKNOWN_CMD;
@@ -107,8 +132,8 @@ uint16_t gsmCmdSearch(uint8_t const * const cmd)
 
 const uint8_t const *  gsmGetCmdSucRsp (uint16_t idx)
 {
-   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
-      return commands[idx].sucRsp;
+   if(idx < (sizeof(atCmds)/sizeof(atCmd_t))){
+      return atCmds[idx].sucRsp;
    }
 
    return NULL;
@@ -116,8 +141,8 @@ const uint8_t const *  gsmGetCmdSucRsp (uint16_t idx)
 
 const uint8_t const * gsmGetCmdErrRsp (uint16_t idx)
 {
-   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
-      return commands[idx].errRsp;
+   if(idx < (sizeof(atCmds)/sizeof(atCmd_t))){
+      return atCmds[idx].errRsp;
    }
 
    return NULL;
@@ -125,22 +150,23 @@ const uint8_t const * gsmGetCmdErrRsp (uint16_t idx)
 
 uint32_t gsmGetCmdTimeout (uint16_t idx)
 {
-   if(idx < (sizeof(commands)/sizeof(atCmd_t))){
-      return commands[idx].timeout;
+   if(idx < (sizeof(atCmds)/sizeof(atCmd_t))){
+      return atCmds[idx].timeout;
    }
 
    return 0;
 }
 
-uint8_t gsmUrcSearch(uint8_t const * const urc)
+bool gsmUrcSearch(uint8_t const * const urc)
 {
-   int i = 0;
+   uint8_t i = 0;
 
-   for(i = 0; 0 != urcs[i].name; i++){
-      if(0 == strcmp(urc, urcs[i].name)){return 1;}
+   for(i = 0; i < (sizeof(urcs)/sizeof(urc_t)); i++){
+      if(0 == strcmp(urc, urcs[i].name)){return true;}
    }
 
-   return 0;
+   return false;
 }
 
+/** @} doxygen end group definition */
 /*==================[end of file]============================================*/

@@ -385,6 +385,60 @@ void test_gsmCheckConn(void)
 
 }
 
+/* test_gsmReadUrc
+ *
+ * Functions tested:
+ *
+ * - gsmReadUrc
+ *
+ * */
+
+void test_gsmReadUrc(void)
+{
+   /* Variables */
+
+   gsmInterface_t interface;
+   urc_s urcTest = {"\0","\0"};
+   bool result;
+
+   rsp_t rspTest1 = {"\0","\0"};
+   rsp_t rspTest2 = {"command",""};
+   rsp_t rspTest3 = {"command","parameters"};
+
+   /* Test sequence */
+
+   /* Test for no URCs in store */
+
+   gsmGetUrc_ExpectAndReturn(&(interface.engine), rspTest1);
+
+   result = gsmReadUrc(&interface, &urcTest);
+
+   TEST_ASSERT_FALSE(result);
+   TEST_ASSERT_EQUAL_STRING("\0", urcTest.cmd);
+   TEST_ASSERT_EQUAL_STRING("\0", urcTest.par);
+
+   /* Test for URC with cmd and no pars*/
+
+   gsmGetUrc_ExpectAndReturn(&(interface.engine), rspTest2);
+
+   result = gsmReadUrc(&interface, &urcTest);
+
+   TEST_ASSERT_TRUE(result);
+   TEST_ASSERT_EQUAL_STRING("command", urcTest.cmd);
+   TEST_ASSERT_EQUAL_STRING("\0", urcTest.par);
+
+   /* Test for IRC with cmd and pars*/
+
+   gsmGetUrc_ExpectAndReturn(&(interface.engine), rspTest3);
+
+   result = gsmReadUrc(&interface, &urcTest);
+
+   TEST_ASSERT_TRUE(result);
+   TEST_ASSERT_EQUAL_STRING("command", urcTest.cmd);
+   TEST_ASSERT_EQUAL_STRING("parameters", urcTest.par);
+
+}
+
 /* test_gsmSetUrcMode
  *
  * Functions tested:

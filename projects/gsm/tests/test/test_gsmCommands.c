@@ -45,7 +45,11 @@ void tearDown(void)
 
 void test_gsmCmdSearch(void)
 {
+   /* Variables */
+
    uint16_t idx = UNKNOWN_CMD;
+
+   /* Test sequence */
 
    /* Test AT cmd */
 
@@ -75,8 +79,88 @@ void test_gsmCmdSearch(void)
 
 }
 
+void test_gsmGetCmdSucRsp(void)
+{
+   /* Variables */
+
+   const uint8_t * rsp;
+
+   /* Test sequence */
+
+   /* Test CMGL cmd */
+
+   rsp = gsmGetCmdSucRsp(3);
+
+   TEST_ASSERT_EQUAL_STRING("-OK-", rsp);
+
+   /* Test CIPSTART cmd */
+
+   rsp = gsmGetCmdSucRsp(16);
+
+   TEST_ASSERT_EQUAL_STRING("-CONNECT OK-ALREADY CONNECT-CONNECT FAIL-CONNECT-"
+                            ,rsp);
+
+   /* Test CIPCLOSE cmd */
+
+   rsp = gsmGetCmdSucRsp(17);
+
+   TEST_ASSERT_EQUAL_STRING("-CLOSE OK-", rsp);
+}
+
+void test_gsmGetCmdErrRsp(void)
+{
+   /* Variables */
+
+   const uint8_t * rsp;
+
+   /* Test sequence */
+
+   /* Test CMGL cmd */
+
+   rsp = gsmGetCmdErrRsp(3);
+
+   TEST_ASSERT_EQUAL_STRING("-ERROR-CME ERROR-CMS ERROR-", rsp);
+
+   /* Test CNMI cmd */
+
+   rsp = gsmGetCmdErrRsp(11);
+
+   TEST_ASSERT_EQUAL_STRING("-ERROR-", rsp);
+
+}
+
+void test_gsmGetCmdtimeout(void)
+{
+   /* Variables */
+
+   uint32_t timeout;
+
+   /* Test sequence */
+
+   /* Test CMEE cmd */
+
+   timeout = gsmGetCmdTimeout(2);
+
+   TEST_ASSERT_EQUAL_UINT32(TOUT_DEF, timeout);
+
+   /* Test CIICR cmd */
+
+   timeout = gsmGetCmdTimeout(15);
+
+   TEST_ASSERT_EQUAL_UINT32(85000, timeout);
+
+   /* Test CMGD cmd */
+
+   timeout = gsmGetCmdTimeout(12);
+
+   TEST_ASSERT_EQUAL_UINT32(25000, timeout);
+
+}
+
 void test_gsmUrcSearch(void)
 {
+   /* Variables */
+
    uint8_t idx = 2;
 
    /* Test CMTI urc */
@@ -94,5 +178,4 @@ void test_gsmUrcSearch(void)
    return;
 
 }
-
 

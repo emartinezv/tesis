@@ -48,10 +48,10 @@ void gsmGetCmdTimeout_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t 
 typedef uint32_t (* CMOCK_gsmGetCmdTimeout_CALLBACK)(uint16_t idx, int cmock_num_calls);
 void gsmGetCmdTimeout_StubWithCallback(CMOCK_gsmGetCmdTimeout_CALLBACK Callback);
 #define gsmUrcSearch_IgnoreAndReturn(cmock_retval) gsmUrcSearch_CMockIgnoreAndReturn(__LINE__, cmock_retval)
-void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
+void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmUrcSearch_ExpectAndReturn(urc, cmock_retval) gsmUrcSearch_CMockExpectAndReturn(__LINE__, urc, cmock_retval)
-void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, uint8_t cmock_to_return);
-typedef uint8_t (* CMOCK_gsmUrcSearch_CALLBACK)(uint8_t const* const urc, int cmock_num_calls);
+void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, _Bool cmock_to_return);
+typedef _Bool (* CMOCK_gsmUrcSearch_CALLBACK)(uint8_t const* const urc, int cmock_num_calls);
 void gsmUrcSearch_StubWithCallback(CMOCK_gsmUrcSearch_CALLBACK Callback);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)

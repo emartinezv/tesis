@@ -235,6 +235,17 @@ typedef struct _connStatus_s {
 } connStatus_s;
 
 /*---------------------------------------------------------------------------*/
+/*                Data structures for the gsmReadUrc function                */
+/*---------------------------------------------------------------------------*/
+
+/** @brief Struct for reading URC command and parameters */
+
+typedef struct _urc_s {
+   uint8_t cmd[TKN_CMD_SIZE];
+   uint8_t par[TKN_PAR_SIZE];
+} urc_s;
+
+/*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmSmsSend function                */
 /*---------------------------------------------------------------------------*/
 
@@ -457,6 +468,16 @@ void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
 
 void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
                    frmCback_t cback);
+
+/** @brief Read latest URC received, if any
+*
+* @param interface : Pointer to interface
+* @param urc       : Pointer to URC struct
+*
+* @return Return true if URC read
+*/
+
+bool gsmReadUrc (gsmInterface_t * interface, urc_s * urc);
 
 /** @brief Sets URC handling either cback mode or manual mode
 *

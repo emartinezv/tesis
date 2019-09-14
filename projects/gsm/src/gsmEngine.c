@@ -223,7 +223,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
 
             /* Search in the recognized URCs list and log the URC if correct */
 
-            if(1 == gsmUrcSearch(cmd)){
+            if(true == gsmUrcSearch(cmd)){
 
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc (engine, cmd, par);
@@ -305,7 +305,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
 
             /* Search in the recognized URCs list and log the URC if correct */
 
-            if(1 == gsmUrcSearch(cmd)){
+            if(true == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc(engine, cmd, par);
 
@@ -368,7 +368,7 @@ static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
 
             /* Search in the recognized URCs list and log the URC if correct */
 
-            if(1 == gsmUrcSearch(cmd)){
+            if(true == gsmUrcSearch(cmd)){
                debug(">>>engine<<<   URC detected\r\n");
                gsmRecordUrc(engine, cmd, par);
 

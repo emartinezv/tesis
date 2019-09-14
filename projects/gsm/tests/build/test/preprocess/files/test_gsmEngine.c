@@ -401,7 +401,7 @@ uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
 
 
 
-   return 65535;
+   return UNKNOWN_CMD;
 
 }
 
@@ -471,7 +471,7 @@ uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
 
          if(0 != idx){UnityFail( (("Incorrect command index")), (UNITY_UINT)(255));}
 
-         else{return 100;}
+         else{return TOUT_DEF;}
 
          break;
 
