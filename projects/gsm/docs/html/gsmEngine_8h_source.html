@@ -157,121 +157,123 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="comment">#define MAX_CGNSINF_SIZE 94</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">typedef struct _rsp_t</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment">{</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="comment">   uint8_t cmd[TKN_CMD_SIZE];</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">   uint8_t par[TKN_PAR_SIZE];</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">} rsp_t;</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">typedef enum _serialMode_e</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">{</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">   COMMAND_MODE,</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">   DATA_MODE</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">} serialMode_e ;</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">typedef enum _fsmState_e</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">{</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">   WAITING = 0,  </span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">   CMD_SENT = 1, </span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">   CMD_ACK = 2,  </span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">} fsmState_e;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment">typedef enum _fsmEvent</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="comment">{</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">   NO_UPDATE,         </span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">   OK_CMD_SENT,       </span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">   OK_CMD_ACK,        </span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">   OK_RSP,            </span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">   OK_URC,            </span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">   OK_CLOSE,          </span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">   ERR_CMD_UKN,       </span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">   ERR_CMD_ECHO,      </span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">   ERR_OOO,           </span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">   ERR_TKN_INV,       </span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">   ERR_MSG_CLOSE,     </span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">   ERR_TIMEOUT,       </span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">   ERR_FSM_OOR        </span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">} fsmEvent_e;</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment"></span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">typedef struct _gsmEngine_t</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">{</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">   /* State */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;   fsmState_e fsmState;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;   serialMode_e serialMode;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;   uint8_t currCmd[<a class="code" href="group__gsm.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>]; <span class="comment">/* command being currently executed */</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;   uint8_t currPar[TKN_PAR_SIZE]; <span class="comment">/* parameter of the current command */</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;   uint8_t currIdx;               <span class="comment">/* save index of current command */</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;   <span class="comment">/* Counters */</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;   uint32_t toutCnt;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;   <span class="comment">/* VL ring buffers */</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> tknVlRb;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> rspVlRb;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> urcVlRb;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;   <span class="comment">/* Ring buffers */</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;   RINGBUFF_T tknRb;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;   RINGBUFF_T rspRb;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;   RINGBUFF_T urcRb;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;   <span class="comment">/* Ring buffer storage arrays */</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;   uint8_t tknRbBuf[<a class="code" href="group__gsm.html#ga246f1925726ab2bd77a8dddcaae15e26">TKN_BUF_SIZE</a>];</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;   uint8_t rspRbBuf[<a class="code" href="group__gsm.html#ga8b2430568b016c5a6e520af63e4b88e3">RSP_BUF_SIZE</a>];</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;   uint8_t urcRbBuf[<a class="code" href="group__gsm.html#ga98de0d06859a21dd5792cc75d6ecc5d9">URC_BUF_SIZE</a>];</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;} gsmEngine_t;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="keywordtype">bool</span> gsmInitEngine(gsmEngine_t * engine);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;fsmEvent_e <a class="code" href="group__gsm.html#ga50bbd7544920f18bbc7f5104a8023671">gsmProcessTkn</a>(gsmEngine_t * engine);</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="keywordtype">bool</span> gsmToutCntZero(gsmEngine_t * engine);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="keywordtype">void</span> gsmDecToutCnt(gsmEngine_t * engine);</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;fsmEvent_e <a class="code" href="group__gsm.html#ga3cd501ba729c92838c12f83f53fc35e0">gsmSendCmd</a> (gsmEngine_t * engine, <span class="keyword">const</span> uint8_t * cmdStr);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;rsp_t gsmGetCmdRsp (gsmEngine_t * engine);</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;uint8_t gsmGetNoCmdRsp (gsmEngine_t * engine);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;rsp_t gsmGetUrc (gsmEngine_t * engine);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;serialMode_e gsmGetSerialMode(gsmEngine_t * engine);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="keywordtype">bool</span> gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment">#define RD_BUF_SIZ TKN_LEN</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">typedef struct _rsp_t</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">{</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">   uint8_t cmd[TKN_CMD_SIZE];</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="comment">   uint8_t par[TKN_PAR_SIZE];</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">} rsp_t;</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">typedef enum _serialMode_e</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">{</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">   COMMAND_MODE,</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">   DATA_MODE</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">} serialMode_e ;</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">typedef enum _fsmState_e</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">{</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">   WAITING = 0,  </span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">   CMD_SENT = 1, </span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="comment">   CMD_ACK = 2,  </span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">} fsmState_e;</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">typedef enum _fsmEvent</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">{</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">   NO_UPDATE,         </span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">   OK_CMD_SENT,       </span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="comment">   OK_CMD_ACK,        </span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">   OK_RSP,            </span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="comment">   OK_URC,            </span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="comment">   OK_CLOSE,          </span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">   ERR_CMD_UKN,       </span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">   ERR_CMD_ECHO,      </span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">   ERR_OOO,           </span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="comment">   ERR_TKN_INV,       </span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="comment">   ERR_MSG_CLOSE,     </span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">   ERR_TIMEOUT,       </span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment">   ERR_FSM_OOR        </span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">} fsmEvent_e;</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment"></span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">typedef struct _gsmEngine_t</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">{</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">   /* State */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;   fsmState_e fsmState;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;   serialMode_e serialMode;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;   uint8_t currCmd[<a class="code" href="group__gsm.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>]; <span class="comment">/* command being currently executed */</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;   uint8_t currPar[TKN_PAR_SIZE]; <span class="comment">/* parameter of the current command */</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;   uint8_t currIdx;               <span class="comment">/* save index of current command */</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;   <span class="comment">/* Counters */</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;   uint32_t toutCnt;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;   <span class="comment">/* VL ring buffers */</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> tknVlRb;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> rspVlRb;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;   <a class="code" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> urcVlRb;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;   <span class="comment">/* Ring buffers */</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;   RINGBUFF_T tknRb;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;   RINGBUFF_T rspRb;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;   RINGBUFF_T urcRb;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;   <span class="comment">/* Ring buffer storage arrays */</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;   uint8_t tknRbBuf[<a class="code" href="group__gsm.html#ga246f1925726ab2bd77a8dddcaae15e26">TKN_BUF_SIZE</a>];</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;   uint8_t rspRbBuf[<a class="code" href="group__gsm.html#ga8b2430568b016c5a6e520af63e4b88e3">RSP_BUF_SIZE</a>];</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;   uint8_t urcRbBuf[<a class="code" href="group__gsm.html#ga98de0d06859a21dd5792cc75d6ecc5d9">URC_BUF_SIZE</a>];</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;} gsmEngine_t;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="keywordtype">bool</span> gsmInitEngine(gsmEngine_t * engine);</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;fsmEvent_e <a class="code" href="group__gsm.html#ga50bbd7544920f18bbc7f5104a8023671">gsmProcessTkn</a>(gsmEngine_t * engine);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="keywordtype">bool</span> gsmToutCntZero(gsmEngine_t * engine);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="keywordtype">void</span> gsmDecToutCnt(gsmEngine_t * engine);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;fsmEvent_e <a class="code" href="group__gsm.html#ga3cd501ba729c92838c12f83f53fc35e0">gsmSendCmd</a> (gsmEngine_t * engine, <span class="keyword">const</span> uint8_t * cmdStr);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;rsp_t gsmGetCmdRsp (gsmEngine_t * engine);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;uint8_t gsmGetNoCmdRsp (gsmEngine_t * engine);</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;rsp_t gsmGetUrc (gsmEngine_t * engine);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;serialMode_e gsmGetSerialMode(gsmEngine_t * engine);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="keywordtype">bool</span> gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="group__gsm_html_ga246f1925726ab2bd77a8dddcaae15e26"><div class="ttname"><a href="group__gsm.html#ga246f1925726ab2bd77a8dddcaae15e26">TKN_BUF_SIZE</a></div><div class="ttdeci">#define TKN_BUF_SIZE</div><div class="ttdoc">Size in bytes of the tknVlRb buffer. </div><div class="ttdef"><b>Definition:</b> gsmEngine.h:58</div></div>
 <div class="ttc" id="group__gsm_html_ga98de0d06859a21dd5792cc75d6ecc5d9"><div class="ttname"><a href="group__gsm.html#ga98de0d06859a21dd5792cc75d6ecc5d9">URC_BUF_SIZE</a></div><div class="ttdeci">#define URC_BUF_SIZE</div><div class="ttdoc">Size in bytes of the urcVlRb buffer. </div><div class="ttdef"><b>Definition:</b> gsmEngine.h:64</div></div>
 <div class="ttc" id="group__gsm_html_ga50bbd7544920f18bbc7f5104a8023671"><div class="ttname"><a href="group__gsm.html#ga50bbd7544920f18bbc7f5104a8023671">gsmProcessTkn</a></div><div class="ttdeci">fsmEvent_e gsmProcessTkn(gsmEngine_t *engine)</div><div class="ttdef"><b>Definition:</b> gsmEngine.c:580</div></div>
-<div class="ttc" id="group__gsm_html_ga3cd501ba729c92838c12f83f53fc35e0"><div class="ttname"><a href="group__gsm.html#ga3cd501ba729c92838c12f83f53fc35e0">gsmSendCmd</a></div><div class="ttdeci">fsmEvent_e gsmSendCmd(gsmEngine_t *engine, const uint8_t *cmdStr)</div><div class="ttdef"><b>Definition:</b> gsmEngine.c:644</div></div>
+<div class="ttc" id="group__gsm_html_ga3cd501ba729c92838c12f83f53fc35e0"><div class="ttname"><a href="group__gsm.html#ga3cd501ba729c92838c12f83f53fc35e0">gsmSendCmd</a></div><div class="ttdeci">fsmEvent_e gsmSendCmd(gsmEngine_t *engine, const uint8_t *cmdStr)</div><div class="ttdef"><b>Definition:</b> gsmEngine.c:649</div></div>
 <div class="ttc" id="structVLRINGBUFF__T_html"><div class="ttname"><a href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a></div><div class="ttdef"><b>Definition:</b> vl_ring_buffer.h:27</div></div>
 <div class="ttc" id="group__gsm_html_ga8b2430568b016c5a6e520af63e4b88e3"><div class="ttname"><a href="group__gsm.html#ga8b2430568b016c5a6e520af63e4b88e3">RSP_BUF_SIZE</a></div><div class="ttdeci">#define RSP_BUF_SIZE</div><div class="ttdoc">Size in bytes of the rspVlRb buffer. </div><div class="ttdef"><b>Definition:</b> gsmEngine.h:61</div></div>
 <div class="ttc" id="group__gsm_html_ga84449ac99bb9a378f8d11e6b3e875ffa"><div class="ttname"><a href="group__gsm.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a></div><div class="ttdeci">#define TKN_CMD_SIZE</div><div class="ttdoc">Max size of an AT token command part. </div><div class="ttdef"><b>Definition:</b> gsmEngine.h:67</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 14 2019 16:18:45 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 14 2019 18:53:15 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

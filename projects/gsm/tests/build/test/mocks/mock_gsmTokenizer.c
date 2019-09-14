@@ -6,8 +6,11 @@
 #include "cmock.h"
 #include "mock_gsmTokenizer.h"
 
+static const char* CMockString_buffer = "buffer";
 static const char* CMockString_gsmDetectTkns = "gsmDetectTkns";
 static const char* CMockString_gsmInitTokenizer = "gsmInitTokenizer";
+static const char* CMockString_gsmNoChTokenizer = "gsmNoChTokenizer";
+static const char* CMockString_nch = "nch";
 static const char* CMockString_tknVlRb = "tknVlRb";
 
 typedef struct _CMOCK_gsmInitTokenizer_CALL_INSTANCE
@@ -18,11 +21,21 @@ typedef struct _CMOCK_gsmInitTokenizer_CALL_INSTANCE
 
 } CMOCK_gsmInitTokenizer_CALL_INSTANCE;
 
+typedef struct _CMOCK_gsmNoChTokenizer_CALL_INSTANCE
+{
+  UNITY_LINE_TYPE LineNumber;
+  uint16_t ReturnVal;
+  int CallOrder;
+
+} CMOCK_gsmNoChTokenizer_CALL_INSTANCE;
+
 typedef struct _CMOCK_gsmDetectTkns_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
   int CallOrder;
   VLRINGBUFF_T* Expected_tknVlRb;
+  uint16_t Expected_nch;
+  uint8_t const* Expected_buffer;
 
 } CMOCK_gsmDetectTkns_CALL_INSTANCE;
 
@@ -33,6 +46,11 @@ static struct mock_gsmTokenizerInstance
   CMOCK_gsmInitTokenizer_CALLBACK gsmInitTokenizer_CallbackFunctionPointer;
   int gsmInitTokenizer_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE gsmInitTokenizer_CallInstance;
+  int gsmNoChTokenizer_IgnoreBool;
+  uint16_t gsmNoChTokenizer_FinalReturn;
+  CMOCK_gsmNoChTokenizer_CALLBACK gsmNoChTokenizer_CallbackFunctionPointer;
+  int gsmNoChTokenizer_CallbackCalls;
+  CMOCK_MEM_INDEX_TYPE gsmNoChTokenizer_CallInstance;
   int gsmDetectTkns_IgnoreBool;
   CMOCK_gsmDetectTkns_CALLBACK gsmDetectTkns_CallbackFunctionPointer;
   int gsmDetectTkns_CallbackCalls;
@@ -52,6 +70,12 @@ void mock_gsmTokenizer_Verify(void)
   UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.gsmInitTokenizer_CallInstance, cmock_line, CMockStringCalledLess);
   if (Mock.gsmInitTokenizer_CallbackFunctionPointer != NULL)
     Mock.gsmInitTokenizer_CallInstance = CMOCK_GUTS_NONE;
+  if (Mock.gsmNoChTokenizer_IgnoreBool)
+    Mock.gsmNoChTokenizer_CallInstance = CMOCK_GUTS_NONE;
+  UNITY_SET_DETAIL(CMockString_gsmNoChTokenizer);
+  UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.gsmNoChTokenizer_CallInstance, cmock_line, CMockStringCalledLess);
+  if (Mock.gsmNoChTokenizer_CallbackFunctionPointer != NULL)
+    Mock.gsmNoChTokenizer_CallInstance = CMOCK_GUTS_NONE;
   if (Mock.gsmDetectTkns_IgnoreBool)
     Mock.gsmDetectTkns_CallInstance = CMOCK_GUTS_NONE;
   UNITY_SET_DETAIL(CMockString_gsmDetectTkns);
@@ -71,6 +95,8 @@ void mock_gsmTokenizer_Destroy(void)
   memset(&Mock, 0, sizeof(Mock));
   Mock.gsmInitTokenizer_CallbackFunctionPointer = NULL;
   Mock.gsmInitTokenizer_CallbackCalls = 0;
+  Mock.gsmNoChTokenizer_CallbackFunctionPointer = NULL;
+  Mock.gsmNoChTokenizer_CallbackCalls = 0;
   Mock.gsmDetectTkns_CallbackFunctionPointer = NULL;
   Mock.gsmDetectTkns_CallbackCalls = 0;
   GlobalExpectCount = 0;
@@ -139,7 +165,69 @@ void gsmInitTokenizer_StubWithCallback(CMOCK_gsmInitTokenizer_CALLBACK Callback)
   Mock.gsmInitTokenizer_CallbackFunctionPointer = Callback;
 }
 
-void gsmDetectTkns(VLRINGBUFF_T* tknVlRb)
+uint16_t gsmNoChTokenizer(void)
+{
+  UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
+  CMOCK_gsmNoChTokenizer_CALL_INSTANCE* cmock_call_instance;
+  UNITY_SET_DETAIL(CMockString_gsmNoChTokenizer);
+  cmock_call_instance = (CMOCK_gsmNoChTokenizer_CALL_INSTANCE*)CMock_Guts_GetAddressFor(Mock.gsmNoChTokenizer_CallInstance);
+  Mock.gsmNoChTokenizer_CallInstance = CMock_Guts_MemNext(Mock.gsmNoChTokenizer_CallInstance);
+  if (Mock.gsmNoChTokenizer_IgnoreBool)
+  {
+    UNITY_CLR_DETAILS();
+    if (cmock_call_instance == NULL)
+      return Mock.gsmNoChTokenizer_FinalReturn;
+    Mock.gsmNoChTokenizer_FinalReturn = cmock_call_instance->ReturnVal;
+    return cmock_call_instance->ReturnVal;
+  }
+  if (Mock.gsmNoChTokenizer_CallbackFunctionPointer != NULL)
+  {
+    return Mock.gsmNoChTokenizer_CallbackFunctionPointer(Mock.gsmNoChTokenizer_CallbackCalls++);
+  }
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
+  cmock_line = cmock_call_instance->LineNumber;
+  if (cmock_call_instance->CallOrder > ++GlobalVerifyOrder)
+    UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
+  if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
+    UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  UNITY_CLR_DETAILS();
+  return cmock_call_instance->ReturnVal;
+}
+
+void gsmNoChTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmNoChTokenizer_CALL_INSTANCE));
+  CMOCK_gsmNoChTokenizer_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmNoChTokenizer_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmNoChTokenizer_CallInstance = CMock_Guts_MemChain(Mock.gsmNoChTokenizer_CallInstance, cmock_guts_index);
+  Mock.gsmNoChTokenizer_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  Mock.gsmNoChTokenizer_IgnoreBool = (int)1;
+}
+
+void gsmNoChTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmNoChTokenizer_CALL_INSTANCE));
+  CMOCK_gsmNoChTokenizer_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmNoChTokenizer_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmNoChTokenizer_CallInstance = CMock_Guts_MemChain(Mock.gsmNoChTokenizer_CallInstance, cmock_guts_index);
+  Mock.gsmNoChTokenizer_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  UNITY_CLR_DETAILS();
+}
+
+void gsmNoChTokenizer_StubWithCallback(CMOCK_gsmNoChTokenizer_CALLBACK Callback)
+{
+  Mock.gsmNoChTokenizer_IgnoreBool = (int)0;
+  Mock.gsmNoChTokenizer_CallbackFunctionPointer = Callback;
+}
+
+void gsmDetectTkns(VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer)
 {
   UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
   CMOCK_gsmDetectTkns_CALL_INSTANCE* cmock_call_instance;
@@ -153,7 +241,7 @@ void gsmDetectTkns(VLRINGBUFF_T* tknVlRb)
   }
   if (Mock.gsmDetectTkns_CallbackFunctionPointer != NULL)
   {
-    Mock.gsmDetectTkns_CallbackFunctionPointer(tknVlRb, Mock.gsmDetectTkns_CallbackCalls++);
+    Mock.gsmDetectTkns_CallbackFunctionPointer(tknVlRb, nch, buffer, Mock.gsmDetectTkns_CallbackCalls++);
     return;
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringCalledMore);
@@ -166,12 +254,25 @@ void gsmDetectTkns(VLRINGBUFF_T* tknVlRb)
     UNITY_SET_DETAILS(CMockString_gsmDetectTkns,CMockString_tknVlRb);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_tknVlRb), (void*)(tknVlRb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
   }
+  {
+    UNITY_SET_DETAILS(CMockString_gsmDetectTkns,CMockString_nch);
+    UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_nch, nch, cmock_line, CMockStringMismatch);
+  }
+  {
+    UNITY_SET_DETAILS(CMockString_gsmDetectTkns,CMockString_buffer);
+    if (cmock_call_instance->Expected_buffer == NULL)
+      { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+  }
   UNITY_CLR_DETAILS();
 }
 
-void CMockExpectParameters_gsmDetectTkns(CMOCK_gsmDetectTkns_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* tknVlRb)
+void CMockExpectParameters_gsmDetectTkns(CMOCK_gsmDetectTkns_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer)
 {
   cmock_call_instance->Expected_tknVlRb = tknVlRb;
+  cmock_call_instance->Expected_nch = nch;
+  cmock_call_instance->Expected_buffer = buffer;
 }
 
 void gsmDetectTkns_CMockIgnore(void)
@@ -179,7 +280,7 @@ void gsmDetectTkns_CMockIgnore(void)
   Mock.gsmDetectTkns_IgnoreBool = (int)1;
 }
 
-void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb)
+void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmDetectTkns_CALL_INSTANCE));
   CMOCK_gsmDetectTkns_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmDetectTkns_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -189,7 +290,7 @@ void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb
   Mock.gsmDetectTkns_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmDetectTkns(cmock_call_instance, tknVlRb);
+  CMockExpectParameters_gsmDetectTkns(cmock_call_instance, tknVlRb, nch, buffer);
   UNITY_CLR_DETAILS();
 }
 

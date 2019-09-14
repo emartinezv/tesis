@@ -1,4 +1,4 @@
-/* Copyright 2018, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,11 @@
 #ifndef _GSM_TOKENIZER_H_
 #define _GSM_TOKENIZER_H_
 
-/** \addtogroup gsm
+/** @brief This module handles the tokenizer function, turning the raw serial
+ *         input from the modem into discrete tokens
+ */
+
+/** \addtogroup tokenizer tokenizer
  ** @{ */
 
 /*==================[inclusions]============================================*/
@@ -52,9 +56,6 @@ extern "C" {
 
 /** @brief Maximum size of tokens */
 #define TKN_LEN 300
-
-/** @brief Size in bytes of the UART read buffer */
-#define RD_BUF_SIZ TKN_LEN
 
 /** @brief Size in bytes of the UART swap buffer */
 #define SWAP_BUF_SIZ TKN_LEN
@@ -81,20 +82,31 @@ tknTypeTknzer_e;
 /*==================[external functions declaration]========================*/
 
 /** @brief Initializes tokenizer and it's RB
-*
-*  @return Returns true if successful
-*/
+ *
+ *  @return True if successful
+ */
 
 bool gsmInitTokenizer(void);
 
-/** @brief Get characters from the UART ring buffer into a local buffer, cycle
- *         though it and send detected tokens to the token VL ring buffer
-*
-*  @param  tknVlRb   : Pointer to the token VL ring buffer
-*
-*/
+/** @brief Determines how many chars can be sent to the tokenizer at this time
+ *
+ *  @return Number of chars the tokenizer can accommodate right now
+ */
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb);
+uint16_t gsmNoChTokenizer(void);
+
+/** @brief Get characters from input buffer into the current tkn ring buffer,
+ *         cycle though it and send detected tokens to the output token VL
+ *         ring buffer
+ *
+ *  @param tknVlRb : Pointer to the output token VL ring buffer
+ *  @param nch     : Number of characters in input buffer
+ *  @param buffer  : Pointer to input buffer
+ *
+ */
+
+void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
+                   uint8_t const * const buffer);
 
 /*==================[cplusplus]=============================================*/
 

@@ -4,37 +4,37 @@
   :file: test_gsmEngine.c
 :successes:
 - :test: test_gsmInitEngine
-  :line: 329
+  :line: 336
   :message: ''
 - :test: test_gsmProcessTkn
-  :line: 356
+  :line: 363
   :message: ''
 - :test: test_gsmToutCntZero
-  :line: 585
+  :line: 595
   :message: ''
 - :test: test_gsmDecToutCnt
-  :line: 613
+  :line: 623
   :message: ''
 - :test: test_gsmSendCmd
-  :line: 653
+  :line: 663
   :message: ''
 - :test: test_gsmGetCmdRsp
-  :line: 693
+  :line: 703
   :message: ''
 - :test: test_gsmGetNoCmdRsp
-  :line: 746
+  :line: 756
   :message: ''
 - :test: test_gsmGetUrc
-  :line: 774
+  :line: 784
   :message: ''
 - :test: test_gsmGetSerialMode
-  :line: 818
+  :line: 828
   :message: ''
 - :test: test_gsmSetSerialMode
-  :line: 846
+  :line: 856
   :message: ''
 - :test: test_gsmRecordUrc
-  :line: 874
+  :line: 884
   :message: ''
 :failures: []
 :ignores: []
@@ -44,4 +44,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002341782
+:time: 0.002556966

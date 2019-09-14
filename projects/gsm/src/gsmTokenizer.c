@@ -1,4 +1,4 @@
-/* Copyright 2018, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
  *
@@ -30,10 +30,7 @@
  *
  */
 
-/** @brief This module handles the tokenizer function
- */
-
-/** \addtogroup gsm
+/** \addtogroup tokenizer tokenizer
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -73,9 +70,16 @@ static RINGBUFF_T currTknRb;
 
 bool gsmInitTokenizer(void)
 {
-   /* Initialize current token ring buffer and return result */
-
    return RingBuffer_Init(&currTknRb, &currTknBuf, 1, CURR_TKN_BUF_SIZ);
+}
+
+uint16_t gsmNoChTokenizer(void)
+{
+   uint16_t tknRbFree;
+
+   tknRbFree = RingBuffer_GetFree(&currTknRb);
+
+   return ((tknRbFree < SWAP_BUF_SIZ) ? tknRbFree : SWAP_BUF_SIZ);
 }
 
 /* gsmDetectTkns takes the raw serial input and turns it into discrete parts we
@@ -86,21 +90,23 @@ bool gsmInitTokenizer(void)
  * AT protocol. The function does make a very rough classification of each
  * token type, but the upper layers refine this classification.
  *
- * The function accumulates the incoming characters in a ring buffer
+ * The function accumulates input buffer characters in a ring buffer
  * (currTknRb) and looks for the specific characters mentioned. This takes the
- * form of a FSM of sorts, since the condition for token detection sometimes
+ * form of an implicit FSM, since the condition for token detection sometimes
  * involves both starting and finishing characters. When the function has
  * detected a token, it pops a number of characters from currTknRb and inserts
- * them as a single entry in tknVlRb, the VLRB sent as by the upper layer as
- * the single input variable with the invocation.
+ * them as a single entry in the output tknVlRb. The token type (at tokenizer
+ * level) is added to the end of the token to assist the higher-level parser
+ * function.
  *
  */
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
+void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
+                   uint8_t const * const buffer)
 {
    /* State-machine variables and flags */
 
-   tknTypeTknzer_e currTkn = NONE;     /* Classification of the current token */
+   tknTypeTknzer_e currTkn = NONE; /* Classification of the current token */
 
    static uint8_t crLf = 0;    /* Initial <CR><LF> sequence detected */
    static uint8_t empty = 1;   /* Non-control characters received */
@@ -108,41 +114,25 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
 
    /* Buffer processing variables */
 
-   uint8_t rdBuf[RD_BUF_SIZ];       /* read buffer */
-   uint8_t swapBuf[SWAP_BUF_SIZ];   /* swap buffer */
-   uint16_t n = 0;                  /* no of chars read from UART rb */
-   uint16_t i = 0;                  /* swap buffer indexing variable */
+   uint8_t swapBuf[SWAP_BUF_SIZ];
+   uint16_t i = 0;
    uint8_t ch = '\0';               /* character being read */
    static uint8_t pCh = '\0';       /* previous character read */
 
-   /* Get free space in the current token rb */
-   uint16_t currTknRbFree = RingBuffer_GetFree(&currTknRb);
+   /* Cycles through each char in buffer, inserts chars in local RB, detects
+    * all tokens and inserts them in the token VLRB */
 
-   /* Read chars from the UART up to free space in the current token rb or
-    * swap buffer size, whichever is smaller */
-   n = gsm232UartRecv(&rdBuf,
-                     (currTknRbFree < RD_BUF_SIZ) ?
-                      currTknRbFree : RD_BUF_SIZ);
+   for(i = 0; i < nch; i++){
 
-   if(RingBuffer_IsFull(&currTknRb)){
-      debug(">>>tknzer<<<   CURRENT TOKEN RB FULL!\r\n");
-   }
+      ch = buffer[i];
 
-   /* Cycle through each char in rdBuf, detect all tokens and insert them in
-    * the token vlrb */
-   for(i = 0; i < n; i++){
-
-      ch = rdBuf[i];
-
-      RingBuffer_Insert(&currTknRb, &ch); /* insert char in the current token
-                                             rb */
+      RingBuffer_Insert(&currTknRb, &ch);
 
       if(RingBuffer_IsFull(&currTknRb)){
          debug(">>>tknzer<<<   CURRENT TOKEN BUFFER FULL!\r\n");
       }
 
-      if(!iscntrl(ch)){empty = 0;} /* if ch is not a control character then
-                                      lower the empty flag */
+      if(!iscntrl(ch)){empty = 0;}
 
       if(('\r' == pCh) && ('\n' != ch) && !crLf && !empty){
          currTkn = ECHO; smsIn = 0;
@@ -166,8 +156,9 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
       } /* SMS send prompt */
       else { currTkn = NONE; }
 
-      /* if a valid token is detected, empty the current token rb into
-       * the swap buffer and insert it in the token vlrb */
+      /* if a valid token is detected empty the current token RB into
+       * the swap buffer, add the current token type as a trailer and insert
+       * the whole thing in the token VLRB */
 
       if(NONE != currTkn){
 
@@ -177,10 +168,9 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb)
                       - (ECHO == currTkn) - (SMS_BODY == currTkn)*2;
          RingBuffer_PopMult(&currTknRb, &swapBuf, length);
 
-         /* Add the token type as a trailer to the current token */
+         /* Add the token type as a trailer*/
          swapBuf[length]=(uint8_t)currTkn;
 
-         /* insert current token into token VL ring buffer */
          VLRingBuffer_Insert(tknVlRb, &swapBuf, length+1);
       }
 

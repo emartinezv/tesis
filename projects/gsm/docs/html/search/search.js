@@ -13,7 +13,7 @@ var indexSectionsWithContent =
   3: "enst",
   4: "t",
   5: "abdeinrst",
-  6: "cgiv"
+  6: "cgitv"
 };
 
 var indexSectionNames =

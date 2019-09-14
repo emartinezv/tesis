@@ -16,7 +16,8 @@
  *    DEFINITIONS
  ******************************************************************************/
 
-#define TKN_BUF_SIZE 1024
+#define TKN_BUF_SIZE 16 /* Must be larger than the largest token used for
+                           testing purposes */
 
 /*******************************************************************************
  *    PRIVATE TYPES
@@ -26,28 +27,9 @@
  *    PRIVATE DATA
  ******************************************************************************/
 
-uint8_t const * const uartRecvMock [] = {
-
-      "AT\r\r\nOK", "\r\nabcde", "\r\n", "\r\n> ", "abcde\r\n"
-};
-
 /*******************************************************************************
  *    PRIVATE FUNCTIONS
  ******************************************************************************/
-
-uint8_t gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
-{
-   uint8_t res = 0;
-
-   if(NumCalls > 4){
-      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-   }
-
-   strncpy(buffer, uartRecvMock[NumCalls], strlen(uartRecvMock[NumCalls]));
-   res = strlen(uartRecvMock[NumCalls]);
-
-   return res;
-}
 
 /*******************************************************************************
  *    SETUP, TEARDOWN
@@ -76,13 +58,16 @@ void test_gsmInitTokenizer(void)
    TEST_ASSERT_EQUAL_INT(1, n);
 }
 
-void test_gsmDetectTkns_1(void)
+void test_gsmDetectTkns(void)
 {
    /** Variables for the VL token RB */
 
    static uint8_t tknRbBuf[TKN_BUF_SIZE];
    static RINGBUFF_T tknRb;
    static VLRINGBUFF_T tknVlRb;
+
+   static uint8_t * bufferTest[5] = {"AT\r\r\nOK", "\r\nabcde",
+                                     "\r\n", "\r\n> ", "abcde\r\n"};
 
    /** Initializations */
 
@@ -94,13 +79,9 @@ void test_gsmDetectTkns_1(void)
 
    uint8_t res = 0;
 
-   /* Mock definitions */
-
-   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
-
    /* 1st Call: Testing ECHO token */
 
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&tknVlRb, 7, bufferTest[0]);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
@@ -109,7 +90,7 @@ void test_gsmDetectTkns_1(void)
 
    /* 2nd Call: Testing RSP token */
 
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&tknVlRb, 7, bufferTest[1]);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
@@ -118,7 +99,7 @@ void test_gsmDetectTkns_1(void)
 
    /* 3rd Call: Testing DATA_BLOCK */
 
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&tknVlRb, 2, bufferTest[2]);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
@@ -127,7 +108,7 @@ void test_gsmDetectTkns_1(void)
 
    /* 4th Call: Testing SMS_PROMPT */
 
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&tknVlRb, 4, bufferTest[3]);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 
@@ -136,7 +117,7 @@ void test_gsmDetectTkns_1(void)
 
    /* 5th Call: Testing SMS_BODY */
 
-   gsmDetectTkns(&tknVlRb);
+   gsmDetectTkns(&tknVlRb, 7, bufferTest[4]);
 
    res = VLRingBuffer_Pop(&tknVlRb, token, 10);
 

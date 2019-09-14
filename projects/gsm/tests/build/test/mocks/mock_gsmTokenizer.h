@@ -29,11 +29,17 @@ void gsmInitTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmo
 void gsmInitTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmInitTokenizer_CALLBACK)(int cmock_num_calls);
 void gsmInitTokenizer_StubWithCallback(CMOCK_gsmInitTokenizer_CALLBACK Callback);
+#define gsmNoChTokenizer_IgnoreAndReturn(cmock_retval) gsmNoChTokenizer_CMockIgnoreAndReturn(__LINE__, cmock_retval)
+void gsmNoChTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+#define gsmNoChTokenizer_ExpectAndReturn(cmock_retval) gsmNoChTokenizer_CMockExpectAndReturn(__LINE__, cmock_retval)
+void gsmNoChTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+typedef uint16_t (* CMOCK_gsmNoChTokenizer_CALLBACK)(int cmock_num_calls);
+void gsmNoChTokenizer_StubWithCallback(CMOCK_gsmNoChTokenizer_CALLBACK Callback);
 #define gsmDetectTkns_Ignore() gsmDetectTkns_CMockIgnore()
 void gsmDetectTkns_CMockIgnore(void);
-#define gsmDetectTkns_Expect(tknVlRb) gsmDetectTkns_CMockExpect(__LINE__, tknVlRb)
-void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb);
-typedef void (* CMOCK_gsmDetectTkns_CALLBACK)(VLRINGBUFF_T* tknVlRb, int cmock_num_calls);
+#define gsmDetectTkns_Expect(tknVlRb, nch, buffer) gsmDetectTkns_CMockExpect(__LINE__, tknVlRb, nch, buffer)
+void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer);
+typedef void (* CMOCK_gsmDetectTkns_CALLBACK)(VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer, int cmock_num_calls);
 void gsmDetectTkns_StubWithCallback(CMOCK_gsmDetectTkns_CALLBACK Callback);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)

@@ -78,6 +78,9 @@ extern "C" {
 /** @brief Max size in chars of the AT+CGNSINF response */
 #define MAX_CGNSINF_SIZE 94
 
+/** @brief Size in bytes of the UART read buffer */
+#define RD_BUF_SIZ TKN_LEN
+
 /** @brief AT command response type */
 typedef struct _rsp_t
 {

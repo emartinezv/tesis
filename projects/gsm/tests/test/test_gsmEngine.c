@@ -118,6 +118,13 @@ static int bufEmptyV [] = {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0};
  *    PRIVATE FUNCTIONS
  ******************************************************************************/
 
+int gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
+{
+   TEST_ASSERT_EQUAL_INT(10, n);
+
+   return 10;
+}
+
 int VLRingBuffer_IsEmpty_Callback (VLRINGBUFF_T * vlrb, int NumCalls)
 {
    if(NumCalls > (sizeof(bufEmptyV)/sizeof(int))){
@@ -377,6 +384,8 @@ void test_gsmProcessTkn(void)
    /* Mocks */
 
    gsmTermUartSend_IgnoreAndReturn(0);
+   gsmNoChTokenizer_IgnoreAndReturn(10);
+   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
    gsmDetectTkns_Ignore();
    VLRingBuffer_IsEmpty_StubWithCallback(VLRingBuffer_IsEmpty_Callback);
    VLRingBuffer_IsFull_IgnoreAndReturn(0);
@@ -391,6 +400,7 @@ void test_gsmProcessTkn(void)
    /* Test sequence */
 
    /* URC (1.2) */
+
 
    event = gsmProcessTkn(&engine);
 
@@ -892,6 +902,8 @@ void test_gsmRecordUrc(void)
    /* Mocks -Ignore- */
 
    gsmTermUartSend_IgnoreAndReturn(0);
+   gsmNoChTokenizer_IgnoreAndReturn(10);
+   gsm232UartRecv_IgnoreAndReturn(10);
    gsmDetectTkns_Ignore();
    VLRingBuffer_Pop_IgnoreAndReturn(0);
    gsmUrcSearch_IgnoreAndReturn(1);

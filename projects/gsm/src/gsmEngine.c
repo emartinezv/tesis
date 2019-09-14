@@ -579,7 +579,12 @@ bool gsmInitEngine(gsmEngine_t * engine){
 
 fsmEvent_e gsmProcessTkn(gsmEngine_t * engine)
 {
-   gsmDetectTkns(&(engine->tknVlRb));
+   uint16_t nch;
+   uint8_t buffer[RD_BUF_SIZ];
+
+   nch = gsm232UartRecv(buffer, gsmNoChTokenizer());
+
+   gsmDetectTkns(&(engine->tknVlRb), nch, buffer);
 
    tknTypeParser_e received;       /* stores the received token type */
    fsmEvent_e result = NO_UPDATE;  /* stores the resulting event of the

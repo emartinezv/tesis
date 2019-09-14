@@ -42,7 +42,7 @@ char* GlobalOrderError;
 extern void setUp(void);
 extern void tearDown(void);
 extern void test_gsmInitTokenizer(void);
-extern void test_gsmDetectTkns_1(void);
+extern void test_gsmDetectTkns(void);
 
 
 /*=======Mock Management=====*/
@@ -97,8 +97,8 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmTokenizer.c");
-  RUN_TEST(test_gsmInitTokenizer, 70);
-  RUN_TEST(test_gsmDetectTkns_1, 79);
+  RUN_TEST(test_gsmInitTokenizer, 52);
+  RUN_TEST(test_gsmDetectTkns, 61);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());

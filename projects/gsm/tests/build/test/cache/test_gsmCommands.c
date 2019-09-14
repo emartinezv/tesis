@@ -51,7 +51,7 @@ void test_gsmCmdSearch(void)
 
 
 
-   uint16_t idx = UNKNOWN_CMD;
+   uint16_t idx = 65535;
 
 
 
@@ -103,7 +103,7 @@ void test_gsmCmdSearch(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT16)((UNKNOWN_CMD)), (UNITY_INT)(UNITY_INT16)((idx)), (((void *)0)), (UNITY_UINT)(76), UNITY_DISPLAY_STYLE_INT16);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT16)((65535)), (UNITY_INT)(UNITY_INT16)((idx)), (((void *)0)), (UNITY_UINT)(76), UNITY_DISPLAY_STYLE_INT16);
 
 
 
@@ -239,7 +239,7 @@ void test_gsmGetCmdtimeout(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((TOUT_DEF)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(144), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((100)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(144), UNITY_DISPLAY_STYLE_UINT32);
 
 
 
