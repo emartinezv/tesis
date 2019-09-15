@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Gsm</div>  </div>
@@ -88,9 +87,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)</td></tr>
-<tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)</td></tr>
 <tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,31 +107,6 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max size of an AT token command part. <br/></td></tr>
 <tr class="separator:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:gafc423741f0c92519323ce7d70d6aa1d1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#gafc423741f0c92519323ce7d70d6aa1d1">tknTypeParser_e</a> { <br/>
-&#160;&#160;<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1aef2863a469df3ea6871d640e3669a2f2">INVALID</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1ae0bc6dc3f72c7f7ed46e8c5c20f0808c">AUTOBAUD</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1ae25c51a61bcc2883119b535fdfd3267b">BASIC_CMD</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1ae1e9bdf33e47e29e2d1dcd8c427e6824">BASIC_CMD_AMP</a>, 
-<br/>
-&#160;&#160;<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a74915f57e53ef4350232ac68246b7ea0">EXT_CMD_TEST</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a4c66a968d37626eba5a5ffa164479721">EXT_CMD_WRITE</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1af82452fc68ab63a1ae6c8220e732021e">EXT_CMD_READ</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a544a3ec0d4b80d3374403976dcbfba2c">EXT_CMD_EXEC</a>, 
-<br/>
-&#160;&#160;<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a5234717396fbfcc32c8d97e6abcebc42">SMS_BODY_P</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1aef0c47fa94c20f39aa2049470d716020">BASIC_RSP</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a03724d5f5ce7c64094a5129c03dedac5">DATA_BLOCK_P</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1abde5f2c5956da1e22795670dbf640a4b">SMS_PROMPT_P</a>, 
-<br/>
-&#160;&#160;<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1a567e76000c15d199520e19d02982d9fd">EXT_RSP</a>, 
-<a class="el" href="group__gsm.html#ggafc423741f0c92519323ce7d70d6aa1d1aad9dee005a3d0f9137b2ac1e0869f89b">TIMEOUT</a>
-<br/>
- }</td></tr>
-<tr class="memdesc:gafc423741f0c92519323ce7d70d6aa1d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of AT token as per the parse function; used to feed the cmd FSM.  <a href="group__gsm.html#gafc423741f0c92519323ce7d70d6aa1d1">More...</a><br/></td></tr>
-<tr class="separator:gafc423741f0c92519323ce7d70d6aa1d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gae8cd88fd0ba86d82faf88b249e054bac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae8cd88fd0ba86d82faf88b249e054bac"></a>
@@ -154,125 +125,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gsmDecToutCnt</b> (gs
 <tr class="memitem:gab3a01fcce22cd813af9b12d796dff5c4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gab3a01fcce22cd813af9b12d796dff5c4"></a>
 rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gsmEngine_t *engine)</td></tr>
 <tr class="separator:gab3a01fcce22cd813af9b12d796dff5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf556f1f1ba0c64f3c43fc61174c38a45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__gsm.html#gafc423741f0c92519323ce7d70d6aa1d1">tknTypeParser_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__gsm.html#gaf556f1f1ba0c64f3c43fc61174c38a45">gsmParseTkn</a> (uint8_t const *const tkn, uint8_t *cmd, uint8_t *par, uint16_t tknLen)</td></tr>
-<tr class="memdesc:gaf556f1f1ba0c64f3c43fc61174c38a45"><td class="mdescLeft">&#160;</td><td class="mdescRight">AT token parser.  <a href="#gaf556f1f1ba0c64f3c43fc61174c38a45">More...</a><br/></td></tr>
-<tr class="separator:gaf556f1f1ba0c64f3c43fc61174c38a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This module handles the internal engine of the library. </p>
-<p>This module handles AT token parsing.</p>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a class="anchor" id="gafc423741f0c92519323ce7d70d6aa1d1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group__gsm.html#gafc423741f0c92519323ce7d70d6aa1d1">tknTypeParser_e</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Type of AT token as per the parse function; used to feed the cmd FSM. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1aef2863a469df3ea6871d640e3669a2f2"></a>INVALID</em>&#160;</td><td class="fielddoc">
-<p>Token is invalid </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1ae0bc6dc3f72c7f7ed46e8c5c20f0808c"></a>AUTOBAUD</em>&#160;</td><td class="fielddoc">
-<p>Token is the autobauding sequence </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1ae25c51a61bcc2883119b535fdfd3267b"></a>BASIC_CMD</em>&#160;</td><td class="fielddoc">
-<p>Token is a basic command </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1ae1e9bdf33e47e29e2d1dcd8c427e6824"></a>BASIC_CMD_AMP</em>&#160;</td><td class="fielddoc">
-<p>Token is a basic command with ampersand </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a74915f57e53ef4350232ac68246b7ea0"></a>EXT_CMD_TEST</em>&#160;</td><td class="fielddoc">
-<p>Token is a extended test command </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a4c66a968d37626eba5a5ffa164479721"></a>EXT_CMD_WRITE</em>&#160;</td><td class="fielddoc">
-<p>Token is a extended test command </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1af82452fc68ab63a1ae6c8220e732021e"></a>EXT_CMD_READ</em>&#160;</td><td class="fielddoc">
-<p>Token is a extended test command </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a544a3ec0d4b80d3374403976dcbfba2c"></a>EXT_CMD_EXEC</em>&#160;</td><td class="fielddoc">
-<p>Token is a extended test command </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a5234717396fbfcc32c8d97e6abcebc42"></a>SMS_BODY_P</em>&#160;</td><td class="fielddoc">
-<p>Token is the body of an SMS </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1aef0c47fa94c20f39aa2049470d716020"></a>BASIC_RSP</em>&#160;</td><td class="fielddoc">
-<p>Token is a basic response </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a03724d5f5ce7c64094a5129c03dedac5"></a>DATA_BLOCK_P</em>&#160;</td><td class="fielddoc">
-<p>Token is a DATA block from a response </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1abde5f2c5956da1e22795670dbf640a4b"></a>SMS_PROMPT_P</em>&#160;</td><td class="fielddoc">
-<p>Token is the SMS prompt </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1a567e76000c15d199520e19d02982d9fd"></a>EXT_RSP</em>&#160;</td><td class="fielddoc">
-<p>Token is an extended response </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggafc423741f0c92519323ce7d70d6aa1d1aad9dee005a3d0f9137b2ac1e0869f89b"></a>TIMEOUT</em>&#160;</td><td class="fielddoc">
-<p>Dummy value for timeout events </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="gaf556f1f1ba0c64f3c43fc61174c38a45"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__gsm.html#gafc423741f0c92519323ce7d70d6aa1d1">tknTypeParser_e</a> gsmParseTkn </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t const *const&#160;</td>
-          <td class="paramname"><em>tkn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>cmd</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>par</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>tknLen</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>AT token parser. </p>
-<p>The function takes a pointer to token, two buffers (cmd and par) and the length of the token. In the AT protocol, most tokens have a command part and optional parameters which specify variable input. Not all tokens have parameters, but all of them have a command part.</p>
-<p>This function returns the token type plus the command part in cmd and the parameter part (if present) in par. It turns the "raw" token we get from the tokenizer into something usable for the Engine layer.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tkn</td><td>Pointer to AT token fetched from the serial port tokenizer </td></tr>
-    <tr><td class="paramname">cmd</td><td>AT command buffer </td></tr>
-    <tr><td class="paramname">par</td><td>AT parameter buffer </td></tr>
-    <tr><td class="paramname">tknLen</td><td>Length of the received token</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the type of AT token in an tknTypeParser_e enum, as well as the command and parameter parts in their corresponding buffers </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="ga50bbd7544920f18bbc7f5104a8023671"></a>
 <div class="memitem">
 <div class="memproto">
@@ -320,7 +176,7 @@ rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gs
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 14 2019 18:53:15 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 15 2019 11:53:11 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

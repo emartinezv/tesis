@@ -29,8 +29,8 @@ typedef enum {INVALID,
 
               TIMEOUT,
 
-              }tknTypeParser_e;
+              }tknTypeParser_t;
 
-tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
+tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
 
                             uint8_t * par, uint16_t tknLen);

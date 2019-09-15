@@ -15,7 +15,7 @@ static const char* CMockString_tknLen = "tknLen";
 typedef struct _CMOCK_gsmParseTkn_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
-  tknTypeParser_e ReturnVal;
+  tknTypeParser_t ReturnVal;
   int CallOrder;
   uint8_t const* Expected_tkn;
   uint8_t* Expected_cmd;
@@ -27,7 +27,7 @@ typedef struct _CMOCK_gsmParseTkn_CALL_INSTANCE
 static struct mock_gsmParserInstance
 {
   int gsmParseTkn_IgnoreBool;
-  tknTypeParser_e gsmParseTkn_FinalReturn;
+  tknTypeParser_t gsmParseTkn_FinalReturn;
   CMOCK_gsmParseTkn_CALLBACK gsmParseTkn_CallbackFunctionPointer;
   int gsmParseTkn_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE gsmParseTkn_CallInstance;
@@ -63,7 +63,7 @@ void mock_gsmParser_Destroy(void)
   GlobalVerifyOrder = 0;
 }
 
-tknTypeParser_e gsmParseTkn(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen)
+tknTypeParser_t gsmParseTkn(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen)
 {
   UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
   CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance;
@@ -75,7 +75,7 @@ tknTypeParser_e gsmParseTkn(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par
     UNITY_CLR_DETAILS();
     if (cmock_call_instance == NULL)
       return Mock.gsmParseTkn_FinalReturn;
-    memcpy(&Mock.gsmParseTkn_FinalReturn, &cmock_call_instance->ReturnVal, sizeof(tknTypeParser_e));
+    memcpy(&Mock.gsmParseTkn_FinalReturn, &cmock_call_instance->ReturnVal, sizeof(tknTypeParser_t));
     return cmock_call_instance->ReturnVal;
   }
   if (Mock.gsmParseTkn_CallbackFunctionPointer != NULL)
@@ -125,7 +125,7 @@ void CMockExpectParameters_gsmParseTkn(CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_ca
   cmock_call_instance->Expected_tknLen = tknLen;
 }
 
-void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_e cmock_to_return)
+void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmParseTkn_CALL_INSTANCE));
   CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -138,7 +138,7 @@ void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_
   Mock.gsmParseTkn_IgnoreBool = (int)1;
 }
 
-void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_e cmock_to_return)
+void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_t cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmParseTkn_CALL_INSTANCE));
   CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -149,7 +149,7 @@ void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const*
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
   CMockExpectParameters_gsmParseTkn(cmock_call_instance, tkn, cmd, par, tknLen);
-  memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(tknTypeParser_e));
+  memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(tknTypeParser_t));
   UNITY_CLR_DETAILS();
 }
 

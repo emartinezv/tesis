@@ -24,10 +24,10 @@ void mock_gsmParser_Verify(void);
 
 
 #define gsmParseTkn_IgnoreAndReturn(cmock_retval) gsmParseTkn_CMockIgnoreAndReturn(__LINE__, cmock_retval)
-void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_e cmock_to_return);
+void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return);
 #define gsmParseTkn_ExpectAndReturn(tkn, cmd, par, tknLen, cmock_retval) gsmParseTkn_CMockExpectAndReturn(__LINE__, tkn, cmd, par, tknLen, cmock_retval)
-void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_e cmock_to_return);
-typedef tknTypeParser_e (* CMOCK_gsmParseTkn_CALLBACK)(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, int cmock_num_calls);
+void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_t cmock_to_return);
+typedef tknTypeParser_t (* CMOCK_gsmParseTkn_CALLBACK)(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, int cmock_num_calls);
 void gsmParseTkn_StubWithCallback(CMOCK_gsmParseTkn_CALLBACK Callback);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)

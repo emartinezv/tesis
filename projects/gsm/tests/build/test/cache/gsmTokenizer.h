@@ -17,7 +17,7 @@ typedef enum {
 
 }
 
-tknTypeTknzer_e;
+tknTypeTknzer_t;
 
 _Bool gsmInitTokenizer(void);
 

@@ -4,7 +4,7 @@
   :file: test_gsmParser.c
 :successes:
 - :test: test_gsmParseTkn
-  :line: 50
+  :line: 54
   :message: ''
 :failures: []
 :ignores: []
@@ -14,4 +14,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002597204
+:time: 0.002744534

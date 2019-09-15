@@ -1,7 +1,6 @@
 /* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -106,7 +105,7 @@ void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
 {
    /* State-machine variables and flags */
 
-   tknTypeTknzer_e currTkn = NONE; /* Classification of the current token */
+   tknTypeTknzer_t currTkn = NONE; /* Classification of the current token */
 
    static uint8_t crLf = 0;    /* Initial <CR><LF> sequence detected */
    static uint8_t empty = 1;   /* Non-control characters received */

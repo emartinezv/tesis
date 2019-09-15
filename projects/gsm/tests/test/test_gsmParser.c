@@ -7,9 +7,13 @@
 
 //-- module being tested
 #include "gsmParser.h"
-#include "string.h"
+
+//-- mocks
 #include "mock_gsmComms.h"
 #include "mock_gsmTokenizer.h"
+
+//-- other includes
+#include "string.h"
 
 /*******************************************************************************
  *    DEFINITIONS
@@ -49,12 +53,17 @@ void tearDown(void)
 
 void test_gsmParseTkn(void)
 {
-   tknTypeParser_e tknType;
+   tknTypeParser_t tknType;
 
    uint8_t tkn[2*TKN_SIZ];
 
    uint8_t cmd[TKN_SIZ];
    uint8_t par[TKN_SIZ];
+
+   /* Test sequence */
+
+   /* We organize the test around the different return paths of the function,
+      which correspond to the different token classifications. */
 
    /* Testing INVALID token option 1 */
 

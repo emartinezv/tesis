@@ -134,7 +134,7 @@ static VLRINGBUFF_T urcVlRb;
 *  @return Returns the event triggered by the updateFSM call
 */
 
-static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine, tknTypeParser_e tknType,
+static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine, tknTypeParser_t tknType,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par,
                                 uint8_t const index);
@@ -167,7 +167,7 @@ static uint8_t gsmRecordUrc (gsmEngine_t * engine , uint8_t const * const cmd,
  */
 
 static fsmEvent_e gsmUpdateFsm (gsmEngine_t * engine,
-                                tknTypeParser_e tknType,
+                                tknTypeParser_t tknType,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
 {
@@ -586,7 +586,7 @@ fsmEvent_e gsmProcessTkn(gsmEngine_t * engine)
 
    gsmDetectTkns(&(engine->tknVlRb), nch, buffer);
 
-   tknTypeParser_e received;       /* stores the received token type */
+   tknTypeParser_t received;       /* stores the received token type */
    fsmEvent_e result = NO_UPDATE;  /* stores the resulting event of the
                                       gsmUpdateFsm call */
 
@@ -648,7 +648,7 @@ void gsmDecToutCnt(gsmEngine_t * engine){
 
 fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr)
 {
-   tknTypeParser_e sending;   /* classifies the command being sent */
+   tknTypeParser_t sending;   /* classifies the command being sent */
    fsmEvent_e result;         /* result of the updateFSM invocation */
    uint16_t idx;              /* index of the command to be sent in
                                  the commands vector */

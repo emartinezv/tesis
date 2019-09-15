@@ -75,7 +75,7 @@ typedef enum {
    SMS_PROMPT = 4,   /**< SMS send prompt */
    SMS_BODY   = 5,   /**< SMS send body */
 }
-tknTypeTknzer_e;
+tknTypeTknzer_t;
 
 /*==================[external data declaration]=============================*/
 

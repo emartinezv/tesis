@@ -19,6 +19,8 @@
 
 
 
+
+
 void setUp(void)
 
 {
@@ -51,7 +53,7 @@ void test_gsmParseTkn(void)
 
 {
 
-   tknTypeParser_e tknType;
+   tknTypeParser_t tknType;
 
 
 
@@ -62,12 +64,6 @@ void test_gsmParseTkn(void)
    uint8_t cmd[300];
 
    uint8_t par[300];
-
-
-
-
-
-
 
    tknType = AUTOBAUD;
 
@@ -83,11 +79,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(68), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(77), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(69), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(78), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)((INVALID)), (UNITY_INT)((tknType)), (((void *)0)), (UNITY_UINT)(70), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((INVALID)), (UNITY_INT)((tknType)), (((void *)0)), (UNITY_UINT)(79), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -109,11 +105,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(81), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(90), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(82), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(91), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)((INVALID)), (UNITY_INT)((tknType)), (((void *)0)), (UNITY_UINT)(83), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((INVALID)), (UNITY_INT)((tknType)), (((void *)0)), (UNITY_UINT)(92), UNITY_DISPLAY_STYLE_INT);
 
 
 
@@ -135,11 +131,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("AT")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(94));
+   UnityAssertEqualStringLen((const char*)(("AT")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(103));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(95), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(104), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((AUTOBAUD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(96), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((AUTOBAUD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(105), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -161,11 +157,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(107));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(116));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(108), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(117), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(109), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(118), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -187,11 +183,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(120));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(129));
 
-   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(121));
+   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(130));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(122), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(131), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -213,11 +209,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(133));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(142));
 
-   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(134));
+   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(143));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD_AMP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(135), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_CMD_AMP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(144), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -239,11 +235,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(146));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(155));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(147), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(156), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_TEST)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(148), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_TEST)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(157), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -265,11 +261,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(159));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(168));
 
-   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(160));
+   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(169));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_WRITE)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(161), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_WRITE)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(170), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -291,11 +287,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(172));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(181));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(173), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(182), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_READ)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(174), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_READ)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(183), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -317,11 +313,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(185));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(194));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(186), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(195), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_EXEC)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(187), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_CMD_EXEC)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(196), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -343,11 +339,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("SMS_BODY")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(198));
+   UnityAssertEqualStringLen((const char*)(("SMS_BODY")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(207));
 
-   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(199));
+   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(208));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_BODY_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(200), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_BODY_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(209), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -369,11 +365,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(211));
+   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(220));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(212), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(221), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(213), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((BASIC_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(222), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -395,11 +391,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("DATA")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(224));
+   UnityAssertEqualStringLen((const char*)(("DATA")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(233));
 
-   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(225));
+   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(234));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((DATA_BLOCK_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(226), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((DATA_BLOCK_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(235), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -421,11 +417,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("> ")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(237));
+   UnityAssertEqualStringLen((const char*)(("> ")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(246));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(238), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(247), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_PROMPT_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(239), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_PROMPT_P)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(248), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -447,11 +443,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(250));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(259));
 
-   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(251), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((0)), (UNITY_INT)((strlen(par))), (((void *)0)), (UNITY_UINT)(260), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(252), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(261), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -473,11 +469,11 @@ void test_gsmParseTkn(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(263));
+   UnityAssertEqualStringLen((const char*)(("X")), (const char*)((cmd)), (UNITY_UINT32)((strlen(cmd))), (((void *)0)), (UNITY_UINT)(272));
 
-   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(264));
+   UnityAssertEqualStringLen((const char*)(("123")), (const char*)((par)), (UNITY_UINT32)((strlen(par))), (((void *)0)), (UNITY_UINT)(273));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(265), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((EXT_RSP)), (UNITY_INT)(UNITY_INT8 )((tknType)), (((void *)0)), (UNITY_UINT)(274), UNITY_DISPLAY_STYLE_INT8);
 
 
 

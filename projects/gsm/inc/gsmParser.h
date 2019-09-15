@@ -1,7 +1,5 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
- *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +32,7 @@
 #ifndef _GSM_PARSER_H_
 #define _GSM_PARSER_H_
 
-/** \addtogroup gsm
+/** \addtogroup parser parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -51,8 +49,6 @@ extern "C" {
 #endif
 
 /*==================[macros]=================================================*/
-
-
 
 /*==================[typedef]================================================*/
 
@@ -73,7 +69,7 @@ typedef enum {INVALID,        /**< Token is invalid */
               SMS_PROMPT_P,   /**< Token is the SMS prompt */
               EXT_RSP,        /**< Token is an extended response */
               TIMEOUT,        /**< Dummy value for timeout events */
-              }tknTypeParser_e;
+              }tknTypeParser_t;
 
 /*==================[external data declaration]==============================*/
 
@@ -81,16 +77,16 @@ typedef enum {INVALID,        /**< Token is invalid */
 
 /** @brief AT token parser
 *
-*  @param tkn      Pointer to AT token fetched from the serial port tokenizer
-*  @param cmd      AT command buffer
-*  @param par      AT parameter buffer
-*  @param tknLen   Length of the received token
+*  @param tkn    : Pointer to AT token (processed by tokenizer)
+*  @param cmd    : AT command buffer
+*  @param par    : AT parameter buffer
+*  @param tknLen : Length of the received token
 *
-*  @return Returns the type of AT token in an tknTypeParser_e enum, as well as
+*  @return Type of AT token in an tknTypeParser_t enum, as well as
 *          the command and parameter parts in their corresponding buffers
 */
 
-tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
+tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                             uint8_t * par, uint16_t tknLen);
 
 /*==================[cplusplus]==============================================*/

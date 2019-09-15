@@ -1,7 +1,5 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
- *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +32,7 @@
 /** @brief This module handles AT token parsing
  */
 
-/** \addtogroup gsm
+/** \addtogroup parser parser
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -69,15 +67,15 @@
  *
  *  This function returns the token type plus the command part in cmd and the
  *  parameter part (if present) in par. It turns the "raw" token we get from
- *  the tokenizer into something usable for the Engine layer.
+ *  the tokenizer into something usable by the engine module.
  */
 
-tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
+tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                             uint8_t * par, uint16_t tknLen)
 {
-   int i = 0; /* loop counter */
+   int i = 0;
 
-   /* In all cases we classify the token and then copy the appropiate parts of
+   /* In all cases we classify the token and then copy the appropriate parts of
     * the token into the command and parameter buffers, depending on the
     * specific token syntax. */
 
@@ -86,14 +84,14 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
 
    /* The last character of the token has the tokenizer token type encoded.
     * This is a basic classification which we further refine in this function.
-    * We extract this basic token type by taking the last char and feeding
-    * a switch statement with it. Each switch option then detects a more
-    * specific sub-class of token.
+    * We use this basic token type by taking the last char and feeding a switch
+    * statement with it. Each switch option then detects a more specific
+    * sub-class of token.
     */
 
-   tknTypeTknzer_e tknType;
-   tknType = (tknTypeTknzer_e)tkn[tknLen-1];
-   tknLen--; /* discard this last character for string search purposes */
+   tknTypeTknzer_t tknType;
+   tknType = (tknTypeTknzer_t)tkn[tknLen-1];
+   tknLen--;
 
    /* Different sorts of tokens have trailing and/or leading '\r' and/or '\n'
     * characters. For all purposes these are ignored and not copied into the
@@ -102,25 +100,30 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
     * There is extensive use of the strncpy function in the following code. To
     * understand the "from" and "length" arguments used, it is important to
     * know the type of token. We always need to discard any leading '\r' and
-    * 'n' characters.
+    * '\n' characters.
     */
 
    switch(tknType){
 
-      case ECHO: /* The token should be the echo of an AT command sent by us;
-                    the last character is always \r */
+      case ECHO: /* Echo of a sent AT command. Last character is always \r */
 
-         /* All AT commands start with "AT", so we check this first. If we pass
-          * this check, we determine what specific sort of AT command we have
-          * depending on the following chars. */
+         /* All AT commands start with "AT", so if this is not the case the
+          * token is invalid. */
 
-         if(('A' == tkn[0]) && ('T' == tkn[1])){
+         if(('A' != tkn[0]) || ('T' != tkn[1])){
+
+            debug(">>>parser<<<   INVALID TOKEN\r\n");
+
+            return INVALID;
+
+         }
+
+         else{
 
             /* If the token is just "AT\r" then we have the autobauding sync
              * sequence */
 
             if('\r' == tkn[2]){
-               /* Simply copy "AT" to cmd */
                strncpy(cmd,"AT",2);
                cmd[2] = '\0';
 
@@ -134,9 +137,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
              * and '?' characters. */
 
             else if('+' == tkn[2]){
-
-               /* Search for '=' and '?' characters and store position to
-                * determine type of extended AT command */
 
                uint8_t equalPos = 0; /* position of the '=' char in tkn */
                uint8_t intPos = 0;   /* position of the '?' char in tkn */
@@ -164,7 +164,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                 * extended command */
                if (0 != equalPos){
 
-                  /* Copy the part between '+' and '=' to cmd */
                   strncpy(cmd,&tkn[3],(equalPos - 3));
                   cmd[equalPos -3] = '\0';
 
@@ -182,7 +181,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                   /* If the token is written "AT+cmd=par\r" we have a WRITE
                    * extended command*/
                   else{
-                     /* copy the part between '=' and the end to par */
                      strncpy(par,&tkn[equalPos+1],tknLen-equalPos-2);
                      par[tknLen-equalPos-2] = '\0';
 
@@ -216,7 +214,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                 * command */
                else{
 
-                  /* Copy everything after '+' to cmd */
                   strncpy(cmd,&tkn[3],(tknLen - 4));
                   cmd[tknLen -4] = '\0';
 
@@ -229,12 +226,12 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
             }
 
             /* If the third character is a '&' we have a basic AT
-             * command with ampersand written "AT&...\r" */
+             * command with ampersand written "AT&C...\r" where C is the
+             * cmd (single char) and any following chars are the par part */
 
             else if('&' == tkn[2]){
 
                if('\r' != tkn[3]){
-                  /* The first char after the '&' is the cmd */
                   cmd[0] = tkn[3];
                   cmd[1] = '\0';
 
@@ -242,7 +239,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                   debug(cmd);
 
                   if('\r' != tkn[4]){
-                     /* If present, everything after the cmd char is the par */
                      strncpy(par,&tkn[4],tknLen-5);
                      par[tknLen-5] = '\0';
 
@@ -271,10 +267,10 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
             }
 
             /* If we have neither '+' nor '&' as the third character, then this
-             * is just a basic AT command written "AT...\r" */
+             * is just a basic AT command written "ATCP...\r" where C is the
+             * cmd (single char) and any following chars are the par part */
 
             else {
-               /* The first char after "AT" is the cmd */
                cmd[0] = tkn[2];
                cmd[1] = '\0';
 
@@ -282,7 +278,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                debug(cmd);
 
                if('\r' != tkn[3]){
-                  /* If present, everything after the cmd char is the par */
                   strncpy(par,&tkn[3],tknLen-4);
                   par[tknLen-4] = '\0';
 
@@ -299,33 +294,20 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
 
          }
 
-         /* If an ECHO token does not start with AT it cannot be the echo of
-          * a command and is therefore invalid
-          */
-
-         else{
-
-            debug(">>>parser<<<   INVALID TOKEN\r\n");
-
-            return INVALID;
-
-         }
-
       break;
 
       case RSP:
-      case SMS_PROMPT: /* The token should be a response by the GSM modem,
-                          be it a basic or extended command response or a SMS
-                          prompt; the token starts with "\r\n" and ends with
-                          either "\r\n" (response) or "> " (SMS prompt) */
+      case SMS_PROMPT: /* The token is a response by the GSM modem: basic or
+                          extended command response or a SMS prompt. The token
+                          starts with "\r\n" and ends with either "\r\n"
+                          (response) or "> " (SMS prompt) */
 
-         /* If '+' is the first char after "\r\n", we have an extended syntax
+         /* If '+' is the first char after "\r\n", we have an extended command
           * response written "\r\n+cmd...\r\n" */
 
          if('+' == tkn[2]){
 
-            /* The extended command response may have a ':' character; we look
-             * for it and store its position if present */
+            /* The extended command response may have a ':' character */
 
             uint8_t colonPos = 0; /* position of the ':' char in tkn */
 
@@ -340,7 +322,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
              * response written "\r\n+cmd\r\n" */
 
             if(0 == colonPos){
-               /* Everything after the + is the cmd */
                strncpy(cmd,&tkn[3],tknLen-5);
                cmd[tknLen-5] = '\0';
 
@@ -355,10 +336,8 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
              * the response written "\r\n+cmd:par\r\n" */
 
             else{
-               /* Everything between the + and the : is the cmd */
                strncpy(cmd,&tkn[3],colonPos-3);
                cmd[colonPos-3] = '\0';
-               /* Everything between the : and the end is the par */
                strncpy(par,&tkn[colonPos+1],tknLen-colonPos-3);
                par[tknLen-colonPos-3] = '\0';
 
@@ -388,7 +367,6 @@ tknTypeParser_e gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
           * response written "\r\ncmd\r\n" */
 
          else{
-            /* The whole token excepting the "\r\n" parts is the cmd */
             strncpy(cmd,&tkn[2],tknLen-4);
             cmd[tknLen-4] = '\0';
 

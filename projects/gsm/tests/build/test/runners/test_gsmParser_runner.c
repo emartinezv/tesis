@@ -100,7 +100,7 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmParser.c");
-  RUN_TEST(test_gsmParseTkn, 50);
+  RUN_TEST(test_gsmParseTkn, 54);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());
