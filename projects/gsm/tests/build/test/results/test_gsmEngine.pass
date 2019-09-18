@@ -4,44 +4,44 @@
   :file: test_gsmEngine.c
 :successes:
 - :test: test_gsmInitEngine
-  :line: 404
+  :line: 394
+  :message: ''
+- :test: test_gsmProcessTkn
+  :line: 420
   :message: ''
 - :test: test_gsmToutCntZero
-  :line: 682
+  :line: 704
   :message: ''
 - :test: test_gsmDecToutCnt
-  :line: 710
+  :line: 732
+  :message: ''
+- :test: test_gsmSendCmd
+  :line: 772
   :message: ''
 - :test: test_gsmGetCmdRsp
-  :line: 790
+  :line: 812
   :message: ''
 - :test: test_gsmGetNoCmdRsp
-  :line: 843
+  :line: 865
   :message: ''
 - :test: test_gsmGetUrc
-  :line: 871
+  :line: 893
   :message: ''
 - :test: test_gsmGetSerialMode
-  :line: 915
+  :line: 937
   :message: ''
 - :test: test_gsmSetSerialMode
-  :line: 943
+  :line: 965
   :message: ''
 - :test: test_gsmRecordUrc
-  :line: 971
+  :line: 993
   :message: ''
-:failures:
-- :test: test_gsmProcessTkn
-  :line: 163
-  :message: Function gsm232UartSend.  OKTA\x01
-- :test: test_gsmSendCmd
-  :line: 163
-  :message: Function gsm232UartSend.  AT\r
+:failures: []
 :ignores: []
 :counts:
   :total: 11
-  :passed: 9
-  :failed: 2
+  :passed: 11
+  :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002258275
+:time: 0.002945483

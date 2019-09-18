@@ -158,14 +158,6 @@ void loadProcessTkn(const uint8_t * const tkn,
  *    PRIVATE FUNCTIONS - CALLBACKS
  *****************************************************************************/
 
-int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
-{
-   TEST_ASSERT_TRUE_MESSAGE(0, buffer);
-
-   return;
-}
-
-
 uint16_t gsmNoChTokenizer_Callback(int NumCalls)
 {
    return tknzerNoCh;
@@ -206,9 +198,11 @@ tknTypeParser_t gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
                                       int NumCalls)
 {
    strncpy(cmd, cmdTest, strlen(cmdTest));
+   cmd[strlen(cmdTest)] = '\0';
 
    if(strlen(parTest) > 0){
       strncpy(par, parTest, strlen(parTest));
+      par[strlen(parTest)] = '\0';
    }
    else{
       par[0]='\0';
@@ -292,8 +286,6 @@ uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
    return UNKNOWN_CMD;
 }
 
-#ifdef NO
-
 int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
 {
    switch(NumCalls){
@@ -318,8 +310,6 @@ int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
          break;
    }
 }
-
-#endif
 
 uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
 {
@@ -454,7 +444,7 @@ void test_gsmProcessTkn(void)
    VLRingBuffer_Insert_IgnoreAndReturn(0);
    VLRingBuffer_Flush_Ignore();
 
-   gsm232UartSend_StubWithCallback(gsm232UartSend_Callback);
+   //gsm232UartSend_Ignore();
 
    gsmNoChTokenizer_StubWithCallback(gsmNoChTokenizer_Callback);
    gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
@@ -514,16 +504,14 @@ void test_gsmProcessTkn(void)
 
    TEST_ASSERT_EQUAL_INT(OK_CLOSE, event);
 
-}
-
-#ifdef NO
-
    /* AT sent + echo error (2.2) */
 
    engine.fsmState = CMD_SENT;
    strncpy(engine.currCmd, "AT", strlen("AT")+1);
    engine.currPar[0]='\0';
    engine.currIdx = 0;
+
+   loadProcessTkn("ATI\r", "I", "", AUTOBAUD);
 
    event = gsmProcessTkn(&engine);
 
@@ -536,13 +524,19 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 0;
 
+   loadProcessTkn("AT\r", "AT", "", AUTOBAUD);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, event);
 
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_URC, event);
+
+   loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
 
    event = gsmProcessTkn(&engine);
 
@@ -555,6 +549,8 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 0;
 
+   loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_CMD_ECHO, event);
@@ -565,6 +561,8 @@ void test_gsmProcessTkn(void)
    strncpy(engine.currCmd, "AT", strlen("AT")+1);
    engine.currPar[0]='\0';
    engine.currIdx = 0;
+
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
 
    event = gsmProcessTkn(&engine);
 
@@ -579,9 +577,16 @@ void test_gsmProcessTkn(void)
 
    engine.toutCnt = 0; /* simulate timeout */
 
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
+
+   vlrb_empty = 1; /* no tokens read */
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_TIMEOUT, event);
+
+   vlrb_empty = 0;      /* reset to normal state */
+   engine.toutCnt = 1;  /* reset to normal state */
 
    /* AT sent + invalid (2.6) */
 
@@ -590,9 +595,27 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 0;
 
+   loadProcessTkn("TA\r", "", "", INVALID);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, event);
+
+}
+
+#ifdef NO
+
+
+
+
+
+
+
+
+
+
+
+
 
    /* AT sent and echoed + error (3.2) */
 

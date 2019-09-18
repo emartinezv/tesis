@@ -322,8 +322,6 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
                strncat(auxCmd, cmd, strlen(cmd));
                strncat(auxCmd, "-", strlen("-"));
 
-               gsm232UartSend(cmd, strlen(cmd)); // SACAR
-
                /* Compare current response with the string of valid error    */
                /* end responses for the current command. If a match is       */
                /* detected, close command and report ERR_MSG_CLOSE           */
