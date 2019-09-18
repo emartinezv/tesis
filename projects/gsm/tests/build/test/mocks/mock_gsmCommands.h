@@ -25,34 +25,58 @@ void mock_gsmCommands_Verify(void);
 
 #define gsmCmdSearch_IgnoreAndReturn(cmock_retval) gsmCmdSearch_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmCmdSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+#define gsmCmdSearch_ExpectAnyArgsAndReturn(cmock_retval) gsmCmdSearch_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmCmdSearch_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define gsmCmdSearch_ExpectAndReturn(cmd, cmock_retval) gsmCmdSearch_CMockExpectAndReturn(__LINE__, cmd, cmock_retval)
 void gsmCmdSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const cmd, uint16_t cmock_to_return);
 typedef uint16_t (* CMOCK_gsmCmdSearch_CALLBACK)(uint8_t const* const cmd, int cmock_num_calls);
 void gsmCmdSearch_StubWithCallback(CMOCK_gsmCmdSearch_CALLBACK Callback);
+#define gsmCmdSearch_ExpectWithArrayAndReturn(cmd, cmd_Depth, cmock_retval) gsmCmdSearch_CMockExpectWithArrayAndReturn(__LINE__, cmd, cmd_Depth, cmock_retval)
+void gsmCmdSearch_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const cmd, int cmd_Depth, uint16_t cmock_to_return);
+#define gsmCmdSearch_IgnoreArg_cmd() gsmCmdSearch_CMockIgnoreArg_cmd(__LINE__)
+void gsmCmdSearch_CMockIgnoreArg_cmd(UNITY_LINE_TYPE cmock_line);
 #define gsmGetCmdSucRsp_IgnoreAndReturn(cmock_retval) gsmGetCmdSucRsp_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetCmdSucRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t const* cmock_to_return);
+#define gsmGetCmdSucRsp_ExpectAnyArgsAndReturn(cmock_retval) gsmGetCmdSucRsp_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetCmdSucRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t const* cmock_to_return);
 #define gsmGetCmdSucRsp_ExpectAndReturn(idx, cmock_retval) gsmGetCmdSucRsp_CMockExpectAndReturn(__LINE__, idx, cmock_retval)
 void gsmGetCmdSucRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t idx, const uint8_t const* cmock_to_return);
 typedef const uint8_t const* (* CMOCK_gsmGetCmdSucRsp_CALLBACK)(uint16_t idx, int cmock_num_calls);
 void gsmGetCmdSucRsp_StubWithCallback(CMOCK_gsmGetCmdSucRsp_CALLBACK Callback);
+#define gsmGetCmdSucRsp_IgnoreArg_idx() gsmGetCmdSucRsp_CMockIgnoreArg_idx(__LINE__)
+void gsmGetCmdSucRsp_CMockIgnoreArg_idx(UNITY_LINE_TYPE cmock_line);
 #define gsmGetCmdErrRsp_IgnoreAndReturn(cmock_retval) gsmGetCmdErrRsp_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetCmdErrRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t const* cmock_to_return);
+#define gsmGetCmdErrRsp_ExpectAnyArgsAndReturn(cmock_retval) gsmGetCmdErrRsp_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetCmdErrRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, const uint8_t const* cmock_to_return);
 #define gsmGetCmdErrRsp_ExpectAndReturn(idx, cmock_retval) gsmGetCmdErrRsp_CMockExpectAndReturn(__LINE__, idx, cmock_retval)
 void gsmGetCmdErrRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t idx, const uint8_t const* cmock_to_return);
 typedef const uint8_t const* (* CMOCK_gsmGetCmdErrRsp_CALLBACK)(uint16_t idx, int cmock_num_calls);
 void gsmGetCmdErrRsp_StubWithCallback(CMOCK_gsmGetCmdErrRsp_CALLBACK Callback);
+#define gsmGetCmdErrRsp_IgnoreArg_idx() gsmGetCmdErrRsp_CMockIgnoreArg_idx(__LINE__)
+void gsmGetCmdErrRsp_CMockIgnoreArg_idx(UNITY_LINE_TYPE cmock_line);
 #define gsmGetCmdTimeout_IgnoreAndReturn(cmock_retval) gsmGetCmdTimeout_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetCmdTimeout_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
+#define gsmGetCmdTimeout_ExpectAnyArgsAndReturn(cmock_retval) gsmGetCmdTimeout_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetCmdTimeout_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint32_t cmock_to_return);
 #define gsmGetCmdTimeout_ExpectAndReturn(idx, cmock_retval) gsmGetCmdTimeout_CMockExpectAndReturn(__LINE__, idx, cmock_retval)
 void gsmGetCmdTimeout_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t idx, uint32_t cmock_to_return);
 typedef uint32_t (* CMOCK_gsmGetCmdTimeout_CALLBACK)(uint16_t idx, int cmock_num_calls);
 void gsmGetCmdTimeout_StubWithCallback(CMOCK_gsmGetCmdTimeout_CALLBACK Callback);
+#define gsmGetCmdTimeout_IgnoreArg_idx() gsmGetCmdTimeout_CMockIgnoreArg_idx(__LINE__)
+void gsmGetCmdTimeout_CMockIgnoreArg_idx(UNITY_LINE_TYPE cmock_line);
 #define gsmUrcSearch_IgnoreAndReturn(cmock_retval) gsmUrcSearch_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmUrcSearch_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+#define gsmUrcSearch_ExpectAnyArgsAndReturn(cmock_retval) gsmUrcSearch_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmUrcSearch_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmUrcSearch_ExpectAndReturn(urc, cmock_retval) gsmUrcSearch_CMockExpectAndReturn(__LINE__, urc, cmock_retval)
 void gsmUrcSearch_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmUrcSearch_CALLBACK)(uint8_t const* const urc, int cmock_num_calls);
 void gsmUrcSearch_StubWithCallback(CMOCK_gsmUrcSearch_CALLBACK Callback);
+#define gsmUrcSearch_ExpectWithArrayAndReturn(urc, urc_Depth, cmock_retval) gsmUrcSearch_CMockExpectWithArrayAndReturn(__LINE__, urc, urc_Depth, cmock_retval)
+void gsmUrcSearch_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const urc, int urc_Depth, _Bool cmock_to_return);
+#define gsmUrcSearch_IgnoreArg_urc() gsmUrcSearch_CMockIgnoreArg_urc(__LINE__)
+void gsmUrcSearch_CMockIgnoreArg_urc(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

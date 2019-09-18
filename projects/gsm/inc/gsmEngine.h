@@ -1,7 +1,6 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +33,11 @@
 #ifndef _GSM_ENGINE_H_
 #define _GSM_ENGINE_H_
 
-/** \addtogroup gsm
+/** @brief This module handles the internal engine of the library, including
+ *         the different states of the modem and the execution of commands.
+ */
+
+/** \addtogroup engine engine
  ** @{ */
 
 /*==================[inclusions]=============================================*/
@@ -63,26 +66,17 @@ extern "C" {
 /** @brief Size in bytes of the urcVlRb buffer */
 #define URC_BUF_SIZE 256
 
-/** @brief Max size of an AT token command part */
-#define TKN_CMD_SIZE 20
-
-/** @brief Max size of an AT token parameter part */
-
-#define TKN_PAR_SIZE 300 /* Max size is usually determined by SMS message
-                            length which is topped at 160 chars with the usual
-                            GSM-7 coding. However, if using UCS2 coding the max
-                            number of chars will be 67, but they come out of
-                            the modem coded at a 4-to-1 rate, which means a max
-                            of 268 effective chars to store.
-
 /** @brief Max size in chars of the AT+CGNSINF response */
 #define MAX_CGNSINF_SIZE 94
 
-/** @brief Size in bytes of the UART read buffer */
+/** @brief Size in bytes of the gsmProcessTkn read buffer */
 #define RD_BUF_SIZ TKN_LEN
 
+/*==================[typedef]================================================*/
+
 /** @brief AT command response type */
-typedef struct _rsp_t
+
+typedef struct _rsp
 {
    uint8_t cmd[TKN_CMD_SIZE];
    uint8_t par[TKN_PAR_SIZE];
@@ -90,20 +84,20 @@ typedef struct _rsp_t
 
 /** @brief Modes for the serial port */
 
-typedef enum _serialMode_e
+typedef enum _serialMode
 {
    COMMAND_MODE,
    DATA_MODE
-} serialMode_e ;
+} serialMode_t ;
 
 /** @brief State of the engine FSM */
 
-typedef enum _fsmState_e
+typedef enum _fsmState
 {
    WAITING = 0,  /**< waiting for a command */
    CMD_SENT = 1, /**< cmd sent through serial port */
    CMD_ACK = 2,  /**< cmd echo confirmed */
-} fsmState_e;
+} fsmState_t;
 
 /** @brief State of the current command */
 
@@ -122,16 +116,16 @@ typedef enum _fsmEvent
    ERR_MSG_CLOSE,     /**< error message from modem received */
    ERR_TIMEOUT,       /**< AT command timeout */
    ERR_FSM_OOR        /**< FSM out of range */
-} fsmEvent_e;
+} fsmEvent_t;
 
 /** @brief GSM engine type */
 
-typedef struct _gsmEngine_t
+typedef struct _gsmEngine
 {
    /* State */
 
-   fsmState_e fsmState;
-   serialMode_e serialMode;
+   fsmState_t fsmState;
+   serialMode_t serialMode;
    uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
    uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
    uint8_t currIdx;               /* save index of current command */
@@ -160,38 +154,37 @@ typedef struct _gsmEngine_t
 
 } gsmEngine_t;
 
-/*==================[typedef]================================================*/
-
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
 
-/** @brief Initializes the library engine
+/** @brief Initializes the engine
 *
 *  @param engine : Pointer to engine
 *
+*  @return True if successful
 */
 
-bool gsmInitEngine(gsmEngine_t * engine);
+bool gsmInitEngine(gsmEngine_t * const engine);
 
 /** @brief Processes a single token
 *
 *  @param engine : Pointer to engine
 *
-*  @return Returns the event triggered by the gsmUpdateFsm call
+*  @return Event triggered by the gsmUpdateFsm call
 */
 
-fsmEvent_e gsmProcessTkn(gsmEngine_t * engine);
+fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine);
 
 /** @brief Checks if timeout counter has reached zero
 *
 *  @param engine : Pointer to engine
 *
-*  @return Returns true if the engine toutCnt == 0
+*  @return True if the engine toutCnt == 0
 *
 */
 
-bool gsmToutCntZero(gsmEngine_t * engine);
+bool gsmToutCntZero(gsmEngine_t * const engine);
 
 /** @brief Decrements the timeout counter
 *
@@ -199,64 +192,65 @@ bool gsmToutCntZero(gsmEngine_t * engine);
 *
 */
 
-void gsmDecToutCnt(gsmEngine_t * engine);
+void gsmDecToutCnt(gsmEngine_t * const engine);
 
 /** @brief Sends an AT command to the GSM module
 *
 *  @param engine : Pointer to engine
 *  @param cmdStr : AT command string including parameters
 *
-*  @return Returns the event triggered by the gsmUpdateFsm call
+*  @return Event triggered by the gsmUpdateFsm call
 */
 
-fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr);
+fsmEvent_t gsmSendCmd (gsmEngine_t * const engine,
+                       const uint8_t * const cmdStr);
 
-/** @brief Gets the latest command response
+/** @brief Gets command response from the response VLRB (FIFO)
 *
 *  @param engine : Pointer to engine
 *
-*  @return Returns the required response (0 if no such response)
+*  @return Response ('\0' in both cmd and par if no responses left)
 */
 
-rsp_t gsmGetCmdRsp (gsmEngine_t * engine);
+rsp_t gsmGetCmdRsp (gsmEngine_t * const engine);
 
-/** @brief Gets the number of responses generated by the command
+/** @brief Gets the number of responses generated by the current command
 *
 *  @param  engine : Pointer to engine
 *
-*  @return Returns the number of responses generated by the command
+*  @return Number of responses generated by the command
 */
 
-uint8_t gsmGetNoCmdRsp (gsmEngine_t * engine);
+uint8_t gsmGetNoCmdRsp (const gsmEngine_t * const engine);
 
-/** @brief Reads the oldest URC event in the URC VLRB
+/** @brief Gets URC from the URC VLRB (FIFO)
 *
 *  @param  engine : Pointer to engine
 *
-*  @return Returns the required URC (0 if no such response)
+*  @return URC ('\0' in both cmd and par if no URCs left)
 */
 
-rsp_t gsmGetUrc (gsmEngine_t * engine);
+rsp_t gsmGetUrc (gsmEngine_t * const engine);
 
-/** @brief Returns the actual mode of the serial port
+/** @brief Returns the current mode of the serial port
 *
 *  @param  engine : Pointer to engine
 *
-*  @return Returns COMMAND_MODE or DATA_MODE
+*  @return COMMAND_MODE or DATA_MODE
 */
 
-serialMode_e gsmGetSerialMode(gsmEngine_t * engine);
+serialMode_t gsmGetSerialMode(const gsmEngine_t * const engine);
 
 /** @brief Changes the mode of the serial port
 *
 *  @param mode   : Serial port mode
 *  @param engine : Pointer to engine
 *
-*  @return Returns true if successful
+*  @return True if successful
 *
 */
 
-bool gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode);
+bool gsmSetSerialMode(gsmEngine_t * const engine, serialMode_t mode);
 
 /*==================[cplusplus]==============================================*/
 

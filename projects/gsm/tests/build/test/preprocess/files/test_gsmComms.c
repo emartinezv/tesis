@@ -38,16 +38,6 @@ void tearDown(void)
 
 }
 
-
-
-
-
-
-
-
-
-
-
 void test_gsm232UartRecv(void)
 
 {
@@ -64,7 +54,7 @@ void test_gsm232UartRecv(void)
 
 
 
-   uartRecv_CMockExpectAndReturn(58, CIAA_UART_232, buffer, 10, 8);
+   uartRecv_CMockExpectAndReturn(66, CIAA_UART_232, buffer, 10, 8);
 
 
 
@@ -76,11 +66,9 @@ void test_gsm232UartRecv(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(64), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(72), UNITY_DISPLAY_STYLE_INT);
 
 }
-
-
 
 void test_gsm232UartSend(void)
 
@@ -98,7 +86,7 @@ void test_gsm232UartSend(void)
 
 
 
-   uartSend_CMockExpectAndReturn(75, CIAA_UART_232, buffer, 10, 8);
+   uartSend_CMockExpectAndReturn(91, CIAA_UART_232, buffer, 10, 8);
 
 
 
@@ -110,11 +98,9 @@ void test_gsm232UartSend(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(81), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(97), UNITY_DISPLAY_STYLE_INT);
 
 }
-
-
 
 void test_gsmTermUartRecv(void)
 
@@ -132,7 +118,7 @@ void test_gsmTermUartRecv(void)
 
 
 
-   uartRecv_CMockExpectAndReturn(92, CIAA_UART_USB, buffer, 10, 8);
+   uartRecv_CMockExpectAndReturn(116, CIAA_UART_USB, buffer, 10, 8);
 
 
 
@@ -144,11 +130,9 @@ void test_gsmTermUartRecv(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(98), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(122), UNITY_DISPLAY_STYLE_INT);
 
 }
-
-
 
 void test_gsmTermUartSend(void)
 
@@ -166,7 +150,7 @@ void test_gsmTermUartSend(void)
 
 
 
-   uartSend_CMockExpectAndReturn(109, CIAA_UART_USB, buffer, 10, 8);
+   uartSend_CMockExpectAndReturn(141, CIAA_UART_USB, buffer, 10, 8);
 
 
 
@@ -178,6 +162,6 @@ void test_gsmTermUartSend(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(115), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((8)), (UNITY_INT)((res)), (((void *)0)), (UNITY_UINT)(147), UNITY_DISPLAY_STYLE_INT);
 
 }

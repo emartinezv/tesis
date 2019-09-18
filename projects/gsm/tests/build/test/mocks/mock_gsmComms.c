@@ -16,40 +16,62 @@ static const char* CMockString_n = "n";
 typedef struct _CMOCK_gsm232UartRecv_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   uint8_t* Expected_buffer;
   int Expected_n;
+  int Expected_buffer_Depth;
+  int ReturnThruPtr_buffer_Used;
+  uint8_t* ReturnThruPtr_buffer_Val;
+  int ReturnThruPtr_buffer_Size;
+  int IgnoreArg_buffer;
+  int IgnoreArg_n;
 
 } CMOCK_gsm232UartRecv_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsm232UartSend_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   uint8_t const* Expected_buffer;
   int Expected_n;
+  int Expected_buffer_Depth;
+  int IgnoreArg_buffer;
+  int IgnoreArg_n;
 
 } CMOCK_gsm232UartSend_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmTermUartRecv_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   uint8_t* Expected_buffer;
   int Expected_n;
+  int Expected_buffer_Depth;
+  int ReturnThruPtr_buffer_Used;
+  uint8_t* ReturnThruPtr_buffer_Val;
+  int ReturnThruPtr_buffer_Size;
+  int IgnoreArg_buffer;
+  int IgnoreArg_n;
 
 } CMOCK_gsmTermUartRecv_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmTermUartSend_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   uint8_t const* Expected_buffer;
   int Expected_n;
+  int Expected_buffer_Depth;
+  int IgnoreArg_buffer;
+  int IgnoreArg_n;
 
 } CMOCK_gsmTermUartSend_CALL_INSTANCE;
 
@@ -156,25 +178,40 @@ int gsm232UartRecv(uint8_t* const buffer, int n)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_gsm232UartRecv,CMockString_buffer);
     if (cmock_call_instance->Expected_buffer == NULL)
       { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, cmock_call_instance->Expected_buffer_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_n)
   {
     UNITY_SET_DETAILS(CMockString_gsm232UartRecv,CMockString_n);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_n, n, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_buffer_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(buffer, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)buffer, (void*)cmock_call_instance->ReturnThruPtr_buffer_Val,
+      cmock_call_instance->ReturnThruPtr_buffer_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsm232UartRecv(CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance, uint8_t* const buffer, int n)
+void CMockExpectParameters_gsm232UartRecv(CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance, uint8_t* const buffer, int buffer_Depth, int n)
 {
   cmock_call_instance->Expected_buffer = buffer;
+  cmock_call_instance->Expected_buffer_Depth = buffer_Depth;
+  cmock_call_instance->IgnoreArg_buffer = 0;
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 0;
   cmock_call_instance->Expected_n = n;
+  cmock_call_instance->IgnoreArg_n = 0;
 }
 
 void gsm232UartRecv_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -186,8 +223,24 @@ void gsm232UartRecv_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_t
   Mock.gsm232UartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartRecv_CallInstance, cmock_guts_index);
   Mock.gsm232UartRecv_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsm232UartRecv_IgnoreBool = (int)1;
+}
+
+void gsm232UartRecv_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsm232UartRecv_CALL_INSTANCE));
+  CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsm232UartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartRecv_CallInstance, cmock_guts_index);
+  Mock.gsm232UartRecv_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsm232UartRecv_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* const buffer, int n, int cmock_to_return)
@@ -200,7 +253,8 @@ void gsm232UartRecv_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* co
   Mock.gsm232UartRecv_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsm232UartRecv(cmock_call_instance, buffer, n);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsm232UartRecv(cmock_call_instance, buffer, 1, n);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -209,6 +263,44 @@ void gsm232UartRecv_StubWithCallback(CMOCK_gsm232UartRecv_CALLBACK Callback)
 {
   Mock.gsm232UartRecv_IgnoreBool = (int)0;
   Mock.gsm232UartRecv_CallbackFunctionPointer = Callback;
+}
+
+void gsm232UartRecv_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* const buffer, int buffer_Depth, int n, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsm232UartRecv_CALL_INSTANCE));
+  CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsm232UartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartRecv_CallInstance, cmock_guts_index);
+  Mock.gsm232UartRecv_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsm232UartRecv(cmock_call_instance, buffer, buffer_Depth, n);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsm232UartRecv_CMockReturnMemThruPtr_buffer(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, int cmock_size)
+{
+  CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsm232UartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 1;
+  cmock_call_instance->ReturnThruPtr_buffer_Val = buffer;
+  cmock_call_instance->ReturnThruPtr_buffer_Size = cmock_size;
+}
+
+void gsm232UartRecv_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsm232UartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_buffer = 1;
+}
+
+void gsm232UartRecv_CMockIgnoreArg_n(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsm232UartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsm232UartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_n = 1;
 }
 
 int gsm232UartSend(uint8_t const* const buffer, int n)
@@ -236,25 +328,33 @@ int gsm232UartSend(uint8_t const* const buffer, int n)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_gsm232UartSend,CMockString_buffer);
     if (cmock_call_instance->Expected_buffer == NULL)
       { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, cmock_call_instance->Expected_buffer_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_n)
   {
     UNITY_SET_DETAILS(CMockString_gsm232UartSend,CMockString_n);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_n, n, cmock_line, CMockStringMismatch);
+  }
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsm232UartSend(CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance, uint8_t const* const buffer, int n)
+void CMockExpectParameters_gsm232UartSend(CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance, uint8_t const* const buffer, int buffer_Depth, int n)
 {
   cmock_call_instance->Expected_buffer = buffer;
+  cmock_call_instance->Expected_buffer_Depth = buffer_Depth;
+  cmock_call_instance->IgnoreArg_buffer = 0;
   cmock_call_instance->Expected_n = n;
+  cmock_call_instance->IgnoreArg_n = 0;
 }
 
 void gsm232UartSend_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -266,8 +366,24 @@ void gsm232UartSend_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_t
   Mock.gsm232UartSend_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartSend_CallInstance, cmock_guts_index);
   Mock.gsm232UartSend_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsm232UartSend_IgnoreBool = (int)1;
+}
+
+void gsm232UartSend_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsm232UartSend_CALL_INSTANCE));
+  CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsm232UartSend_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartSend_CallInstance, cmock_guts_index);
+  Mock.gsm232UartSend_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsm232UartSend_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const buffer, int n, int cmock_to_return)
@@ -280,7 +396,8 @@ void gsm232UartSend_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t con
   Mock.gsm232UartSend_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsm232UartSend(cmock_call_instance, buffer, n);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsm232UartSend(cmock_call_instance, buffer, 1, n);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -289,6 +406,35 @@ void gsm232UartSend_StubWithCallback(CMOCK_gsm232UartSend_CALLBACK Callback)
 {
   Mock.gsm232UartSend_IgnoreBool = (int)0;
   Mock.gsm232UartSend_CallbackFunctionPointer = Callback;
+}
+
+void gsm232UartSend_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const buffer, int buffer_Depth, int n, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsm232UartSend_CALL_INSTANCE));
+  CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsm232UartSend_CallInstance = CMock_Guts_MemChain(Mock.gsm232UartSend_CallInstance, cmock_guts_index);
+  Mock.gsm232UartSend_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsm232UartSend(cmock_call_instance, buffer, buffer_Depth, n);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsm232UartSend_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsm232UartSend_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_buffer = 1;
+}
+
+void gsm232UartSend_CMockIgnoreArg_n(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsm232UartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsm232UartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsm232UartSend_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_n = 1;
 }
 
 int gsmTermUartRecv(uint8_t* const buffer, int n)
@@ -316,25 +462,40 @@ int gsmTermUartRecv(uint8_t* const buffer, int n)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_gsmTermUartRecv,CMockString_buffer);
     if (cmock_call_instance->Expected_buffer == NULL)
       { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, cmock_call_instance->Expected_buffer_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_n)
   {
     UNITY_SET_DETAILS(CMockString_gsmTermUartRecv,CMockString_n);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_n, n, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_buffer_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(buffer, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)buffer, (void*)cmock_call_instance->ReturnThruPtr_buffer_Val,
+      cmock_call_instance->ReturnThruPtr_buffer_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmTermUartRecv(CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance, uint8_t* const buffer, int n)
+void CMockExpectParameters_gsmTermUartRecv(CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance, uint8_t* const buffer, int buffer_Depth, int n)
 {
   cmock_call_instance->Expected_buffer = buffer;
+  cmock_call_instance->Expected_buffer_Depth = buffer_Depth;
+  cmock_call_instance->IgnoreArg_buffer = 0;
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 0;
   cmock_call_instance->Expected_n = n;
+  cmock_call_instance->IgnoreArg_n = 0;
 }
 
 void gsmTermUartRecv_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -346,8 +507,24 @@ void gsmTermUartRecv_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_
   Mock.gsmTermUartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartRecv_CallInstance, cmock_guts_index);
   Mock.gsmTermUartRecv_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmTermUartRecv_IgnoreBool = (int)1;
+}
+
+void gsmTermUartRecv_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmTermUartRecv_CALL_INSTANCE));
+  CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmTermUartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartRecv_CallInstance, cmock_guts_index);
+  Mock.gsmTermUartRecv_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmTermUartRecv_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* const buffer, int n, int cmock_to_return)
@@ -360,7 +537,8 @@ void gsmTermUartRecv_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* c
   Mock.gsmTermUartRecv_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmTermUartRecv(cmock_call_instance, buffer, n);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmTermUartRecv(cmock_call_instance, buffer, 1, n);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -369,6 +547,44 @@ void gsmTermUartRecv_StubWithCallback(CMOCK_gsmTermUartRecv_CALLBACK Callback)
 {
   Mock.gsmTermUartRecv_IgnoreBool = (int)0;
   Mock.gsmTermUartRecv_CallbackFunctionPointer = Callback;
+}
+
+void gsmTermUartRecv_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t* const buffer, int buffer_Depth, int n, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmTermUartRecv_CALL_INSTANCE));
+  CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmTermUartRecv_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartRecv_CallInstance, cmock_guts_index);
+  Mock.gsmTermUartRecv_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmTermUartRecv(cmock_call_instance, buffer, buffer_Depth, n);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmTermUartRecv_CMockReturnMemThruPtr_buffer(UNITY_LINE_TYPE cmock_line, uint8_t* buffer, int cmock_size)
+{
+  CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmTermUartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 1;
+  cmock_call_instance->ReturnThruPtr_buffer_Val = buffer;
+  cmock_call_instance->ReturnThruPtr_buffer_Size = cmock_size;
+}
+
+void gsmTermUartRecv_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmTermUartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_buffer = 1;
+}
+
+void gsmTermUartRecv_CMockIgnoreArg_n(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmTermUartRecv_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartRecv_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmTermUartRecv_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_n = 1;
 }
 
 int gsmTermUartSend(uint8_t const* const buffer, int n)
@@ -396,25 +612,33 @@ int gsmTermUartSend(uint8_t const* const buffer, int n)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_gsmTermUartSend,CMockString_buffer);
     if (cmock_call_instance->Expected_buffer == NULL)
       { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, cmock_call_instance->Expected_buffer_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_n)
   {
     UNITY_SET_DETAILS(CMockString_gsmTermUartSend,CMockString_n);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_n, n, cmock_line, CMockStringMismatch);
+  }
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmTermUartSend(CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance, uint8_t const* const buffer, int n)
+void CMockExpectParameters_gsmTermUartSend(CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance, uint8_t const* const buffer, int buffer_Depth, int n)
 {
   cmock_call_instance->Expected_buffer = buffer;
+  cmock_call_instance->Expected_buffer_Depth = buffer_Depth;
+  cmock_call_instance->IgnoreArg_buffer = 0;
   cmock_call_instance->Expected_n = n;
+  cmock_call_instance->IgnoreArg_n = 0;
 }
 
 void gsmTermUartSend_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -426,8 +650,24 @@ void gsmTermUartSend_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_
   Mock.gsmTermUartSend_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartSend_CallInstance, cmock_guts_index);
   Mock.gsmTermUartSend_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmTermUartSend_IgnoreBool = (int)1;
+}
+
+void gsmTermUartSend_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmTermUartSend_CALL_INSTANCE));
+  CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmTermUartSend_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartSend_CallInstance, cmock_guts_index);
+  Mock.gsmTermUartSend_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmTermUartSend_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const buffer, int n, int cmock_to_return)
@@ -440,7 +680,8 @@ void gsmTermUartSend_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t co
   Mock.gsmTermUartSend_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmTermUartSend(cmock_call_instance, buffer, n);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmTermUartSend(cmock_call_instance, buffer, 1, n);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -449,5 +690,34 @@ void gsmTermUartSend_StubWithCallback(CMOCK_gsmTermUartSend_CALLBACK Callback)
 {
   Mock.gsmTermUartSend_IgnoreBool = (int)0;
   Mock.gsmTermUartSend_CallbackFunctionPointer = Callback;
+}
+
+void gsmTermUartSend_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const buffer, int buffer_Depth, int n, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmTermUartSend_CALL_INSTANCE));
+  CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmTermUartSend_CallInstance = CMock_Guts_MemChain(Mock.gsmTermUartSend_CallInstance, cmock_guts_index);
+  Mock.gsmTermUartSend_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmTermUartSend(cmock_call_instance, buffer, buffer_Depth, n);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmTermUartSend_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmTermUartSend_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_buffer = 1;
+}
+
+void gsmTermUartSend_CMockIgnoreArg_n(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmTermUartSend_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmTermUartSend_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmTermUartSend_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_n = 1;
 }
 

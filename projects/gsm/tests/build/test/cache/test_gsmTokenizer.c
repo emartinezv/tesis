@@ -1,9 +1,10 @@
 #include "build/temp/_test_gsmTokenizer.c"
-#include "vl_ring_buffer.h"
 #include "ring_buffer.h"
-#include "mock_gsmComms.h"
+#include "vl_ring_buffer.h"
 #include "gsmTokenizer.h"
 #include "unity.h"
+
+
 
 
 
@@ -40,16 +41,6 @@ void tearDown(void)
 
 }
 
-
-
-
-
-
-
-
-
-
-
 void test_gsmInitTokenizer(void)
 
 {
@@ -62,11 +53,49 @@ void test_gsmInitTokenizer(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((1)), (UNITY_INT)((n)), (((void *)0)), (UNITY_UINT)(58), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((1)), (UNITY_INT)((n)), (((void *)0)), (UNITY_UINT)(71), UNITY_DISPLAY_STYLE_INT);
 
 }
 
+void test_gsmNoChTokenizer(void)
 
+{
+
+
+
+
+
+   uint16_t noCh;
+
+   _Bool init;
+
+
+
+
+
+
+
+   init = gsmInitTokenizer();
+
+
+
+   if ((init)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(99)));};
+
+
+
+
+
+
+
+   noCh = gsmNoChTokenizer();
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(((20 +280 +1))), (UNITY_INT)((noCh)), (((void *)0)), (UNITY_UINT)(105), UNITY_DISPLAY_STYLE_INT);
+
+
+
+}
 
 void test_gsmDetectTkns(void)
 
@@ -76,15 +105,15 @@ void test_gsmDetectTkns(void)
 
 
 
-   static uint8_t tknRbBuf[16];
+   uint8_t tknRbBuf[16];
 
-   static RINGBUFF_T tknRb;
+   RINGBUFF_T tknRb;
 
-   static VLRINGBUFF_T tknVlRb;
+   VLRINGBUFF_T tknVlRb;
 
 
 
-   static uint8_t * bufferTest[5] = {"AT\r\r\nOK", "\r\nabcde",
+   uint8_t * bufferTest[5] = {"AT\r\r\nOK", "\r\nabcde",
 
                                      "\r\n", "\r\n> ", "abcde\r\n"};
 
@@ -122,9 +151,9 @@ void test_gsmDetectTkns(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("AT\r")), (const char*)((token)), (UNITY_UINT32)((strlen("AT\r"))), (((void *)0)), (UNITY_UINT)(88));
+   UnityAssertEqualStringLen((const char*)(("AT\r")), (const char*)((token)), (UNITY_UINT32)((strlen("AT\r"))), (((void *)0)), (UNITY_UINT)(144));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((ECHO)), (UNITY_INT)(UNITY_INT8 )((token[strlen("AT\r")])), (((void *)0)), (UNITY_UINT)(89), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((ECHO)), (UNITY_INT)(UNITY_INT8 )((token[strlen("AT\r")])), (((void *)0)), (UNITY_UINT)(145), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -140,9 +169,9 @@ void test_gsmDetectTkns(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("\r\nOK\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\nOK\r\n"))), (((void *)0)), (UNITY_UINT)(97));
+   UnityAssertEqualStringLen((const char*)(("\r\nOK\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\nOK\r\n"))), (((void *)0)), (UNITY_UINT)(153));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((RSP)), (UNITY_INT)(UNITY_INT8 )((token[strlen("\r\nOK\r\n")])), (((void *)0)), (UNITY_UINT)(98), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((RSP)), (UNITY_INT)(UNITY_INT8 )((token[strlen("\r\nOK\r\n")])), (((void *)0)), (UNITY_UINT)(154), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -158,9 +187,9 @@ void test_gsmDetectTkns(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("abcde\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde\r\n"))), (((void *)0)), (UNITY_UINT)(106));
+   UnityAssertEqualStringLen((const char*)(("abcde\r\n")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde\r\n"))), (((void *)0)), (UNITY_UINT)(162));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((DATA_BLOCK)), (UNITY_INT)(UNITY_INT8 )((token[strlen("abcde\r\n")])), (((void *)0)), (UNITY_UINT)(107), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((DATA_BLOCK)), (UNITY_INT)(UNITY_INT8 )((token[strlen("abcde\r\n")])), (((void *)0)), (UNITY_UINT)(163), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -176,9 +205,9 @@ void test_gsmDetectTkns(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("\r\n> ")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\n> "))), (((void *)0)), (UNITY_UINT)(115));
+   UnityAssertEqualStringLen((const char*)(("\r\n> ")), (const char*)((token)), (UNITY_UINT32)((strlen("\r\n> "))), (((void *)0)), (UNITY_UINT)(171));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_PROMPT)), (UNITY_INT)(UNITY_INT8 )((token[strlen("\r\n> ")])), (((void *)0)), (UNITY_UINT)(116), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_PROMPT)), (UNITY_INT)(UNITY_INT8 )((token[strlen("\r\n> ")])), (((void *)0)), (UNITY_UINT)(172), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -194,9 +223,9 @@ void test_gsmDetectTkns(void)
 
 
 
-   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde"))), (((void *)0)), (UNITY_UINT)(124));
+   UnityAssertEqualStringLen((const char*)(("abcde")), (const char*)((token)), (UNITY_UINT32)((strlen("abcde"))), (((void *)0)), (UNITY_UINT)(180));
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_BODY)), (UNITY_INT)(UNITY_INT8 )((token[strlen("abcde")])), (((void *)0)), (UNITY_UINT)(125), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((SMS_BODY)), (UNITY_INT)(UNITY_INT8 )((token[strlen("abcde")])), (((void *)0)), (UNITY_UINT)(181), UNITY_DISPLAY_STYLE_INT8);
 
 
 

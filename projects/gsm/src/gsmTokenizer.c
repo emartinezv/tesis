@@ -100,7 +100,7 @@ uint16_t gsmNoChTokenizer(void)
  *
  */
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
+void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
                    uint8_t const * const buffer)
 {
    /* State-machine variables and flags */

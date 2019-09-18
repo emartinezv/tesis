@@ -3,13 +3,13 @@
 #include "gsmParser.h"
 #include "gsmComms.h"
 #include "lpc_types.h"
-typedef struct _rsp_t
+typedef struct _rsp
 
 {
 
    uint8_t cmd[20];
 
-   uint8_t par[300];
+   uint8_t par[280];
 
 } rsp_t;
 
@@ -19,7 +19,7 @@ typedef struct _rsp_t
 
 
 
-typedef enum _serialMode_e
+typedef enum _serialMode
 
 {
 
@@ -27,7 +27,7 @@ typedef enum _serialMode_e
 
    DATA_MODE
 
-} serialMode_e ;
+} serialMode_t ;
 
 
 
@@ -35,7 +35,7 @@ typedef enum _serialMode_e
 
 
 
-typedef enum _fsmState_e
+typedef enum _fsmState
 
 {
 
@@ -45,7 +45,7 @@ typedef enum _fsmState_e
 
    CMD_ACK = 2,
 
-} fsmState_e;
+} fsmState_t;
 
 
 
@@ -83,7 +83,7 @@ typedef enum _fsmEvent
 
    ERR_FSM_OOR
 
-} fsmEvent_e;
+} fsmEvent_t;
 
 
 
@@ -91,7 +91,7 @@ typedef enum _fsmEvent
 
 
 
-typedef struct _gsmEngine_t
+typedef struct _gsmEngine
 
 {
 
@@ -99,13 +99,13 @@ typedef struct _gsmEngine_t
 
 
 
-   fsmState_e fsmState;
+   fsmState_t fsmState;
 
-   serialMode_e serialMode;
+   serialMode_t serialMode;
 
    uint8_t currCmd[20];
 
-   uint8_t currPar[300];
+   uint8_t currPar[280];
 
    uint8_t currIdx;
 
@@ -157,13 +157,11 @@ typedef struct _gsmEngine_t
 
 } gsmEngine_t;
 
-_Bool gsmInitEngine(gsmEngine_t * engine);
+_Bool gsmInitEngine(gsmEngine_t * const engine);
 
-fsmEvent_e gsmProcessTkn(gsmEngine_t * engine);
+fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine);
 
-_Bool gsmToutCntZero(gsmEngine_t * engine);
-
-
+_Bool gsmToutCntZero(gsmEngine_t * const engine);
 
 
 
@@ -177,16 +175,20 @@ _Bool gsmToutCntZero(gsmEngine_t * engine);
 
 
 
-void gsmDecToutCnt(gsmEngine_t * engine);
 
-fsmEvent_e gsmSendCmd (gsmEngine_t * engine, const uint8_t * cmdStr);
 
-rsp_t gsmGetCmdRsp (gsmEngine_t * engine);
+void gsmDecToutCnt(gsmEngine_t * const engine);
 
-uint8_t gsmGetNoCmdRsp (gsmEngine_t * engine);
+fsmEvent_t gsmSendCmd (gsmEngine_t * const engine,
 
-rsp_t gsmGetUrc (gsmEngine_t * engine);
+                       const uint8_t * const cmdStr);
 
-serialMode_e gsmGetSerialMode(gsmEngine_t * engine);
+rsp_t gsmGetCmdRsp (gsmEngine_t * const engine);
 
-_Bool gsmSetSerialMode(gsmEngine_t * engine, serialMode_e mode);
+uint8_t gsmGetNoCmdRsp (const gsmEngine_t * const engine);
+
+rsp_t gsmGetUrc (gsmEngine_t * const engine);
+
+serialMode_t gsmGetSerialMode(const gsmEngine_t * const engine);
+
+_Bool gsmSetSerialMode(gsmEngine_t * const engine, serialMode_t mode);

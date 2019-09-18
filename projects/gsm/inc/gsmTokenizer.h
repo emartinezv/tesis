@@ -33,7 +33,7 @@
 #define _GSM_TOKENIZER_H_
 
 /** @brief This module handles the tokenizer function, turning the raw serial
- *         input from the modem into discrete tokens
+ *         input from the modem into discrete tokens.
  */
 
 /** \addtogroup tokenizer tokenizer
@@ -54,8 +54,23 @@ extern "C" {
 
 /*==================[macros]================================================*/
 
+/** @brief Max size of an AT token command part */
+
+#define TKN_CMD_SIZE 20  /* Max size is based on all the commands of the SIM808
+                            (largest are 11 chars), plus an extra for any
+                            future expansions */
+
+/** @brief Max size of an AT token parameter part */
+
+#define TKN_PAR_SIZE 280 /* Max size is usually determined by SMS message
+                            length which is topped at 160 chars with the usual
+                            GSM-7 coding. However, if using UCS2 coding the max
+                            number of chars will be 70, but they come out of
+                            the modem coded at a 4-to-1 rate, which means a max
+                            of 280 effective chars to store.
+
 /** @brief Maximum size of tokens */
-#define TKN_LEN 300
+#define TKN_LEN (TKN_CMD_SIZE+TKN_PAR_SIZE+1)
 
 /** @brief Size in bytes of the UART swap buffer */
 #define SWAP_BUF_SIZ TKN_LEN
@@ -67,7 +82,7 @@ extern "C" {
 
 /** @brief Token type enum for the tokenizer functionality */
 
-typedef enum {
+typedef enum _tknTypeTknzer {
    NONE       = 0,   /**< No token detected yet */
    ECHO       = 1,   /**< AT command echo */
    RSP        = 2,   /**< AT command response */
@@ -105,7 +120,7 @@ uint16_t gsmNoChTokenizer(void);
  *
  */
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
+void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
                    uint8_t const * const buffer);
 
 /*==================[cplusplus]=============================================*/

@@ -15,12 +15,26 @@ static const char* CMockString_tknLen = "tknLen";
 typedef struct _CMOCK_gsmParseTkn_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   tknTypeParser_t ReturnVal;
   int CallOrder;
   uint8_t const* Expected_tkn;
   uint8_t* Expected_cmd;
   uint8_t* Expected_par;
   uint16_t Expected_tknLen;
+  int Expected_tkn_Depth;
+  int Expected_cmd_Depth;
+  int Expected_par_Depth;
+  int ReturnThruPtr_cmd_Used;
+  uint8_t* ReturnThruPtr_cmd_Val;
+  int ReturnThruPtr_cmd_Size;
+  int ReturnThruPtr_par_Used;
+  uint8_t* ReturnThruPtr_par_Val;
+  int ReturnThruPtr_par_Size;
+  int IgnoreArg_tkn;
+  int IgnoreArg_cmd;
+  int IgnoreArg_par;
+  int IgnoreArg_tknLen;
 
 } CMOCK_gsmParseTkn_CALL_INSTANCE;
 
@@ -88,41 +102,69 @@ tknTypeParser_t gsmParseTkn(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_tkn)
   {
     UNITY_SET_DETAILS(CMockString_gsmParseTkn,CMockString_tkn);
     if (cmock_call_instance->Expected_tkn == NULL)
       { UNITY_TEST_ASSERT_NULL(tkn, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_tkn, tkn, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_tkn, tkn, cmock_call_instance->Expected_tkn_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_cmd)
   {
     UNITY_SET_DETAILS(CMockString_gsmParseTkn,CMockString_cmd);
     if (cmock_call_instance->Expected_cmd == NULL)
       { UNITY_TEST_ASSERT_NULL(cmd, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_cmd, cmd, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_cmd, cmd, cmock_call_instance->Expected_cmd_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_par)
   {
     UNITY_SET_DETAILS(CMockString_gsmParseTkn,CMockString_par);
     if (cmock_call_instance->Expected_par == NULL)
       { UNITY_TEST_ASSERT_NULL(par, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_par, par, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_par, par, cmock_call_instance->Expected_par_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_tknLen)
   {
     UNITY_SET_DETAILS(CMockString_gsmParseTkn,CMockString_tknLen);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_tknLen, tknLen, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_cmd_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(cmd, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)cmd, (void*)cmock_call_instance->ReturnThruPtr_cmd_Val,
+      cmock_call_instance->ReturnThruPtr_cmd_Size);
+  }
+  if (cmock_call_instance->ReturnThruPtr_par_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(par, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)par, (void*)cmock_call_instance->ReturnThruPtr_par_Val,
+      cmock_call_instance->ReturnThruPtr_par_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmParseTkn(CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen)
+void CMockExpectParameters_gsmParseTkn(CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance, uint8_t const* const tkn, int tkn_Depth, uint8_t* cmd, int cmd_Depth, uint8_t* par, int par_Depth, uint16_t tknLen)
 {
   cmock_call_instance->Expected_tkn = tkn;
+  cmock_call_instance->Expected_tkn_Depth = tkn_Depth;
+  cmock_call_instance->IgnoreArg_tkn = 0;
   cmock_call_instance->Expected_cmd = cmd;
+  cmock_call_instance->Expected_cmd_Depth = cmd_Depth;
+  cmock_call_instance->IgnoreArg_cmd = 0;
+  cmock_call_instance->ReturnThruPtr_cmd_Used = 0;
   cmock_call_instance->Expected_par = par;
+  cmock_call_instance->Expected_par_Depth = par_Depth;
+  cmock_call_instance->IgnoreArg_par = 0;
+  cmock_call_instance->ReturnThruPtr_par_Used = 0;
   cmock_call_instance->Expected_tknLen = tknLen;
+  cmock_call_instance->IgnoreArg_tknLen = 0;
 }
 
 void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return)
@@ -134,8 +176,24 @@ void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_
   Mock.gsmParseTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmParseTkn_CallInstance, cmock_guts_index);
   Mock.gsmParseTkn_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmParseTkn_IgnoreBool = (int)1;
+}
+
+void gsmParseTkn_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmParseTkn_CALL_INSTANCE));
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmParseTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmParseTkn_CallInstance, cmock_guts_index);
+  Mock.gsmParseTkn_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_t cmock_to_return)
@@ -148,7 +206,8 @@ void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const*
   Mock.gsmParseTkn_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmParseTkn(cmock_call_instance, tkn, cmd, par, tknLen);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmParseTkn(cmock_call_instance, tkn, 1, cmd, 1, par, 1, tknLen);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(tknTypeParser_t));
   UNITY_CLR_DETAILS();
 }
@@ -157,5 +216,66 @@ void gsmParseTkn_StubWithCallback(CMOCK_gsmParseTkn_CALLBACK Callback)
 {
   Mock.gsmParseTkn_IgnoreBool = (int)0;
   Mock.gsmParseTkn_CallbackFunctionPointer = Callback;
+}
+
+void gsmParseTkn_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, int tkn_Depth, uint8_t* cmd, int cmd_Depth, uint8_t* par, int par_Depth, uint16_t tknLen, tknTypeParser_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmParseTkn_CALL_INSTANCE));
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmParseTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmParseTkn_CallInstance, cmock_guts_index);
+  Mock.gsmParseTkn_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmParseTkn(cmock_call_instance, tkn, tkn_Depth, cmd, cmd_Depth, par, par_Depth, tknLen);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmParseTkn_CMockReturnMemThruPtr_cmd(UNITY_LINE_TYPE cmock_line, uint8_t* cmd, int cmock_size)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_cmd_Used = 1;
+  cmock_call_instance->ReturnThruPtr_cmd_Val = cmd;
+  cmock_call_instance->ReturnThruPtr_cmd_Size = cmock_size;
+}
+
+void gsmParseTkn_CMockReturnMemThruPtr_par(UNITY_LINE_TYPE cmock_line, uint8_t* par, int cmock_size)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_par_Used = 1;
+  cmock_call_instance->ReturnThruPtr_par_Val = par;
+  cmock_call_instance->ReturnThruPtr_par_Size = cmock_size;
+}
+
+void gsmParseTkn_CMockIgnoreArg_tkn(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_tkn = 1;
+}
+
+void gsmParseTkn_CMockIgnoreArg_cmd(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_cmd = 1;
+}
+
+void gsmParseTkn_CMockIgnoreArg_par(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_par = 1;
+}
+
+void gsmParseTkn_CMockIgnoreArg_tknLen(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmParseTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmParseTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmParseTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_tknLen = 1;
 }
 

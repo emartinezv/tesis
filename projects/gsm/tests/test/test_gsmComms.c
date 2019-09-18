@@ -47,6 +47,14 @@ void tearDown(void)
  *    TESTS
  ******************************************************************************/
 
+/* test_gsm232UartRecv
+ *
+ * Functions tested:
+ *
+ * - gsm232UartRecv
+ *
+ * */
+
 void test_gsm232UartRecv(void)
 {
    /* Variables */
@@ -63,6 +71,14 @@ void test_gsm232UartRecv(void)
 
    TEST_ASSERT_EQUAL_INT(8, res);
 }
+
+/* test_gsm232UartSend
+ *
+ * Functions tested:
+ *
+ * - gsm232UartSend
+ *
+ * */
 
 void test_gsm232UartSend(void)
 {
@@ -81,6 +97,14 @@ void test_gsm232UartSend(void)
    TEST_ASSERT_EQUAL_INT(8, res);
 }
 
+/* test_gsmTermUartRecv
+ *
+ * Functions tested:
+ *
+ * - gsmTermUartRecv
+ *
+ * */
+
 void test_gsmTermUartRecv(void)
 {
    /* Variables */
@@ -97,6 +121,14 @@ void test_gsmTermUartRecv(void)
 
    TEST_ASSERT_EQUAL_INT(8, res);
 }
+
+/* test_gsmTermUartSend
+ *
+ * Functions tested:
+ *
+ * - gsmTermUartSend
+ *
+ * */
 
 void test_gsmTermUartSend(void)
 {

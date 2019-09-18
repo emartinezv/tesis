@@ -43,7 +43,7 @@
 /** @brief Used for the private vector of AT commands. Stores the name,
  *         successful and error end responses and timeout in ms */
 
-typedef struct {
+typedef struct _atCmd {
    uint8_t const * const name;     /**< pointer to str with command name */
    uint8_t const * const sucRsp;   /**< pointer to str with successful end
                                         responses */
@@ -54,7 +54,7 @@ typedef struct {
 
 /** @brief Used for the private vector of URCs. Stores the name of the URC */
 
-typedef struct {
+typedef struct _urc {
    uint8_t const * const name;     /**< pointer to str with URC name */
 } urc_t;
 

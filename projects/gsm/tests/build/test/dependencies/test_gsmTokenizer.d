@@ -5,5 +5,4 @@ build/test/out/c/test_gsmTokenizer.o: test/test_gsmTokenizer.c \
  ../inc/gsmComms.h ../../../modules/lpc4337_m4/ciaa/inc/ciaaUART.h \
  test/support/chip.h ../../../modules/lpc4337_m4/chip/inc/ring_buffer.h \
  ../../../modules/lpc4337_m4/chip/inc/lpc_types.h ../inc/vl_ring_buffer.h \
- build/test/mocks/mock_gsmComms.h ../inc/gsmComms.h \
  ../inc/vl_ring_buffer.h

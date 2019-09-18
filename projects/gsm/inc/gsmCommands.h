@@ -53,7 +53,6 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /** @brief Value returned by gsmCmdSearch when cmd is not found */
-
 #define UNKNOWN_CMD 65535
 
 /** @brief Default timeout for AT commands in ms */

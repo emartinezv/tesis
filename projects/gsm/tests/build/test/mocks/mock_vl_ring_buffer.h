@@ -25,52 +25,160 @@ void mock_vl_ring_buffer_Verify(void);
 
 #define VLRingBuffer_Init_IgnoreAndReturn(cmock_retval) VLRingBuffer_Init_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_Init_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_Init_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_Init_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_Init_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_Init_ExpectAndReturn(vlrb, RingBuff, buffer, itemSize, count, cmock_retval) VLRingBuffer_Init_CMockExpectAndReturn(__LINE__, vlrb, RingBuff, buffer, itemSize, count, cmock_retval)
 void VLRingBuffer_Init_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, RINGBUFF_T* RingBuff, void* buffer, int itemSize, int count, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_Init_CALLBACK)(VLRINGBUFF_T* vlrb, RINGBUFF_T* RingBuff, void* buffer, int itemSize, int count, int cmock_num_calls);
 void VLRingBuffer_Init_StubWithCallback(CMOCK_VLRingBuffer_Init_CALLBACK Callback);
+#define VLRingBuffer_Init_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, RingBuff, RingBuff_Depth, buffer, buffer_Depth, itemSize, count, cmock_retval) VLRingBuffer_Init_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, RingBuff, RingBuff_Depth, buffer, buffer_Depth, itemSize, count, cmock_retval)
+void VLRingBuffer_Init_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, RINGBUFF_T* RingBuff, int RingBuff_Depth, void* buffer, int buffer_Depth, int itemSize, int count, int cmock_to_return);
+#define VLRingBuffer_Init_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_Init_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_Init_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_Init_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_Init_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_Init_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_Init_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_Init_ReturnThruPtr_RingBuff(RingBuff) VLRingBuffer_Init_CMockReturnMemThruPtr_RingBuff(__LINE__, RingBuff, sizeof(*RingBuff))
+#define VLRingBuffer_Init_ReturnArrayThruPtr_RingBuff(RingBuff, cmock_len) VLRingBuffer_Init_CMockReturnMemThruPtr_RingBuff(__LINE__, RingBuff, (int)(cmock_len * (int)sizeof(*RingBuff)))
+#define VLRingBuffer_Init_ReturnMemThruPtr_RingBuff(RingBuff, cmock_size) VLRingBuffer_Init_CMockReturnMemThruPtr_RingBuff(__LINE__, RingBuff, cmock_size)
+void VLRingBuffer_Init_CMockReturnMemThruPtr_RingBuff(UNITY_LINE_TYPE cmock_line, RINGBUFF_T* RingBuff, int cmock_size);
+#define VLRingBuffer_Init_ReturnThruPtr_buffer(buffer) VLRingBuffer_Init_CMockReturnMemThruPtr_buffer(__LINE__, buffer, sizeof(*buffer))
+#define VLRingBuffer_Init_ReturnArrayThruPtr_buffer(buffer, cmock_len) VLRingBuffer_Init_CMockReturnMemThruPtr_buffer(__LINE__, buffer, (int)(cmock_len * (int)sizeof(*buffer)))
+#define VLRingBuffer_Init_ReturnMemThruPtr_buffer(buffer, cmock_size) VLRingBuffer_Init_CMockReturnMemThruPtr_buffer(__LINE__, buffer, cmock_size)
+void VLRingBuffer_Init_CMockReturnMemThruPtr_buffer(UNITY_LINE_TYPE cmock_line, void* buffer, int cmock_size);
+#define VLRingBuffer_Init_IgnoreArg_vlrb() VLRingBuffer_Init_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_Init_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Init_IgnoreArg_RingBuff() VLRingBuffer_Init_CMockIgnoreArg_RingBuff(__LINE__)
+void VLRingBuffer_Init_CMockIgnoreArg_RingBuff(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Init_IgnoreArg_buffer() VLRingBuffer_Init_CMockIgnoreArg_buffer(__LINE__)
+void VLRingBuffer_Init_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Init_IgnoreArg_itemSize() VLRingBuffer_Init_CMockIgnoreArg_itemSize(__LINE__)
+void VLRingBuffer_Init_CMockIgnoreArg_itemSize(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Init_IgnoreArg_count() VLRingBuffer_Init_CMockIgnoreArg_count(__LINE__)
+void VLRingBuffer_Init_CMockIgnoreArg_count(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_Insert_IgnoreAndReturn(cmock_retval) VLRingBuffer_Insert_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_Insert_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_Insert_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_Insert_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_Insert_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_Insert_ExpectAndReturn(vlrb, data, num, cmock_retval) VLRingBuffer_Insert_CMockExpectAndReturn(__LINE__, vlrb, data, num, cmock_retval)
 void VLRingBuffer_Insert_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, const void* data, uint16_t num, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_Insert_CALLBACK)(VLRINGBUFF_T* vlrb, const void* data, uint16_t num, int cmock_num_calls);
 void VLRingBuffer_Insert_StubWithCallback(CMOCK_VLRingBuffer_Insert_CALLBACK Callback);
+#define VLRingBuffer_Insert_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, data, data_Depth, num, cmock_retval) VLRingBuffer_Insert_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, data, data_Depth, num, cmock_retval)
+void VLRingBuffer_Insert_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, const void* data, int data_Depth, uint16_t num, int cmock_to_return);
+#define VLRingBuffer_Insert_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_Insert_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_Insert_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_Insert_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_Insert_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_Insert_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_Insert_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_Insert_IgnoreArg_vlrb() VLRingBuffer_Insert_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_Insert_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Insert_IgnoreArg_data() VLRingBuffer_Insert_CMockIgnoreArg_data(__LINE__)
+void VLRingBuffer_Insert_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Insert_IgnoreArg_num() VLRingBuffer_Insert_CMockIgnoreArg_num(__LINE__)
+void VLRingBuffer_Insert_CMockIgnoreArg_num(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_Pop_IgnoreAndReturn(cmock_retval) VLRingBuffer_Pop_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_Pop_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_Pop_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_Pop_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_Pop_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_Pop_ExpectAndReturn(vlrb, data, cap, cmock_retval) VLRingBuffer_Pop_CMockExpectAndReturn(__LINE__, vlrb, data, cap, cmock_retval)
 void VLRingBuffer_Pop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, void* data, uint16_t cap, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_Pop_CALLBACK)(VLRINGBUFF_T* vlrb, void* data, uint16_t cap, int cmock_num_calls);
 void VLRingBuffer_Pop_StubWithCallback(CMOCK_VLRingBuffer_Pop_CALLBACK Callback);
+#define VLRingBuffer_Pop_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, data, data_Depth, cap, cmock_retval) VLRingBuffer_Pop_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, data, data_Depth, cap, cmock_retval)
+void VLRingBuffer_Pop_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, void* data, int data_Depth, uint16_t cap, int cmock_to_return);
+#define VLRingBuffer_Pop_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_Pop_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_Pop_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_Pop_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_Pop_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_Pop_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_Pop_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_Pop_ReturnThruPtr_data(data) VLRingBuffer_Pop_CMockReturnMemThruPtr_data(__LINE__, data, sizeof(*data))
+#define VLRingBuffer_Pop_ReturnArrayThruPtr_data(data, cmock_len) VLRingBuffer_Pop_CMockReturnMemThruPtr_data(__LINE__, data, (int)(cmock_len * (int)sizeof(*data)))
+#define VLRingBuffer_Pop_ReturnMemThruPtr_data(data, cmock_size) VLRingBuffer_Pop_CMockReturnMemThruPtr_data(__LINE__, data, cmock_size)
+void VLRingBuffer_Pop_CMockReturnMemThruPtr_data(UNITY_LINE_TYPE cmock_line, void* data, int cmock_size);
+#define VLRingBuffer_Pop_IgnoreArg_vlrb() VLRingBuffer_Pop_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_Pop_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Pop_IgnoreArg_data() VLRingBuffer_Pop_CMockIgnoreArg_data(__LINE__)
+void VLRingBuffer_Pop_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line);
+#define VLRingBuffer_Pop_IgnoreArg_cap() VLRingBuffer_Pop_CMockIgnoreArg_cap(__LINE__)
+void VLRingBuffer_Pop_CMockIgnoreArg_cap(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_Flush_Ignore() VLRingBuffer_Flush_CMockIgnore()
 void VLRingBuffer_Flush_CMockIgnore(void);
+#define VLRingBuffer_Flush_ExpectAnyArgs() VLRingBuffer_Flush_CMockExpectAnyArgs(__LINE__)
+void VLRingBuffer_Flush_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_Flush_Expect(vlrb) VLRingBuffer_Flush_CMockExpect(__LINE__, vlrb)
 void VLRingBuffer_Flush_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb);
 typedef void (* CMOCK_VLRingBuffer_Flush_CALLBACK)(VLRINGBUFF_T* vlrb, int cmock_num_calls);
 void VLRingBuffer_Flush_StubWithCallback(CMOCK_VLRingBuffer_Flush_CALLBACK Callback);
+#define VLRingBuffer_Flush_ExpectWithArray(vlrb, vlrb_Depth) VLRingBuffer_Flush_CMockExpectWithArray(__LINE__, vlrb, vlrb_Depth)
+void VLRingBuffer_Flush_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth);
+#define VLRingBuffer_Flush_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_Flush_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_Flush_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_Flush_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_Flush_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_Flush_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_Flush_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_Flush_IgnoreArg_vlrb() VLRingBuffer_Flush_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_Flush_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_IsEmpty_IgnoreAndReturn(cmock_retval) VLRingBuffer_IsEmpty_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_IsEmpty_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_IsEmpty_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_IsEmpty_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_IsEmpty_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_IsEmpty_ExpectAndReturn(vlrb, cmock_retval) VLRingBuffer_IsEmpty_CMockExpectAndReturn(__LINE__, vlrb, cmock_retval)
 void VLRingBuffer_IsEmpty_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_IsEmpty_CALLBACK)(VLRINGBUFF_T* vlrb, int cmock_num_calls);
 void VLRingBuffer_IsEmpty_StubWithCallback(CMOCK_VLRingBuffer_IsEmpty_CALLBACK Callback);
+#define VLRingBuffer_IsEmpty_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, cmock_retval) VLRingBuffer_IsEmpty_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, cmock_retval)
+void VLRingBuffer_IsEmpty_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return);
+#define VLRingBuffer_IsEmpty_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_IsEmpty_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_IsEmpty_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_IsEmpty_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_IsEmpty_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_IsEmpty_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_IsEmpty_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_IsEmpty_IgnoreArg_vlrb() VLRingBuffer_IsEmpty_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_IsEmpty_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_IsFull_IgnoreAndReturn(cmock_retval) VLRingBuffer_IsFull_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_IsFull_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_IsFull_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_IsFull_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_IsFull_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_IsFull_ExpectAndReturn(vlrb, cmock_retval) VLRingBuffer_IsFull_CMockExpectAndReturn(__LINE__, vlrb, cmock_retval)
 void VLRingBuffer_IsFull_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_IsFull_CALLBACK)(VLRINGBUFF_T* vlrb, int cmock_num_calls);
 void VLRingBuffer_IsFull_StubWithCallback(CMOCK_VLRingBuffer_IsFull_CALLBACK Callback);
+#define VLRingBuffer_IsFull_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, cmock_retval) VLRingBuffer_IsFull_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, cmock_retval)
+void VLRingBuffer_IsFull_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return);
+#define VLRingBuffer_IsFull_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_IsFull_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_IsFull_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_IsFull_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_IsFull_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_IsFull_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_IsFull_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_IsFull_IgnoreArg_vlrb() VLRingBuffer_IsFull_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_IsFull_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_GetFree_IgnoreAndReturn(cmock_retval) VLRingBuffer_GetFree_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_GetFree_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_GetFree_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_GetFree_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_GetFree_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_GetFree_ExpectAndReturn(vlrb, cmock_retval) VLRingBuffer_GetFree_CMockExpectAndReturn(__LINE__, vlrb, cmock_retval)
 void VLRingBuffer_GetFree_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_GetFree_CALLBACK)(VLRINGBUFF_T* vlrb, int cmock_num_calls);
 void VLRingBuffer_GetFree_StubWithCallback(CMOCK_VLRingBuffer_GetFree_CALLBACK Callback);
+#define VLRingBuffer_GetFree_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, cmock_retval) VLRingBuffer_GetFree_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, cmock_retval)
+void VLRingBuffer_GetFree_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return);
+#define VLRingBuffer_GetFree_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_GetFree_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_GetFree_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_GetFree_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_GetFree_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_GetFree_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_GetFree_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_GetFree_IgnoreArg_vlrb() VLRingBuffer_GetFree_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_GetFree_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
 #define VLRingBuffer_GetCount_IgnoreAndReturn(cmock_retval) VLRingBuffer_GetCount_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void VLRingBuffer_GetCount_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define VLRingBuffer_GetCount_ExpectAnyArgsAndReturn(cmock_retval) VLRingBuffer_GetCount_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void VLRingBuffer_GetCount_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define VLRingBuffer_GetCount_ExpectAndReturn(vlrb, cmock_retval) VLRingBuffer_GetCount_CMockExpectAndReturn(__LINE__, vlrb, cmock_retval)
 void VLRingBuffer_GetCount_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return);
 typedef int (* CMOCK_VLRingBuffer_GetCount_CALLBACK)(VLRINGBUFF_T* vlrb, int cmock_num_calls);
 void VLRingBuffer_GetCount_StubWithCallback(CMOCK_VLRingBuffer_GetCount_CALLBACK Callback);
+#define VLRingBuffer_GetCount_ExpectWithArrayAndReturn(vlrb, vlrb_Depth, cmock_retval) VLRingBuffer_GetCount_CMockExpectWithArrayAndReturn(__LINE__, vlrb, vlrb_Depth, cmock_retval)
+void VLRingBuffer_GetCount_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return);
+#define VLRingBuffer_GetCount_ReturnThruPtr_vlrb(vlrb) VLRingBuffer_GetCount_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, sizeof(*vlrb))
+#define VLRingBuffer_GetCount_ReturnArrayThruPtr_vlrb(vlrb, cmock_len) VLRingBuffer_GetCount_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, (int)(cmock_len * (int)sizeof(*vlrb)))
+#define VLRingBuffer_GetCount_ReturnMemThruPtr_vlrb(vlrb, cmock_size) VLRingBuffer_GetCount_CMockReturnMemThruPtr_vlrb(__LINE__, vlrb, cmock_size)
+void VLRingBuffer_GetCount_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size);
+#define VLRingBuffer_GetCount_IgnoreArg_vlrb() VLRingBuffer_GetCount_CMockIgnoreArg_vlrb(__LINE__)
+void VLRingBuffer_GetCount_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

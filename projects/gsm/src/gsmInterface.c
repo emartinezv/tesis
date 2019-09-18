@@ -319,7 +319,7 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface);
 
 static void gsmStartUpF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -448,7 +448,7 @@ static void gsmExitDataModeF (gsmInterface_t * interface)
 
 static void gsmGetSigQualF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -595,7 +595,7 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
 
 void gsmCheckConnF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    /* We use two different rsp_t structure variables in this case because we
     * need the result of two successive commands. As the engine flushes the
@@ -746,7 +746,7 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
    static uint8_t smsText[160+1];
 
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -848,13 +848,16 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
                rsp_t rsp;
 
-               rsp = gsmGetCmdRsp(&(interface->engine)); /* discard the final OK response */
                rsp = gsmGetCmdRsp(&(interface->engine)); /* get the "+CMGS:<mr>\r\n" response */
 
                /* Convert the <mr> number string into an integer type  and
                 * store it for reference */
 
                ((smsConf_s *)interface->frmOutput)->mr = atoi(rsp.par);
+
+               debug(">>>interf<<<   SENT MSG MR: ");
+               debug(rsp.par);
+               debug("\r\n");
 
          }
 
@@ -872,7 +875,7 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
 static void gsmSmsReadF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    static uint8_t strSmsRead[8+5+1]; /* string for the SMS read command*/
                                      /* AT+CMGR=XXX,Y\0 --> max str len 14 */
@@ -987,7 +990,7 @@ static void gsmSmsReadF (gsmInterface_t * interface)
 
 static void gsmSmsListF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    /* String to assemble the SMS list command
     *
@@ -1184,7 +1187,7 @@ static void gsmSmsDelF (gsmInterface_t * interface)
 
    static uint8_t smsDel[8+3+1+1+2];
 
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1263,7 +1266,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
    static uint8_t APNstring[9+30+3+30+3+30+3];
 
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1394,7 +1397,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
 static void gsmGprsStopF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1462,7 +1465,7 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
    rsp_t rsp; /* auxiliary variable used to analize the response to CIPSTART
               /* and distinguish the open port attempt results */
 
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1588,7 +1591,7 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
 
 static void gsmGprsClosePortF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1656,7 +1659,7 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
 
    static uint8_t cmdStr[14];
 
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1722,7 +1725,7 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
 
 static void gsmGnssGetDataF (gsmInterface_t * interface)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1809,7 +1812,7 @@ static void gsmFrmInit (gsmInterface_t * interface)
 static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
                              uint8_t const * const cmd, procStatus_e nextState)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
    static Bool firstCall = TRUE;
 
    /* If this is the first call of the function for the current cmd we send
@@ -1844,7 +1847,7 @@ static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
                              procStatus_e closingState, Bool closingWrap,
                              procStatus_e errorState, Bool errorWrap)
 {
-   fsmEvent_e result;
+   fsmEvent_t result;
 
    result = gsmProcessTkn(&(interface->engine));
 

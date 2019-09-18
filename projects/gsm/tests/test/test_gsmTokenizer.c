@@ -7,14 +7,19 @@
 
 //-- module being tested
 #include "gsmTokenizer.h"
+
+//-- other modules
 #include "string.h"
-#include "mock_gsmComms.h" /* VER */
-#include "ring_buffer.h" /* VER */
-#include "vl_ring_buffer.h" /* VER */
+#include "vl_ring_buffer.h"
+#include "ring_buffer.h"
+
 
 /*******************************************************************************
  *    DEFINITIONS
  ******************************************************************************/
+
+#define SWAP_BUF_SIZE TKN_LEN /* Should pick this up from gsmTokenizer.h but
+                                 for some reason it doesn't */
 
 #define TKN_BUF_SIZE 16 /* Must be larger than the largest token used for
                            testing purposes */
@@ -49,6 +54,14 @@ void tearDown(void)
  *    TESTS
  ******************************************************************************/
 
+/* test_gsmInitTokenizer
+ *
+ * Functions tested:
+ *
+ * - gsmInitTokenizer
+ *
+ * */
+
 void test_gsmInitTokenizer(void)
 {
    int n = 0;
@@ -58,15 +71,58 @@ void test_gsmInitTokenizer(void)
    TEST_ASSERT_EQUAL_INT(1, n);
 }
 
+/* test_gsmNoChTokenizer
+ *
+ * Functions tested:
+ *
+ * - gsmInitTokenizer
+ * - gsmNoChTokenizer
+ *
+ * Ideally this test would be independent of RB operation, but since we need
+ * the actual RB module as an include we cannot mock it at the same time. Test
+ * is incomplete in the sense that we would need to change defines in order to
+ * test other branches.
+ *
+ * */
+
+void test_gsmNoChTokenizer(void)
+{
+   /* Variables */
+
+   uint16_t noCh;
+   bool init;
+
+   /* Initializations */
+
+   init = gsmInitTokenizer();
+
+   TEST_ASSERT_TRUE(init);
+
+   /* Test sequence */
+
+   noCh = gsmNoChTokenizer();
+
+   TEST_ASSERT_EQUAL_INT(SWAP_BUF_SIZE, noCh);
+
+}
+
+/* test_gsmDetectTkns
+ *
+ * Functions tested:
+ *
+ * - gsmDetectTkns
+ *
+ * */
+
 void test_gsmDetectTkns(void)
 {
    /** Variables for the VL token RB */
 
-   static uint8_t tknRbBuf[TKN_BUF_SIZE];
-   static RINGBUFF_T tknRb;
-   static VLRINGBUFF_T tknVlRb;
+   uint8_t tknRbBuf[TKN_BUF_SIZE];
+   RINGBUFF_T tknRb;
+   VLRINGBUFF_T tknVlRb;
 
-   static uint8_t * bufferTest[5] = {"AT\r\r\nOK", "\r\nabcde",
+   uint8_t * bufferTest[5] = {"AT\r\r\nOK", "\r\nabcde",
                                      "\r\n", "\r\n> ", "abcde\r\n"};
 
    /** Initializations */

@@ -1,7 +1,7 @@
 #include "vl_ring_buffer.h"
 #include "gsmComms.h"
 #include "lpc_types.h"
-typedef enum {
+typedef enum _tknTypeTknzer {
 
    NONE = 0,
 
@@ -35,6 +35,6 @@ _Bool gsmInitTokenizer(void);
 
 uint16_t gsmNoChTokenizer(void);
 
-void gsmDetectTkns(VLRINGBUFF_T * tknVlRb, uint16_t nch,
+void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
 
                    uint8_t const * const buffer);

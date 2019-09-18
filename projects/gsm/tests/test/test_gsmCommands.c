@@ -43,6 +43,14 @@ void tearDown(void)
  *    TESTS
  ******************************************************************************/
 
+/* test_gsmCmdSearch
+ *
+ * Functions tested:
+ *
+ * - gsmCmdSearch
+ *
+ * */
+
 void test_gsmCmdSearch(void)
 {
    /* Variables */
@@ -79,6 +87,14 @@ void test_gsmCmdSearch(void)
 
 }
 
+/* test_gsmGetCmdSucRsp
+ *
+ * Functions tested:
+ *
+ * - gsmGetCmdSucRsp
+ *
+ * */
+
 void test_gsmGetCmdSucRsp(void)
 {
    /* Variables */
@@ -107,6 +123,14 @@ void test_gsmGetCmdSucRsp(void)
    TEST_ASSERT_EQUAL_STRING("-CLOSE OK-", rsp);
 }
 
+/* test_gsmGetCmdErrRsp
+ *
+ * Functions tested:
+ *
+ * - gsmGetCmdErrRsp
+ *
+ * */
+
 void test_gsmGetCmdErrRsp(void)
 {
    /* Variables */
@@ -129,7 +153,15 @@ void test_gsmGetCmdErrRsp(void)
 
 }
 
-void test_gsmGetCmdtimeout(void)
+/* test_gsmGetCmdTimeout
+ *
+ * Functions tested:
+ *
+ * - gsmGetCmdTimeout
+ *
+ * */
+
+void test_gsmGetCmdTimeout(void)
 {
    /* Variables */
 
@@ -156,6 +188,14 @@ void test_gsmGetCmdtimeout(void)
    TEST_ASSERT_EQUAL_UINT32(25000, timeout);
 
 }
+
+/* test_gsmUrcSearch
+ *
+ * Functions tested:
+ *
+ * - gsmUrcSearch
+ *
+ * */
 
 void test_gsmUrcSearch(void)
 {

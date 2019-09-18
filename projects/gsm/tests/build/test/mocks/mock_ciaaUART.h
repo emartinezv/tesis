@@ -25,22 +25,52 @@ void mock_ciaaUART_Verify(void);
 
 #define ciaaUARTInit_Ignore() ciaaUARTInit_CMockIgnore()
 void ciaaUARTInit_CMockIgnore(void);
+#define ciaaUARTInit_ExpectAnyArgs() ciaaUARTInit_CMockExpectAnyArgs(__LINE__)
+void ciaaUARTInit_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define ciaaUARTInit_Expect() ciaaUARTInit_CMockExpect(__LINE__)
 void ciaaUARTInit_CMockExpect(UNITY_LINE_TYPE cmock_line);
 typedef void (* CMOCK_ciaaUARTInit_CALLBACK)(int cmock_num_calls);
 void ciaaUARTInit_StubWithCallback(CMOCK_ciaaUARTInit_CALLBACK Callback);
 #define uartSend_IgnoreAndReturn(cmock_retval) uartSend_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void uartSend_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define uartSend_ExpectAnyArgsAndReturn(cmock_retval) uartSend_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void uartSend_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define uartSend_ExpectAndReturn(nUART, data, datalen, cmock_retval) uartSend_CMockExpectAndReturn(__LINE__, nUART, data, datalen, cmock_retval)
 void uartSend_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, ciaaUART_e nUART, void* data, int datalen, int cmock_to_return);
 typedef int (* CMOCK_uartSend_CALLBACK)(ciaaUART_e nUART, void* data, int datalen, int cmock_num_calls);
 void uartSend_StubWithCallback(CMOCK_uartSend_CALLBACK Callback);
+#define uartSend_ExpectWithArrayAndReturn(nUART, data, data_Depth, datalen, cmock_retval) uartSend_CMockExpectWithArrayAndReturn(__LINE__, nUART, data, data_Depth, datalen, cmock_retval)
+void uartSend_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, ciaaUART_e nUART, void* data, int data_Depth, int datalen, int cmock_to_return);
+#define uartSend_ReturnThruPtr_data(data) uartSend_CMockReturnMemThruPtr_data(__LINE__, data, sizeof(*data))
+#define uartSend_ReturnArrayThruPtr_data(data, cmock_len) uartSend_CMockReturnMemThruPtr_data(__LINE__, data, (int)(cmock_len * (int)sizeof(*data)))
+#define uartSend_ReturnMemThruPtr_data(data, cmock_size) uartSend_CMockReturnMemThruPtr_data(__LINE__, data, cmock_size)
+void uartSend_CMockReturnMemThruPtr_data(UNITY_LINE_TYPE cmock_line, void* data, int cmock_size);
+#define uartSend_IgnoreArg_nUART() uartSend_CMockIgnoreArg_nUART(__LINE__)
+void uartSend_CMockIgnoreArg_nUART(UNITY_LINE_TYPE cmock_line);
+#define uartSend_IgnoreArg_data() uartSend_CMockIgnoreArg_data(__LINE__)
+void uartSend_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line);
+#define uartSend_IgnoreArg_datalen() uartSend_CMockIgnoreArg_datalen(__LINE__)
+void uartSend_CMockIgnoreArg_datalen(UNITY_LINE_TYPE cmock_line);
 #define uartRecv_IgnoreAndReturn(cmock_retval) uartRecv_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void uartRecv_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define uartRecv_ExpectAnyArgsAndReturn(cmock_retval) uartRecv_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void uartRecv_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
 #define uartRecv_ExpectAndReturn(nUART, data, datalen, cmock_retval) uartRecv_CMockExpectAndReturn(__LINE__, nUART, data, datalen, cmock_retval)
 void uartRecv_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, ciaaUART_e nUART, void* data, int datalen, int cmock_to_return);
 typedef int (* CMOCK_uartRecv_CALLBACK)(ciaaUART_e nUART, void* data, int datalen, int cmock_num_calls);
 void uartRecv_StubWithCallback(CMOCK_uartRecv_CALLBACK Callback);
+#define uartRecv_ExpectWithArrayAndReturn(nUART, data, data_Depth, datalen, cmock_retval) uartRecv_CMockExpectWithArrayAndReturn(__LINE__, nUART, data, data_Depth, datalen, cmock_retval)
+void uartRecv_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, ciaaUART_e nUART, void* data, int data_Depth, int datalen, int cmock_to_return);
+#define uartRecv_ReturnThruPtr_data(data) uartRecv_CMockReturnMemThruPtr_data(__LINE__, data, sizeof(*data))
+#define uartRecv_ReturnArrayThruPtr_data(data, cmock_len) uartRecv_CMockReturnMemThruPtr_data(__LINE__, data, (int)(cmock_len * (int)sizeof(*data)))
+#define uartRecv_ReturnMemThruPtr_data(data, cmock_size) uartRecv_CMockReturnMemThruPtr_data(__LINE__, data, cmock_size)
+void uartRecv_CMockReturnMemThruPtr_data(UNITY_LINE_TYPE cmock_line, void* data, int cmock_size);
+#define uartRecv_IgnoreArg_nUART() uartRecv_CMockIgnoreArg_nUART(__LINE__)
+void uartRecv_CMockIgnoreArg_nUART(UNITY_LINE_TYPE cmock_line);
+#define uartRecv_IgnoreArg_data() uartRecv_CMockIgnoreArg_data(__LINE__)
+void uartRecv_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line);
+#define uartRecv_IgnoreArg_datalen() uartRecv_CMockIgnoreArg_datalen(__LINE__)
+void uartRecv_CMockIgnoreArg_datalen(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

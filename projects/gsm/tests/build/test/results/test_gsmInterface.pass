@@ -2,124 +2,13 @@
 :source:
   :path: test
   :file: test_gsmInterface.c
-:successes:
-- :test: test_gsmInitInterface
-  :line: 90
-  :message: ''
-- :test: test_gsmStartUp
-  :line: 136
-  :message: ''
-- :test: test_gsmExitDataMode
-  :line: 160
-  :message: ''
-- :test: test_gsmSysTickHandler
-  :line: 184
-  :message: ''
-- :test: test_gsmProcess
-  :line: 226
-  :message: ''
-- :test: test_gsmIsIdle
-  :line: 305
-  :message: ''
-- :test: test_gsmGetSigQual
-  :line: 336
-  :message: ''
-- :test: test_gsmCheckConn
-  :line: 362
-  :message: ''
-- :test: test_gsmReadUrc
-  :line: 388
-  :message: ''
-- :test: test_gsmSetUrcMode
-  :line: 442
-  :message: ''
-- :test: test_gsmSetUrcCback
-  :line: 468
-  :message: ''
-- :test: test_gsmSetDataCback
-  :line: 490
-  :message: ''
-- :test: test_gsmCheckDataMode
-  :line: 512
-  :message: ''
-- :test: test_gsmSmsSend
-  :line: 568
-  :message: ''
-- :test: test_gsmSmsRead
-  :line: 596
-  :message: ''
-- :test: test_gsmSmsList
-  :line: 624
-  :message: ''
-- :test: test_gsmSmsDel
-  :line: 652
-  :message: ''
-- :test: test_gsmGprsStart
-  :line: 678
-  :message: ''
-- :test: test_gsmGprsStop
-  :line: 704
-  :message: ''
-- :test: test_gsmGprsOpenPort
-  :line: 728
-  :message: ''
-- :test: test_gsmGprsClosePort
-  :line: 754
-  :message: ''
-- :test: test_gsmGnssPwr
-  :line: 778
-  :message: ''
-- :test: test_gsmGnssGetData
-  :line: 804
-  :message: ''
-- :test: test_gsmStartUpF
-  :line: 830
-  :message: ''
-- :test: test_gsmExitDataModeF
-  :line: 983
-  :message: ''
-- :test: test_gsmGetSigQualF
-  :line: 1038
-  :message: ''
-- :test: test_gsmCheckConnF
-  :line: 1229
-  :message: ''
-- :test: test_gsmSmsSendF
-  :line: 1345
-  :message: ''
-- :test: test_gsmSmsReadF
-  :line: 1464
-  :message: ''
-- :test: test_gsmSmsListF
-  :line: 1565
-  :message: ''
-- :test: test_gsmSmsDelF
-  :line: 1723
-  :message: ''
-- :test: test_gsmGprsStartF
-  :line: 1775
-  :message: ''
-- :test: test_gsmGprsStopF
-  :line: 1893
-  :message: ''
-- :test: test_gsmGprsOpenPortF
-  :line: 1943
-  :message: ''
-- :test: test_gsmGprsClosePortF
-  :line: 2015
-  :message: ''
-- :test: test_gsmGnssPwrF
-  :line: 2067
-  :message: ''
-- :test: test_gsmGnssGetDataF
-  :line: 2146
-  :message: ''
+:successes: []
 :failures: []
 :ignores: []
 :counts:
-  :total: 37
-  :passed: 37
+  :total: 0
+  :passed: 0
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.003552682
+:time: 0.002081843

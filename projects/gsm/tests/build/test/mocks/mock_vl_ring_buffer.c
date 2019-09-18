@@ -26,6 +26,7 @@ static const char* CMockString_vlrb = "vlrb";
 typedef struct _CMOCK_VLRingBuffer_Init_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
@@ -33,72 +34,140 @@ typedef struct _CMOCK_VLRingBuffer_Init_CALL_INSTANCE
   void* Expected_buffer;
   int Expected_itemSize;
   int Expected_count;
+  int Expected_vlrb_Depth;
+  int Expected_RingBuff_Depth;
+  int Expected_buffer_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int ReturnThruPtr_RingBuff_Used;
+  RINGBUFF_T* ReturnThruPtr_RingBuff_Val;
+  int ReturnThruPtr_RingBuff_Size;
+  int ReturnThruPtr_buffer_Used;
+  void* ReturnThruPtr_buffer_Val;
+  int ReturnThruPtr_buffer_Size;
+  int IgnoreArg_vlrb;
+  int IgnoreArg_RingBuff;
+  int IgnoreArg_buffer;
+  int IgnoreArg_itemSize;
+  int IgnoreArg_count;
 
 } CMOCK_VLRingBuffer_Init_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_Insert_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
   const void* Expected_data;
   uint16_t Expected_num;
+  int Expected_vlrb_Depth;
+  int Expected_data_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
+  int IgnoreArg_data;
+  int IgnoreArg_num;
 
 } CMOCK_VLRingBuffer_Insert_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_Pop_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
   void* Expected_data;
   uint16_t Expected_cap;
+  int Expected_vlrb_Depth;
+  int Expected_data_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int ReturnThruPtr_data_Used;
+  void* ReturnThruPtr_data_Val;
+  int ReturnThruPtr_data_Size;
+  int IgnoreArg_vlrb;
+  int IgnoreArg_data;
+  int IgnoreArg_cap;
 
 } CMOCK_VLRingBuffer_Pop_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_Flush_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
+  int Expected_vlrb_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
 
 } CMOCK_VLRingBuffer_Flush_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
+  int Expected_vlrb_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
 
 } CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
+  int Expected_vlrb_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
 
 } CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
+  int Expected_vlrb_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
 
 } CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE;
 
 typedef struct _CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int ReturnVal;
   int CallOrder;
   VLRINGBUFF_T* Expected_vlrb;
+  int Expected_vlrb_Depth;
+  int ReturnThruPtr_vlrb_Used;
+  VLRINGBUFF_T* ReturnThruPtr_vlrb_Val;
+  int ReturnThruPtr_vlrb_Size;
+  int IgnoreArg_vlrb;
 
 } CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE;
 
@@ -256,40 +325,83 @@ int VLRingBuffer_Init(VLRINGBUFF_T* vlrb, RINGBUFF_T* RingBuff, void* buffer, in
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Init,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_RingBuff)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Init,CMockString_RingBuff);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_RingBuff), (void*)(RingBuff), sizeof(RINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_RingBuff == NULL)
+      { UNITY_TEST_ASSERT_NULL(RingBuff, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_RingBuff), (void*)(RingBuff), sizeof(RINGBUFF_T), cmock_call_instance->Expected_RingBuff_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_buffer)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Init,CMockString_buffer);
     if (cmock_call_instance->Expected_buffer == NULL)
       { UNITY_TEST_ASSERT_NULL(buffer, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_buffer, buffer, cmock_call_instance->Expected_buffer_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_itemSize)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Init,CMockString_itemSize);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_itemSize, itemSize, cmock_line, CMockStringMismatch);
   }
+  if (!cmock_call_instance->IgnoreArg_count)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Init,CMockString_count);
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_count, count, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
+  }
+  if (cmock_call_instance->ReturnThruPtr_RingBuff_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(RingBuff, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)RingBuff, (void*)cmock_call_instance->ReturnThruPtr_RingBuff_Val,
+      cmock_call_instance->ReturnThruPtr_RingBuff_Size);
+  }
+  if (cmock_call_instance->ReturnThruPtr_buffer_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(buffer, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)buffer, (void*)cmock_call_instance->ReturnThruPtr_buffer_Val,
+      cmock_call_instance->ReturnThruPtr_buffer_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_Init(CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, RINGBUFF_T* RingBuff, void* buffer, int itemSize, int count)
+void CMockExpectParameters_VLRingBuffer_Init(CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth, RINGBUFF_T* RingBuff, int RingBuff_Depth, void* buffer, int buffer_Depth, int itemSize, int count)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
   cmock_call_instance->Expected_RingBuff = RingBuff;
+  cmock_call_instance->Expected_RingBuff_Depth = RingBuff_Depth;
+  cmock_call_instance->IgnoreArg_RingBuff = 0;
+  cmock_call_instance->ReturnThruPtr_RingBuff_Used = 0;
   cmock_call_instance->Expected_buffer = buffer;
+  cmock_call_instance->Expected_buffer_Depth = buffer_Depth;
+  cmock_call_instance->IgnoreArg_buffer = 0;
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 0;
   cmock_call_instance->Expected_itemSize = itemSize;
+  cmock_call_instance->IgnoreArg_itemSize = 0;
   cmock_call_instance->Expected_count = count;
+  cmock_call_instance->IgnoreArg_count = 0;
 }
 
 void VLRingBuffer_Init_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -301,8 +413,24 @@ void VLRingBuffer_Init_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmoc
   Mock.VLRingBuffer_Init_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Init_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_Init_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_Init_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_Init_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Init_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Init_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Init_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Init_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_Init_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, RINGBUFF_T* RingBuff, void* buffer, int itemSize, int count, int cmock_to_return)
@@ -315,7 +443,8 @@ void VLRingBuffer_Init_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBU
   Mock.VLRingBuffer_Init_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_Init(cmock_call_instance, vlrb, RingBuff, buffer, itemSize, count);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Init(cmock_call_instance, vlrb, 1, RingBuff, 1, buffer, 1, itemSize, count);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -324,6 +453,83 @@ void VLRingBuffer_Init_StubWithCallback(CMOCK_VLRingBuffer_Init_CALLBACK Callbac
 {
   Mock.VLRingBuffer_Init_IgnoreBool = (int)0;
   Mock.VLRingBuffer_Init_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_Init_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, RINGBUFF_T* RingBuff, int RingBuff_Depth, void* buffer, int buffer_Depth, int itemSize, int count, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Init_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Init_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Init_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Init_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Init(cmock_call_instance, vlrb, vlrb_Depth, RingBuff, RingBuff_Depth, buffer, buffer_Depth, itemSize, count);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_Init_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_Init_CMockReturnMemThruPtr_RingBuff(UNITY_LINE_TYPE cmock_line, RINGBUFF_T* RingBuff, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_RingBuff_Used = 1;
+  cmock_call_instance->ReturnThruPtr_RingBuff_Val = RingBuff;
+  cmock_call_instance->ReturnThruPtr_RingBuff_Size = cmock_size;
+}
+
+void VLRingBuffer_Init_CMockReturnMemThruPtr_buffer(UNITY_LINE_TYPE cmock_line, void* buffer, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_buffer_Used = 1;
+  cmock_call_instance->ReturnThruPtr_buffer_Val = buffer;
+  cmock_call_instance->ReturnThruPtr_buffer_Size = cmock_size;
+}
+
+void VLRingBuffer_Init_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
+}
+
+void VLRingBuffer_Init_CMockIgnoreArg_RingBuff(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_RingBuff = 1;
+}
+
+void VLRingBuffer_Init_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_buffer = 1;
+}
+
+void VLRingBuffer_Init_CMockIgnoreArg_itemSize(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_itemSize = 1;
+}
+
+void VLRingBuffer_Init_CMockIgnoreArg_count(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Init_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Init_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Init_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_count = 1;
 }
 
 int VLRingBuffer_Insert(VLRINGBUFF_T* vlrb, const void* data, uint16_t num)
@@ -351,30 +557,51 @@ int VLRingBuffer_Insert(VLRINGBUFF_T* vlrb, const void* data, uint16_t num)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Insert,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_data)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Insert,CMockString_data);
     if (cmock_call_instance->Expected_data == NULL)
       { UNITY_TEST_ASSERT_NULL(data, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_data, data, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_data, data, cmock_call_instance->Expected_data_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_num)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Insert,CMockString_num);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_num, num, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_Insert(CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, const void* data, uint16_t num)
+void CMockExpectParameters_VLRingBuffer_Insert(CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth, const void* data, int data_Depth, uint16_t num)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
   cmock_call_instance->Expected_data = data;
+  cmock_call_instance->Expected_data_Depth = data_Depth;
+  cmock_call_instance->IgnoreArg_data = 0;
   cmock_call_instance->Expected_num = num;
+  cmock_call_instance->IgnoreArg_num = 0;
 }
 
 void VLRingBuffer_Insert_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -386,8 +613,24 @@ void VLRingBuffer_Insert_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cm
   Mock.VLRingBuffer_Insert_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Insert_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_Insert_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_Insert_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_Insert_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Insert_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Insert_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Insert_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Insert_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_Insert_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, const void* data, uint16_t num, int cmock_to_return)
@@ -400,7 +643,8 @@ void VLRingBuffer_Insert_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRING
   Mock.VLRingBuffer_Insert_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_Insert(cmock_call_instance, vlrb, data, num);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Insert(cmock_call_instance, vlrb, 1, data, 1, num);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -409,6 +653,51 @@ void VLRingBuffer_Insert_StubWithCallback(CMOCK_VLRingBuffer_Insert_CALLBACK Cal
 {
   Mock.VLRingBuffer_Insert_IgnoreBool = (int)0;
   Mock.VLRingBuffer_Insert_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_Insert_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, const void* data, int data_Depth, uint16_t num, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Insert_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Insert_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Insert_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Insert_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Insert(cmock_call_instance, vlrb, vlrb_Depth, data, data_Depth, num);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_Insert_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Insert_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_Insert_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Insert_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
+}
+
+void VLRingBuffer_Insert_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Insert_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_data = 1;
+}
+
+void VLRingBuffer_Insert_CMockIgnoreArg_num(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Insert_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Insert_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Insert_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_num = 1;
 }
 
 int VLRingBuffer_Pop(VLRINGBUFF_T* vlrb, void* data, uint16_t cap)
@@ -436,30 +725,58 @@ int VLRingBuffer_Pop(VLRINGBUFF_T* vlrb, void* data, uint16_t cap)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Pop,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_data)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Pop,CMockString_data);
     if (cmock_call_instance->Expected_data == NULL)
       { UNITY_TEST_ASSERT_NULL(data, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_data, data, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_data, data, cmock_call_instance->Expected_data_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_cap)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Pop,CMockString_cap);
     UNITY_TEST_ASSERT_EQUAL_HEX16(cmock_call_instance->Expected_cap, cap, cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
+  }
+  if (cmock_call_instance->ReturnThruPtr_data_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(data, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)data, (void*)cmock_call_instance->ReturnThruPtr_data_Val,
+      cmock_call_instance->ReturnThruPtr_data_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_Pop(CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, void* data, uint16_t cap)
+void CMockExpectParameters_VLRingBuffer_Pop(CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth, void* data, int data_Depth, uint16_t cap)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
   cmock_call_instance->Expected_data = data;
+  cmock_call_instance->Expected_data_Depth = data_Depth;
+  cmock_call_instance->IgnoreArg_data = 0;
+  cmock_call_instance->ReturnThruPtr_data_Used = 0;
   cmock_call_instance->Expected_cap = cap;
+  cmock_call_instance->IgnoreArg_cap = 0;
 }
 
 void VLRingBuffer_Pop_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -471,8 +788,24 @@ void VLRingBuffer_Pop_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock
   Mock.VLRingBuffer_Pop_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Pop_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_Pop_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_Pop_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_Pop_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Pop_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Pop_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Pop_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Pop_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_Pop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, void* data, uint16_t cap, int cmock_to_return)
@@ -485,7 +818,8 @@ void VLRingBuffer_Pop_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUF
   Mock.VLRingBuffer_Pop_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_Pop(cmock_call_instance, vlrb, data, cap);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Pop(cmock_call_instance, vlrb, 1, data, 1, cap);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -494,6 +828,60 @@ void VLRingBuffer_Pop_StubWithCallback(CMOCK_VLRingBuffer_Pop_CALLBACK Callback)
 {
   Mock.VLRingBuffer_Pop_IgnoreBool = (int)0;
   Mock.VLRingBuffer_Pop_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_Pop_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, void* data, int data_Depth, uint16_t cap, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Pop_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Pop_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Pop_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Pop_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Pop(cmock_call_instance, vlrb, vlrb_Depth, data, data_Depth, cap);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_Pop_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Pop_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_Pop_CMockReturnMemThruPtr_data(UNITY_LINE_TYPE cmock_line, void* data, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Pop_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_data_Used = 1;
+  cmock_call_instance->ReturnThruPtr_data_Val = data;
+  cmock_call_instance->ReturnThruPtr_data_Size = cmock_size;
+}
+
+void VLRingBuffer_Pop_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Pop_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
+}
+
+void VLRingBuffer_Pop_CMockIgnoreArg_data(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Pop_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_data = 1;
+}
+
+void VLRingBuffer_Pop_CMockIgnoreArg_cap(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Pop_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Pop_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Pop_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_cap = 1;
 }
 
 void VLRingBuffer_Flush(VLRINGBUFF_T* vlrb)
@@ -519,21 +907,51 @@ void VLRingBuffer_Flush(VLRINGBUFF_T* vlrb)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_Flush,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
 }
 
-void CMockExpectParameters_VLRingBuffer_Flush(CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb)
+void CMockExpectParameters_VLRingBuffer_Flush(CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
 }
 
 void VLRingBuffer_Flush_CMockIgnore(void)
 {
   Mock.VLRingBuffer_Flush_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_Flush_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Flush_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Flush_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Flush_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Flush_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Flush_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_Flush_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb)
@@ -546,7 +964,8 @@ void VLRingBuffer_Flush_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vl
   Mock.VLRingBuffer_Flush_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_Flush(cmock_call_instance, vlrb);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Flush(cmock_call_instance, vlrb, 1);
   UNITY_CLR_DETAILS();
 }
 
@@ -554,6 +973,36 @@ void VLRingBuffer_Flush_StubWithCallback(CMOCK_VLRingBuffer_Flush_CALLBACK Callb
 {
   Mock.VLRingBuffer_Flush_IgnoreBool = (int)0;
   Mock.VLRingBuffer_Flush_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_Flush_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_Flush_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Flush_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_Flush_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_Flush_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_Flush_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_Flush(cmock_call_instance, vlrb, vlrb_Depth);
+}
+
+void VLRingBuffer_Flush_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Flush_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Flush_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_Flush_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_Flush_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_Flush_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_Flush_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
 }
 
 int VLRingBuffer_IsEmpty(VLRINGBUFF_T* vlrb)
@@ -581,17 +1030,33 @@ int VLRingBuffer_IsEmpty(VLRINGBUFF_T* vlrb)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_IsEmpty,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_IsEmpty(CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb)
+void CMockExpectParameters_VLRingBuffer_IsEmpty(CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
 }
 
 void VLRingBuffer_IsEmpty_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -603,8 +1068,24 @@ void VLRingBuffer_IsEmpty_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int c
   Mock.VLRingBuffer_IsEmpty_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsEmpty_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_IsEmpty_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_IsEmpty_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsEmpty_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_IsEmpty_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return)
@@ -617,7 +1098,8 @@ void VLRingBuffer_IsEmpty_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRIN
   Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_IsEmpty(cmock_call_instance, vlrb);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_IsEmpty(cmock_call_instance, vlrb, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -626,6 +1108,37 @@ void VLRingBuffer_IsEmpty_StubWithCallback(CMOCK_VLRingBuffer_IsEmpty_CALLBACK C
 {
   Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)0;
   Mock.VLRingBuffer_IsEmpty_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_IsEmpty_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_IsEmpty_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsEmpty_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_IsEmpty_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_IsEmpty(cmock_call_instance, vlrb, vlrb_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_IsEmpty_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_IsEmpty_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_IsEmpty_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsEmpty_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_IsEmpty_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
 }
 
 int VLRingBuffer_IsFull(VLRINGBUFF_T* vlrb)
@@ -653,17 +1166,33 @@ int VLRingBuffer_IsFull(VLRINGBUFF_T* vlrb)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_IsFull,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_IsFull(CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb)
+void CMockExpectParameters_VLRingBuffer_IsFull(CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
 }
 
 void VLRingBuffer_IsFull_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -675,8 +1204,24 @@ void VLRingBuffer_IsFull_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cm
   Mock.VLRingBuffer_IsFull_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsFull_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_IsFull_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_IsFull_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_IsFull_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_IsFull_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsFull_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_IsFull_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_IsFull_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return)
@@ -689,7 +1234,8 @@ void VLRingBuffer_IsFull_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRING
   Mock.VLRingBuffer_IsFull_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_IsFull(cmock_call_instance, vlrb);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_IsFull(cmock_call_instance, vlrb, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -698,6 +1244,37 @@ void VLRingBuffer_IsFull_StubWithCallback(CMOCK_VLRingBuffer_IsFull_CALLBACK Cal
 {
   Mock.VLRingBuffer_IsFull_IgnoreBool = (int)0;
   Mock.VLRingBuffer_IsFull_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_IsFull_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_IsFull_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_IsFull_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_IsFull_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_IsFull(cmock_call_instance, vlrb, vlrb_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_IsFull_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_IsFull_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_IsFull_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_IsFull_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_IsFull_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
 }
 
 int VLRingBuffer_GetFree(VLRINGBUFF_T* vlrb)
@@ -725,17 +1302,33 @@ int VLRingBuffer_GetFree(VLRINGBUFF_T* vlrb)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_GetFree,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_GetFree(CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb)
+void CMockExpectParameters_VLRingBuffer_GetFree(CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
 }
 
 void VLRingBuffer_GetFree_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -747,8 +1340,24 @@ void VLRingBuffer_GetFree_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int c
   Mock.VLRingBuffer_GetFree_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetFree_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_GetFree_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_GetFree_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_GetFree_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_GetFree_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetFree_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_GetFree_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_GetFree_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return)
@@ -761,7 +1370,8 @@ void VLRingBuffer_GetFree_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRIN
   Mock.VLRingBuffer_GetFree_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_GetFree(cmock_call_instance, vlrb);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_GetFree(cmock_call_instance, vlrb, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -770,6 +1380,37 @@ void VLRingBuffer_GetFree_StubWithCallback(CMOCK_VLRingBuffer_GetFree_CALLBACK C
 {
   Mock.VLRingBuffer_GetFree_IgnoreBool = (int)0;
   Mock.VLRingBuffer_GetFree_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_GetFree_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_GetFree_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetFree_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_GetFree_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_GetFree(cmock_call_instance, vlrb, vlrb_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_GetFree_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_GetFree_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_GetFree_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetFree_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_GetFree_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
 }
 
 int VLRingBuffer_GetCount(VLRINGBUFF_T* vlrb)
@@ -797,17 +1438,33 @@ int VLRingBuffer_GetCount(VLRINGBUFF_T* vlrb)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_vlrb)
   {
     UNITY_SET_DETAILS(CMockString_VLRingBuffer_GetCount,CMockString_vlrb);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_vlrb == NULL)
+      { UNITY_TEST_ASSERT_NULL(vlrb, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_vlrb), (void*)(vlrb), sizeof(VLRINGBUFF_T), cmock_call_instance->Expected_vlrb_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_vlrb_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(vlrb, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)vlrb, (void*)cmock_call_instance->ReturnThruPtr_vlrb_Val,
+      cmock_call_instance->ReturnThruPtr_vlrb_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_VLRingBuffer_GetCount(CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb)
+void CMockExpectParameters_VLRingBuffer_GetCount(CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance, VLRINGBUFF_T* vlrb, int vlrb_Depth)
 {
   cmock_call_instance->Expected_vlrb = vlrb;
+  cmock_call_instance->Expected_vlrb_Depth = vlrb_Depth;
+  cmock_call_instance->IgnoreArg_vlrb = 0;
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 0;
 }
 
 void VLRingBuffer_GetCount_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
@@ -819,8 +1476,24 @@ void VLRingBuffer_GetCount_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int 
   Mock.VLRingBuffer_GetCount_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetCount_CallInstance, cmock_guts_index);
   Mock.VLRingBuffer_GetCount_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.VLRingBuffer_GetCount_IgnoreBool = (int)1;
+}
+
+void VLRingBuffer_GetCount_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_GetCount_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetCount_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_GetCount_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void VLRingBuffer_GetCount_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_to_return)
@@ -833,7 +1506,8 @@ void VLRingBuffer_GetCount_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, VLRI
   Mock.VLRingBuffer_GetCount_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_VLRingBuffer_GetCount(cmock_call_instance, vlrb);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_GetCount(cmock_call_instance, vlrb, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -842,5 +1516,36 @@ void VLRingBuffer_GetCount_StubWithCallback(CMOCK_VLRingBuffer_GetCount_CALLBACK
 {
   Mock.VLRingBuffer_GetCount_IgnoreBool = (int)0;
   Mock.VLRingBuffer_GetCount_CallbackFunctionPointer = Callback;
+}
+
+void VLRingBuffer_GetCount_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int vlrb_Depth, int cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE));
+  CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.VLRingBuffer_GetCount_CallInstance = CMock_Guts_MemChain(Mock.VLRingBuffer_GetCount_CallInstance, cmock_guts_index);
+  Mock.VLRingBuffer_GetCount_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_VLRingBuffer_GetCount(cmock_call_instance, vlrb, vlrb_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void VLRingBuffer_GetCount_CMockReturnMemThruPtr_vlrb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* vlrb, int cmock_size)
+{
+  CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_GetCount_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_vlrb_Used = 1;
+  cmock_call_instance->ReturnThruPtr_vlrb_Val = vlrb;
+  cmock_call_instance->ReturnThruPtr_vlrb_Size = cmock_size;
+}
+
+void VLRingBuffer_GetCount_CMockIgnoreArg_vlrb(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE* cmock_call_instance = (CMOCK_VLRingBuffer_GetCount_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.VLRingBuffer_GetCount_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_vlrb = 1;
 }
 

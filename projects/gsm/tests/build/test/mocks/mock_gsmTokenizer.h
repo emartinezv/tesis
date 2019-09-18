@@ -25,22 +25,40 @@ void mock_gsmTokenizer_Verify(void);
 
 #define gsmInitTokenizer_IgnoreAndReturn(cmock_retval) gsmInitTokenizer_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmInitTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+#define gsmInitTokenizer_ExpectAnyArgsAndReturn(cmock_retval) gsmInitTokenizer_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmInitTokenizer_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmInitTokenizer_ExpectAndReturn(cmock_retval) gsmInitTokenizer_CMockExpectAndReturn(__LINE__, cmock_retval)
 void gsmInitTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmInitTokenizer_CALLBACK)(int cmock_num_calls);
 void gsmInitTokenizer_StubWithCallback(CMOCK_gsmInitTokenizer_CALLBACK Callback);
 #define gsmNoChTokenizer_IgnoreAndReturn(cmock_retval) gsmNoChTokenizer_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmNoChTokenizer_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+#define gsmNoChTokenizer_ExpectAnyArgsAndReturn(cmock_retval) gsmNoChTokenizer_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmNoChTokenizer_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 #define gsmNoChTokenizer_ExpectAndReturn(cmock_retval) gsmNoChTokenizer_CMockExpectAndReturn(__LINE__, cmock_retval)
 void gsmNoChTokenizer_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
 typedef uint16_t (* CMOCK_gsmNoChTokenizer_CALLBACK)(int cmock_num_calls);
 void gsmNoChTokenizer_StubWithCallback(CMOCK_gsmNoChTokenizer_CALLBACK Callback);
 #define gsmDetectTkns_Ignore() gsmDetectTkns_CMockIgnore()
 void gsmDetectTkns_CMockIgnore(void);
+#define gsmDetectTkns_ExpectAnyArgs() gsmDetectTkns_CMockExpectAnyArgs(__LINE__)
+void gsmDetectTkns_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define gsmDetectTkns_Expect(tknVlRb, nch, buffer) gsmDetectTkns_CMockExpect(__LINE__, tknVlRb, nch, buffer)
-void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer);
-typedef void (* CMOCK_gsmDetectTkns_CALLBACK)(VLRINGBUFF_T* tknVlRb, uint16_t nch, uint8_t const* const buffer, int cmock_num_calls);
+void gsmDetectTkns_CMockExpect(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* const tknVlRb, uint16_t nch, uint8_t const* const buffer);
+typedef void (* CMOCK_gsmDetectTkns_CALLBACK)(VLRINGBUFF_T* const tknVlRb, uint16_t nch, uint8_t const* const buffer, int cmock_num_calls);
 void gsmDetectTkns_StubWithCallback(CMOCK_gsmDetectTkns_CALLBACK Callback);
+#define gsmDetectTkns_ExpectWithArray(tknVlRb, tknVlRb_Depth, nch, buffer, buffer_Depth) gsmDetectTkns_CMockExpectWithArray(__LINE__, tknVlRb, tknVlRb_Depth, nch, buffer, buffer_Depth)
+void gsmDetectTkns_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* const tknVlRb, int tknVlRb_Depth, uint16_t nch, uint8_t const* const buffer, int buffer_Depth);
+#define gsmDetectTkns_ReturnThruPtr_tknVlRb(tknVlRb) gsmDetectTkns_CMockReturnMemThruPtr_tknVlRb(__LINE__, tknVlRb, sizeof(*tknVlRb))
+#define gsmDetectTkns_ReturnArrayThruPtr_tknVlRb(tknVlRb, cmock_len) gsmDetectTkns_CMockReturnMemThruPtr_tknVlRb(__LINE__, tknVlRb, (int)(cmock_len * (int)sizeof(*tknVlRb)))
+#define gsmDetectTkns_ReturnMemThruPtr_tknVlRb(tknVlRb, cmock_size) gsmDetectTkns_CMockReturnMemThruPtr_tknVlRb(__LINE__, tknVlRb, cmock_size)
+void gsmDetectTkns_CMockReturnMemThruPtr_tknVlRb(UNITY_LINE_TYPE cmock_line, VLRINGBUFF_T* tknVlRb, int cmock_size);
+#define gsmDetectTkns_IgnoreArg_tknVlRb() gsmDetectTkns_CMockIgnoreArg_tknVlRb(__LINE__)
+void gsmDetectTkns_CMockIgnoreArg_tknVlRb(UNITY_LINE_TYPE cmock_line);
+#define gsmDetectTkns_IgnoreArg_nch() gsmDetectTkns_CMockIgnoreArg_nch(__LINE__)
+void gsmDetectTkns_CMockIgnoreArg_nch(UNITY_LINE_TYPE cmock_line);
+#define gsmDetectTkns_IgnoreArg_buffer() gsmDetectTkns_CMockIgnoreArg_buffer(__LINE__)
+void gsmDetectTkns_CMockIgnoreArg_buffer(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

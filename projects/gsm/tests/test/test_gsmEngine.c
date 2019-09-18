@@ -19,28 +19,45 @@
 #include "ring_buffer.h"
 #include "string.h"
 
-
-/*******************************************************************************
+/******************************************************************************
  *    DEFINITIONS
- ******************************************************************************/
+ *****************************************************************************/
 
-#define TKN_SIZ 300
-
-/*******************************************************************************
+/******************************************************************************
  *    PRIVATE TYPES
- ******************************************************************************/
+ *****************************************************************************/
 
 typedef struct _tknTypeSize {
    uint8_t const * tkn;
    uint8_t const * cmd;
    uint8_t const * par;
-   tknTypeParser_e type;
+   tknTypeParser_t type;
    int size;
 } tknTypeSize_s;
 
-/*******************************************************************************
+/******************************************************************************
  *    PRIVATE DATA
- ******************************************************************************/
+ *****************************************************************************/
+
+/* Variables used for testing gsmProcessTkn */
+
+gsmEngine_t engine;
+
+uint16_t tknzerNoCh = 0;
+
+uint8_t tknTest[280+20+1];
+uint8_t cmdTest[20+1];
+uint8_t parTest[280+1];
+
+uint16_t tknSizeTest;
+tknTypeParser_t tknTypeTest = AUTOBAUD;
+
+int vlrb_empty = 0;
+
+
+
+
+/***/
 
 static uint8_t auxBuffer[100];
 
@@ -114,89 +131,136 @@ static tknTypeSize_s tknTypeV [] = {
 
 static int bufEmptyV [] = {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0};
 
-/*******************************************************************************
- *    PRIVATE FUNCTIONS
- ******************************************************************************/
+
+/******************************************************************************
+ *    PRIVATE FUNCTIONS - HELPERS
+ *****************************************************************************/
+
+void loadProcessTkn(const uint8_t * const tkn,
+                    const uint8_t * const cmd,
+                    const uint8_t * const par,
+                    tknTypeParser_t tknType)
+{
+   strncpy(tknTest, tkn, strlen(tkn));
+   tknTest[strlen(tkn)] = '\0';
+   tknzerNoCh = strlen(tknTest);
+   strncpy(cmdTest, cmd, strlen(cmd));
+   cmdTest[strlen(cmd)] = '\0';
+   strncpy(parTest, par, strlen(par));
+   parTest[strlen(par)] = '\0';
+
+   tknSizeTest = tknzerNoCh;
+   tknTypeTest = tknType;
+
+   return;
+}
+/******************************************************************************
+ *    PRIVATE FUNCTIONS - CALLBACKS
+ *****************************************************************************/
+
+int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
+{
+   TEST_ASSERT_TRUE_MESSAGE(0, buffer);
+
+   return;
+}
+
+
+uint16_t gsmNoChTokenizer_Callback(int NumCalls)
+{
+   return tknzerNoCh;
+}
 
 int gsm232UartRecv_Callback (uint8_t * const buffer, int n, int NumCalls)
 {
-   TEST_ASSERT_EQUAL_INT(10, n);
+   TEST_ASSERT_EQUAL_INT(tknzerNoCh, n);
 
-   return 10;
+   return tknSizeTest;
+}
+
+void gsmDetectTkns_Callback (VLRINGBUFF_T * const tknVlRb, uint16_t nch,
+                             uint8_t const * const buffer, int NumCalls)
+{
+   TEST_ASSERT_TRUE(tknVlRb == &(engine.tknVlRb));
+   TEST_ASSERT_EQUAL_INT(tknSizeTest, nch);
 }
 
 int VLRingBuffer_IsEmpty_Callback (VLRINGBUFF_T * vlrb, int NumCalls)
 {
-   if(NumCalls > (sizeof(bufEmptyV)/sizeof(int))){
-      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-   }
+   TEST_ASSERT_TRUE(&(engine.tknVlRb) == vlrb)
 
-   return (bufEmptyV[NumCalls]);
+   return vlrb_empty;
 }
 
 int VLRingBuffer_Pop_Callback (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
                                int NumCalls)
 {
-   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
-      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-   }
+   TEST_ASSERT_TRUE(vlrb == &(engine.tknVlRb));
+   strncpy(data, tknTest, strlen(tknTest));
 
-   strncpy(data, tknTypeSizeV[NumCalls].tkn,
-           strlen(tknTypeSizeV[NumCalls].tkn));
-
-   return (tknTypeSizeV[NumCalls].size);
+   return (tknSizeTest);
 }
 
-tknTypeParser_e gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
+tknTypeParser_t gsmParseTkn_Callback (uint8_t const * const tkn, uint8_t * cmd,
                                       uint8_t * par, uint16_t tknLen,
                                       int NumCalls)
 {
-   if(NumCalls > (sizeof(tknTypeSizeV)/sizeof(tknTypeSize_s))){
-      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-   }
+   strncpy(cmd, cmdTest, strlen(cmdTest));
 
-   strncpy(cmd, tknTypeSizeV[NumCalls].cmd,
-           strlen(tknTypeSizeV[NumCalls].cmd));
-   cmd[strlen(tknTypeSizeV[NumCalls].cmd)] = '\0';
-
-   if(strlen(tknTypeSizeV[NumCalls].par) > 0){
-      strncpy(par, tknTypeSizeV[NumCalls].par,
-              strlen(tknTypeSizeV[NumCalls].par));
-      par[strlen(tknTypeSizeV[NumCalls].par)] = '\0';
+   if(strlen(parTest) > 0){
+      strncpy(par, parTest, strlen(parTest));
    }
    else{
       par[0]='\0';
    }
 
-   return (tknTypeSizeV[NumCalls].type);
+   return (tknTypeTest);
 }
 
-uint8_t gsmUrcSearch_Callback (uint8_t const * const urc, int NumCalls)
+bool gsmUrcSearch_Callback (uint8_t const * const urc, int NumCalls)
 {
-   if(0 == strcmp(urc,"CMTI")){return 1;}
+   if(0 == strncmp(urc,"CMTI", strlen("CMTI"))){return true;}
 
-   return 0;
+   return false;
 }
 
 const uint8_t const * gsmGetCmdErrRsp_Callback (uint16_t idx, int Numcalls)
 {
-   return ("-ERROR-CMS ERROR-");
+   switch(idx){
+
+      case 0:
+
+         return("-ERROR-CMS ERROR-");
+
+         break;
+
+      default:
+
+         return ("???");
+
+   }
+
 }
 
 const uint8_t const * gsmGetCmdSucRsp_Callback (uint16_t idx, int Numcalls)
 {
-   if(0 == idx){
-      return ("-OK-");
+   switch(idx){
+
+      case 0:
+
+         return("-OK-");
+
+         break;
+
+      default:
+
+         return ("???");
+
    }
-   else if(19 == idx){
-      return ("");
-   }
-   else{
-      TEST_FAIL_MESSAGE("gsmGetCmdSucRsp_Callback called incorrectly");
-   }
+
 }
 
-tknTypeParser_e gsmParseTkn_Callback2 (uint8_t const * const tkn,
+tknTypeParser_t gsmParseTkn_Callback2 (uint8_t const * const tkn,
                                        uint8_t * cmd, uint8_t * par,
                                        uint16_t tknLen, int NumCalls)
 {
@@ -228,6 +292,8 @@ uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
    return UNKNOWN_CMD;
 }
 
+#ifdef NO
+
 int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
 {
    switch(NumCalls){
@@ -252,6 +318,8 @@ int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
          break;
    }
 }
+
+#endif
 
 uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
 {
@@ -295,7 +363,7 @@ int VLRingBuffer_Pop_Callback2 (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
    }
 }
 
-tknTypeParser_e gsmParseTkn_Callback3 (uint8_t const * const tkn,
+tknTypeParser_t gsmParseTkn_Callback3 (uint8_t const * const tkn,
                                        uint8_t * cmd, uint8_t * par,
                                        uint16_t tknLen, int NumCalls)
 {
@@ -345,7 +413,6 @@ void test_gsmInitEngine(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    bool result;
 
    /* Mocks */
@@ -374,8 +441,7 @@ void test_gsmProcessTkn(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
-   fsmEvent_e event;
+   fsmEvent_t event;
 
    /* Initialization */
 
@@ -384,13 +450,16 @@ void test_gsmProcessTkn(void)
    /* Mocks */
 
    gsmTermUartSend_IgnoreAndReturn(0);
-   gsmNoChTokenizer_IgnoreAndReturn(10);
-   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
-   gsmDetectTkns_Ignore();
-   VLRingBuffer_IsEmpty_StubWithCallback(VLRingBuffer_IsEmpty_Callback);
    VLRingBuffer_IsFull_IgnoreAndReturn(0);
    VLRingBuffer_Insert_IgnoreAndReturn(0);
    VLRingBuffer_Flush_Ignore();
+
+   gsm232UartSend_StubWithCallback(gsm232UartSend_Callback);
+
+   gsmNoChTokenizer_StubWithCallback(gsmNoChTokenizer_Callback);
+   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
+   gsmDetectTkns_StubWithCallback(gsmDetectTkns_Callback);
+   VLRingBuffer_IsEmpty_StubWithCallback(VLRingBuffer_IsEmpty_Callback);
    VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
    gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
    gsmUrcSearch_StubWithCallback(gsmUrcSearch_Callback);
@@ -399,8 +468,12 @@ void test_gsmProcessTkn(void)
 
    /* Test sequence */
 
+   /* We created helper function loadProcessTkn to load the corresponding
+      constants to feed all the callback mocks easily */
+
    /* URC (1.2) */
 
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
 
    event = gsmProcessTkn(&engine);
 
@@ -408,11 +481,15 @@ void test_gsmProcessTkn(void)
 
    /* ooo rsp (1.3) */
 
+   loadProcessTkn("\r\n+OK\r\n", "OK", "", BASIC_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_OOO, event);
 
    /* ooo data block (1.4) */
+
+   loadProcessTkn("abcde\r\n", "DATA", "abcde", DATA_BLOCK_P);
 
    event = gsmProcessTkn(&engine);
 
@@ -421,17 +498,25 @@ void test_gsmProcessTkn(void)
    /* AT sent + AT echo + OK (2.1, 3.3) */
 
    engine.fsmState = CMD_SENT;
-   strncpy(engine.currCmd, "AT", strlen("AT")+1);
+   strncpy(engine.currCmd, "AT", strlen("AT"));
    engine.currPar[0]='\0';
    engine.currIdx = 0;
+
+   loadProcessTkn("AT\r", "AT", "", AUTOBAUD);
 
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_CMD_ACK, event);
 
+   loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_CLOSE, event);
+
+}
+
+#ifdef NO
 
    /* AT sent + echo error (2.2) */
 
@@ -592,6 +677,8 @@ void test_gsmProcessTkn(void)
 
 }
 
+#endif
+
 /* test_gsmToutCntZero
  *
  * Functions tested:
@@ -675,7 +762,7 @@ void test_gsmSendCmd(void)
    /* Variables */
 
    gsmEngine_t engine;
-   fsmEvent_e event;
+   fsmEvent_t event;
 
    /* Mocks */
 
@@ -839,7 +926,7 @@ void test_gsmGetSerialMode(void)
    /* Variables */
 
    gsmEngine_t engine;
-   serialMode_e mode;
+   serialMode_t mode;
 
    /* Test sequence */
 
@@ -867,7 +954,7 @@ void test_gsmSetSerialMode(void)
    /* Variables */
 
    gsmEngine_t engine;
-   serialMode_e mode;
+   serialMode_t mode;
 
    /* Test sequence */
 

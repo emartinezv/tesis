@@ -32,6 +32,9 @@
 #ifndef _GSM_PARSER_H_
 #define _GSM_PARSER_H_
 
+/** @brief This module handles AT token parsing
+ */
+
 /** \addtogroup parser parser
  ** @{ */
 

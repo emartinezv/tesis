@@ -25,10 +25,30 @@ void mock_gsmParser_Verify(void);
 
 #define gsmParseTkn_IgnoreAndReturn(cmock_retval) gsmParseTkn_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmParseTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return);
+#define gsmParseTkn_ExpectAnyArgsAndReturn(cmock_retval) gsmParseTkn_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmParseTkn_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, tknTypeParser_t cmock_to_return);
 #define gsmParseTkn_ExpectAndReturn(tkn, cmd, par, tknLen, cmock_retval) gsmParseTkn_CMockExpectAndReturn(__LINE__, tkn, cmd, par, tknLen, cmock_retval)
 void gsmParseTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, tknTypeParser_t cmock_to_return);
 typedef tknTypeParser_t (* CMOCK_gsmParseTkn_CALLBACK)(uint8_t const* const tkn, uint8_t* cmd, uint8_t* par, uint16_t tknLen, int cmock_num_calls);
 void gsmParseTkn_StubWithCallback(CMOCK_gsmParseTkn_CALLBACK Callback);
+#define gsmParseTkn_ExpectWithArrayAndReturn(tkn, tkn_Depth, cmd, cmd_Depth, par, par_Depth, tknLen, cmock_retval) gsmParseTkn_CMockExpectWithArrayAndReturn(__LINE__, tkn, tkn_Depth, cmd, cmd_Depth, par, par_Depth, tknLen, cmock_retval)
+void gsmParseTkn_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t const* const tkn, int tkn_Depth, uint8_t* cmd, int cmd_Depth, uint8_t* par, int par_Depth, uint16_t tknLen, tknTypeParser_t cmock_to_return);
+#define gsmParseTkn_ReturnThruPtr_cmd(cmd) gsmParseTkn_CMockReturnMemThruPtr_cmd(__LINE__, cmd, sizeof(*cmd))
+#define gsmParseTkn_ReturnArrayThruPtr_cmd(cmd, cmock_len) gsmParseTkn_CMockReturnMemThruPtr_cmd(__LINE__, cmd, (int)(cmock_len * (int)sizeof(*cmd)))
+#define gsmParseTkn_ReturnMemThruPtr_cmd(cmd, cmock_size) gsmParseTkn_CMockReturnMemThruPtr_cmd(__LINE__, cmd, cmock_size)
+void gsmParseTkn_CMockReturnMemThruPtr_cmd(UNITY_LINE_TYPE cmock_line, uint8_t* cmd, int cmock_size);
+#define gsmParseTkn_ReturnThruPtr_par(par) gsmParseTkn_CMockReturnMemThruPtr_par(__LINE__, par, sizeof(*par))
+#define gsmParseTkn_ReturnArrayThruPtr_par(par, cmock_len) gsmParseTkn_CMockReturnMemThruPtr_par(__LINE__, par, (int)(cmock_len * (int)sizeof(*par)))
+#define gsmParseTkn_ReturnMemThruPtr_par(par, cmock_size) gsmParseTkn_CMockReturnMemThruPtr_par(__LINE__, par, cmock_size)
+void gsmParseTkn_CMockReturnMemThruPtr_par(UNITY_LINE_TYPE cmock_line, uint8_t* par, int cmock_size);
+#define gsmParseTkn_IgnoreArg_tkn() gsmParseTkn_CMockIgnoreArg_tkn(__LINE__)
+void gsmParseTkn_CMockIgnoreArg_tkn(UNITY_LINE_TYPE cmock_line);
+#define gsmParseTkn_IgnoreArg_cmd() gsmParseTkn_CMockIgnoreArg_cmd(__LINE__)
+void gsmParseTkn_CMockIgnoreArg_cmd(UNITY_LINE_TYPE cmock_line);
+#define gsmParseTkn_IgnoreArg_par() gsmParseTkn_CMockIgnoreArg_par(__LINE__)
+void gsmParseTkn_CMockIgnoreArg_par(UNITY_LINE_TYPE cmock_line);
+#define gsmParseTkn_IgnoreArg_tknLen() gsmParseTkn_CMockIgnoreArg_tknLen(__LINE__)
+void gsmParseTkn_CMockIgnoreArg_tknLen(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

@@ -29,9 +29,6 @@
  *
  */
 
-/** @brief This module handles AT token parsing
- */
-
 /** \addtogroup parser parser
  ** @{ */
 

@@ -10,8 +10,8 @@ var searchData=
   ['gsminittokenizer',['gsmInitTokenizer',['../group__tokenizer.html#ga6536451389cc0becb4a0a474a2ae4251',1,'gsmTokenizer.c']]],
   ['gsmnochtokenizer',['gsmNoChTokenizer',['../group__tokenizer.html#gada3f2da4d56bfd75868601bba785ee21',1,'gsmTokenizer.c']]],
   ['gsmparsetkn',['gsmParseTkn',['../group__parser.html#gaadf9c32404a6261eb7cab788f56f1599',1,'gsmParser.c']]],
-  ['gsmprocesstkn',['gsmProcessTkn',['../group__gsm.html#ga50bbd7544920f18bbc7f5104a8023671',1,'gsmEngine.c']]],
-  ['gsmsendcmd',['gsmSendCmd',['../group__gsm.html#ga3cd501ba729c92838c12f83f53fc35e0',1,'gsmEngine.c']]],
+  ['gsmprocesstkn',['gsmProcessTkn',['../group__engine.html#ga50bbd7544920f18bbc7f5104a8023671',1,'gsmEngine.c']]],
+  ['gsmsendcmd',['gsmSendCmd',['../group__engine.html#ga3cd501ba729c92838c12f83f53fc35e0',1,'gsmEngine.c']]],
   ['gsmtermuartrecv',['gsmTermUartRecv',['../group__comms.html#ga1479aeb785e7f02b87abbab8bc7b2150',1,'gsmComms.c']]],
   ['gsmtermuartsend',['gsmTermUartSend',['../group__comms.html#ga487f0a6281a8743c5eaab81ec950db32',1,'gsmComms.c']]],
   ['gsmurcsearch',['gsmUrcSearch',['../group__commands.html#gad13734a104d039634d8c42d1238fe2b5',1,'gsmCommands.c']]]
