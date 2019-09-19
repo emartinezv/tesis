@@ -27,21 +27,26 @@
  *    PRIVATE TYPES
  *****************************************************************************/
 
-typedef struct _tknTypeSize {
-   uint8_t const * tkn;
-   uint8_t const * cmd;
-   uint8_t const * par;
-   tknTypeParser_t type;
-   int size;
-} tknTypeSize_s;
+/* Type to determine which buffer will be checked for as input in the
+   VLRingBuffer_Pop mock callback function */
+
+typedef enum _vlBufType {
+   TKN,
+   RSPB,
+   URC
+} vlBufType_t ;
 
 /******************************************************************************
  *    PRIVATE DATA
  *****************************************************************************/
 
-/* Variables used for testing gsmProcessTkn */
+/* Global engine variable for all tests */
 
 gsmEngine_t engine;
+
+vlBufType_t bufSel;
+
+/* Gloval variables used for test_gsmProcessTkn */
 
 uint16_t tknzerNoCh = 0;
 
@@ -54,87 +59,16 @@ tknTypeParser_t tknTypeTest = AUTOBAUD;
 
 int vlrb_empty = 0;
 
+/* Global variables used for test_gsmRecordUrc */
 
-
-
-/***/
-
-static uint8_t auxBuffer[100];
-
-static gsmEngine_t engine2;
-
-static tknTypeSize_s tknTypeSizeV [] = {
-
-   /* URC */
-   {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
-
-   /* ooo rsp */
-   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
-
-   /* ooo data block */
-   {"abcde\r\n","DATA","abcde",DATA_BLOCK_P,8},
-
-   /* AT echo + OK */
-   {"AT\r","AT","",AUTOBAUD,4},
-   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
-
-   /* echo error */
-   {"ATI\r","I","",BASIC_CMD,5},
-
-   /* AT echo + URC + OK */
-   {"AT\r","AT","",AUTOBAUD,4},
-   {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
-   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
-
-   /* ooo rsp */
-   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
-
-   /* URC */
-   {"\r\n+CMTI:abcde\r\n","CMTI","abcde",EXT_RSP,16},
-
-   /* invalid */
-   {"TA\r","","",INVALID,4},
-
-   /* error */
-   {"\r\nERROR\r\n","ERROR","",BASIC_RSP,10},
-
-   /* IP response to CIFSR */
-   {"\r\n192.168.0.1\r\n","192.168.0.1","",BASIC_RSP,16},
-
-   /* rsp + OK */
-   {"\r\nRSP\r\n","RSP","",BASIC_RSP,8},
-   {"\r\nOK\r\n","OK","",BASIC_RSP,7},
-
-   /* AT echo */
-   {"AT\r","AT","",AUTOBAUD,4},
-
-   /* invalid */
-   {"TA\r","","",INVALID,4},
-
-   /* rsp */
-   {"\r\nRSP\r\n","RSP","",BASIC_RSP,8}
-
-};
-
-static tknTypeSize_s tknTypeV [] = {
-
-   /* AT command */
-   {"AT\r","AT","",AUTOBAUD,0},
-
-   /* SMS text */
-   {"texto sms","SMS_BODY","texto sms",SMS_BODY_P,0},
-
-   /* UKN command */
-   {"ATB\r","B","",BASIC_CMD,0}
-
-};
-
-static int bufEmptyV [] = {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0};
-
+auxBuffer[280+20+1];
 
 /******************************************************************************
  *    PRIVATE FUNCTIONS - HELPERS
  *****************************************************************************/
+
+/* Loads tknTest, cmdTest, parTest and tknTypeTest to aid the gsmParseTkn and
+   VLRingBuffer_Pop mock callback functions */
 
 void loadProcessTkn(const uint8_t * const tkn,
                     const uint8_t * const cmd,
@@ -157,6 +91,10 @@ void loadProcessTkn(const uint8_t * const tkn,
 /******************************************************************************
  *    PRIVATE FUNCTIONS - CALLBACKS
  *****************************************************************************/
+
+/* All callbacks try to check the input variables (unless they are private
+   variables from the calling function) and mimic the effect of the original
+   function up to the needs of the test. */
 
 uint16_t gsmNoChTokenizer_Callback(int NumCalls)
 {
@@ -187,8 +125,36 @@ int VLRingBuffer_IsEmpty_Callback (VLRINGBUFF_T * vlrb, int NumCalls)
 int VLRingBuffer_Pop_Callback (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
                                int NumCalls)
 {
-   TEST_ASSERT_TRUE(vlrb == &(engine.tknVlRb));
+   /* Check input data buffer depending on the global bufSel variable */
+
+   switch(bufSel){
+
+      case TKN:
+
+         TEST_ASSERT_TRUE(vlrb == &(engine.tknVlRb));
+
+         break;
+
+      case RSPB:
+
+         TEST_ASSERT_TRUE(vlrb == &(engine.rspVlRb));
+
+         break;
+
+      case URC:
+
+         TEST_ASSERT_TRUE(vlrb == &(engine.urcVlRb));
+
+         break;
+
+      default:
+
+         break;
+
+   }
+
    strncpy(data, tknTest, strlen(tknTest));
+   ((char *)data)[strlen(tknTest)]= '\0';
 
    return (tknSizeTest);
 }
@@ -228,6 +194,12 @@ const uint8_t const * gsmGetCmdErrRsp_Callback (uint16_t idx, int Numcalls)
 
          break;
 
+      case 19:
+
+         return("-ERROR-CMS ERROR-");
+
+         break;
+
       default:
 
          return ("???");
@@ -246,6 +218,12 @@ const uint8_t const * gsmGetCmdSucRsp_Callback (uint16_t idx, int Numcalls)
 
          break;
 
+      case 19:
+
+         return("");
+
+         break;
+
       default:
 
          return ("???");
@@ -254,29 +232,7 @@ const uint8_t const * gsmGetCmdSucRsp_Callback (uint16_t idx, int Numcalls)
 
 }
 
-tknTypeParser_t gsmParseTkn_Callback2 (uint8_t const * const tkn,
-                                       uint8_t * cmd, uint8_t * par,
-                                       uint16_t tknLen, int NumCalls)
-{
-   if(NumCalls > (sizeof(tknTypeV)/sizeof(tknTypeSize_s))){
-      TEST_FAIL_MESSAGE("Demasiadas llamadas!");
-   }
-
-   strncpy(cmd, tknTypeV[NumCalls].cmd,
-           strlen(tknTypeV[NumCalls].cmd));
-   cmd[strlen(tknTypeV[NumCalls].cmd)] = '\0';
-
-   if(strlen(tknTypeV[NumCalls].par) > 0){
-      strncpy(par, tknTypeV[NumCalls].par,
-              strlen(tknTypeV[NumCalls].par));
-      par[strlen(tknTypeV[NumCalls].par)] = '\0';
-   }
-   else{
-      par[0]='\0';
-   }
-
-   return (tknTypeV[NumCalls].type);
-}
+/**/
 
 uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
 {
@@ -286,22 +242,32 @@ uint16_t gsmCmdSearch_Callback(uint8_t const * const cmd, int NumCalls)
    return UNKNOWN_CMD;
 }
 
+/* Both gsm232UartSend_Callback and gsmGetCmdTimeout are not very flexible
+   callbacks, but the way in which they are called forces us to use a more
+   static structure */
+
 int gsm232UartSend_Callback (uint8_t const * const buffer, int n, int NumCalls)
 {
    switch(NumCalls){
 
       case 0:
-         if(0 != strcmp(buffer,"AT\r")){TEST_FAIL_MESSAGE("Not sending correct string through UART!");}
+         if(0 != strcmp(buffer,"AT\r")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
          else{return 3;}
          break;
 
       case 1:
-         if(0 != strcmp(buffer,"texto sms")){TEST_FAIL_MESSAGE("Not sending correct string through UART!");}
+         if(0 != strcmp(buffer,"texto sms")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
          else{return 9;}
          break;
 
       case 2:
-         if(0 != strcmp(buffer,"\x1A")){TEST_FAIL_MESSAGE("Not sending correct string through UART!");}
+         if(0 != strcmp(buffer,"\x1A")){
+            TEST_FAIL_MESSAGE("Not sending correct string through UART!");
+         }
          else{return 1;}
          break;
 
@@ -330,38 +296,6 @@ uint32_t gsmGetCmdTimeout_Callback (uint16_t idx, int NumCalls)
          TEST_FAIL_MESSAGE("gsmGetCmdTimeout_Callback called to many times");
          break;
    }
-}
-
-int VLRingBuffer_Pop_Callback2 (VLRINGBUFF_T * vlrb, void * data, uint16_t cap,
-                               int NumCalls)
-{
-   switch(NumCalls){
-
-      case 0:
-         strncpy(data,"RESP1.parametros1",strlen("RESP1.parametros1"));
-         return(17);
-         break;
-
-      case 1:
-         strncpy(data,"RESP2.",strlen("RESP2."));
-         return(6);
-         break;
-
-      default:
-         TEST_FAIL_MESSAGE("VLRingBuffer_Pop_Callback2 called to many times");
-         break;
-   }
-}
-
-tknTypeParser_t gsmParseTkn_Callback3 (uint8_t const * const tkn,
-                                       uint8_t * cmd, uint8_t * par,
-                                       uint16_t tknLen, int NumCalls)
-{
-   strncpy(cmd,"CMTI",strlen("CMTI"));
-   cmd[strlen("CMTI")]='\0';
-   strncpy(par,"abcde",strlen("abcde"));
-   par[strlen("abcde")]='\0';
-   return(EXT_RSP);
 }
 
 int VLRingBuffer_Insert_Callback (VLRINGBUFF_T * vlrb, const void * data,
@@ -436,6 +370,7 @@ void test_gsmProcessTkn(void)
    /* Initialization */
 
    engine.fsmState = WAITING;
+   bufSel = TKN;
 
    /* Mocks */
 
@@ -601,28 +536,14 @@ void test_gsmProcessTkn(void)
 
    TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, event);
 
-}
-
-#ifdef NO
-
-
-
-
-
-
-
-
-
-
-
-
-
    /* AT sent and echoed + error (3.2) */
 
    engine.fsmState = CMD_ACK;
    strncpy(engine.currCmd, "AT", strlen("AT")+1);
    engine.currPar[0]='\0';
    engine.currIdx = 0;
+
+   loadProcessTkn("\r\nERROR\r\n", "ERROR", "", BASIC_RSP);
 
    event = gsmProcessTkn(&engine);
 
@@ -635,6 +556,8 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 19;
 
+   loadProcessTkn("\r\nE192.168.0.1\r\n", "192.168.0.1", "", BASIC_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_CLOSE, event);
@@ -646,9 +569,13 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 0;
 
+   loadProcessTkn("\r\nresponse\r\n", "response", "", BASIC_RSP);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_RSP, event);
+
+   loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
 
    event = gsmProcessTkn(&engine);
 
@@ -660,6 +587,8 @@ void test_gsmProcessTkn(void)
    strncpy(engine.currCmd, "AT", strlen("AT")+1);
    engine.currPar[0]='\0';
    engine.currIdx = 0;
+
+   loadProcessTkn("AT\r", "AT", "", AUTOBAUD);
 
    event = gsmProcessTkn(&engine);
 
@@ -674,9 +603,14 @@ void test_gsmProcessTkn(void)
 
    engine.toutCnt = 0; /* simulate timeout */
 
+   vlrb_empty = 1; /* no tokens read */
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_TIMEOUT, event);
+
+   vlrb_empty = 0;      /* reset to normal state */
+   engine.toutCnt = 1;  /* reset to normal state */
 
    /* AT sent and echoed + invalid (3.8) */
 
@@ -685,22 +619,23 @@ void test_gsmProcessTkn(void)
    engine.currPar[0]='\0';
    engine.currIdx = 0;
 
+   loadProcessTkn("TA\r", "", "", INVALID);
+
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_TKN_INV, event);
 
    /* rsp with FSM out of range (3.9) */
 
-   engine.toutCnt = 1000; /* avoid timeout */
    engine.fsmState = CMD_ACK+1;
+
+   loadProcessTkn("\r\nresponse\r\n", "response", "", BASIC_RSP);
 
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(ERR_FSM_OOR, event);
 
 }
-
-#endif
 
 /* test_gsmToutCntZero
  *
@@ -715,7 +650,6 @@ void test_gsmToutCntZero(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    bool result;
 
    /* Test sequence */
@@ -743,7 +677,6 @@ void test_gsmDecToutCnt(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    bool result;
 
    /* Test sequence */
@@ -784,28 +717,48 @@ void test_gsmSendCmd(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    fsmEvent_t event;
 
    /* Mocks */
 
-   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback2);
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
    gsmCmdSearch_StubWithCallback(gsmCmdSearch_Callback);
    gsm232UartSend_StubWithCallback(gsm232UartSend_Callback);
    gsmGetCmdTimeout_StubWithCallback(gsmGetCmdTimeout_Callback);
 
    /* Test sequence */
 
+   /* We also use loadProcessTkn here to load the cmd, par and tknType info
+      for the gsmParseTkn mock callback */
+
+   /* Send cmd */
+
    engine.fsmState = WAITING;
+
+   loadProcessTkn("AT\r", "AT", "", AUTOBAUD);
+
    event = gsmSendCmd(&engine, "AT\r");
+
    TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, event);
 
+   /* Send sms text body */
+
    engine.fsmState = WAITING;
+
+   loadProcessTkn("texto sms", "SMS_BODY", "texto sms", SMS_BODY_P);
+
    event = gsmSendCmd(&engine, "texto sms");
+
    TEST_ASSERT_EQUAL_INT(OK_CMD_SENT, event);
 
+   /* Send unrecognized cmd */
+
    engine.fsmState = WAITING;
+
+   loadProcessTkn("ATB\r", "B", "", BASIC_CMD);
+
    event = gsmSendCmd(&engine, "ATB\r");
+
    TEST_ASSERT_EQUAL_INT(ERR_CMD_UKN, event);
 
 }
@@ -823,32 +776,47 @@ void test_gsmGetCmdRsp(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    rsp_t rsp;
-   VLRINGBUFF_T * buffer;
 
    /* Initializations */
 
-   buffer = &(engine.rspVlRb);
+   bufSel = RSPB;
 
    /* Mocks */
 
-   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback2);
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
 
    /* Test sequence */
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   /* We also use loadProcessTkn here to load tknTest and tknSizeTest for the
+      VLRingBuffer_Pop mock callback */
+
+   /* Get rsp with parameters */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.rspVlRb),0);
+   loadProcessTkn("RESP1.parametros1", "RESP1", "parametros1", BASIC_RSP);
+
    rsp = gsmGetCmdRsp(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP1"));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,"parametros1"));
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   /* Get rsp without parameters */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.rspVlRb),0);
+   loadProcessTkn("RESP2.", "RESP2", "", BASIC_RSP);
+
    rsp = gsmGetCmdRsp(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP2"));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,1);
+   /* No response in buffer */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.rspVlRb),1);
+
    rsp = gsmGetCmdRsp(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,""));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
 
@@ -867,26 +835,26 @@ void test_gsmGetNoCmdRsp (void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
-   VLRINGBUFF_T * buffer;
    int noRsp;
-
-   /* Initializations */
-
-   buffer = &(engine.rspVlRb);
 
    /* Test sequence */
 
-   VLRingBuffer_GetCount_ExpectAndReturn(buffer,2);
+   VLRingBuffer_GetCount_ExpectAndReturn(&(engine.rspVlRb),2);
+
    noRsp = gsmGetNoCmdRsp(&engine);
+
    TEST_ASSERT_EQUAL_INT(2,noRsp);
 
-   VLRingBuffer_GetCount_ExpectAndReturn(buffer,10);
+   VLRingBuffer_GetCount_ExpectAndReturn(&(engine.rspVlRb),10);
+
    noRsp = gsmGetNoCmdRsp(&engine);
+
    TEST_ASSERT_EQUAL_INT(10,noRsp);
 
-   VLRingBuffer_GetCount_ExpectAndReturn(buffer,0);
+   VLRingBuffer_GetCount_ExpectAndReturn(&(engine.rspVlRb),0);
+
    noRsp = gsmGetNoCmdRsp(&engine);
+
    TEST_ASSERT_EQUAL_INT(0,noRsp);
 
 }
@@ -904,32 +872,49 @@ void test_gsmGetUrc(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    rsp_t rsp;
-   VLRINGBUFF_T * buffer;
 
    /* Initializations */
 
-   buffer = &(engine.urcVlRb);
+   bufSel = URC;
 
    /* Mocks */
 
-   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback2);
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
 
    /* Test sequence */
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   /* We also use loadProcessTkn here to load tknTest and tknSizeTest for the
+      VLRingBuffer_Pop mock callback */
+
+   /* urc with parameters */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.urcVlRb),0);
+
+   loadProcessTkn("RESP1.parametros1", "RESP1", "parametros1", BASIC_RSP);
+
    rsp = gsmGetUrc(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP1"));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,"parametros1"));
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,0);
+   /* urc without parameters */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.urcVlRb),0);
+
+   loadProcessTkn("RESP2.", "RESP2", "", BASIC_RSP);
+
    rsp = gsmGetUrc(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,"RESP2"));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(buffer,1);
+   /* no urcs */
+
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.urcVlRb),1);
+
    rsp = gsmGetUrc(&engine);
+
    TEST_ASSERT_TRUE(0 == strcmp(rsp.cmd,""));
    TEST_ASSERT_TRUE(0 == strcmp(rsp.par,""));
 
@@ -948,17 +933,20 @@ void test_gsmGetSerialMode(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    serialMode_t mode;
 
    /* Test sequence */
 
    engine.serialMode = COMMAND_MODE;
+
    mode = gsmGetSerialMode(&engine);
+
    TEST_ASSERT_EQUAL_INT(COMMAND_MODE,mode);
 
    engine.serialMode = DATA_MODE;
+
    mode = gsmGetSerialMode(&engine);
+
    TEST_ASSERT_EQUAL_INT(DATA_MODE,mode);
 
 }
@@ -976,17 +964,20 @@ void test_gsmSetSerialMode(void)
 {
    /* Variables */
 
-   gsmEngine_t engine;
    serialMode_t mode;
 
    /* Test sequence */
 
    gsmSetSerialMode(&engine,COMMAND_MODE);
+
    mode = engine.serialMode;
+
    TEST_ASSERT_EQUAL_INT(COMMAND_MODE,mode);
 
    gsmSetSerialMode(&engine,DATA_MODE);
+
    mode = engine.serialMode;
+
    TEST_ASSERT_EQUAL_INT(DATA_MODE,mode);
 
 }
@@ -1007,27 +998,31 @@ void test_gsmRecordUrc(void)
 
    /* Initialization */
 
-   engine2.fsmState = WAITING;
+   engine.fsmState = WAITING;
+   bufSel = TKN;
 
    /* Mocks -Ignore- */
 
    gsmTermUartSend_IgnoreAndReturn(0);
-   gsmNoChTokenizer_IgnoreAndReturn(10);
-   gsm232UartRecv_IgnoreAndReturn(10);
-   gsmDetectTkns_Ignore();
-   VLRingBuffer_Pop_IgnoreAndReturn(0);
-   gsmUrcSearch_IgnoreAndReturn(1);
 
    /* Mocks -Callback- */
 
-   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback3);
+   gsmNoChTokenizer_StubWithCallback(gsmNoChTokenizer_Callback);
+   gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
+   gsmDetectTkns_StubWithCallback(gsmDetectTkns_Callback);
+   VLRingBuffer_Pop_StubWithCallback(VLRingBuffer_Pop_Callback);
+   gsmParseTkn_StubWithCallback(gsmParseTkn_Callback);
+   gsmUrcSearch_StubWithCallback(gsmUrcSearch_Callback);
    VLRingBuffer_Insert_StubWithCallback(VLRingBuffer_Insert_Callback);
 
    /* Test sequence */
 
-   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine2.tknVlRb),0);
-   VLRingBuffer_IsFull_ExpectAndReturn(&(engine2.urcVlRb),0);
-   result = gsmProcessTkn(&engine2);
+   VLRingBuffer_IsEmpty_ExpectAndReturn(&(engine.tknVlRb),0);
+   VLRingBuffer_IsFull_ExpectAndReturn(&(engine.urcVlRb),0);
+
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
+
+   result = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_STRING("CMTI.abcde",auxBuffer);
 

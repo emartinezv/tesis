@@ -122,17 +122,17 @@ int main(void)
 {
   suite_setup();
   UnityBegin("test_gsmEngine.c");
-  RUN_TEST(test_gsmInitEngine, 394);
-  RUN_TEST(test_gsmProcessTkn, 420);
-  RUN_TEST(test_gsmToutCntZero, 704);
-  RUN_TEST(test_gsmDecToutCnt, 732);
-  RUN_TEST(test_gsmSendCmd, 772);
-  RUN_TEST(test_gsmGetCmdRsp, 812);
-  RUN_TEST(test_gsmGetNoCmdRsp , 865);
-  RUN_TEST(test_gsmGetUrc, 893);
-  RUN_TEST(test_gsmGetSerialMode, 937);
-  RUN_TEST(test_gsmSetSerialMode, 965);
-  RUN_TEST(test_gsmRecordUrc, 993);
+  RUN_TEST(test_gsmInitEngine, 328);
+  RUN_TEST(test_gsmProcessTkn, 354);
+  RUN_TEST(test_gsmToutCntZero, 640);
+  RUN_TEST(test_gsmDecToutCnt, 667);
+  RUN_TEST(test_gsmSendCmd, 706);
+  RUN_TEST(test_gsmGetCmdRsp, 766);
+  RUN_TEST(test_gsmGetNoCmdRsp , 834);
+  RUN_TEST(test_gsmGetUrc, 862);
+  RUN_TEST(test_gsmGetSerialMode, 923);
+  RUN_TEST(test_gsmSetSerialMode, 954);
+  RUN_TEST(test_gsmRecordUrc, 985);
 
   CMock_Guts_MemFreeFinal();
   return suite_teardown(UnityEnd());
