@@ -654,9 +654,13 @@ void test_gsmToutCntZero(void)
 
    /* Test sequence */
 
+   /* toutCnt not zero */
+
    engine.toutCnt = 1000;
    result = gsmToutCntZero(&engine);
    TEST_ASSERT_FALSE(result);
+
+   /* toutCnt zero */
 
    engine.toutCnt = 0;
    result = gsmToutCntZero(&engine);
@@ -681,11 +685,15 @@ void test_gsmDecToutCnt(void)
 
    /* Test sequence */
 
+   /* Decrement once */
+
    engine.toutCnt = 100;
 
    gsmDecToutCnt(&engine);
 
    TEST_ASSERT_TRUE(99 == engine.toutCnt);
+
+   /* Decrement 10 more times */
 
    int i;
 
@@ -694,6 +702,8 @@ void test_gsmDecToutCnt(void)
    }
 
    TEST_ASSERT_TRUE(89 == engine.toutCnt);
+
+   /* Already 0, should stay there and not cause any errors */
 
    engine.toutCnt = 0;
 
@@ -838,6 +848,8 @@ void test_gsmGetNoCmdRsp (void)
    int noRsp;
 
    /* Test sequence */
+
+   /* We test different number of responses, including none */
 
    VLRingBuffer_GetCount_ExpectAndReturn(&(engine.rspVlRb),2);
 
