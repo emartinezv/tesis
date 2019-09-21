@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groups</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Groups</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -134,36 +134,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*==================[macros]=================================================*/</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="group__commands.html#ga743af2f0cf7fc1ef170b7f38f788d2e1">   57</a></span>&#160;<span class="preprocessor">#define UNKNOWN_CMD 65535</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="group__commands.html#ga339ae3ba57c3eedbede42befe7db794e">   61</a></span>&#160;<span class="preprocessor">#define TOUT_DEF 100   </span><span class="comment">/* SIMCOM modules do not specify a default timeout</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">                             period, but looking at other manufacturers the</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment">                             suggested value seems to be around 100 ms */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;uint16_t <a class="code" href="group__commands.html#ga367f8e60e72341004625fda5603434df">gsmCmdSearch</a>(uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> cmd);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">const</span> uint8_t <span class="keyword">const</span> * <a class="code" href="group__commands.html#ga12204cbe11a48505b3225a1e6df29637">gsmGetCmdSucRsp</a> (uint16_t idx);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">const</span> uint8_t <span class="keyword">const</span> * <a class="code" href="group__commands.html#gad4bd83d134b8d0ed0e76987deb5a3f28">gsmGetCmdErrRsp</a> (uint16_t idx);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;uint32_t <a class="code" href="group__commands.html#ga4ae400036ca5607336e6e62c492557f7">gsmGetCmdTimeout</a> (uint16_t idx);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__commands.html#gad13734a104d039634d8c42d1238fe2b5">gsmUrcSearch</a>(uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> urc);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* #ifndef _GSM_COMMANDS_H_ */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="group__commands.html#ga743af2f0cf7fc1ef170b7f38f788d2e1">   56</a></span>&#160;<span class="preprocessor">#define UNKNOWN_CMD 65535</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="group__commands.html#ga339ae3ba57c3eedbede42befe7db794e">   60</a></span>&#160;<span class="preprocessor">#define TOUT_DEF 100   </span><span class="comment">/* SIMCOM modules do not specify a default timeout</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">                             period, but looking at other manufacturers the</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment">                             suggested value seems to be around 100 ms */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;uint16_t <a class="code" href="group__commands.html#ga367f8e60e72341004625fda5603434df">gsmCmdSearch</a>(uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> cmd);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">const</span> uint8_t <span class="keyword">const</span> * <a class="code" href="group__commands.html#ga12204cbe11a48505b3225a1e6df29637">gsmGetCmdSucRsp</a> (uint16_t idx);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">const</span> uint8_t <span class="keyword">const</span> * <a class="code" href="group__commands.html#gad4bd83d134b8d0ed0e76987deb5a3f28">gsmGetCmdErrRsp</a> (uint16_t idx);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;uint32_t <a class="code" href="group__commands.html#ga4ae400036ca5607336e6e62c492557f7">gsmGetCmdTimeout</a> (uint16_t idx);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__commands.html#gad13734a104d039634d8c42d1238fe2b5">gsmUrcSearch</a>(uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> urc);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* #ifndef _GSM_COMMANDS_H_ */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="group__commands_html_gad4bd83d134b8d0ed0e76987deb5a3f28"><div class="ttname"><a href="group__commands.html#gad4bd83d134b8d0ed0e76987deb5a3f28">gsmGetCmdErrRsp</a></div><div class="ttdeci">const uint8_t const * gsmGetCmdErrRsp(uint16_t idx)</div><div class="ttdoc">Given a cmd index, returns the string of error close responses for the corresponding command...</div><div class="ttdef"><b>Definition:</b> gsmCommands.c:132</div></div>
 <div class="ttc" id="group__commands_html_ga12204cbe11a48505b3225a1e6df29637"><div class="ttname"><a href="group__commands.html#ga12204cbe11a48505b3225a1e6df29637">gsmGetCmdSucRsp</a></div><div class="ttdeci">const uint8_t const * gsmGetCmdSucRsp(uint16_t idx)</div><div class="ttdoc">Given a cmd index, returns the string of successful close responses for the corresponding command...</div><div class="ttdef"><b>Definition:</b> gsmCommands.c:123</div></div>
 <div class="ttc" id="group__commands_html_ga367f8e60e72341004625fda5603434df"><div class="ttname"><a href="group__commands.html#ga367f8e60e72341004625fda5603434df">gsmCmdSearch</a></div><div class="ttdeci">uint16_t gsmCmdSearch(uint8_t const *const cmd)</div><div class="ttdoc">Searches for a cmd and returns its index. </div><div class="ttdef"><b>Definition:</b> gsmCommands.c:112</div></div>
@@ -172,7 +172,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 15 2019 11:59:49 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 21 2019 17:55:55 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

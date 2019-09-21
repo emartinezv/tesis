@@ -1,7 +1,5 @@
-/* Copyright 2016, Ezequiel Martinez Vazquez
+/* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
- *
- * This file is part of Workspace.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,18 +52,7 @@ extern "C" {
 /*==================[macros]=================================================*/
 
 /** @brief Invocation period of gsmProcess in ms */
-
 #define DELAY_PROC 10
-
-/** @brief Number of commands which return the modem to data mode. See
- *         gsmCheckDataMode function for more details */
-
-#define CMD_MODE_NO 2
-
-/** @brief Max size of the commands which return the modem to data mode. See
- *         gsmCheckDataMode function for more details */
-
-#define CMD_MODE_SIZE 6
 
 /*==================[typedef]================================================*/
 
@@ -75,16 +62,16 @@ extern "C" {
 
 /** @brief State of the current formula being run */
 
-typedef enum _frmStatus_e {
+typedef enum _frmStatus {
    IDLE = 0, /**< no formula currently running*/
    INIT = 1, /**< initializing formula */
    PROC = 2, /**< processing commands */
    WRAP = 3  /**< wrapping up formula and callback */
-} frmStatus_e;
+} frmStatus_t;
 
 /** @brief Number of command or response in the PROC section being processed */
 
-typedef enum _procStatus_e {
+typedef enum _procStatus {
    NOCMD,
    ATCMD1,
    ATCMD1RESP,
@@ -106,7 +93,7 @@ typedef enum _procStatus_e {
    ATCMD9RESP,
    ATCMD10,
    ATCMD10RESP
-} procStatus_e;
+} procStatus_t;
 
 /*---------------------------------------------------------------------------*/
 /*                     Data structures for error handling                    */
@@ -114,7 +101,7 @@ typedef enum _procStatus_e {
 
 /** @brief Type for formula level error code return */
 
-typedef enum _errorFrm_e {
+typedef enum _errorFrm {
    OK,         /**< no errors */
    ERR_INIT,   /**< error during initialization */
    ERR_PROC,   /**< error during command processing */
@@ -123,21 +110,21 @@ typedef enum _errorFrm_e {
    ERR_FSM,    /**< error due to cmd FSM being out of range */
    ERR_WRAP,   /**< error during wrap process */
    ERR_UNK     /**< error of type unknown */
-} errorFrm_e;
+} errorFrm_t;
 
 /** @brief Type for command level error code return */
 
-typedef struct _errorCmd_s {
-   uint8_t cmd[TKN_CMD_SIZE];     /**< error command */
-   uint8_t par[TKN_PAR_SIZE];     /**< error parameter */
-} errorCmd_s;
+typedef struct _errorCmd {
+   uint8_t cmd[TKN_CMD_SIZE+1];     /**< error command as string */
+   uint8_t par[TKN_PAR_SIZE+1];     /**< error parameter as string */
+} errorCmd_t;
 
-/** @brief Type for user error reporting*/
+/** @brief Type for user level error code return */
 
-typedef struct _errorUser_s {
-   errorFrm_e errorFrm;     /**< formula level error */
-   errorCmd_s errorCmd;     /**< command level error */
-} errorUser_s;
+typedef struct _errorUser {
+   errorFrm_t errorFrm;     /**< formula level error */
+   errorCmd_t errorCmd;     /**< command level error */
+} errorUser_t;
 
 /*---------------------------------------------------------------------------*/
 /*                              Misc. data structures                        */
@@ -147,28 +134,21 @@ typedef struct _errorUser_s {
 typedef struct _gsmInterface_t gsmInterface_t;
 
 /** @brief Type for formula callback */
-
-typedef void * (*frmCback_t) (errorUser_s, void *);
+typedef void * (*frmCback_t) (errorUser_t, void *);
 
 /** @brief Modes for URC handling */
 
-typedef enum _urcMode_e
+typedef enum _urcMode
 {
    MANUAL_MODE,
    CBACK_MODE
-} urcMode_e ;
+} urcMode_t ;
 
 /** @brief Type for URC callback */
-
 typedef void (*urcCback_t) (uint8_t const * const cmd,
                             uint8_t const * const par);
 
-/** @brief Type for DATA_MODE callback */
-
-typedef void (*dataCback_t) (gsmInterface_t * interface);
-
 /** @brief Type for formula function pointer */
-
 typedef void (*frm_t) (gsmInterface_t *);
 
 /*---------------------------------------------------------------------------*/
@@ -179,8 +159,8 @@ typedef struct _gsmInterface_t
 {
    /* State */
 
-   frmStatus_e frmState;
-   procStatus_e procState;
+   frmStatus_t frmState;   /* formula-level state */
+   procStatus_t procState; /* command-level state */
 
    /* Counters */
 
@@ -189,13 +169,14 @@ typedef struct _gsmInterface_t
 
    /* URC handling */
 
-   urcMode_e urcMode;
+   urcMode_t urcMode;
    urcCback_t urcCback;
 
    /* DATA mode */
 
-   dataCback_t dataCback;
-   uint8_t const * const *exitCmdList;
+   frm_t dataCback;
+   uint8_t const * const *exitCmdList; /* list of commands that exit the modem
+                                          from DATA_MODE */
 
    /* Formula */
 
@@ -203,7 +184,7 @@ typedef struct _gsmInterface_t
    void * frmInput;      /* Pointer to formula inputs */
    void * frmOutput;     /* Pointer to formula outputs */
    frmCback_t frmCback;
-   errorUser_s errorOut;
+   errorUser_t errorOut; /* Error output */
 
    /* Engine */
 
@@ -217,11 +198,11 @@ typedef struct _gsmInterface_t
 
 /** @brief Type for signal quality */
 
-typedef struct _sigQual_s {
+typedef struct _sigQual {
    int8_t  rssi;    /**< RSSI in dBm */
    uint8_t ber;     /**< BER as RXQUAL values in the table in GSM 05.08 [20]
                        subclause 7.2.4 */
-} sigQual_s;
+} sigQual_t;
 
 /*---------------------------------------------------------------------------*/
 /*               Data structures for the gsmCheckConn function               */
@@ -229,21 +210,21 @@ typedef struct _sigQual_s {
 
 /** @brief Struct for determining the status of the GSM and GPRS connections */
 
-typedef struct _connStatus_s {
+typedef struct _connStatus {
    bool  gsm;   /**< Is the ME attached to the GSM network? */
    bool  gprs;  /**< Is the ME attached to the GPRS service? */
-} connStatus_s;
+} connStatus_t;
 
 /*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmReadUrc function                */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Struct for reading URC command and parameters */
+/** @brief Struct for reading URC command and parameters*/
 
-typedef struct _urc_s {
-   uint8_t cmd[TKN_CMD_SIZE];
-   uint8_t par[TKN_PAR_SIZE];
-} urc_s;
+typedef struct _urc {
+   uint8_t cmd[TKN_CMD_SIZE+1];
+   uint8_t par[TKN_PAR_SIZE+1];
+} urc_t;
 
 /*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmSmsSend function                */
@@ -251,16 +232,16 @@ typedef struct _urc_s {
 
 /** @brief Type for outgoing SMS message */
 
-typedef struct _smsOut_s {
-   uint8_t * dest; /**< destination number as a str */
+typedef struct _smsOut {
+   uint8_t * dest; /**< destination number as a string */
    uint8_t * text; /**< text of the sms message */
-} smsOut_s;
+} smsOut_t;
 
 /** @brief Type for outgoing SMS confirmation message */
 
-typedef struct _smsConf_s {
+typedef struct _smsConf {
    uint8_t mr;     /**< mr code returned */
-} smsConf_s;
+} smsConf_t;
 
 /*---------------------------------------------------------------------------*/
 /*        Data structures for the gsmSmsRead and gsmSmsList functions        */
@@ -268,49 +249,49 @@ typedef struct _smsConf_s {
 
 /** @brief Type for SMS read mode */
 
-typedef enum _smsReadMode_e {
+typedef enum _smsReadMode {
    NORMAL = 0,     /**< change status to read if message unread */
    NOCHANGE = 1,   /**< do not change status of message */
-} smsReadMode_e;
+} smsReadMode_t;
 
 /** @brief Type for SMS read parameters */
 
-typedef struct _smsReadPars_s {
+typedef struct _smsReadPars {
    uint8_t idx;        /**< SMS message index in memory */
-   smsReadMode_e mode; /**< SMS read mode (change status or leave as is) */
-} smsReadPars_s;
+   smsReadMode_t mode; /**< SMS read mode (change status or leave as is) */
+} smsReadPars_t;
 
 /** @brief Type for received SMS */
 
-typedef struct _smsRec_s {
-   uint8_t meta[TKN_PAR_SIZE]; /**< metadata */
-   uint8_t text[TKN_PAR_SIZE];   /**< text of the SMS message */
-} smsRec_s;
+typedef struct _smsRec {
+   uint8_t meta[TKN_PAR_SIZE+1]; /**< metadata string */
+   uint8_t text[TKN_PAR_SIZE+1]; /**< text of the SMS message */
+} smsRec_t;
 
 /** @brief Type for SMS list messages status */
 
-typedef enum _smsListStat_e {
+typedef enum _smsListStat {
    REC_UNREAD,  /**< Received unread messages */
    REC_READ,    /**< Received read messages */
    STO_UNSENT,  /**< Stored unsent messages */
    STO_SENT,    /**< Stored sent messages */
    ALL_MSG      /**< All messages */
-} smsListStat_e;
+} smsListStat_t;
 
 /** @brief Type for SMS list parameters */
 
-typedef struct _smsListPars_s {
-   smsListStat_e stat; /**< SMS list messages status */
-   smsReadMode_e mode; /**< SMS read mode (change status or leave as is) */
+typedef struct _smsListPars {
+   smsListStat_t stat; /**< SMS list messages status */
+   smsReadMode_t mode; /**< SMS read mode (change status or leave as is) */
    uint8_t listSize;   /**< Size of the SMS list vector */
-} smsListPars_s;
+} smsListPars_t;
 
 /** @brief Type for SMS read/list return */
 
-typedef struct _smsListRet_s {
-   smsRec_s * msgs;  /**< Pointer to message array */
+typedef struct _smsListRet {
+   smsRec_t * msgs;  /**< Pointer to message array */
    uint8_t noMsgs;   /**< Size of message array */
-} smsListRet_s;
+} smsListRet_t;
 
 /*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmSmsDel function                 */
@@ -318,20 +299,20 @@ typedef struct _smsListRet_s {
 
 /** @brief Type for SMS deletion mode */
 
-typedef enum _smsDelMode_e {
+typedef enum _smsDelMode {
    INDEX = 0,              /**< del the message indicated by index */
    READ = 1,               /**< del all read messages */
    READ_SENT = 2,          /**< del all read and sent messages */
    READ_SENT_UNSENT = 3,   /**< del all read, sent and unsent messages */
    DEL_ALL = 4             /**< del all messages */
-} smsDelMode_e;
+} smsDelMode_t;
 
 /** @brief Type for SMS delete parameters */
 
-typedef struct _smsDelPars_s {
+typedef struct _smsDelPars {
    uint8_t idx;        /**< index of the message in memory */
-   smsDelMode_e mode;  /**< deletion mode */
-} smsDelPars_s;
+   smsDelMode_t mode;  /**< deletion mode */
+} smsDelPars_t;
 
 /*---------------------------------------------------------------------------*/
 /*               Data structures for the gsmGprsStart function               */
@@ -339,28 +320,30 @@ typedef struct _smsDelPars_s {
 
 /** @brief Type for APN name, user and password */
 
-typedef struct _apnUserPwd_s {
-   uint8_t * apn;   /**< APN address */
-   uint8_t * user;  /**< User */
-   uint8_t * pwd;   /**< Password */
-} apnUserPwd_s;
+typedef struct _apnUserPwd {
+   uint8_t * apn;   /**< APN address string */
+   uint8_t * user;  /**< User string */
+   uint8_t * pwd;   /**< Password string */
+} apnUserPwd_t;
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGprsOpenPort function             */
 /*---------------------------------------------------------------------------*/
 
-typedef enum _portType_e {
+/** @brief Type for port protocol (TCP or UDP) */
+
+typedef enum _portType {
    TCP,         /**< TCP port */
    UDP          /**< UDP port */
-} portType_e;
+} portType_t;
 
 /** @brief Type for address and port */
 
-typedef struct _socket_s {
-   portType_e type;      /**< TCP or UDP port */
-   uint8_t *  address;   /**< address (domain or IP) */
+typedef struct _socket {
+   portType_t type;
+   uint8_t *  address;   /**< address (domain or IP) as string */
    uint16_t   port;      /**< port number */
-} socket_s;
+} socket_t;
 
 /*---------------------------------------------------------------------------*/
 /*                Data structures for the gsmGnssPwr function                */
@@ -368,10 +351,10 @@ typedef struct _socket_s {
 
 /** @brief Enum for turning GNSS module on or off */
 
-typedef enum _pwrGnss_e {
+typedef enum _pwrGnss {
    ON,    /**< Power GNSS module on */
    OFF    /**< Power GNSS module off */
-} pwrGnss_e;
+} pwrGnss_t;
 
 /*---------------------------------------------------------------------------*/
 /*              Data structures for the gsmGnssGetData function              */
@@ -379,9 +362,9 @@ typedef enum _pwrGnss_e {
 
 /** @brief Struct for storing GNSS info */
 
-typedef struct _dataGnss_s {
+typedef struct _dataGnss {
    uint8_t data[95];   /**< GNSS data string */
-} dataGnss_s;
+} dataGnss_t;
 
 /*==================[external data declaration]==============================*/
 
@@ -395,7 +378,7 @@ typedef struct _dataGnss_s {
  *
  * @param interface : Pointer to interface
  *
- * @return Returns true if initialization successful
+ * @return True if initialization successful
  */
 
 bool gsmInitInterface (gsmInterface_t * interface);
@@ -427,8 +410,8 @@ void gsmExitDataMode (gsmInterface_t * interface, frmCback_t cback);
 
 void gsmSysTickHandler (void);
 
-/** @brief Processes commands, responded and URCs at the rate of one token
-*   per invocation
+/** @brief Processes commands, responses and URCs at the rate of one token
+*          per invocation
 *
 * @param interface : Pointer to interface
 *
@@ -440,21 +423,21 @@ void gsmProcess (gsmInterface_t * interface);
  *
  * @param interface : Pointer to interface
  *
- * @return Returns true if no formula is being run
+ * @return True if no formula is being run
 */
 
 bool gsmIsIdle (gsmInterface_t * interface);
 
 /** @brief Gets signal quality values (RSSI and BER)
 *
-* @param interface      : Pointer to interface
-* @param signal_quality : Pointer to signal quality struct
-* @param cback          : Function pointer to callback function
+* @param interface : Pointer to interface
+* @param sigQual   : Pointer to signal quality struct
+* @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
+void gsmGetSigQual (gsmInterface_t * interface, sigQual_t * sigQual,
                     frmCback_t cback);
 
 /** @brief Check status of GSM and GPRS connection
@@ -466,20 +449,20 @@ void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
 * @return
 */
 
-void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
+void gsmCheckConn (gsmInterface_t * interface, connStatus_t * status,
                    frmCback_t cback);
 
-/** @brief Read latest URC received, if any
+/** @brief Read latest URC received
 *
 * @param interface : Pointer to interface
 * @param urc       : Pointer to URC struct
 *
-* @return Return true if URC read
+* @return True if URC read
 */
 
-bool gsmReadUrc (gsmInterface_t * interface, urc_s * urc);
+bool gsmReadUrc (gsmInterface_t * interface, urc_t * urc);
 
-/** @brief Sets URC handling either cback mode or manual mode
+/** @brief Sets URC handling to either callback mode or manual mode
 *
 * @param interface : Pointer to interface
 * @param mode      : URC handling mode
@@ -487,41 +470,52 @@ bool gsmReadUrc (gsmInterface_t * interface, urc_s * urc);
 * @return
 */
 
-bool gsmSetUrcMode (gsmInterface_t * interface, urcMode_e mode);
+bool gsmSetUrcMode (gsmInterface_t * interface, urcMode_t mode);
 
 /** @brief Sets URC cback function
 *
 * @param interface : Pointer to interface
 * @param cback     : Function pointer to callback function
 *
-* @return
+* @return True
 */
 
 bool gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback);
 
-/** @brief Sets DATA_MODE cback
+/** @brief Sets DATA_MODE callback
 *
 * @param interface : Pointer to interface
 * @param cback     : Function pointer to callback function
 *
-* @return Returns true
+* @return True
 */
 
-bool gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);
+bool gsmSetDataCback (gsmInterface_t * interface, frm_t cback);
 
-/** @brief Detects tokens from the GSM modem which indicate that we have left
- *         data mode
+/** @brief Detects tokens from the modem which indicate that we have left
+*          DATA_MODE and goes back to COMMAND_MODE if it finds any
 *
-* @param buf     Serial port read buffer
-* @param nch     Pointer to integer indicating number of characters in the read
-*                buffer.
+* @param buf : Read buffer with most recent chars from 232 UART
+* @param nch : Pointer to integer indicating number of characters in the read
+*              buffer
 *
-* @return Returns number of chars that should be printed
+* @return Number of chars that should be printed (everything up to the exit
+*         tokens if any)
 */
 
 uint8_t gsmCheckDataMode (gsmInterface_t * interface,
                           uint8_t const * const buf,
                           uint8_t const * const nch);
+
+/** @brief Reads URC from urc VLRB
+*
+* @param interface : Pointer to interface
+* @param urc       : Pointer to URC variable
+*
+* @return True if URC available
+*/
+
+bool gsmReadUrc (gsmInterface_t * interface, urc_t * urc);
 
 /*---------------------------------------------------------------------------*/
 /*                              SMS functions                                */
@@ -537,7 +531,7 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
 * @return
 */
 
-void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
+void gsmSmsSend (gsmInterface_t * interface, smsOut_t * msg, smsConf_t * conf,
                  frmCback_t cback);
 
 /** @brief Reads a single received SMS
@@ -550,8 +544,8 @@ void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
 * @return
 */
 
-void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
-                 smsReadPars_s * pars, frmCback_t cback);
+void gsmSmsRead (gsmInterface_t * interface, smsRec_t * msg,
+                 smsReadPars_t * pars, frmCback_t cback);
 
 /** @brief Lists received SMSs in a vector
 *
@@ -563,8 +557,8 @@ void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
 * @return
 */
 
-void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
-                 smsListPars_s * pars, frmCback_t cback);
+void gsmSmsList (gsmInterface_t * interface, smsRec_t * list,
+                 smsListPars_t * pars, frmCback_t cback);
 
 /** @brief Deletes a single SMS from memory
 *
@@ -575,7 +569,7 @@ void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
 * @return
 */
 
-void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
+void gsmSmsDel (gsmInterface_t * interface, smsDelPars_t * msgdel,
                 frmCback_t cback);
 
 /*---------------------------------------------------------------------------*/
@@ -591,7 +585,7 @@ void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
 * @return
 */
 
-void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
+void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_t * apn,
                    frmCback_t cback);
 
 /** @brief Stops GPRS connection in the modem
@@ -607,13 +601,14 @@ void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback);
 /** @brief Opens TCP or UDP port
 *
 * @param interface : Pointer to interface
-* @param port      : Pointer to struct containing the type of port, IP address and port #
+* @param port      : Pointer to struct containing the type of port, IP address
+*                    and port number
 * @param cback     : Function pointer to callback function
 *
 * @return
 */
 
-void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * port, frmCback_t cback);
+void gsmGprsOpenPort (gsmInterface_t * interface, socket_t * port, frmCback_t cback);
 
 /** @brief Closes open TCP or UDP port
 *
@@ -639,19 +634,19 @@ void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback);
 */
 
 void gsmGnssPwr (gsmInterface_t * interface,
-                 pwrGnss_e * cmd, frmCback_t cback);
+                 pwrGnss_t * cmd, frmCback_t cback);
 
 /** @brief Get GNSS data
 *
 * @param interface : Pointer to interface
-* @param gnssData  : GNSS data vector; must be of size 95 at least
+* @param dataGnss  : GNSS data vector
 * @param cback     : Function pointer to callback function
 *
 * @return
 */
 
 void gsmGnssGetData (gsmInterface_t * interface,
-                     dataGnss_s * dataGnss, frmCback_t cback);
+                     dataGnss_t * dataGnss, frmCback_t cback);
 
 /*==================[cplusplus]==============================================*/
 

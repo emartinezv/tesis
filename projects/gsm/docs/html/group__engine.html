@@ -64,7 +64,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groups</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Groups</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -90,76 +90,72 @@ Macros</h2></td></tr>
 <tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)</td></tr>
 <tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga246f1925726ab2bd77a8dddcaae15e26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga246f1925726ab2bd77a8dddcaae15e26"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga246f1925726ab2bd77a8dddcaae15e26">TKN_BUF_SIZE</a>&#160;&#160;&#160;1024</td></tr>
-<tr class="memdesc:ga246f1925726ab2bd77a8dddcaae15e26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the tknVlRb buffer. <br/></td></tr>
-<tr class="separator:ga246f1925726ab2bd77a8dddcaae15e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8b2430568b016c5a6e520af63e4b88e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga8b2430568b016c5a6e520af63e4b88e3"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga8b2430568b016c5a6e520af63e4b88e3">RSP_BUF_SIZE</a>&#160;&#160;&#160;1024</td></tr>
-<tr class="memdesc:ga8b2430568b016c5a6e520af63e4b88e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the rspVlRb buffer. <br/></td></tr>
-<tr class="separator:ga8b2430568b016c5a6e520af63e4b88e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga98de0d06859a21dd5792cc75d6ecc5d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga98de0d06859a21dd5792cc75d6ecc5d9"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga98de0d06859a21dd5792cc75d6ecc5d9">URC_BUF_SIZE</a>&#160;&#160;&#160;256</td></tr>
-<tr class="memdesc:ga98de0d06859a21dd5792cc75d6ecc5d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the urcVlRb buffer. <br/></td></tr>
-<tr class="separator:ga98de0d06859a21dd5792cc75d6ecc5d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga84449ac99bb9a378f8d11e6b3e875ffa"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>&#160;&#160;&#160;20</td></tr>
-<tr class="memdesc:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max size of an AT token command part. <br/></td></tr>
-<tr class="separator:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae8cd88fd0ba86d82faf88b249e054bac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae8cd88fd0ba86d82faf88b249e054bac"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmInitEngine</b> (gsmEngine_t *engine)</td></tr>
-<tr class="separator:gae8cd88fd0ba86d82faf88b249e054bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga50bbd7544920f18bbc7f5104a8023671"><td class="memItemLeft" align="right" valign="top">fsmEvent_e&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga50bbd7544920f18bbc7f5104a8023671">gsmProcessTkn</a> (gsmEngine_t *engine)</td></tr>
-<tr class="separator:ga50bbd7544920f18bbc7f5104a8023671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4f56bd4e50e387e0854b4e5d91e07acd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga4f56bd4e50e387e0854b4e5d91e07acd"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmToutCntZero</b> (gsmEngine_t *engine)</td></tr>
-<tr class="separator:ga4f56bd4e50e387e0854b4e5d91e07acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad1ec63b5b62ff7a829552d3b0de1c945"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gad1ec63b5b62ff7a829552d3b0de1c945"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>gsmDecToutCnt</b> (gsmEngine_t *engine)</td></tr>
-<tr class="separator:gad1ec63b5b62ff7a829552d3b0de1c945"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3cd501ba729c92838c12f83f53fc35e0"><td class="memItemLeft" align="right" valign="top">fsmEvent_e&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga3cd501ba729c92838c12f83f53fc35e0">gsmSendCmd</a> (gsmEngine_t *engine, const uint8_t *cmdStr)</td></tr>
-<tr class="separator:ga3cd501ba729c92838c12f83f53fc35e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab3a01fcce22cd813af9b12d796dff5c4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gab3a01fcce22cd813af9b12d796dff5c4"></a>
-rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gsmEngine_t *engine)</td></tr>
-<tr class="separator:gab3a01fcce22cd813af9b12d796dff5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ee1723fd0e6609fde34a2e12cace6e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga9ee1723fd0e6609fde34a2e12cace6e1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmInitEngine</b> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:ga9ee1723fd0e6609fde34a2e12cace6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac86762674d730cdaf7bbab7ccf8c3534"><td class="memItemLeft" align="right" valign="top">fsmEvent_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#gac86762674d730cdaf7bbab7ccf8c3534">gsmProcessTkn</a> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:gac86762674d730cdaf7bbab7ccf8c3534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7a018a0d0e09e6cbecf742415440443"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae7a018a0d0e09e6cbecf742415440443"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmToutCntZero</b> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:gae7a018a0d0e09e6cbecf742415440443"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67a6467cde604f96bf10d082781b6a2f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga67a6467cde604f96bf10d082781b6a2f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>gsmDecToutCnt</b> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:ga67a6467cde604f96bf10d082781b6a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga11352fbf2f18f8254c28d2a0c62877fb"><td class="memItemLeft" align="right" valign="top">fsmEvent_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__engine.html#ga11352fbf2f18f8254c28d2a0c62877fb">gsmSendCmd</a> (gsmEngine_t *const engine, const uint8_t *const cmdStr)</td></tr>
+<tr class="separator:ga11352fbf2f18f8254c28d2a0c62877fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga503b39ab73c118dbf326d696b3d0a80d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga503b39ab73c118dbf326d696b3d0a80d"></a>
+rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:ga503b39ab73c118dbf326d696b3d0a80d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad14f969eece519e89ca3df599e073600"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gad14f969eece519e89ca3df599e073600"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetNoCmdRsp</b> (const gsmEngine_t *const engine)</td></tr>
+<tr class="separator:gad14f969eece519e89ca3df599e073600"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0d8508724afd2e95a8bfd87bf2bd3999"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga0d8508724afd2e95a8bfd87bf2bd3999"></a>
+rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetUrc</b> (gsmEngine_t *const engine)</td></tr>
+<tr class="separator:ga0d8508724afd2e95a8bfd87bf2bd3999"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86a76bf9d8344a98def8d41a4db5f3fb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga86a76bf9d8344a98def8d41a4db5f3fb"></a>
+serialMode_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetSerialMode</b> (const gsmEngine_t *const engine)</td></tr>
+<tr class="separator:ga86a76bf9d8344a98def8d41a4db5f3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0cc4ba16ecadcde47ab5303860c88c0d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga0cc4ba16ecadcde47ab5303860c88c0d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmSetSerialMode</b> (gsmEngine_t *const engine, serialMode_t mode)</td></tr>
+<tr class="separator:ga0cc4ba16ecadcde47ab5303860c88c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This module handles the internal engine of the library, including the different states of the modem and the execution of commands. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ga50bbd7544920f18bbc7f5104a8023671"></a>
+<a class="anchor" id="gac86762674d730cdaf7bbab7ccf8c3534"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">fsmEvent_e gsmProcessTkn </td>
+          <td class="memname">fsmEvent_t gsmProcessTkn </td>
           <td>(</td>
-          <td class="paramtype">gsmEngine_t *&#160;</td>
+          <td class="paramtype">gsmEngine_t *const&#160;</td>
           <td class="paramname"><em>engine</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The processToken function checks if there are unread tokens in the token ring buffer. If so, it reads the oldest token, parses the token through the parse function and calls upon the gsmUpdateFsm function with the result. It then passes along the return value of the gsmUpdateFsm call. </p>
+<p>The processToken function reads the UART, calls the gsmDetectTkns function and then checks if there are unread tokens in the token ring buffer. If so, it reads the oldest token, parses the token through the parse function and calls upon the gsmUpdateFsm function with the result. It then passes along the return value of the gsmUpdateFsm call. </p>
 
 </div>
 </div>
-<a class="anchor" id="ga3cd501ba729c92838c12f83f53fc35e0"></a>
+<a class="anchor" id="ga11352fbf2f18f8254c28d2a0c62877fb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">fsmEvent_e gsmSendCmd </td>
+          <td class="memname">fsmEvent_t gsmSendCmd </td>
           <td>(</td>
-          <td class="paramtype">gsmEngine_t *&#160;</td>
+          <td class="paramtype">gsmEngine_t *const&#160;</td>
           <td class="paramname"><em>engine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t *const&#160;</td>
           <td class="paramname"><em>cmdStr</em>&#160;</td>
         </tr>
         <tr>
@@ -169,14 +165,14 @@ rsp_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmGetCmdRsp</b> (gs
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The gsmSendCmd function first parses cmdStr in the same way as we would do with a token received from the GSM module. This is needed since we are going to use the token to update the FSM. We parse cmdStr, make sure that it is a recognized command and write it in the correct format to the serial port. Afterwards, gsmUpdateFsm is called. </p>
+<p>The gsmSendCmd parses cmdStr, makes sure that it is a recognized command and writes it in the correct format to the serial port. Afterwards, gsmUpdateFsm is called. </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 15 2019 11:59:49 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 21 2019 17:55:55 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

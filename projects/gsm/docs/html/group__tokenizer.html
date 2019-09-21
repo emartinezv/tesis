@@ -64,7 +64,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groups</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Groups</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -76,7 +76,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">tokenizer</div>  </div>
@@ -91,168 +90,46 @@ Macros</h2></td></tr>
 <tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>debug</b>(msg)</td></tr>
 <tr class="separator:ga06818542b3c471ba114965d1526d106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6b8ec25fbcb0e9c76ab558591a38c85f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6b8ec25fbcb0e9c76ab558591a38c85f"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#ga6b8ec25fbcb0e9c76ab558591a38c85f">TKN_LEN</a>&#160;&#160;&#160;300</td></tr>
-<tr class="memdesc:ga6b8ec25fbcb0e9c76ab558591a38c85f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum size of tokens. <br/></td></tr>
-<tr class="separator:ga6b8ec25fbcb0e9c76ab558591a38c85f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf4abe4a3d6994e2529557a4b94f90a33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaf4abe4a3d6994e2529557a4b94f90a33"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#gaf4abe4a3d6994e2529557a4b94f90a33">SWAP_BUF_SIZ</a>&#160;&#160;&#160;<a class="el" href="group__tokenizer.html#ga6b8ec25fbcb0e9c76ab558591a38c85f">TKN_LEN</a></td></tr>
-<tr class="memdesc:gaf4abe4a3d6994e2529557a4b94f90a33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the UART swap buffer. <br/></td></tr>
-<tr class="separator:gaf4abe4a3d6994e2529557a4b94f90a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8aea764a72004cd8bb17b5be3210b7d5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga8aea764a72004cd8bb17b5be3210b7d5"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#ga8aea764a72004cd8bb17b5be3210b7d5">CURR_TKN_BUF_SIZ</a>&#160;&#160;&#160;512</td></tr>
-<tr class="memdesc:ga8aea764a72004cd8bb17b5be3210b7d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size in bytes of the current token buffer (must be power of 2) <br/></td></tr>
-<tr class="separator:ga8aea764a72004cd8bb17b5be3210b7d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:gaa18a0628cd6412258d58d08ed3644db9"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#gaa18a0628cd6412258d58d08ed3644db9">tknTypeTknzer_t</a> { <br/>
-&#160;&#160;<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9ac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a> = 0, 
-<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9a6e074abc1ec6368da315a331ad35c00b">ECHO</a> = 1, 
-<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9a0a7d06954b9e9723d747fea19e537188">RSP</a> = 2, 
-<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9a3e72e3b0582e1d58363525bd8733dcc2">DATA_BLOCK</a> = 3, 
-<br/>
-&#160;&#160;<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9a3045b7cc630ef40ed0d78b3c4da568f3">SMS_PROMPT</a> = 4, 
-<a class="el" href="group__tokenizer.html#ggaa18a0628cd6412258d58d08ed3644db9ae026ca92dcdb311e7004d5e8a57a8227">SMS_BODY</a> = 5
-<br/>
- }</td></tr>
-<tr class="memdesc:gaa18a0628cd6412258d58d08ed3644db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Token type enum for the tokenizer functionality.  <a href="group__tokenizer.html#gaa18a0628cd6412258d58d08ed3644db9">More...</a><br/></td></tr>
-<tr class="separator:gaa18a0628cd6412258d58d08ed3644db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a></td></tr>
+<tr class="memdesc:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max size of an AT token command part.  <a href="#ga84449ac99bb9a378f8d11e6b3e875ffa">More...</a><br/></td></tr>
+<tr class="separator:ga84449ac99bb9a378f8d11e6b3e875ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga6536451389cc0becb4a0a474a2ae4251"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#ga6536451389cc0becb4a0a474a2ae4251">gsmInitTokenizer</a> (void)</td></tr>
-<tr class="memdesc:ga6536451389cc0becb4a0a474a2ae4251"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes tokenizer and it's RB.  <a href="#ga6536451389cc0becb4a0a474a2ae4251">More...</a><br/></td></tr>
+<tr class="memitem:ga6536451389cc0becb4a0a474a2ae4251"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6536451389cc0becb4a0a474a2ae4251"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmInitTokenizer</b> (void)</td></tr>
 <tr class="separator:ga6536451389cc0becb4a0a474a2ae4251"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gada3f2da4d56bfd75868601bba785ee21"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#gada3f2da4d56bfd75868601bba785ee21">gsmNoChTokenizer</a> (void)</td></tr>
-<tr class="memdesc:gada3f2da4d56bfd75868601bba785ee21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines how many chars can be sent to the tokenizer at this time.  <a href="#gada3f2da4d56bfd75868601bba785ee21">More...</a><br/></td></tr>
+<tr class="memitem:gada3f2da4d56bfd75868601bba785ee21"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gada3f2da4d56bfd75868601bba785ee21"></a>
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>gsmNoChTokenizer</b> (void)</td></tr>
 <tr class="separator:gada3f2da4d56bfd75868601bba785ee21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0be3475f3cdbef7e0fb2de802dc68914"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tokenizer.html#ga0be3475f3cdbef7e0fb2de802dc68914">gsmDetectTkns</a> (<a class="el" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> *tknVlRb, uint16_t nch, uint8_t const *const buffer)</td></tr>
-<tr class="memdesc:ga0be3475f3cdbef7e0fb2de802dc68914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get characters from input buffer into the current tkn ring buffer, cycle though it and send detected tokens to the output token VL ring buffer.  <a href="#ga0be3475f3cdbef7e0fb2de802dc68914">More...</a><br/></td></tr>
-<tr class="separator:ga0be3475f3cdbef7e0fb2de802dc68914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef99993cf819871d35bd005b7609c349"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaef99993cf819871d35bd005b7609c349"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>gsmDetectTkns</b> (<a class="el" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> *const tknVlRb, uint16_t nch, uint8_t const *const buffer)</td></tr>
+<tr class="separator:gaef99993cf819871d35bd005b7609c349"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This module handles the tokenizer function, turning the raw serial input from the modem into discrete tokens. </p>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a class="anchor" id="gaa18a0628cd6412258d58d08ed3644db9"></a>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="ga84449ac99bb9a378f8d11e6b3e875ffa"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group__tokenizer.html#gaa18a0628cd6412258d58d08ed3644db9">tknTypeTknzer_t</a></td>
+          <td class="memname">#define TKN_CMD_SIZE</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Token type enum for the tokenizer functionality. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9ac157bdf0b85a40d2619cbc8bc1ae5fe2"></a>NONE</em>&#160;</td><td class="fielddoc">
-<p>No token detected yet </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9a6e074abc1ec6368da315a331ad35c00b"></a>ECHO</em>&#160;</td><td class="fielddoc">
-<p>AT command echo </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9a0a7d06954b9e9723d747fea19e537188"></a>RSP</em>&#160;</td><td class="fielddoc">
-<p>AT command response </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9a3e72e3b0582e1d58363525bd8733dcc2"></a>DATA_BLOCK</em>&#160;</td><td class="fielddoc">
-<p>DATA block </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9a3045b7cc630ef40ed0d78b3c4da568f3"></a>SMS_PROMPT</em>&#160;</td><td class="fielddoc">
-<p>SMS send prompt </p>
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="ggaa18a0628cd6412258d58d08ed3644db9ae026ca92dcdb311e7004d5e8a57a8227"></a>SMS_BODY</em>&#160;</td><td class="fielddoc">
-<p>SMS send body </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ga0be3475f3cdbef7e0fb2de802dc68914"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void gsmDetectTkns </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structVLRINGBUFF__T.html">VLRINGBUFF_T</a> *&#160;</td>
-          <td class="paramname"><em>tknVlRb</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>nch</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t const *const&#160;</td>
-          <td class="paramname"><em>buffer</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get characters from input buffer into the current tkn ring buffer, cycle though it and send detected tokens to the output token VL ring buffer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">tknVlRb</td><td>: Pointer to the output token VL ring buffer </td></tr>
-    <tr><td class="paramname">nch</td><td>: Number of characters in input buffer </td></tr>
-    <tr><td class="paramname">buffer</td><td>: Pointer to input buffer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ga6536451389cc0becb4a0a474a2ae4251"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool gsmInitTokenizer </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initializes tokenizer and it's RB. </p>
-<dl class="section return"><dt>Returns</dt><dd>True if successful </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="gada3f2da4d56bfd75868601bba785ee21"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t gsmNoChTokenizer </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Determines how many chars can be sent to the tokenizer at this time. </p>
-<dl class="section return"><dt>Returns</dt><dd>Number of chars the tokenizer can accommodate right now </dd></dl>
+<b>Value:</b><div class="fragment"><div class="line">20  <span class="comment">/* Max size is based on all the commands of the SIM808</span></div>
+<div class="line"><span class="comment">                            (largest are 11 chars), plus an extra for any</span></div>
+<div class="line"><span class="comment">                            future expansions */</span></div>
+</div><!-- fragment -->
+<p>Max size of an AT token command part. </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 15 2019 11:59:49 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 21 2019 17:55:55 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

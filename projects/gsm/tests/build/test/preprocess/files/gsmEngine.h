@@ -7,9 +7,9 @@ typedef struct _rsp
 
 {
 
-   uint8_t cmd[20];
+   uint8_t cmd[20 +1];
 
-   uint8_t par[280];
+   uint8_t par[280 +1];
 
 } rsp_t;
 

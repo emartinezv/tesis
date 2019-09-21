@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['errrsp',['errRsp',['../structatCmd__t.html#a9f52e087911b4eec0d3eeb854297d506',1,'atCmd_t']]]
+  ['address',['address',['../struct__socket.html#a65e6e8eb85a3cde66eec5a060ad2ffb6',1,'_socket']]],
+  ['apn',['apn',['../struct__apnUserPwd.html#a03e841cda38b0588dfa18d7678928008',1,'_apnUserPwd']]]
 ];

@@ -23,91 +23,148 @@ static const char* CMockString_mode = "mode";
 typedef struct _CMOCK_gsmInitEngine_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   _Bool ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmInitEngine_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmProcessTkn_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   fsmEvent_t ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmProcessTkn_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmToutCntZero_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   _Bool ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmToutCntZero_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmDecToutCnt_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmDecToutCnt_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmSendCmd_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   fsmEvent_t ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
   const uint8_t* Expected_cmdStr;
+  int Expected_engine_Depth;
+  int Expected_cmdStr_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
+  int IgnoreArg_cmdStr;
 
 } CMOCK_gsmSendCmd_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmGetCmdRsp_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   rsp_t ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmGetCmdRsp_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   uint8_t ReturnVal;
   int CallOrder;
   const gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmGetUrc_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   rsp_t ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmGetUrc_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmGetSerialMode_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   serialMode_t ReturnVal;
   int CallOrder;
   const gsmEngine_t* Expected_engine;
+  int Expected_engine_Depth;
+  int IgnoreArg_engine;
 
 } CMOCK_gsmGetSerialMode_CALL_INSTANCE;
 
 typedef struct _CMOCK_gsmSetSerialMode_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
+  CMOCK_ARG_MODE IgnoreMode;
   _Bool ReturnVal;
   int CallOrder;
   gsmEngine_t* Expected_engine;
   serialMode_t Expected_mode;
+  int Expected_engine_Depth;
+  int ReturnThruPtr_engine_Used;
+  gsmEngine_t* ReturnThruPtr_engine_Val;
+  int ReturnThruPtr_engine_Size;
+  int IgnoreArg_engine;
+  int IgnoreArg_mode;
 
 } CMOCK_gsmSetSerialMode_CALL_INSTANCE;
 
@@ -291,17 +348,33 @@ _Bool gsmInitEngine(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmInitEngine,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmInitEngine(CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmInitEngine(CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmInitEngine_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
@@ -313,8 +386,24 @@ void gsmInitEngine_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_
   Mock.gsmInitEngine_CallInstance = CMock_Guts_MemChain(Mock.gsmInitEngine_CallInstance, cmock_guts_index);
   Mock.gsmInitEngine_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmInitEngine_IgnoreBool = (int)1;
+}
+
+void gsmInitEngine_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmInitEngine_CALL_INSTANCE));
+  CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmInitEngine_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmInitEngine_CallInstance = CMock_Guts_MemChain(Mock.gsmInitEngine_CallInstance, cmock_guts_index);
+  Mock.gsmInitEngine_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmInitEngine_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, _Bool cmock_to_return)
@@ -327,7 +416,8 @@ void gsmInitEngine_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t*
   Mock.gsmInitEngine_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmInitEngine(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmInitEngine(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(_Bool));
   UNITY_CLR_DETAILS();
 }
@@ -336,6 +426,37 @@ void gsmInitEngine_StubWithCallback(CMOCK_gsmInitEngine_CALLBACK Callback)
 {
   Mock.gsmInitEngine_IgnoreBool = (int)0;
   Mock.gsmInitEngine_CallbackFunctionPointer = Callback;
+}
+
+void gsmInitEngine_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmInitEngine_CALL_INSTANCE));
+  CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmInitEngine_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmInitEngine_CallInstance = CMock_Guts_MemChain(Mock.gsmInitEngine_CallInstance, cmock_guts_index);
+  Mock.gsmInitEngine_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmInitEngine(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmInitEngine_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmInitEngine_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmInitEngine_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmInitEngine_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmInitEngine_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmInitEngine_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmInitEngine_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 fsmEvent_t gsmProcessTkn(gsmEngine_t* const engine)
@@ -363,17 +484,33 @@ fsmEvent_t gsmProcessTkn(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmProcessTkn,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmProcessTkn(CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmProcessTkn(CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmProcessTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return)
@@ -385,8 +522,24 @@ void gsmProcessTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t c
   Mock.gsmProcessTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmProcessTkn_CallInstance, cmock_guts_index);
   Mock.gsmProcessTkn_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmProcessTkn_IgnoreBool = (int)1;
+}
+
+void gsmProcessTkn_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmProcessTkn_CALL_INSTANCE));
+  CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmProcessTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmProcessTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmProcessTkn_CallInstance, cmock_guts_index);
+  Mock.gsmProcessTkn_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmProcessTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, fsmEvent_t cmock_to_return)
@@ -399,7 +552,8 @@ void gsmProcessTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t*
   Mock.gsmProcessTkn_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmProcessTkn(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmProcessTkn(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(fsmEvent_t));
   UNITY_CLR_DETAILS();
 }
@@ -408,6 +562,37 @@ void gsmProcessTkn_StubWithCallback(CMOCK_gsmProcessTkn_CALLBACK Callback)
 {
   Mock.gsmProcessTkn_IgnoreBool = (int)0;
   Mock.gsmProcessTkn_CallbackFunctionPointer = Callback;
+}
+
+void gsmProcessTkn_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, fsmEvent_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmProcessTkn_CALL_INSTANCE));
+  CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmProcessTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmProcessTkn_CallInstance = CMock_Guts_MemChain(Mock.gsmProcessTkn_CallInstance, cmock_guts_index);
+  Mock.gsmProcessTkn_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmProcessTkn(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmProcessTkn_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmProcessTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmProcessTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmProcessTkn_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmProcessTkn_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmProcessTkn_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmProcessTkn_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 _Bool gsmToutCntZero(gsmEngine_t* const engine)
@@ -435,17 +620,33 @@ _Bool gsmToutCntZero(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmToutCntZero,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmToutCntZero(CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmToutCntZero(CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmToutCntZero_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
@@ -457,8 +658,24 @@ void gsmToutCntZero_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock
   Mock.gsmToutCntZero_CallInstance = CMock_Guts_MemChain(Mock.gsmToutCntZero_CallInstance, cmock_guts_index);
   Mock.gsmToutCntZero_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmToutCntZero_IgnoreBool = (int)1;
+}
+
+void gsmToutCntZero_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmToutCntZero_CALL_INSTANCE));
+  CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmToutCntZero_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmToutCntZero_CallInstance = CMock_Guts_MemChain(Mock.gsmToutCntZero_CallInstance, cmock_guts_index);
+  Mock.gsmToutCntZero_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmToutCntZero_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, _Bool cmock_to_return)
@@ -471,7 +688,8 @@ void gsmToutCntZero_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t
   Mock.gsmToutCntZero_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmToutCntZero(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmToutCntZero(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(_Bool));
   UNITY_CLR_DETAILS();
 }
@@ -480,6 +698,37 @@ void gsmToutCntZero_StubWithCallback(CMOCK_gsmToutCntZero_CALLBACK Callback)
 {
   Mock.gsmToutCntZero_IgnoreBool = (int)0;
   Mock.gsmToutCntZero_CallbackFunctionPointer = Callback;
+}
+
+void gsmToutCntZero_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmToutCntZero_CALL_INSTANCE));
+  CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmToutCntZero_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmToutCntZero_CallInstance = CMock_Guts_MemChain(Mock.gsmToutCntZero_CallInstance, cmock_guts_index);
+  Mock.gsmToutCntZero_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmToutCntZero(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmToutCntZero_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmToutCntZero_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmToutCntZero_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmToutCntZero_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmToutCntZero_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmToutCntZero_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmToutCntZero_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 void gsmDecToutCnt(gsmEngine_t* const engine)
@@ -505,21 +754,51 @@ void gsmDecToutCnt(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmDecToutCnt,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
 }
 
-void CMockExpectParameters_gsmDecToutCnt(CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmDecToutCnt(CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmDecToutCnt_CMockIgnore(void)
 {
   Mock.gsmDecToutCnt_IgnoreBool = (int)1;
+}
+
+void gsmDecToutCnt_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmDecToutCnt_CALL_INSTANCE));
+  CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmDecToutCnt_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmDecToutCnt_CallInstance = CMock_Guts_MemChain(Mock.gsmDecToutCnt_CallInstance, cmock_guts_index);
+  Mock.gsmDecToutCnt_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmDecToutCnt_CMockExpect(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine)
@@ -532,7 +811,8 @@ void gsmDecToutCnt_CMockExpect(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const en
   Mock.gsmDecToutCnt_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmDecToutCnt(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmDecToutCnt(cmock_call_instance, engine, 1);
   UNITY_CLR_DETAILS();
 }
 
@@ -540,6 +820,36 @@ void gsmDecToutCnt_StubWithCallback(CMOCK_gsmDecToutCnt_CALLBACK Callback)
 {
   Mock.gsmDecToutCnt_IgnoreBool = (int)0;
   Mock.gsmDecToutCnt_CallbackFunctionPointer = Callback;
+}
+
+void gsmDecToutCnt_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmDecToutCnt_CALL_INSTANCE));
+  CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmDecToutCnt_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmDecToutCnt_CallInstance = CMock_Guts_MemChain(Mock.gsmDecToutCnt_CallInstance, cmock_guts_index);
+  Mock.gsmDecToutCnt_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmDecToutCnt(cmock_call_instance, engine, engine_Depth);
+}
+
+void gsmDecToutCnt_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmDecToutCnt_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmDecToutCnt_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmDecToutCnt_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmDecToutCnt_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmDecToutCnt_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmDecToutCnt_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 fsmEvent_t gsmSendCmd(gsmEngine_t* const engine, const uint8_t* const cmdStr)
@@ -567,25 +877,44 @@ fsmEvent_t gsmSendCmd(gsmEngine_t* const engine, const uint8_t* const cmdStr)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmSendCmd,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_cmdStr)
   {
     UNITY_SET_DETAILS(CMockString_gsmSendCmd,CMockString_cmdStr);
     if (cmock_call_instance->Expected_cmdStr == NULL)
       { UNITY_TEST_ASSERT_NULL(cmdStr, cmock_line, CMockStringExpNULL); }
     else
-      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_cmdStr, cmdStr, 1, cmock_line, CMockStringMismatch); }
+      { UNITY_TEST_ASSERT_EQUAL_HEX8_ARRAY(cmock_call_instance->Expected_cmdStr, cmdStr, cmock_call_instance->Expected_cmdStr_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmSendCmd(CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, const uint8_t* const cmdStr)
+void CMockExpectParameters_gsmSendCmd(CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth, const uint8_t* const cmdStr, int cmdStr_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
   cmock_call_instance->Expected_cmdStr = cmdStr;
+  cmock_call_instance->Expected_cmdStr_Depth = cmdStr_Depth;
+  cmock_call_instance->IgnoreArg_cmdStr = 0;
 }
 
 void gsmSendCmd_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return)
@@ -597,8 +926,24 @@ void gsmSendCmd_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmoc
   Mock.gsmSendCmd_CallInstance = CMock_Guts_MemChain(Mock.gsmSendCmd_CallInstance, cmock_guts_index);
   Mock.gsmSendCmd_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmSendCmd_IgnoreBool = (int)1;
+}
+
+void gsmSendCmd_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmSendCmd_CALL_INSTANCE));
+  CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSendCmd_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmSendCmd_CallInstance = CMock_Guts_MemChain(Mock.gsmSendCmd_CallInstance, cmock_guts_index);
+  Mock.gsmSendCmd_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmSendCmd_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, const uint8_t* const cmdStr, fsmEvent_t cmock_to_return)
@@ -611,7 +956,8 @@ void gsmSendCmd_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* co
   Mock.gsmSendCmd_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmSendCmd(cmock_call_instance, engine, cmdStr);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmSendCmd(cmock_call_instance, engine, 1, cmdStr, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(fsmEvent_t));
   UNITY_CLR_DETAILS();
 }
@@ -620,6 +966,44 @@ void gsmSendCmd_StubWithCallback(CMOCK_gsmSendCmd_CALLBACK Callback)
 {
   Mock.gsmSendCmd_IgnoreBool = (int)0;
   Mock.gsmSendCmd_CallbackFunctionPointer = Callback;
+}
+
+void gsmSendCmd_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, const uint8_t* const cmdStr, int cmdStr_Depth, fsmEvent_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmSendCmd_CALL_INSTANCE));
+  CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSendCmd_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmSendCmd_CallInstance = CMock_Guts_MemChain(Mock.gsmSendCmd_CallInstance, cmock_guts_index);
+  Mock.gsmSendCmd_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmSendCmd(cmock_call_instance, engine, engine_Depth, cmdStr, cmdStr_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmSendCmd_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSendCmd_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSendCmd_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmSendCmd_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSendCmd_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSendCmd_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
+}
+
+void gsmSendCmd_CMockIgnoreArg_cmdStr(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmSendCmd_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSendCmd_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSendCmd_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_cmdStr = 1;
 }
 
 rsp_t gsmGetCmdRsp(gsmEngine_t* const engine)
@@ -647,17 +1031,33 @@ rsp_t gsmGetCmdRsp(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmGetCmdRsp,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmGetCmdRsp(CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmGetCmdRsp(CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmGetCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return)
@@ -669,8 +1069,24 @@ void gsmGetCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_t
   Mock.gsmGetCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetCmdRsp_CallInstance, cmock_guts_index);
   Mock.gsmGetCmdRsp_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmGetCmdRsp_IgnoreBool = (int)1;
+}
+
+void gsmGetCmdRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetCmdRsp_CALL_INSTANCE));
+  CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetCmdRsp_CallInstance, cmock_guts_index);
+  Mock.gsmGetCmdRsp_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmGetCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, rsp_t cmock_to_return)
@@ -683,7 +1099,8 @@ void gsmGetCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* 
   Mock.gsmGetCmdRsp_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmGetCmdRsp(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetCmdRsp(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(rsp_t));
   UNITY_CLR_DETAILS();
 }
@@ -692,6 +1109,37 @@ void gsmGetCmdRsp_StubWithCallback(CMOCK_gsmGetCmdRsp_CALLBACK Callback)
 {
   Mock.gsmGetCmdRsp_IgnoreBool = (int)0;
   Mock.gsmGetCmdRsp_CallbackFunctionPointer = Callback;
+}
+
+void gsmGetCmdRsp_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, rsp_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetCmdRsp_CALL_INSTANCE));
+  CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetCmdRsp_CallInstance, cmock_guts_index);
+  Mock.gsmGetCmdRsp_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetCmdRsp(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmGetCmdRsp_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetCmdRsp_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmGetCmdRsp_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmGetCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetCmdRsp_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 uint8_t gsmGetNoCmdRsp(const gsmEngine_t* const engine)
@@ -719,17 +1167,26 @@ uint8_t gsmGetNoCmdRsp(const gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmGetNoCmdRsp,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(const gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(const gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmGetNoCmdRsp(CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE* cmock_call_instance, const gsmEngine_t* const engine)
+void CMockExpectParameters_gsmGetNoCmdRsp(CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE* cmock_call_instance, const gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
 }
 
 void gsmGetNoCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return)
@@ -741,8 +1198,24 @@ void gsmGetNoCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmo
   Mock.gsmGetNoCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetNoCmdRsp_CallInstance, cmock_guts_index);
   Mock.gsmGetNoCmdRsp_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmGetNoCmdRsp_IgnoreBool = (int)1;
+}
+
+void gsmGetNoCmdRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE));
+  CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetNoCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetNoCmdRsp_CallInstance, cmock_guts_index);
+  Mock.gsmGetNoCmdRsp_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmGetNoCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, uint8_t cmock_to_return)
@@ -755,7 +1228,8 @@ void gsmGetNoCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEn
   Mock.gsmGetNoCmdRsp_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmGetNoCmdRsp(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetNoCmdRsp(cmock_call_instance, engine, 1);
   cmock_call_instance->ReturnVal = cmock_to_return;
   UNITY_CLR_DETAILS();
 }
@@ -764,6 +1238,28 @@ void gsmGetNoCmdRsp_StubWithCallback(CMOCK_gsmGetNoCmdRsp_CALLBACK Callback)
 {
   Mock.gsmGetNoCmdRsp_IgnoreBool = (int)0;
   Mock.gsmGetNoCmdRsp_CallbackFunctionPointer = Callback;
+}
+
+void gsmGetNoCmdRsp_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, int engine_Depth, uint8_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE));
+  CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetNoCmdRsp_CallInstance = CMock_Guts_MemChain(Mock.gsmGetNoCmdRsp_CallInstance, cmock_guts_index);
+  Mock.gsmGetNoCmdRsp_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetNoCmdRsp(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmGetNoCmdRsp_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetNoCmdRsp_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetNoCmdRsp_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 rsp_t gsmGetUrc(gsmEngine_t* const engine)
@@ -791,17 +1287,33 @@ rsp_t gsmGetUrc(gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmGetUrc,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmGetUrc(CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine)
+void CMockExpectParameters_gsmGetUrc(CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
 }
 
 void gsmGetUrc_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return)
@@ -813,8 +1325,24 @@ void gsmGetUrc_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_r
   Mock.gsmGetUrc_CallInstance = CMock_Guts_MemChain(Mock.gsmGetUrc_CallInstance, cmock_guts_index);
   Mock.gsmGetUrc_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmGetUrc_IgnoreBool = (int)1;
+}
+
+void gsmGetUrc_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetUrc_CALL_INSTANCE));
+  CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetUrc_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetUrc_CallInstance = CMock_Guts_MemChain(Mock.gsmGetUrc_CallInstance, cmock_guts_index);
+  Mock.gsmGetUrc_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmGetUrc_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, rsp_t cmock_to_return)
@@ -827,7 +1355,8 @@ void gsmGetUrc_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* con
   Mock.gsmGetUrc_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmGetUrc(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetUrc(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(rsp_t));
   UNITY_CLR_DETAILS();
 }
@@ -836,6 +1365,37 @@ void gsmGetUrc_StubWithCallback(CMOCK_gsmGetUrc_CALLBACK Callback)
 {
   Mock.gsmGetUrc_IgnoreBool = (int)0;
   Mock.gsmGetUrc_CallbackFunctionPointer = Callback;
+}
+
+void gsmGetUrc_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, rsp_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetUrc_CALL_INSTANCE));
+  CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetUrc_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetUrc_CallInstance = CMock_Guts_MemChain(Mock.gsmGetUrc_CallInstance, cmock_guts_index);
+  Mock.gsmGetUrc_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetUrc(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmGetUrc_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetUrc_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetUrc_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmGetUrc_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmGetUrc_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetUrc_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetUrc_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 serialMode_t gsmGetSerialMode(const gsmEngine_t* const engine)
@@ -863,17 +1423,26 @@ serialMode_t gsmGetSerialMode(const gsmEngine_t* const engine)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmGetSerialMode,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(const gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(const gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
+  }
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmGetSerialMode(CMOCK_gsmGetSerialMode_CALL_INSTANCE* cmock_call_instance, const gsmEngine_t* const engine)
+void CMockExpectParameters_gsmGetSerialMode(CMOCK_gsmGetSerialMode_CALL_INSTANCE* cmock_call_instance, const gsmEngine_t* const engine, int engine_Depth)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
 }
 
 void gsmGetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, serialMode_t cmock_to_return)
@@ -885,8 +1454,24 @@ void gsmGetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, serialMod
   Mock.gsmGetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmGetSerialMode_CallInstance, cmock_guts_index);
   Mock.gsmGetSerialMode_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmGetSerialMode_IgnoreBool = (int)1;
+}
+
+void gsmGetSerialMode_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, serialMode_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetSerialMode_CALL_INSTANCE));
+  CMOCK_gsmGetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmGetSerialMode_CallInstance, cmock_guts_index);
+  Mock.gsmGetSerialMode_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmGetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, serialMode_t cmock_to_return)
@@ -899,7 +1484,8 @@ void gsmGetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsm
   Mock.gsmGetSerialMode_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmGetSerialMode(cmock_call_instance, engine);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetSerialMode(cmock_call_instance, engine, 1);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(serialMode_t));
   UNITY_CLR_DETAILS();
 }
@@ -908,6 +1494,28 @@ void gsmGetSerialMode_StubWithCallback(CMOCK_gsmGetSerialMode_CALLBACK Callback)
 {
   Mock.gsmGetSerialMode_IgnoreBool = (int)0;
   Mock.gsmGetSerialMode_CallbackFunctionPointer = Callback;
+}
+
+void gsmGetSerialMode_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, int engine_Depth, serialMode_t cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmGetSerialMode_CALL_INSTANCE));
+  CMOCK_gsmGetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmGetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmGetSerialMode_CallInstance, cmock_guts_index);
+  Mock.gsmGetSerialMode_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmGetSerialMode(cmock_call_instance, engine, engine_Depth);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmGetSerialMode_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmGetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmGetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmGetSerialMode_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
 }
 
 _Bool gsmSetSerialMode(gsmEngine_t* const engine, serialMode_t mode)
@@ -935,22 +1543,40 @@ _Bool gsmSetSerialMode(gsmEngine_t* const engine, serialMode_t mode)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledEarly);
   if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
     UNITY_TEST_FAIL(cmock_line, CMockStringCalledLate);
+  if (cmock_call_instance->IgnoreMode != CMOCK_ARG_NONE)
+  {
+  if (!cmock_call_instance->IgnoreArg_engine)
   {
     UNITY_SET_DETAILS(CMockString_gsmSetSerialMode,CMockString_engine);
-    UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_line, CMockStringMismatch);
+    if (cmock_call_instance->Expected_engine == NULL)
+      { UNITY_TEST_ASSERT_NULL(engine, cmock_line, CMockStringExpNULL); }
+    else
+      { UNITY_TEST_ASSERT_EQUAL_MEMORY_ARRAY((void*)(cmock_call_instance->Expected_engine), (void*)(engine), sizeof(gsmEngine_t), cmock_call_instance->Expected_engine_Depth, cmock_line, CMockStringMismatch); }
   }
+  if (!cmock_call_instance->IgnoreArg_mode)
   {
     UNITY_SET_DETAILS(CMockString_gsmSetSerialMode,CMockString_mode);
     UNITY_TEST_ASSERT_EQUAL_MEMORY((void*)(&cmock_call_instance->Expected_mode), (void*)(&mode), sizeof(serialMode_t), cmock_line, CMockStringMismatch);
+  }
+  }
+  if (cmock_call_instance->ReturnThruPtr_engine_Used)
+  {
+    UNITY_TEST_ASSERT_NOT_NULL(engine, cmock_line, CMockStringPtrIsNULL);
+    memcpy((void*)engine, (void*)cmock_call_instance->ReturnThruPtr_engine_Val,
+      cmock_call_instance->ReturnThruPtr_engine_Size);
   }
   UNITY_CLR_DETAILS();
   return cmock_call_instance->ReturnVal;
 }
 
-void CMockExpectParameters_gsmSetSerialMode(CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, serialMode_t mode)
+void CMockExpectParameters_gsmSetSerialMode(CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance, gsmEngine_t* const engine, int engine_Depth, serialMode_t mode)
 {
   cmock_call_instance->Expected_engine = engine;
+  cmock_call_instance->Expected_engine_Depth = engine_Depth;
+  cmock_call_instance->IgnoreArg_engine = 0;
+  cmock_call_instance->ReturnThruPtr_engine_Used = 0;
   memcpy(&cmock_call_instance->Expected_mode, &mode, sizeof(serialMode_t));
+  cmock_call_instance->IgnoreArg_mode = 0;
 }
 
 void gsmSetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
@@ -962,8 +1588,24 @@ void gsmSetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmo
   Mock.gsmSetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmSetSerialMode_CallInstance, cmock_guts_index);
   Mock.gsmSetSerialMode_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
   cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.gsmSetSerialMode_IgnoreBool = (int)1;
+}
+
+void gsmSetSerialMode_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmSetSerialMode_CALL_INSTANCE));
+  CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmSetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmSetSerialMode_CallInstance, cmock_guts_index);
+  Mock.gsmSetSerialMode_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  cmock_call_instance->ReturnVal = cmock_to_return;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_NONE;
 }
 
 void gsmSetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, serialMode_t mode, _Bool cmock_to_return)
@@ -976,7 +1618,8 @@ void gsmSetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine
   Mock.gsmSetSerialMode_IgnoreBool = (int)0;
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_gsmSetSerialMode(cmock_call_instance, engine, mode);
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmSetSerialMode(cmock_call_instance, engine, 1, mode);
   memcpy(&cmock_call_instance->ReturnVal, &cmock_to_return, sizeof(_Bool));
   UNITY_CLR_DETAILS();
 }
@@ -985,5 +1628,43 @@ void gsmSetSerialMode_StubWithCallback(CMOCK_gsmSetSerialMode_CALLBACK Callback)
 {
   Mock.gsmSetSerialMode_IgnoreBool = (int)0;
   Mock.gsmSetSerialMode_CallbackFunctionPointer = Callback;
+}
+
+void gsmSetSerialMode_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, serialMode_t mode, _Bool cmock_to_return)
+{
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_gsmSetSerialMode_CALL_INSTANCE));
+  CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringOutOfMemory);
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.gsmSetSerialMode_CallInstance = CMock_Guts_MemChain(Mock.gsmSetSerialMode_CallInstance, cmock_guts_index);
+  Mock.gsmSetSerialMode_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->CallOrder = ++GlobalExpectCount;
+  cmock_call_instance->IgnoreMode = CMOCK_ARG_ALL;
+  CMockExpectParameters_gsmSetSerialMode(cmock_call_instance, engine, engine_Depth, mode);
+  cmock_call_instance->ReturnVal = cmock_to_return;
+}
+
+void gsmSetSerialMode_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size)
+{
+  CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSetSerialMode_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringPtrPreExp);
+  cmock_call_instance->ReturnThruPtr_engine_Used = 1;
+  cmock_call_instance->ReturnThruPtr_engine_Val = engine;
+  cmock_call_instance->ReturnThruPtr_engine_Size = cmock_size;
+}
+
+void gsmSetSerialMode_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSetSerialMode_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_engine = 1;
+}
+
+void gsmSetSerialMode_CMockIgnoreArg_mode(UNITY_LINE_TYPE cmock_line)
+{
+  CMOCK_gsmSetSerialMode_CALL_INSTANCE* cmock_call_instance = (CMOCK_gsmSetSerialMode_CALL_INSTANCE*)CMock_Guts_GetAddressFor(CMock_Guts_MemEndOfChain(Mock.gsmSetSerialMode_CallInstance));
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, CMockStringIgnPreExp);
+  cmock_call_instance->IgnoreArg_mode = 1;
 }
 

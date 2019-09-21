@@ -68,7 +68,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groups</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Groups</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -87,415 +87,541 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">gsmInterface.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2016, Ezequiel Martinez Vazquez</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/* Copyright 2019, Ezequiel Martinez Vazquez</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * All rights reserved.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * This file is part of Workspace.</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> * 1. Redistributions of source code must retain the above copyright notice,</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *    this list of conditions and the following disclaimer.</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * 2. Redistributions in binary form must reproduce the above copyright notice,</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *    this list of conditions and the following disclaimer in the documentation</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> *    and/or other materials provided with the distribution.</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * 3. Neither the name of the copyright holder nor the names of its</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *    contributors may be used to endorse or promote products derived from this</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> *    software without specific prior written permission.</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifndef _GSM_INTERFACE_H_</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _GSM_INTERFACE_H_</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/*==================[inclusions]=============================================*/</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;lpc_types.h&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;string.h&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;stdio.h&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;gsmComms.h&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;gsmEngine.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * 1. Redistributions of source code must retain the above copyright notice,</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *    this list of conditions and the following disclaimer.</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> * 2. Redistributions in binary form must reproduce the above copyright notice,</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *    this list of conditions and the following disclaimer in the documentation</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> *    and/or other materials provided with the distribution.</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * 3. Neither the name of the copyright holder nor the names of its</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> *    contributors may be used to endorse or promote products derived from this</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> *    software without specific prior written permission.</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifndef _GSM_INTERFACE_H_</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _GSM_INTERFACE_H_</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">/*==================[inclusions]=============================================*/</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &quot;lpc_types.h&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;string.h&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;stdio.h&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;gsmComms.h&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;gsmEngine.h&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">/*==================[macros]=================================================*/</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define DELAY_PROC 10</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#define CMD_MODE_NO 2</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#define CMD_MODE_SIZE 6</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/*==================[macros]=================================================*/</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="group__interface.html#ga10b2f3e54e505944b787aee5c5569b43">   55</a></span>&#160;<span class="preprocessor">#define DELAY_PROC 10</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/*==================[typedef]================================================*/</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/*                Data structures for internal state retention               */</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">   65</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">_frmStatus</a> {</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18">   66</a></span>&#160;   <a class="code" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18">IDLE</a> = 0, </div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36">   67</a></span>&#160;   <a class="code" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36">INIT</a> = 1, </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33">   68</a></span>&#160;   <a class="code" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33">PROC</a> = 2, </div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd">   69</a></span>&#160;   <a class="code" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd">WRAP</a> = 3  </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;} <a class="code" href="group__interface.html#ga50f4e1a7265aa3e33fe9e18a370e0a37">frmStatus_t</a>;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/*                Data structures for internal state retention               */</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _frmStatus_e {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   IDLE = 0, </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   INIT = 1, </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   PROC = 2, </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   WRAP = 3  </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} frmStatus_e;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _procStatus_e {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;   NOCMD,</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   ATCMD1,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   ATCMD1RESP,</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;   ATCMD2,</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;   ATCMD2RESP,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;   ATCMD3,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;   ATCMD3RESP,</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;   ATCMD4,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;   ATCMD4RESP,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;   ATCMD5,</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;   ATCMD5RESP,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;   ATCMD6,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;   ATCMD6RESP,</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;   ATCMD7,</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;   ATCMD7RESP,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;   ATCMD8,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;   ATCMD8RESP,</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;   ATCMD9,</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;   ATCMD9RESP,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;   ATCMD10,</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;   ATCMD10RESP</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;} procStatus_e;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">/*                     Data structures for error handling                    */</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="group__interface.html#ga752d93f9a20ab4b6061cd359323288dd">   74</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga752d93f9a20ab4b6061cd359323288dd">_procStatus</a> {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   NOCMD,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   ATCMD1,</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   ATCMD1RESP,</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   ATCMD2,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   ATCMD2RESP,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   ATCMD3,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   ATCMD3RESP,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   ATCMD4,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   ATCMD4RESP,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;   ATCMD5,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   ATCMD5RESP,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   ATCMD6,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   ATCMD6RESP,</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;   ATCMD7,</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   ATCMD7RESP,</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   ATCMD8,</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;   ATCMD8RESP,</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;   ATCMD9,</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;   ATCMD9RESP,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;   ATCMD10,</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;   ATCMD10RESP</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;} <a class="code" href="group__interface.html#ga31770e9f807d5ee665394fab89d1d069">procStatus_t</a>;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="comment">/*                     Data structures for error handling                    */</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="group__interface.html#gac480156d28884097d4917ee280ba89cc">  104</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#gac480156d28884097d4917ee280ba89cc">_errorFrm</a> {</div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59">  105</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59">OK</a>,         </div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46">  106</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46">ERR_INIT</a>,   </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e">  107</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e">ERR_PROC</a>,   </div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36">  108</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36">ERR_GSM</a>,    </div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8">  109</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8">ERR_TOUT</a>,   </div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06">  110</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06">ERR_FSM</a>,    </div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6">  111</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6">ERR_WRAP</a>,   </div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0">  112</a></span>&#160;   <a class="code" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0">ERR_UNK</a>     </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;} <a class="code" href="group__interface.html#ga1dc1553796031046fc3db3d1934a42a6">errorFrm_t</a>;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _errorFrm_e {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;   OK,         </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;   ERR_INIT,   </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;   ERR_PROC,   </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;   ERR_GSM,    </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;   ERR_TOUT,   </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;   ERR_FSM,    </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;   ERR_WRAP,   </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;   ERR_UNK     </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;} errorFrm_e;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_errorCmd_s {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;   uint8_t cmd[<a class="code" href="group__engine.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>];     </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;   uint8_t par[TKN_PAR_SIZE];     </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;} errorCmd_s;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_errorUser_s {</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;   errorFrm_e errorFrm;     </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;   errorCmd_s errorCmd;     </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;} errorUser_s;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">/*                              Misc. data structures                        */</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">/* Preemptive definition of gsmInterface_t to solve interlinked definitions */</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_gsmInterface_t gsmInterface_t;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">void</span> * (*frmCback_t) (errorUser_s, <span class="keywordtype">void</span> *);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _urcMode_e</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;{</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;   MANUAL_MODE,</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;   CBACK_MODE</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;} urcMode_e ;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="keyword">typedef</span> void (*urcCback_t) (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> cmd,</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                            uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> par);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keyword">typedef</span> void (*dataCback_t) (gsmInterface_t * interface);</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="struct__errorCmd.html">  117</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__errorCmd.html">_errorCmd</a> {</div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="struct__errorCmd.html#a894579dabdccceed9cada4ffd53829df">  118</a></span>&#160;   uint8_t <a class="code" href="struct__errorCmd.html#a894579dabdccceed9cada4ffd53829df">cmd</a>[<a class="code" href="group__tokenizer.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>+1];     </div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="struct__errorCmd.html#ac794d1f1d5db1bb936c3d97b038f00b8">  119</a></span>&#160;   uint8_t <a class="code" href="struct__errorCmd.html#ac794d1f1d5db1bb936c3d97b038f00b8">par</a>[TKN_PAR_SIZE+1];     </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;} <a class="code" href="group__interface.html#ga8a45c0adb79c70b6128ca1f487a08a69">errorCmd_t</a>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="struct__errorUser.html">  124</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__errorUser.html">_errorUser</a> {</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="struct__errorUser.html#a0f8e835ab618a375cb760360325412e7">  125</a></span>&#160;   <a class="code" href="group__interface.html#ga1dc1553796031046fc3db3d1934a42a6">errorFrm_t</a> <a class="code" href="struct__errorUser.html#a0f8e835ab618a375cb760360325412e7">errorFrm</a>;     </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="struct__errorUser.html#a400b6230ed6b70fe78b4eeb83c86ad92">  126</a></span>&#160;   <a class="code" href="struct__errorCmd.html">errorCmd_t</a> <a class="code" href="struct__errorUser.html#a400b6230ed6b70fe78b4eeb83c86ad92">errorCmd</a>;     </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;} <a class="code" href="group__interface.html#ga6917edd06c82db0e047d1cda353d4398">errorUser_t</a>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">/*                              Misc. data structures                        */</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">/* Preemptive definition of gsmInterface_t to solve interlinked definitions */</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__gsmInterface__t.html">_gsmInterface_t</a> <a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">  137</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">void</span> * (*frmCback_t) (<a class="code" href="group__interface.html#ga6917edd06c82db0e047d1cda353d4398">errorUser_t</a>, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="group__interface.html#ga9a4fcd0b9b76bb510f098fd4467d757f">  141</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga9a4fcd0b9b76bb510f098fd4467d757f">_urcMode</a></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;{</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;   MANUAL_MODE,</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;   CBACK_MODE</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;} <a class="code" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a> ;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">  148</a></span>&#160;<span class="keyword">typedef</span> void (*<a class="code" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a>) (uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> cmd,</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                            uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> par);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno"><a class="line" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">  152</a></span>&#160;<span class="keyword">typedef</span> void (*<a class="code" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a>) (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> *);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="comment">/*                    Data structures for the interface                      */</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="struct__gsmInterface__t.html">  158</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__gsmInterface__t.html">_gsmInterface_t</a></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;{</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;   <span class="comment">/* State */</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;   <a class="code" href="group__interface.html#ga50f4e1a7265aa3e33fe9e18a370e0a37">frmStatus_t</a> frmState;   <span class="comment">/* formula-level state */</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;   <a class="code" href="group__interface.html#ga31770e9f807d5ee665394fab89d1d069">procStatus_t</a> procState; <span class="comment">/* command-level state */</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;   <span class="comment">/* Counters */</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;   uint32_t procCnt; <span class="comment">/* Period counter for GSM processing */</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;   uint32_t auxCnt;  <span class="comment">/* Auxiliary counter */</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="keyword">typedef</span> void (*frm_t) (gsmInterface_t *);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="comment">/*                    Data structures for the interface                      */</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_gsmInterface_t</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;{</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;   <span class="comment">/* State */</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;   frmStatus_e frmState;</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;   procStatus_e procState;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;   <span class="comment">/* Counters */</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;   uint32_t procCnt; <span class="comment">/* Period counter for GSM processing */</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;   uint32_t auxCnt;  <span class="comment">/* Auxiliary counter */</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;   <span class="comment">/* URC handling */</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;   urcMode_e urcMode;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;   urcCback_t urcCback;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;   <span class="comment">/* URC handling */</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;   <a class="code" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a> urcMode;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;   <a class="code" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a> urcCback;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;   <span class="comment">/* DATA mode */</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;   <a class="code" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a> dataCback;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;   uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> *exitCmdList; <span class="comment">/* list of commands that exit the modem</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="comment">                                          from DATA_MODE */</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;   <span class="comment">/* Formula */</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;   <a class="code" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a> frm;            <span class="comment">/* Pointer to formula function */</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;   <span class="keywordtype">void</span> * frmInput;      <span class="comment">/* Pointer to formula inputs */</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;   <span class="keywordtype">void</span> * frmOutput;     <span class="comment">/* Pointer to formula outputs */</span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;   <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> frmCback;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;   errorUser_t errorOut; <span class="comment">/* Error output */</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;   <span class="comment">/* Engine */</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;   gsmEngine_t engine;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;} <a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a>;</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;   <span class="comment">/* DATA mode */</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;   dataCback_t dataCback;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;   uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> *exitCmdList;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;   <span class="comment">/* Formula */</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;   frm_t frm;            <span class="comment">/* Pointer to formula function */</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;   <span class="keywordtype">void</span> * frmInput;      <span class="comment">/* Pointer to formula inputs */</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;   <span class="keywordtype">void</span> * frmOutput;     <span class="comment">/* Pointer to formula outputs */</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;   frmCback_t frmCback;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;   errorUser_s errorOut;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;   <span class="comment">/* Engine */</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;   gsmEngine_t engine;</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;} gsmInterface_t;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="comment">/*              Data structures for the gsmGetSigQual function               */</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="comment">/*              Data structures for the gsmGetSigQual function               */</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno"><a class="line" href="struct__sigQual.html">  201</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__sigQual.html">_sigQual</a> {</div>
+<div class="line"><a name="l00202"></a><span class="lineno"><a class="line" href="struct__sigQual.html#aeae9f66cbd80e6bd079bfe4c6fe9f7ec">  202</a></span>&#160;   int8_t  <a class="code" href="struct__sigQual.html#aeae9f66cbd80e6bd079bfe4c6fe9f7ec">rssi</a>;    </div>
+<div class="line"><a name="l00203"></a><span class="lineno"><a class="line" href="struct__sigQual.html#acdcb79bcbe2017c9ed22556cf3b1fcb9">  203</a></span>&#160;   uint8_t <a class="code" href="struct__sigQual.html#acdcb79bcbe2017c9ed22556cf3b1fcb9">ber</a>;     </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;} <a class="code" href="group__interface.html#ga76d28e5d09b4841c5ef03a55e77ea732">sigQual_t</a>;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment">/*               Data structures for the gsmCheckConn function               */</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00213"></a><span class="lineno"><a class="line" href="struct__connStatus.html">  213</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__connStatus.html">_connStatus</a> {</div>
+<div class="line"><a name="l00214"></a><span class="lineno"><a class="line" href="struct__connStatus.html#a84c59c2374a9436dcf8d297b247a08eb">  214</a></span>&#160;   <span class="keywordtype">bool</span>  <a class="code" href="struct__connStatus.html#a84c59c2374a9436dcf8d297b247a08eb">gsm</a>;   </div>
+<div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="struct__connStatus.html#ae7f6a760cee0ea28499637838ca34d76">  215</a></span>&#160;   <span class="keywordtype">bool</span>  <a class="code" href="struct__connStatus.html#ae7f6a760cee0ea28499637838ca34d76">gprs</a>;  </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;} <a class="code" href="group__interface.html#ga04193c9e01437684c61e0f614aa41884">connStatus_t</a>;</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_sigQual_s {</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;   int8_t  rssi;    </div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;   uint8_t ber;     </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;} sigQual_s;</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">/*               Data structures for the gsmCheckConn function               */</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_connStatus_s {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;   <span class="keywordtype">bool</span>  gsm;   </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;   <span class="keywordtype">bool</span>  gprs;  </div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;} connStatus_s;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment">/*                Data structures for the gsmReadUrc function                */</span></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_urc_s {</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;   uint8_t cmd[<a class="code" href="group__engine.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>];</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;   uint8_t par[TKN_PAR_SIZE];</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;} urc_s;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">/*                Data structures for the gsmReadUrc function                */</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__urc.html">_urc</a> {</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;   uint8_t cmd[<a class="code" href="group__tokenizer.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a>+1];</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;   uint8_t par[TKN_PAR_SIZE+1];</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;} <a class="code" href="group__interface.html#gaf5ce6d9bc01393cc7194f48c2515a8a5">urc_t</a>;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">/*                Data structures for the gsmSmsSend function                */</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00235"></a><span class="lineno"><a class="line" href="struct__smsOut.html">  235</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsOut.html">_smsOut</a> {</div>
+<div class="line"><a name="l00236"></a><span class="lineno"><a class="line" href="struct__smsOut.html#aabca6f38a7e7e9a91950b034194e1ff3">  236</a></span>&#160;   uint8_t * <a class="code" href="struct__smsOut.html#aabca6f38a7e7e9a91950b034194e1ff3">dest</a>; </div>
+<div class="line"><a name="l00237"></a><span class="lineno"><a class="line" href="struct__smsOut.html#a5c755d2fa261374d8cb89ec1744d5ba9">  237</a></span>&#160;   uint8_t * <a class="code" href="struct__smsOut.html#a5c755d2fa261374d8cb89ec1744d5ba9">text</a>; </div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;} <a class="code" href="group__interface.html#ga74defca0a1ccb7f809f592686b529d14">smsOut_t</a>;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;</div>
+<div class="line"><a name="l00242"></a><span class="lineno"><a class="line" href="struct__smsConf.html">  242</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsConf.html">_smsConf</a> {</div>
+<div class="line"><a name="l00243"></a><span class="lineno"><a class="line" href="struct__smsConf.html#aa0e79fdab3d74d4cbcfef7d9101a0c94">  243</a></span>&#160;   uint8_t <a class="code" href="struct__smsConf.html#aa0e79fdab3d74d4cbcfef7d9101a0c94">mr</a>;     </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;} <a class="code" href="group__interface.html#ga194fad53a180e12adafed3de45f7063a">smsConf_t</a>;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment">/*        Data structures for the gsmSmsRead and gsmSmsList functions        */</span></div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment">/*                Data structures for the gsmSmsSend function                */</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsOut_s {</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;   uint8_t * dest; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;   uint8_t * text; </div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;} smsOut_s;</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsConf_s {</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;   uint8_t mr;     </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;} smsConf_s;</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="comment">/*        Data structures for the gsmSmsRead and gsmSmsList functions        */</span></div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _smsReadMode_e {</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;   NORMAL = 0,     </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;   NOCHANGE = 1,   </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;} smsReadMode_e;</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsReadPars_s {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;   uint8_t idx;        </div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;   smsReadMode_e mode; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;} smsReadPars_s;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsRec_s {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;   uint8_t meta[TKN_PAR_SIZE]; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;   uint8_t text[TKN_PAR_SIZE];   </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;} smsRec_s;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _smsListStat_e {</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;   REC_UNREAD,  </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;   REC_READ,    </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;   STO_UNSENT,  </div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;   STO_SENT,    </div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;   ALL_MSG      </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;} smsListStat_e;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno"><a class="line" href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">  252</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">_smsReadMode</a> {</div>
+<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7">  253</a></span>&#160;   <a class="code" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7">NORMAL</a> = 0,     </div>
+<div class="line"><a name="l00254"></a><span class="lineno"><a class="line" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39">  254</a></span>&#160;   <a class="code" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39">NOCHANGE</a> = 1,   </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;} <a class="code" href="group__interface.html#ga85562e153998837cfd6f9f85f7f7daad">smsReadMode_t</a>;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;</div>
+<div class="line"><a name="l00259"></a><span class="lineno"><a class="line" href="struct__smsReadPars.html">  259</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsReadPars.html">_smsReadPars</a> {</div>
+<div class="line"><a name="l00260"></a><span class="lineno"><a class="line" href="struct__smsReadPars.html#a2b053d11a0c2b33c99896078eb5e58db">  260</a></span>&#160;   uint8_t <a class="code" href="struct__smsReadPars.html#a2b053d11a0c2b33c99896078eb5e58db">idx</a>;        </div>
+<div class="line"><a name="l00261"></a><span class="lineno"><a class="line" href="struct__smsReadPars.html#a5d2721360ab438b7fbff3d737749a4f3">  261</a></span>&#160;   <a class="code" href="group__interface.html#ga85562e153998837cfd6f9f85f7f7daad">smsReadMode_t</a> <a class="code" href="struct__smsReadPars.html#a5d2721360ab438b7fbff3d737749a4f3">mode</a>; </div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;} <a class="code" href="group__interface.html#gaa123d0ac7758bfc6927dc2c2cdc92c59">smsReadPars_t</a>;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;</div>
+<div class="line"><a name="l00266"></a><span class="lineno"><a class="line" href="struct__smsRec.html">  266</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsRec.html">_smsRec</a> {</div>
+<div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="struct__smsRec.html#aa5c6ba1232a46e5492bc503f2d155c98">  267</a></span>&#160;   uint8_t <a class="code" href="struct__smsRec.html#aa5c6ba1232a46e5492bc503f2d155c98">meta</a>[TKN_PAR_SIZE+1]; </div>
+<div class="line"><a name="l00268"></a><span class="lineno"><a class="line" href="struct__smsRec.html#ab88af8e19daef6903accac6bbe1f7e20">  268</a></span>&#160;   uint8_t <a class="code" href="struct__smsRec.html#ab88af8e19daef6903accac6bbe1f7e20">text</a>[TKN_PAR_SIZE+1]; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;} <a class="code" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a>;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;</div>
+<div class="line"><a name="l00273"></a><span class="lineno"><a class="line" href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">  273</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">_smsListStat</a> {</div>
+<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f">  274</a></span>&#160;   <a class="code" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f">REC_UNREAD</a>,  </div>
+<div class="line"><a name="l00275"></a><span class="lineno"><a class="line" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a">  275</a></span>&#160;   <a class="code" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a">REC_READ</a>,    </div>
+<div class="line"><a name="l00276"></a><span class="lineno"><a class="line" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d">  276</a></span>&#160;   <a class="code" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d">STO_UNSENT</a>,  </div>
+<div class="line"><a name="l00277"></a><span class="lineno"><a class="line" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82">  277</a></span>&#160;   <a class="code" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82">STO_SENT</a>,    </div>
+<div class="line"><a name="l00278"></a><span class="lineno"><a class="line" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709">  278</a></span>&#160;   <a class="code" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709">ALL_MSG</a>      </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;} <a class="code" href="group__interface.html#ga4400808bd92f3bba02ac3f1139b1f2a7">smsListStat_t</a>;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
+<div class="line"><a name="l00283"></a><span class="lineno"><a class="line" href="struct__smsListPars.html">  283</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsListPars.html">_smsListPars</a> {</div>
+<div class="line"><a name="l00284"></a><span class="lineno"><a class="line" href="struct__smsListPars.html#a06822f7dc473e2a68d289e58945e94eb">  284</a></span>&#160;   <a class="code" href="group__interface.html#ga4400808bd92f3bba02ac3f1139b1f2a7">smsListStat_t</a> <a class="code" href="struct__smsListPars.html#a06822f7dc473e2a68d289e58945e94eb">stat</a>; </div>
+<div class="line"><a name="l00285"></a><span class="lineno"><a class="line" href="struct__smsListPars.html#afe283dc9e5bdd3482546aa6bb2827fa1">  285</a></span>&#160;   <a class="code" href="group__interface.html#ga85562e153998837cfd6f9f85f7f7daad">smsReadMode_t</a> <a class="code" href="struct__smsListPars.html#afe283dc9e5bdd3482546aa6bb2827fa1">mode</a>; </div>
+<div class="line"><a name="l00286"></a><span class="lineno"><a class="line" href="struct__smsListPars.html#ade2d10f7668df32623a0b93b73646a77">  286</a></span>&#160;   uint8_t <a class="code" href="struct__smsListPars.html#ade2d10f7668df32623a0b93b73646a77">listSize</a>;   </div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;} <a class="code" href="group__interface.html#ga5b04fc26cfe34137d396eb4b92002a9b">smsListPars_t</a>;</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;</div>
+<div class="line"><a name="l00291"></a><span class="lineno"><a class="line" href="struct__smsListRet.html">  291</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsListRet.html">_smsListRet</a> {</div>
+<div class="line"><a name="l00292"></a><span class="lineno"><a class="line" href="struct__smsListRet.html#ae60938400cf078f5f0a80f21da419a5a">  292</a></span>&#160;   <a class="code" href="struct__smsRec.html">smsRec_t</a> * <a class="code" href="struct__smsListRet.html#ae60938400cf078f5f0a80f21da419a5a">msgs</a>;  </div>
+<div class="line"><a name="l00293"></a><span class="lineno"><a class="line" href="struct__smsListRet.html#a0906c18109a8f94b440956dc4666dcfa">  293</a></span>&#160;   uint8_t <a class="code" href="struct__smsListRet.html#a0906c18109a8f94b440956dc4666dcfa">noMsgs</a>;   </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;} <a class="code" href="group__interface.html#ga71dc645511316a9f1de36681774669df">smsListRet_t</a>;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="comment">/*                Data structures for the gsmSmsDel function                 */</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsListPars_s {</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;   smsListStat_e stat; </div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;   smsReadMode_e mode; </div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;   uint8_t listSize;   </div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;} smsListPars_s;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsListRet_s {</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;   smsRec_s * msgs;  </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;   uint8_t noMsgs;   </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;} smsListRet_s;</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="comment">/*                Data structures for the gsmSmsDel function                 */</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno"><a class="line" href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">  302</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">_smsDelMode</a> {</div>
+<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579">  303</a></span>&#160;   <a class="code" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579">INDEX</a> = 0,              </div>
+<div class="line"><a name="l00304"></a><span class="lineno"><a class="line" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6">  304</a></span>&#160;   <a class="code" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6">READ</a> = 1,               </div>
+<div class="line"><a name="l00305"></a><span class="lineno"><a class="line" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429">  305</a></span>&#160;   <a class="code" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429">READ_SENT</a> = 2,          </div>
+<div class="line"><a name="l00306"></a><span class="lineno"><a class="line" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b">  306</a></span>&#160;   <a class="code" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b">READ_SENT_UNSENT</a> = 3,   </div>
+<div class="line"><a name="l00307"></a><span class="lineno"><a class="line" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb">  307</a></span>&#160;   <a class="code" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb">DEL_ALL</a> = 4             </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;} <a class="code" href="group__interface.html#gad12a0e4bd0bc27d1c00a00d542e37a2c">smsDelMode_t</a>;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;</div>
+<div class="line"><a name="l00312"></a><span class="lineno"><a class="line" href="struct__smsDelPars.html">  312</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__smsDelPars.html">_smsDelPars</a> {</div>
+<div class="line"><a name="l00313"></a><span class="lineno"><a class="line" href="struct__smsDelPars.html#a8a8027ad3b2acbdd36465045d5844cfc">  313</a></span>&#160;   uint8_t <a class="code" href="struct__smsDelPars.html#a8a8027ad3b2acbdd36465045d5844cfc">idx</a>;        </div>
+<div class="line"><a name="l00314"></a><span class="lineno"><a class="line" href="struct__smsDelPars.html#a421b3d38358d56a93d6d92156165ef3c">  314</a></span>&#160;   <a class="code" href="group__interface.html#gad12a0e4bd0bc27d1c00a00d542e37a2c">smsDelMode_t</a> <a class="code" href="struct__smsDelPars.html#a421b3d38358d56a93d6d92156165ef3c">mode</a>;  </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;} <a class="code" href="group__interface.html#ga79afe616b056c2e1dc8eb84392f9a68a">smsDelPars_t</a>;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _smsDelMode_e {</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;   INDEX = 0,              </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;   READ = 1,               </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;   READ_SENT = 2,          </div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;   READ_SENT_UNSENT = 3,   </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;   DEL_ALL = 4             </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;} smsDelMode_e;</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="comment">/*               Data structures for the gsmGprsStart function               */</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
+<div class="line"><a name="l00323"></a><span class="lineno"><a class="line" href="struct__apnUserPwd.html">  323</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__apnUserPwd.html">_apnUserPwd</a> {</div>
+<div class="line"><a name="l00324"></a><span class="lineno"><a class="line" href="struct__apnUserPwd.html#a03e841cda38b0588dfa18d7678928008">  324</a></span>&#160;   uint8_t * <a class="code" href="struct__apnUserPwd.html#a03e841cda38b0588dfa18d7678928008">apn</a>;   </div>
+<div class="line"><a name="l00325"></a><span class="lineno"><a class="line" href="struct__apnUserPwd.html#ac89dd14310dfc6210a4322101a42e3c6">  325</a></span>&#160;   uint8_t * <a class="code" href="struct__apnUserPwd.html#ac89dd14310dfc6210a4322101a42e3c6">user</a>;  </div>
+<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="struct__apnUserPwd.html#af956ee629e6b927a2fba9ef2bf25ddff">  326</a></span>&#160;   uint8_t * <a class="code" href="struct__apnUserPwd.html#af956ee629e6b927a2fba9ef2bf25ddff">pwd</a>;   </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;} <a class="code" href="group__interface.html#ga9b3e3f9b1b432389404457261ba7f8ef">apnUserPwd_t</a>;</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_smsDelPars_s {</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;   uint8_t idx;        </div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;   smsDelMode_e mode;  </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;} smsDelPars_s;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment">/*               Data structures for the gsmGprsStart function               */</span></div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="comment">/*              Data structures for the gsmGprsOpenPort function             */</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
+<div class="line"><a name="l00335"></a><span class="lineno"><a class="line" href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">  335</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">_portType</a> {</div>
+<div class="line"><a name="l00336"></a><span class="lineno"><a class="line" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c">  336</a></span>&#160;   <a class="code" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c">TCP</a>,         </div>
+<div class="line"><a name="l00337"></a><span class="lineno"><a class="line" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6">  337</a></span>&#160;   <a class="code" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6">UDP</a>          </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;} <a class="code" href="group__interface.html#gaa2aa4780302ba19f505afda164550c4d">portType_t</a>;</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_apnUserPwd_s {</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;   uint8_t * apn;   </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;   uint8_t * user;  </div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;   uint8_t * pwd;   </div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;} apnUserPwd_s;</div>
+<div class="line"><a name="l00342"></a><span class="lineno"><a class="line" href="struct__socket.html">  342</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__socket.html">_socket</a> {</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;   <a class="code" href="group__interface.html#gaa2aa4780302ba19f505afda164550c4d">portType_t</a> type;</div>
+<div class="line"><a name="l00344"></a><span class="lineno"><a class="line" href="struct__socket.html#a65e6e8eb85a3cde66eec5a060ad2ffb6">  344</a></span>&#160;   uint8_t *  <a class="code" href="struct__socket.html#a65e6e8eb85a3cde66eec5a060ad2ffb6">address</a>;   </div>
+<div class="line"><a name="l00345"></a><span class="lineno"><a class="line" href="struct__socket.html#a042c56e3d322cda7b17ae5aea8dab4e3">  345</a></span>&#160;   uint16_t   <a class="code" href="struct__socket.html#a042c56e3d322cda7b17ae5aea8dab4e3">port</a>;      </div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;} <a class="code" href="group__interface.html#gab32e5f2ec7bb0d6de79b084e15b661d5">socket_t</a>;</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment">/*              Data structures for the gsmGprsOpenPort function             */</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="comment">/*                Data structures for the gsmGnssPwr function                */</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
 <div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _portType_e {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;   TCP,         </div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;   UDP          </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;} portType_e;</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_socket_s {</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;   portType_e type;      </div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;   uint8_t *  address;   </div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;   uint16_t   port;      </div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;} socket_s;</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;<span class="comment">/*                Data structures for the gsmGnssPwr function                */</span></div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno"><a class="line" href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">  354</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">_pwrGnss</a> {</div>
+<div class="line"><a name="l00355"></a><span class="lineno"><a class="line" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03">  355</a></span>&#160;   <a class="code" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03">ON</a>,    </div>
+<div class="line"><a name="l00356"></a><span class="lineno"><a class="line" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75">  356</a></span>&#160;   <a class="code" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75">OFF</a>    </div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;} <a class="code" href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a>;</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="comment">/*              Data structures for the gsmGnssGetData function              */</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;</div>
+<div class="line"><a name="l00365"></a><span class="lineno"><a class="line" href="struct__dataGnss.html">  365</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__dataGnss.html">_dataGnss</a> {</div>
+<div class="line"><a name="l00366"></a><span class="lineno"><a class="line" href="struct__dataGnss.html#a6c172263df238eb3097cdb3d933e4329">  366</a></span>&#160;   uint8_t <a class="code" href="struct__dataGnss.html#a6c172263df238eb3097cdb3d933e4329">data</a>[95];   </div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;} <a class="code" href="group__interface.html#ga7066baf53d5f21a47d9dbb6a1401c18f">dataGnss_t</a>;</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> _pwrGnss_e {</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;   ON,    </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;   OFF    </div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;} pwrGnss_e;</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="comment">/*              Data structures for the gsmGnssGetData function              */</span></div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_dataGnss_s {</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;   uint8_t data[95];   </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;} dataGnss_s;</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment">/*                  General GSM library operation functions                  */</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#gac111d887da1aa4106fdc62fb26b3a61c">gsmInitInterface</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface);</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="comment">/*==================[external data declaration]==============================*/</span></div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;<span class="comment">/*==================[external functions declaration]=========================*/</span></div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;<span class="comment">/*                  General GSM library operation functions                  */</span></div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="keywordtype">bool</span> gsmInitInterface (gsmInterface_t * interface);</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="keywordtype">void</span> gsmStartUp (gsmInterface_t * interface, frmCback_t cback);</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga144541900b09069bc5beda72aa6e0181">gsmStartUp</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga343041c1c8e97f97641a551c6442fbdd">gsmExitDataMode</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#gaf71e50dd68f0f93320574faad2009d54">gsmSysTickHandler</a> (<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="keywordtype">void</span> gsmExitDataMode (gsmInterface_t * interface, frmCback_t cback);</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="keywordtype">void</span> gsmSysTickHandler (<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="keywordtype">void</span> gsmProcess (gsmInterface_t * interface);</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="keywordtype">bool</span> gsmIsIdle (gsmInterface_t * interface);</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="keywordtype">void</span> gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;                    frmCback_t cback);</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;<span class="keywordtype">void</span> gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;                   frmCback_t cback);</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;<span class="keywordtype">bool</span> gsmReadUrc (gsmInterface_t * interface, urc_s * urc);</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;<span class="keywordtype">bool</span> gsmSetUrcMode (gsmInterface_t * interface, urcMode_e mode);</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;<span class="keywordtype">bool</span> gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback);</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;<span class="keywordtype">bool</span> gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback);</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;uint8_t gsmCheckDataMode (gsmInterface_t * interface,</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;                          uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buf,</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;                          uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> nch);</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;<span class="comment">/*                              SMS functions                                */</span></div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;<span class="keywordtype">void</span> gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,</div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;                 frmCback_t cback);</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;<span class="keywordtype">void</span> gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;                 smsReadPars_s * pars, frmCback_t cback);</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;<span class="keywordtype">void</span> gsmSmsList (gsmInterface_t * interface, smsRec_s * list,</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;                 smsListPars_s * pars, frmCback_t cback);</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;<span class="keywordtype">void</span> gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;                frmCback_t cback);</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;</div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;<span class="comment">/*                             GPRS functions                                */</span></div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;<span class="keywordtype">void</span> gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                   frmCback_t cback);</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;<span class="keywordtype">void</span> gsmGprsStop (gsmInterface_t * interface, frmCback_t cback);</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;<span class="keywordtype">void</span> gsmGprsOpenPort (gsmInterface_t * interface, socket_s * port, frmCback_t cback);</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;<span class="keywordtype">void</span> gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback);</div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;<span class="comment">/*                             GNSS functions                                */</span></div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;<span class="keywordtype">void</span> gsmGnssPwr (gsmInterface_t * interface,</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;                 pwrGnss_e * cmd, frmCback_t cback);</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;<span class="keywordtype">void</span> gsmGnssGetData (gsmInterface_t * interface,</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;                     dataGnss_s * dataGnss, frmCback_t cback);</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* #ifndef _GSM_INTERFACE_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="group__engine_html_ga84449ac99bb9a378f8d11e6b3e875ffa"><div class="ttname"><a href="group__engine.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a></div><div class="ttdeci">#define TKN_CMD_SIZE</div><div class="ttdoc">Max size of an AT token command part. </div><div class="ttdef"><b>Definition:</b> gsmEngine.h:70</div></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#gac18fcac3c81c8005ceaa8f38a3a65475">gsmProcess</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface);</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#ga6bf245767dccdef6b903214196a66150">gsmIsIdle</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface);</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga67cc73afafba8db5ba3b39a3a907f357">gsmGetSigQual</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__sigQual.html">sigQual_t</a> * sigQual,</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;                    <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga919ec3878d57b51f45331adbdb7f9149">gsmCheckConn</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__connStatus.html">connStatus_t</a> * status,</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;                   <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#gaa1aecb8a0b6eec444607ce5ca1be0002">gsmReadUrc</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__urc.html">urc_t</a> * urc);</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#ga68e3d360484c20ca6d98167c82a4baf4">gsmSetUrcMode</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a> mode);</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#ga214bfbbaa3b9cb4a63c700e083373422">gsmSetUrcCback</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a> cback);</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#ga52d344af2e08a11fed2a68b31728007d">gsmSetDataCback</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a> cback);</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;uint8_t <a class="code" href="group__interface.html#ga442c775e3c9ba6695fa9f6e3c8565b00">gsmCheckDataMode</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface,</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;                          uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> buf,</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;                          uint8_t <span class="keyword">const</span> * <span class="keyword">const</span> nch);</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group__interface.html#gaa1aecb8a0b6eec444607ce5ca1be0002">gsmReadUrc</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__urc.html">urc_t</a> * urc);</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;<span class="comment">/*                              SMS functions                                */</span></div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga67d11650027da8bc12a1aa8e29dc6713">gsmSmsSend</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__smsOut.html">smsOut_t</a> * msg, <a class="code" href="struct__smsConf.html">smsConf_t</a> * conf,</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;                 <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga374d63406870472e5815c49c9eb1c9cd">gsmSmsRead</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__smsRec.html">smsRec_t</a> * msg,</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;                 <a class="code" href="struct__smsReadPars.html">smsReadPars_t</a> * pars, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#gaa33300fc0f02c4c6de4358ec666e240a">gsmSmsList</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__smsRec.html">smsRec_t</a> * list,</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;                 <a class="code" href="struct__smsListPars.html">smsListPars_t</a> * pars, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga7adbe9890a4727844b507bdcb6857295">gsmSmsDel</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__smsDelPars.html">smsDelPars_t</a> * msgdel,</div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;                <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;<span class="comment">/*                             GPRS functions                                */</span></div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga16934eae26b90c1e294cda1ca42056d8">gsmGprsStart</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__apnUserPwd.html">apnUserPwd_t</a> * apn,</div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;                   <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;</div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#gade7d952df59965a0f00eae71126e771d">gsmGprsStop</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga7de35b1e9cdf386358fd1186d67ba798">gsmGprsOpenPort</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="struct__socket.html">socket_t</a> * port, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga83c34ec1022355e5d131af877d6a38a0">gsmGprsClosePort</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;<span class="comment">/*                             GNSS functions                                */</span></div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;<span class="comment">/*---------------------------------------------------------------------------*/</span></div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga7ccfae60f8d5e2e0afc2a9f0d69ab03f">gsmGnssPwr</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface,</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;                 <a class="code" href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a> * cmd, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__interface.html#ga0a63759a1348c088e42370fb2faa013f">gsmGnssGetData</a> (<a class="code" href="struct__gsmInterface__t.html">gsmInterface_t</a> * interface,</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;                     <a class="code" href="struct__dataGnss.html">dataGnss_t</a> * dataGnss, <a class="code" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback);</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;<span class="comment">/*==================[cplusplus]==============================================*/</span></div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;<span class="comment">/*==================[end of file]============================================*/</span></div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* #ifndef _GSM_INTERFACE_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="struct__sigQual_html_acdcb79bcbe2017c9ed22556cf3b1fcb9"><div class="ttname"><a href="struct__sigQual.html#acdcb79bcbe2017c9ed22556cf3b1fcb9">_sigQual::ber</a></div><div class="ttdeci">uint8_t ber</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:203</div></div>
+<div class="ttc" id="group__interface_html_ga7ccfae60f8d5e2e0afc2a9f0d69ab03f"><div class="ttname"><a href="group__interface.html#ga7ccfae60f8d5e2e0afc2a9f0d69ab03f">gsmGnssPwr</a></div><div class="ttdeci">void gsmGnssPwr(gsmInterface_t *interface, pwrGnss_t *cmd, frmCback_t cback)</div><div class="ttdoc">Turns GNSS on or off. </div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36">ERR_GSM</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:108</div></div>
+<div class="ttc" id="group__interface_html_gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6"><div class="ttname"><a href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6">UDP</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:337</div></div>
+<div class="ttc" id="group__interface_html_ga144541900b09069bc5beda72aa6e0181"><div class="ttname"><a href="group__interface.html#ga144541900b09069bc5beda72aa6e0181">gsmStartUp</a></div><div class="ttdeci">void gsmStartUp(gsmInterface_t *interface, frmCback_t cback)</div><div class="ttdoc">Starts up the GSM engine. </div></div>
+<div class="ttc" id="struct__smsOut_html_aabca6f38a7e7e9a91950b034194e1ff3"><div class="ttname"><a href="struct__smsOut.html#aabca6f38a7e7e9a91950b034194e1ff3">_smsOut::dest</a></div><div class="ttdeci">uint8_t * dest</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:236</div></div>
+<div class="ttc" id="group__interface_html_ga85562e153998837cfd6f9f85f7f7daad"><div class="ttname"><a href="group__interface.html#ga85562e153998837cfd6f9f85f7f7daad">smsReadMode_t</a></div><div class="ttdeci">enum _smsReadMode smsReadMode_t</div><div class="ttdoc">Type for SMS read mode. </div></div>
+<div class="ttc" id="group__interface_html_ga76d28e5d09b4841c5ef03a55e77ea732"><div class="ttname"><a href="group__interface.html#ga76d28e5d09b4841c5ef03a55e77ea732">sigQual_t</a></div><div class="ttdeci">struct _sigQual sigQual_t</div><div class="ttdoc">Type for signal quality. </div></div>
+<div class="ttc" id="struct__smsReadPars_html"><div class="ttname"><a href="struct__smsReadPars.html">_smsReadPars</a></div><div class="ttdoc">Type for SMS read parameters. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:259</div></div>
+<div class="ttc" id="group__interface_html_ga97489b9aa4324c72124ac72e389dc9b6"><div class="ttname"><a href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">_portType</a></div><div class="ttdeci">_portType</div><div class="ttdoc">Type for port protocol (TCP or UDP) </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:335</div></div>
+<div class="ttc" id="group__interface_html_ga0a63759a1348c088e42370fb2faa013f"><div class="ttname"><a href="group__interface.html#ga0a63759a1348c088e42370fb2faa013f">gsmGnssGetData</a></div><div class="ttdeci">void gsmGnssGetData(gsmInterface_t *interface, dataGnss_t *dataGnss, frmCback_t cback)</div><div class="ttdoc">Get GNSS data. </div></div>
+<div class="ttc" id="group__interface_html_ga7066baf53d5f21a47d9dbb6a1401c18f"><div class="ttname"><a href="group__interface.html#ga7066baf53d5f21a47d9dbb6a1401c18f">dataGnss_t</a></div><div class="ttdeci">struct _dataGnss dataGnss_t</div><div class="ttdoc">Struct for storing GNSS info. </div></div>
+<div class="ttc" id="group__interface_html_ga6ba4db4866902fed84f7f52b0527f5c4"><div class="ttname"><a href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a></div><div class="ttdeci">enum _urcMode urcMode_t</div><div class="ttdoc">Modes for URC handling. </div></div>
+<div class="ttc" id="struct__smsOut_html_a5c755d2fa261374d8cb89ec1744d5ba9"><div class="ttname"><a href="struct__smsOut.html#a5c755d2fa261374d8cb89ec1744d5ba9">_smsOut::text</a></div><div class="ttdeci">uint8_t * text</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:237</div></div>
+<div class="ttc" id="group__interface_html_gaee17f59c7ada755681f8708b12b181f1"><div class="ttname"><a href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">_frmStatus</a></div><div class="ttdeci">_frmStatus</div><div class="ttdoc">State of the current formula being run. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:65</div></div>
+<div class="ttc" id="group__interface_html_ga67cc73afafba8db5ba3b39a3a907f357"><div class="ttname"><a href="group__interface.html#ga67cc73afafba8db5ba3b39a3a907f357">gsmGetSigQual</a></div><div class="ttdeci">void gsmGetSigQual(gsmInterface_t *interface, sigQual_t *sigQual, frmCback_t cback)</div><div class="ttdoc">Gets signal quality values (RSSI and BER) </div></div>
+<div class="ttc" id="group__interface_html_ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7"><div class="ttname"><a href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7">NORMAL</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:253</div></div>
+<div class="ttc" id="struct__apnUserPwd_html"><div class="ttname"><a href="struct__apnUserPwd.html">_apnUserPwd</a></div><div class="ttdoc">Type for APN name, user and password. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:323</div></div>
+<div class="ttc" id="group__interface_html_ga7de35b1e9cdf386358fd1186d67ba798"><div class="ttname"><a href="group__interface.html#ga7de35b1e9cdf386358fd1186d67ba798">gsmGprsOpenPort</a></div><div class="ttdeci">void gsmGprsOpenPort(gsmInterface_t *interface, socket_t *port, frmCback_t cback)</div><div class="ttdoc">Opens TCP or UDP port. </div></div>
+<div class="ttc" id="group__interface_html_ga68e3d360484c20ca6d98167c82a4baf4"><div class="ttname"><a href="group__interface.html#ga68e3d360484c20ca6d98167c82a4baf4">gsmSetUrcMode</a></div><div class="ttdeci">bool gsmSetUrcMode(gsmInterface_t *interface, urcMode_t mode)</div><div class="ttdoc">Sets URC handling to either callback mode or manual mode. </div></div>
+<div class="ttc" id="struct__connStatus_html"><div class="ttname"><a href="struct__connStatus.html">_connStatus</a></div><div class="ttdoc">Struct for determining the status of the GSM and GPRS connections. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:213</div></div>
+<div class="ttc" id="struct__smsListPars_html"><div class="ttname"><a href="struct__smsListPars.html">_smsListPars</a></div><div class="ttdoc">Type for SMS list parameters. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:283</div></div>
+<div class="ttc" id="struct__sigQual_html"><div class="ttname"><a href="struct__sigQual.html">_sigQual</a></div><div class="ttdoc">Type for signal quality. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:201</div></div>
+<div class="ttc" id="struct__errorUser_html_a0f8e835ab618a375cb760360325412e7"><div class="ttname"><a href="struct__errorUser.html#a0f8e835ab618a375cb760360325412e7">_errorUser::errorFrm</a></div><div class="ttdeci">errorFrm_t errorFrm</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:125</div></div>
+<div class="ttc" id="struct__smsListRet_html"><div class="ttname"><a href="struct__smsListRet.html">_smsListRet</a></div><div class="ttdoc">Type for SMS read/list return. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:291</div></div>
+<div class="ttc" id="group__interface_html_ga1bba33b12b3e7e38efd620782d892854"><div class="ttname"><a href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">_smsDelMode</a></div><div class="ttdeci">_smsDelMode</div><div class="ttdoc">Type for SMS deletion mode. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:302</div></div>
+<div class="ttc" id="group__interface_html_gaa33300fc0f02c4c6de4358ec666e240a"><div class="ttname"><a href="group__interface.html#gaa33300fc0f02c4c6de4358ec666e240a">gsmSmsList</a></div><div class="ttdeci">void gsmSmsList(gsmInterface_t *interface, smsRec_t *list, smsListPars_t *pars, frmCback_t cback)</div><div class="ttdoc">Lists received SMSs in a vector. </div></div>
+<div class="ttc" id="struct__smsDelPars_html_a421b3d38358d56a93d6d92156165ef3c"><div class="ttname"><a href="struct__smsDelPars.html#a421b3d38358d56a93d6d92156165ef3c">_smsDelPars::mode</a></div><div class="ttdeci">smsDelMode_t mode</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:314</div></div>
+<div class="ttc" id="struct__smsListPars_html_afe283dc9e5bdd3482546aa6bb2827fa1"><div class="ttname"><a href="struct__smsListPars.html#afe283dc9e5bdd3482546aa6bb2827fa1">_smsListPars::mode</a></div><div class="ttdeci">smsReadMode_t mode</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:285</div></div>
+<div class="ttc" id="struct__smsConf_html"><div class="ttname"><a href="struct__smsConf.html">_smsConf</a></div><div class="ttdoc">Type for outgoing SMS confirmation message. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:242</div></div>
+<div class="ttc" id="group__interface_html_gaf71e50dd68f0f93320574faad2009d54"><div class="ttname"><a href="group__interface.html#gaf71e50dd68f0f93320574faad2009d54">gsmSysTickHandler</a></div><div class="ttdeci">void gsmSysTickHandler(void)</div><div class="ttdoc">Handles AT command timeout and gsmProcess function timing. </div></div>
+<div class="ttc" id="group__interface_html_gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429"><div class="ttname"><a href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429">READ_SENT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:305</div></div>
+<div class="ttc" id="group__interface_html_gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b"><div class="ttname"><a href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b">READ_SENT_UNSENT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:306</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06">ERR_FSM</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:110</div></div>
+<div class="ttc" id="group__interface_html_gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f"><div class="ttname"><a href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f">REC_UNREAD</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:274</div></div>
+<div class="ttc" id="group__interface_html_ga83c34ec1022355e5d131af877d6a38a0"><div class="ttname"><a href="group__interface.html#ga83c34ec1022355e5d131af877d6a38a0">gsmGprsClosePort</a></div><div class="ttdeci">void gsmGprsClosePort(gsmInterface_t *interface, frmCback_t cback)</div><div class="ttdoc">Closes open TCP or UDP port. </div></div>
+<div class="ttc" id="group__interface_html_ga752d93f9a20ab4b6061cd359323288dd"><div class="ttname"><a href="group__interface.html#ga752d93f9a20ab4b6061cd359323288dd">_procStatus</a></div><div class="ttdeci">_procStatus</div><div class="ttdoc">Number of command or response in the PROC section being processed. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:74</div></div>
+<div class="ttc" id="group__interface_html_ga74defca0a1ccb7f809f592686b529d14"><div class="ttname"><a href="group__interface.html#ga74defca0a1ccb7f809f592686b529d14">smsOut_t</a></div><div class="ttdeci">struct _smsOut smsOut_t</div><div class="ttdoc">Type for outgoing SMS message. </div></div>
+<div class="ttc" id="struct__smsDelPars_html_a8a8027ad3b2acbdd36465045d5844cfc"><div class="ttname"><a href="struct__smsDelPars.html#a8a8027ad3b2acbdd36465045d5844cfc">_smsDelPars::idx</a></div><div class="ttdeci">uint8_t idx</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:313</div></div>
+<div class="ttc" id="group__interface_html_gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d"><div class="ttname"><a href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d">STO_UNSENT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:276</div></div>
+<div class="ttc" id="struct__errorUser_html"><div class="ttname"><a href="struct__errorUser.html">_errorUser</a></div><div class="ttdoc">Type for user level error code return. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:124</div></div>
+<div class="ttc" id="group__interface_html_ga2f39c5bb4589772532861c5d75c26f60"><div class="ttname"><a href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a></div><div class="ttdeci">void *(* frmCback_t)(errorUser_t, void *)</div><div class="ttdoc">Type for formula callback. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:137</div></div>
+<div class="ttc" id="struct__gsmInterface__t_html"><div class="ttname"><a href="struct__gsmInterface__t.html">_gsmInterface_t</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:158</div></div>
+<div class="ttc" id="group__interface_html_ga7adbe9890a4727844b507bdcb6857295"><div class="ttname"><a href="group__interface.html#ga7adbe9890a4727844b507bdcb6857295">gsmSmsDel</a></div><div class="ttdeci">void gsmSmsDel(gsmInterface_t *interface, smsDelPars_t *msgdel, frmCback_t cback)</div><div class="ttdoc">Deletes a single SMS from memory. </div></div>
+<div class="ttc" id="struct__smsRec_html"><div class="ttname"><a href="struct__smsRec.html">_smsRec</a></div><div class="ttdoc">Type for received SMS. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:266</div></div>
+<div class="ttc" id="group__interface_html_ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd"><div class="ttname"><a href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd">WRAP</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:69</div></div>
+<div class="ttc" id="group__interface_html_gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03"><div class="ttname"><a href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03">ON</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:355</div></div>
+<div class="ttc" id="group__tokenizer_html_ga84449ac99bb9a378f8d11e6b3e875ffa"><div class="ttname"><a href="group__tokenizer.html#ga84449ac99bb9a378f8d11e6b3e875ffa">TKN_CMD_SIZE</a></div><div class="ttdeci">#define TKN_CMD_SIZE</div><div class="ttdoc">Max size of an AT token command part. </div><div class="ttdef"><b>Definition:</b> gsmTokenizer.h:59</div></div>
+<div class="ttc" id="group__interface_html_ga1dc1553796031046fc3db3d1934a42a6"><div class="ttname"><a href="group__interface.html#ga1dc1553796031046fc3db3d1934a42a6">errorFrm_t</a></div><div class="ttdeci">enum _errorFrm errorFrm_t</div><div class="ttdoc">Type for formula level error code return. </div></div>
+<div class="ttc" id="group__interface_html_gab32e5f2ec7bb0d6de79b084e15b661d5"><div class="ttname"><a href="group__interface.html#gab32e5f2ec7bb0d6de79b084e15b661d5">socket_t</a></div><div class="ttdeci">struct _socket socket_t</div><div class="ttdoc">Type for address and port. </div></div>
+<div class="ttc" id="group__interface_html_ga52d344af2e08a11fed2a68b31728007d"><div class="ttname"><a href="group__interface.html#ga52d344af2e08a11fed2a68b31728007d">gsmSetDataCback</a></div><div class="ttdeci">bool gsmSetDataCback(gsmInterface_t *interface, frm_t cback)</div><div class="ttdoc">Sets DATA_MODE callback. </div></div>
+<div class="ttc" id="struct__dataGnss_html"><div class="ttname"><a href="struct__dataGnss.html">_dataGnss</a></div><div class="ttdoc">Struct for storing GNSS info. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:365</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59">OK</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:105</div></div>
+<div class="ttc" id="group__interface_html_gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579"><div class="ttname"><a href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579">INDEX</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:303</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e">ERR_PROC</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:107</div></div>
+<div class="ttc" id="group__interface_html_ga9a4fcd0b9b76bb510f098fd4467d757f"><div class="ttname"><a href="group__interface.html#ga9a4fcd0b9b76bb510f098fd4467d757f">_urcMode</a></div><div class="ttdeci">_urcMode</div><div class="ttdoc">Modes for URC handling. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:141</div></div>
+<div class="ttc" id="group__interface_html_ga67d11650027da8bc12a1aa8e29dc6713"><div class="ttname"><a href="group__interface.html#ga67d11650027da8bc12a1aa8e29dc6713">gsmSmsSend</a></div><div class="ttdeci">void gsmSmsSend(gsmInterface_t *interface, smsOut_t *msg, smsConf_t *conf, frmCback_t cback)</div><div class="ttdoc">Sends an SMS. </div></div>
+<div class="ttc" id="group__interface_html_ga5b04fc26cfe34137d396eb4b92002a9b"><div class="ttname"><a href="group__interface.html#ga5b04fc26cfe34137d396eb4b92002a9b">smsListPars_t</a></div><div class="ttdeci">struct _smsListPars smsListPars_t</div><div class="ttdoc">Type for SMS list parameters. </div></div>
+<div class="ttc" id="group__interface_html_ga79afe616b056c2e1dc8eb84392f9a68a"><div class="ttname"><a href="group__interface.html#ga79afe616b056c2e1dc8eb84392f9a68a">smsDelPars_t</a></div><div class="ttdeci">struct _smsDelPars smsDelPars_t</div><div class="ttdoc">Type for SMS delete parameters. </div></div>
+<div class="ttc" id="group__interface_html_gade7d952df59965a0f00eae71126e771d"><div class="ttname"><a href="group__interface.html#gade7d952df59965a0f00eae71126e771d">gsmGprsStop</a></div><div class="ttdeci">void gsmGprsStop(gsmInterface_t *interface, frmCback_t cback)</div><div class="ttdoc">Stops GPRS connection in the modem. </div></div>
+<div class="ttc" id="struct__sigQual_html_aeae9f66cbd80e6bd079bfe4c6fe9f7ec"><div class="ttname"><a href="struct__sigQual.html#aeae9f66cbd80e6bd079bfe4c6fe9f7ec">_sigQual::rssi</a></div><div class="ttdeci">int8_t rssi</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:202</div></div>
+<div class="ttc" id="struct__socket_html_a65e6e8eb85a3cde66eec5a060ad2ffb6"><div class="ttname"><a href="struct__socket.html#a65e6e8eb85a3cde66eec5a060ad2ffb6">_socket::address</a></div><div class="ttdeci">uint8_t * address</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:344</div></div>
+<div class="ttc" id="group__interface_html_gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75"><div class="ttname"><a href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75">OFF</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:356</div></div>
+<div class="ttc" id="group__interface_html_gaa22a089af17a58f4a94ed81c622a8c4a"><div class="ttname"><a href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">_smsReadMode</a></div><div class="ttdeci">_smsReadMode</div><div class="ttdoc">Type for SMS read mode. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:252</div></div>
+<div class="ttc" id="group__interface_html_gaf5ce6d9bc01393cc7194f48c2515a8a5"><div class="ttname"><a href="group__interface.html#gaf5ce6d9bc01393cc7194f48c2515a8a5">urc_t</a></div><div class="ttdeci">struct _urc urc_t</div><div class="ttdoc">Struct for reading URC command and parameters. </div></div>
+<div class="ttc" id="struct__errorUser_html_a400b6230ed6b70fe78b4eeb83c86ad92"><div class="ttname"><a href="struct__errorUser.html#a400b6230ed6b70fe78b4eeb83c86ad92">_errorUser::errorCmd</a></div><div class="ttdeci">errorCmd_t errorCmd</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:126</div></div>
+<div class="ttc" id="group__interface_html_gac480156d28884097d4917ee280ba89cc"><div class="ttname"><a href="group__interface.html#gac480156d28884097d4917ee280ba89cc">_errorFrm</a></div><div class="ttdeci">_errorFrm</div><div class="ttdoc">Type for formula level error code return. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:104</div></div>
+<div class="ttc" id="group__interface_html_ga31770e9f807d5ee665394fab89d1d069"><div class="ttname"><a href="group__interface.html#ga31770e9f807d5ee665394fab89d1d069">procStatus_t</a></div><div class="ttdeci">enum _procStatus procStatus_t</div><div class="ttdoc">Number of command or response in the PROC section being processed. </div></div>
+<div class="ttc" id="struct__apnUserPwd_html_af956ee629e6b927a2fba9ef2bf25ddff"><div class="ttname"><a href="struct__apnUserPwd.html#af956ee629e6b927a2fba9ef2bf25ddff">_apnUserPwd::pwd</a></div><div class="ttdeci">uint8_t * pwd</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:326</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8">ERR_TOUT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:109</div></div>
+<div class="ttc" id="group__interface_html_gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a"><div class="ttname"><a href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a">REC_READ</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:275</div></div>
+<div class="ttc" id="struct__errorCmd_html_ac794d1f1d5db1bb936c3d97b038f00b8"><div class="ttname"><a href="struct__errorCmd.html#ac794d1f1d5db1bb936c3d97b038f00b8">_errorCmd::par</a></div><div class="ttdeci">uint8_t par[TKN_PAR_SIZE+1]</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:119</div></div>
+<div class="ttc" id="struct__connStatus_html_a84c59c2374a9436dcf8d297b247a08eb"><div class="ttname"><a href="struct__connStatus.html#a84c59c2374a9436dcf8d297b247a08eb">_connStatus::gsm</a></div><div class="ttdeci">bool gsm</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:214</div></div>
+<div class="ttc" id="group__interface_html_ga6d13b96ff034fa54f913d30a8e84aa84"><div class="ttname"><a href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a></div><div class="ttdeci">void(* frm_t)(gsmInterface_t *)</div><div class="ttdoc">Type for formula function pointer. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:152</div></div>
+<div class="ttc" id="group__interface_html_ga4400808bd92f3bba02ac3f1139b1f2a7"><div class="ttname"><a href="group__interface.html#ga4400808bd92f3bba02ac3f1139b1f2a7">smsListStat_t</a></div><div class="ttdeci">enum _smsListStat smsListStat_t</div><div class="ttdoc">Type for SMS list messages status. </div></div>
+<div class="ttc" id="group__interface_html_gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82"><div class="ttname"><a href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82">STO_SENT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:277</div></div>
+<div class="ttc" id="struct__errorCmd_html"><div class="ttname"><a href="struct__errorCmd.html">_errorCmd</a></div><div class="ttdoc">Type for command level error code return. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:117</div></div>
+<div class="ttc" id="struct__socket_html"><div class="ttname"><a href="struct__socket.html">_socket</a></div><div class="ttdoc">Type for address and port. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:342</div></div>
+<div class="ttc" id="group__interface_html_ga649c1a42e99f8fd6042d29a817cfa9f6"><div class="ttname"><a href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">_pwrGnss</a></div><div class="ttdeci">_pwrGnss</div><div class="ttdoc">Enum for turning GNSS module on or off. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:354</div></div>
+<div class="ttc" id="group__interface_html_ga194fad53a180e12adafed3de45f7063a"><div class="ttname"><a href="group__interface.html#ga194fad53a180e12adafed3de45f7063a">smsConf_t</a></div><div class="ttdeci">struct _smsConf smsConf_t</div><div class="ttdoc">Type for outgoing SMS confirmation message. </div></div>
+<div class="ttc" id="group__interface_html_ga214bfbbaa3b9cb4a63c700e083373422"><div class="ttname"><a href="group__interface.html#ga214bfbbaa3b9cb4a63c700e083373422">gsmSetUrcCback</a></div><div class="ttdeci">bool gsmSetUrcCback(gsmInterface_t *interface, urcCback_t cback)</div><div class="ttdoc">Sets URC cback function. </div></div>
+<div class="ttc" id="group__interface_html_ga8a45c0adb79c70b6128ca1f487a08a69"><div class="ttname"><a href="group__interface.html#ga8a45c0adb79c70b6128ca1f487a08a69">errorCmd_t</a></div><div class="ttdeci">struct _errorCmd errorCmd_t</div><div class="ttdoc">Type for command level error code return. </div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6">ERR_WRAP</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:111</div></div>
+<div class="ttc" id="group__interface_html_gac111d887da1aa4106fdc62fb26b3a61c"><div class="ttname"><a href="group__interface.html#gac111d887da1aa4106fdc62fb26b3a61c">gsmInitInterface</a></div><div class="ttdeci">bool gsmInitInterface(gsmInterface_t *interface)</div><div class="ttdoc">Formula to initialize up the GSM interface. </div></div>
+<div class="ttc" id="group__interface_html_gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709"><div class="ttname"><a href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709">ALL_MSG</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:278</div></div>
+<div class="ttc" id="group__interface_html_ga16934eae26b90c1e294cda1ca42056d8"><div class="ttname"><a href="group__interface.html#ga16934eae26b90c1e294cda1ca42056d8">gsmGprsStart</a></div><div class="ttdeci">void gsmGprsStart(gsmInterface_t *interface, apnUserPwd_t *apn, frmCback_t cback)</div><div class="ttdoc">Starts up GPRS connection in the modem. </div></div>
+<div class="ttc" id="group__interface_html_ga6bf245767dccdef6b903214196a66150"><div class="ttname"><a href="group__interface.html#ga6bf245767dccdef6b903214196a66150">gsmIsIdle</a></div><div class="ttdeci">bool gsmIsIdle(gsmInterface_t *interface)</div><div class="ttdoc">Indicates if the GSM interface is currently idle. </div></div>
+<div class="ttc" id="struct__connStatus_html_ae7f6a760cee0ea28499637838ca34d76"><div class="ttname"><a href="struct__connStatus.html#ae7f6a760cee0ea28499637838ca34d76">_connStatus::gprs</a></div><div class="ttdeci">bool gprs</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:215</div></div>
+<div class="ttc" id="struct__urc_html"><div class="ttname"><a href="struct__urc.html">_urc</a></div><div class="ttdoc">Used for the private vector of URCs. Stores the name of the URC. </div><div class="ttdef"><b>Definition:</b> gsmCommands.c:57</div></div>
+<div class="ttc" id="group__interface_html_ga63512e17a0436fe452dcb6269ffdefae"><div class="ttname"><a href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">_smsListStat</a></div><div class="ttdeci">_smsListStat</div><div class="ttdoc">Type for SMS list messages status. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:273</div></div>
+<div class="ttc" id="struct__smsRec_html_aa5c6ba1232a46e5492bc503f2d155c98"><div class="ttname"><a href="struct__smsRec.html#aa5c6ba1232a46e5492bc503f2d155c98">_smsRec::meta</a></div><div class="ttdeci">uint8_t meta[TKN_PAR_SIZE+1]</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:267</div></div>
+<div class="ttc" id="group__interface_html_ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33"><div class="ttname"><a href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33">PROC</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:68</div></div>
+<div class="ttc" id="group__interface_html_gac18fcac3c81c8005ceaa8f38a3a65475"><div class="ttname"><a href="group__interface.html#gac18fcac3c81c8005ceaa8f38a3a65475">gsmProcess</a></div><div class="ttdeci">void gsmProcess(gsmInterface_t *interface)</div><div class="ttdoc">Processes commands, responses and URCs at the rate of one token per invocation. </div></div>
+<div class="ttc" id="group__interface_html_gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6"><div class="ttname"><a href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6">READ</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:304</div></div>
+<div class="ttc" id="group__interface_html_ga374d63406870472e5815c49c9eb1c9cd"><div class="ttname"><a href="group__interface.html#ga374d63406870472e5815c49c9eb1c9cd">gsmSmsRead</a></div><div class="ttdeci">void gsmSmsRead(gsmInterface_t *interface, smsRec_t *msg, smsReadPars_t *pars, frmCback_t cback)</div><div class="ttdoc">Reads a single received SMS. </div></div>
+<div class="ttc" id="struct__smsListRet_html_a0906c18109a8f94b440956dc4666dcfa"><div class="ttname"><a href="struct__smsListRet.html#a0906c18109a8f94b440956dc4666dcfa">_smsListRet::noMsgs</a></div><div class="ttdeci">uint8_t noMsgs</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:293</div></div>
+<div class="ttc" id="struct__apnUserPwd_html_a03e841cda38b0588dfa18d7678928008"><div class="ttname"><a href="struct__apnUserPwd.html#a03e841cda38b0588dfa18d7678928008">_apnUserPwd::apn</a></div><div class="ttdeci">uint8_t * apn</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:324</div></div>
+<div class="ttc" id="struct__smsDelPars_html"><div class="ttname"><a href="struct__smsDelPars.html">_smsDelPars</a></div><div class="ttdoc">Type for SMS delete parameters. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:312</div></div>
+<div class="ttc" id="group__interface_html_ga50f4e1a7265aa3e33fe9e18a370e0a37"><div class="ttname"><a href="group__interface.html#ga50f4e1a7265aa3e33fe9e18a370e0a37">frmStatus_t</a></div><div class="ttdeci">enum _frmStatus frmStatus_t</div><div class="ttdoc">State of the current formula being run. </div></div>
+<div class="ttc" id="group__interface_html_ga734654f9b1466196fd5d9ec61e8bc466"><div class="ttname"><a href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a></div><div class="ttdeci">struct _smsRec smsRec_t</div><div class="ttdoc">Type for received SMS. </div></div>
+<div class="ttc" id="struct__socket_html_a042c56e3d322cda7b17ae5aea8dab4e3"><div class="ttname"><a href="struct__socket.html#a042c56e3d322cda7b17ae5aea8dab4e3">_socket::port</a></div><div class="ttdeci">uint16_t port</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:345</div></div>
+<div class="ttc" id="group__interface_html_gaa2aa4780302ba19f505afda164550c4d"><div class="ttname"><a href="group__interface.html#gaa2aa4780302ba19f505afda164550c4d">portType_t</a></div><div class="ttdeci">enum _portType portType_t</div><div class="ttdoc">Type for port protocol (TCP or UDP) </div></div>
+<div class="ttc" id="group__interface_html_ga6917edd06c82db0e047d1cda353d4398"><div class="ttname"><a href="group__interface.html#ga6917edd06c82db0e047d1cda353d4398">errorUser_t</a></div><div class="ttdeci">struct _errorUser errorUser_t</div><div class="ttdoc">Type for user level error code return. </div></div>
+<div class="ttc" id="struct__smsConf_html_aa0e79fdab3d74d4cbcfef7d9101a0c94"><div class="ttname"><a href="struct__smsConf.html#aa0e79fdab3d74d4cbcfef7d9101a0c94">_smsConf::mr</a></div><div class="ttdeci">uint8_t mr</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:243</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0">ERR_UNK</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:112</div></div>
+<div class="ttc" id="group__interface_html_ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36"><div class="ttname"><a href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36">INIT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:67</div></div>
+<div class="ttc" id="group__interface_html_gaa123d0ac7758bfc6927dc2c2cdc92c59"><div class="ttname"><a href="group__interface.html#gaa123d0ac7758bfc6927dc2c2cdc92c59">smsReadPars_t</a></div><div class="ttdeci">struct _smsReadPars smsReadPars_t</div><div class="ttdoc">Type for SMS read parameters. </div></div>
+<div class="ttc" id="group__interface_html_gaa1aecb8a0b6eec444607ce5ca1be0002"><div class="ttname"><a href="group__interface.html#gaa1aecb8a0b6eec444607ce5ca1be0002">gsmReadUrc</a></div><div class="ttdeci">bool gsmReadUrc(gsmInterface_t *interface, urc_t *urc)</div><div class="ttdoc">Read latest URC received. </div></div>
+<div class="ttc" id="group__interface_html_gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb"><div class="ttname"><a href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb">DEL_ALL</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:307</div></div>
+<div class="ttc" id="struct__smsRec_html_ab88af8e19daef6903accac6bbe1f7e20"><div class="ttname"><a href="struct__smsRec.html#ab88af8e19daef6903accac6bbe1f7e20">_smsRec::text</a></div><div class="ttdeci">uint8_t text[TKN_PAR_SIZE+1]</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:268</div></div>
+<div class="ttc" id="group__interface_html_gaa56bf5b39c992bd3eacb49c27d985a28"><div class="ttname"><a href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a></div><div class="ttdeci">enum _pwrGnss pwrGnss_t</div><div class="ttdoc">Enum for turning GNSS module on or off. </div></div>
+<div class="ttc" id="group__interface_html_gabdaf80f5f0617fd82e429f74e21f8443"><div class="ttname"><a href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a></div><div class="ttdeci">void(* urcCback_t)(uint8_t const *const cmd, uint8_t const *const par)</div><div class="ttdoc">Type for URC callback. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:148</div></div>
+<div class="ttc" id="group__interface_html_ga343041c1c8e97f97641a551c6442fbdd"><div class="ttname"><a href="group__interface.html#ga343041c1c8e97f97641a551c6442fbdd">gsmExitDataMode</a></div><div class="ttdeci">void gsmExitDataMode(gsmInterface_t *interface, frmCback_t cback)</div><div class="ttdoc">Sends the &#39;+++&#39; timed sequence to exit DATA MODE. </div></div>
+<div class="ttc" id="group__interface_html_ga9b3e3f9b1b432389404457261ba7f8ef"><div class="ttname"><a href="group__interface.html#ga9b3e3f9b1b432389404457261ba7f8ef">apnUserPwd_t</a></div><div class="ttdeci">struct _apnUserPwd apnUserPwd_t</div><div class="ttdoc">Type for APN name, user and password. </div></div>
+<div class="ttc" id="struct__smsOut_html"><div class="ttname"><a href="struct__smsOut.html">_smsOut</a></div><div class="ttdoc">Type for outgoing SMS message. </div><div class="ttdef"><b>Definition:</b> gsmInterface.h:235</div></div>
+<div class="ttc" id="group__interface_html_gad12a0e4bd0bc27d1c00a00d542e37a2c"><div class="ttname"><a href="group__interface.html#gad12a0e4bd0bc27d1c00a00d542e37a2c">smsDelMode_t</a></div><div class="ttdeci">enum _smsDelMode smsDelMode_t</div><div class="ttdoc">Type for SMS deletion mode. </div></div>
+<div class="ttc" id="struct__smsListPars_html_a06822f7dc473e2a68d289e58945e94eb"><div class="ttname"><a href="struct__smsListPars.html#a06822f7dc473e2a68d289e58945e94eb">_smsListPars::stat</a></div><div class="ttdeci">smsListStat_t stat</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:284</div></div>
+<div class="ttc" id="group__interface_html_ga919ec3878d57b51f45331adbdb7f9149"><div class="ttname"><a href="group__interface.html#ga919ec3878d57b51f45331adbdb7f9149">gsmCheckConn</a></div><div class="ttdeci">void gsmCheckConn(gsmInterface_t *interface, connStatus_t *status, frmCback_t cback)</div><div class="ttdoc">Check status of GSM and GPRS connection. </div></div>
+<div class="ttc" id="struct__dataGnss_html_a6c172263df238eb3097cdb3d933e4329"><div class="ttname"><a href="struct__dataGnss.html#a6c172263df238eb3097cdb3d933e4329">_dataGnss::data</a></div><div class="ttdeci">uint8_t data[95]</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:366</div></div>
+<div class="ttc" id="struct__apnUserPwd_html_ac89dd14310dfc6210a4322101a42e3c6"><div class="ttname"><a href="struct__apnUserPwd.html#ac89dd14310dfc6210a4322101a42e3c6">_apnUserPwd::user</a></div><div class="ttdeci">uint8_t * user</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:325</div></div>
+<div class="ttc" id="struct__smsListRet_html_ae60938400cf078f5f0a80f21da419a5a"><div class="ttname"><a href="struct__smsListRet.html#ae60938400cf078f5f0a80f21da419a5a">_smsListRet::msgs</a></div><div class="ttdeci">smsRec_t * msgs</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:292</div></div>
+<div class="ttc" id="struct__smsListPars_html_ade2d10f7668df32623a0b93b73646a77"><div class="ttname"><a href="struct__smsListPars.html#ade2d10f7668df32623a0b93b73646a77">_smsListPars::listSize</a></div><div class="ttdeci">uint8_t listSize</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:286</div></div>
+<div class="ttc" id="group__interface_html_ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39"><div class="ttname"><a href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39">NOCHANGE</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:254</div></div>
+<div class="ttc" id="group__interface_html_ga04193c9e01437684c61e0f614aa41884"><div class="ttname"><a href="group__interface.html#ga04193c9e01437684c61e0f614aa41884">connStatus_t</a></div><div class="ttdeci">struct _connStatus connStatus_t</div><div class="ttdoc">Struct for determining the status of the GSM and GPRS connections. </div></div>
+<div class="ttc" id="group__interface_html_ga442c775e3c9ba6695fa9f6e3c8565b00"><div class="ttname"><a href="group__interface.html#ga442c775e3c9ba6695fa9f6e3c8565b00">gsmCheckDataMode</a></div><div class="ttdeci">uint8_t gsmCheckDataMode(gsmInterface_t *interface, uint8_t const *const buf, uint8_t const *const nch)</div><div class="ttdoc">Detects tokens from the modem which indicate that we have left DATA_MODE and goes back to COMMAND_MOD...</div></div>
+<div class="ttc" id="struct__smsReadPars_html_a2b053d11a0c2b33c99896078eb5e58db"><div class="ttname"><a href="struct__smsReadPars.html#a2b053d11a0c2b33c99896078eb5e58db">_smsReadPars::idx</a></div><div class="ttdeci">uint8_t idx</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:260</div></div>
+<div class="ttc" id="group__interface_html_ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18"><div class="ttname"><a href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18">IDLE</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:66</div></div>
+<div class="ttc" id="group__interface_html_ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46"><div class="ttname"><a href="group__interface.html#ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46">ERR_INIT</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:106</div></div>
+<div class="ttc" id="group__interface_html_ga71dc645511316a9f1de36681774669df"><div class="ttname"><a href="group__interface.html#ga71dc645511316a9f1de36681774669df">smsListRet_t</a></div><div class="ttdeci">struct _smsListRet smsListRet_t</div><div class="ttdoc">Type for SMS read/list return. </div></div>
+<div class="ttc" id="struct__smsReadPars_html_a5d2721360ab438b7fbff3d737749a4f3"><div class="ttname"><a href="struct__smsReadPars.html#a5d2721360ab438b7fbff3d737749a4f3">_smsReadPars::mode</a></div><div class="ttdeci">smsReadMode_t mode</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:261</div></div>
+<div class="ttc" id="group__interface_html_gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c"><div class="ttname"><a href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c">TCP</a></div><div class="ttdef"><b>Definition:</b> gsmInterface.h:336</div></div>
+<div class="ttc" id="struct__errorCmd_html_a894579dabdccceed9cada4ffd53829df"><div class="ttname"><a href="struct__errorCmd.html#a894579dabdccceed9cada4ffd53829df">_errorCmd::cmd</a></div><div class="ttdeci">uint8_t cmd[TKN_CMD_SIZE+1]</div><div class="ttdef"><b>Definition:</b> gsmInterface.h:118</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 15 2019 11:59:49 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 21 2019 17:55:55 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

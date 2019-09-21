@@ -6960,7 +6960,7 @@
     <td align="right" class="lineno"><pre>952</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>         smsListRet_s msgVector; /* Message vector includes the actual array</pre></td>
+    <td align="left" class="src "><pre>         smsListRet_t msgVector; /* Message vector includes the actual array</pre></td>
     </tr>
 
     <tr>
@@ -7289,7 +7289,7 @@
     <td align="right" class="lineno"><pre>999</pre></td>
     <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 2 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="notTakenBranch" title="Branch 2 not taken">&cross;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span></td>
     <td align="right" class="linecount coveredLine"><pre>2</pre></td>
-    <td align="left" class="src coveredLine"><pre>         switch(((smsListPars_s *)interface->frmInput)->stat){</pre></td>
+    <td align="left" class="src coveredLine"><pre>         switch(((smsListPars_t *)interface->frmInput)->stat){</pre></td>
     </tr>
 
     <tr>
@@ -7541,7 +7541,7 @@
     <td align="right" class="lineno"><pre>1035</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>2</pre></td>
-    <td align="left" class="src coveredLine"><pre>         itoa(((smsListPars_s *)interface->frmInput)->mode, auxStr, 10);</pre></td>
+    <td align="left" class="src coveredLine"><pre>         itoa(((smsListPars_t *)interface->frmInput)->mode, auxStr, 10);</pre></td>
     </tr>
 
     <tr>
@@ -7989,7 +7989,7 @@
     <td align="right" class="lineno"><pre>1099</pre></td>
     <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 1 times">&check;</span><span class="takenBranch" title="Branch 1 taken 1 times">&check;</span></td>
     <td align="right" class="linecount coveredLine"><pre>4</pre></td>
-    <td align="left" class="src coveredLine"><pre>            if(((smsListPars_s *)interface->frmInput)->listSize</pre></td>
+    <td align="left" class="src coveredLine"><pre>            if(((smsListPars_t *)interface->frmInput)->listSize</pre></td>
     </tr>
 
     <tr>
@@ -8290,7 +8290,7 @@
     <td align="right" class="lineno"><pre>1142</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>         smsListRet_s msgVector; /* Message vector includes the actual array</pre></td>
+    <td align="left" class="src "><pre>         smsListRet_t msgVector; /* Message vector includes the actual array</pre></td>
     </tr>
 
     <tr>
@@ -8591,7 +8591,7 @@
     <td align="right" class="lineno"><pre>1185</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         itoa(((smsDelPars_s *)interface->frmInput)->idx, auxStr, 10);</pre></td>
+    <td align="left" class="src coveredLine"><pre>         itoa(((smsDelPars_t *)interface->frmInput)->idx, auxStr, 10);</pre></td>
     </tr>
 
     <tr>
@@ -8612,7 +8612,7 @@
     <td align="right" class="lineno"><pre>1188</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         itoa(((smsDelPars_s *)interface->frmInput)->mode, auxStr, 10);</pre></td>
+    <td align="left" class="src coveredLine"><pre>         itoa(((smsDelPars_t *)interface->frmInput)->mode, auxStr, 10);</pre></td>
     </tr>
 
     <tr>
@@ -9137,14 +9137,14 @@
     <td align="right" class="lineno"><pre>1263</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->apn,</pre></td>
+    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->apn,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1264</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_s *)interface->frmInput)->apn));</pre></td>
+    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_t *)interface->frmInput)->apn));</pre></td>
     </tr>
 
     <tr>
@@ -9158,14 +9158,14 @@
     <td align="right" class="lineno"><pre>1266</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->user,</pre></td>
+    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->user,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1267</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_s *)interface->frmInput)->user));</pre></td>
+    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_t *)interface->frmInput)->user));</pre></td>
     </tr>
 
     <tr>
@@ -9179,14 +9179,14 @@
     <td align="right" class="lineno"><pre>1269</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->pwd,</pre></td>
+    <td align="left" class="src coveredLine"><pre>         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->pwd,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1270</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_s *)interface->frmInput)->pwd));</pre></td>
+    <td align="left" class="src coveredLine"><pre>                             strlen(((apnUserPwd_t *)interface->frmInput)->pwd));</pre></td>
     </tr>
 
     <tr>
@@ -10537,7 +10537,7 @@
     <td align="right" class="lineno"><pre>1463</pre></td>
     <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 1 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         if(TCP == ((socket_s *)interface->frmInput)->type){</pre></td>
+    <td align="left" class="src coveredLine"><pre>         if(TCP == ((socket_t *)interface->frmInput)->type){</pre></td>
     </tr>
 
     <tr>
@@ -10558,7 +10558,7 @@
     <td align="right" class="lineno"><pre>1466</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>         else if(UDP == ((socket_s *)interface->frmInput)->type){</pre></td>
+    <td align="left" class="src uncoveredLine"><pre>         else if(UDP == ((socket_t *)interface->frmInput)->type){</pre></td>
     </tr>
 
     <tr>
@@ -10586,14 +10586,14 @@
     <td align="right" class="lineno"><pre>1470</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         strncat(socketStr, ((socket_s *)interface->frmInput)->address,</pre></td>
+    <td align="left" class="src coveredLine"><pre>         strncat(socketStr, ((socket_t *)interface->frmInput)->address,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>1471</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>                 strlen(((socket_s *)interface->frmInput)->address));</pre></td>
+    <td align="left" class="src coveredLine"><pre>                 strlen(((socket_t *)interface->frmInput)->address));</pre></td>
     </tr>
 
     <tr>
@@ -10607,7 +10607,7 @@
     <td align="right" class="lineno"><pre>1473</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         itoa(((socket_s *)interface->frmInput)->port, auxStr, 10);</pre></td>
+    <td align="left" class="src coveredLine"><pre>         itoa(((socket_t *)interface->frmInput)->port, auxStr, 10);</pre></td>
     </tr>
 
     <tr>
@@ -11867,7 +11867,7 @@
     <td align="right" class="lineno"><pre>1653</pre></td>
     <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 1 times">&check;</span><span class="takenBranch" title="Branch 1 taken 1 times">&check;</span></td>
     <td align="right" class="linecount coveredLine"><pre>2</pre></td>
-    <td align="left" class="src coveredLine"><pre>         if(ON == *((pwrGnss_e *)interface->frmInput)){</pre></td>
+    <td align="left" class="src coveredLine"><pre>         if(ON == *((pwrGnss_t *)interface->frmInput)){</pre></td>
     </tr>
 
     <tr>
@@ -11888,7 +11888,7 @@
     <td align="right" class="lineno"><pre>1656</pre></td>
     <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 1 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>         else if(OFF == *((pwrGnss_e *)interface->frmInput)){</pre></td>
+    <td align="left" class="src coveredLine"><pre>         else if(OFF == *((pwrGnss_t *)interface->frmInput)){</pre></td>
     </tr>
 
     <tr>
@@ -12553,7 +12553,7 @@
     <td align="right" class="lineno"><pre>1751</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>1</pre></td>
-    <td align="left" class="src coveredLine"><pre>            strncpy(((dataGnss_s *)interface->frmOutput)->data,&amp;rsp.par[0],</pre></td>
+    <td align="left" class="src coveredLine"><pre>            strncpy(((dataGnss_t *)interface->frmOutput)->data,&amp;rsp.par[0],</pre></td>
     </tr>
 
     <tr>
@@ -12588,7 +12588,7 @@
     <td align="right" class="lineno"><pre>1756</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>            debug(((dataGnss_s *)interface->frmOutput)->data);</pre></td>
+    <td align="left" class="src "><pre>            debug(((dataGnss_t *)interface->frmOutput)->data);</pre></td>
     </tr>
 
     <tr>
@@ -16011,7 +16011,7 @@
     <td align="right" class="lineno"><pre>2245</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>                 smsListPars_s * pars, frmCback_t cback)</pre></td>
+    <td align="left" class="src "><pre>                 smsListPars_t * pars, frmCback_t cback)</pre></td>
     </tr>
 
     <tr>
@@ -16102,7 +16102,7 @@
     <td align="right" class="lineno"><pre>2258</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>3</pre></td>
-    <td align="left" class="src coveredLine"><pre>void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmSmsDel (gsmInterface_t * interface, smsDelPars_t * msgdel,</pre></td>
     </tr>
 
     <tr>
@@ -16207,7 +16207,7 @@
     <td align="right" class="lineno"><pre>2273</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>3</pre></td>
-    <td align="left" class="src coveredLine"><pre>void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_t * apn,</pre></td>
     </tr>
 
     <tr>
@@ -16382,7 +16382,7 @@
     <td align="right" class="lineno"><pre>2298</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount coveredLine"><pre>3</pre></td>
-    <td align="left" class="src coveredLine"><pre>void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * socket,</pre></td>
+    <td align="left" class="src coveredLine"><pre>void gsmGprsOpenPort (gsmInterface_t * interface, socket_t * socket,</pre></td>
     </tr>
 
     <tr>
@@ -16571,7 +16571,7 @@
     <td align="right" class="lineno"><pre>2325</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>                 pwrGnss_e * cmd, frmCback_t cback)</pre></td>
+    <td align="left" class="src "><pre>                 pwrGnss_t * cmd, frmCback_t cback)</pre></td>
     </tr>
 
     <tr>
@@ -16662,7 +16662,7 @@
     <td align="right" class="lineno"><pre>2338</pre></td>
     <td align="right" class="linebranch"></td>
     <td align="right" class="linecount "><pre></pre></td>
-    <td align="left" class="src "><pre>                     dataGnss_s * dataGnss, frmCback_t cback)</pre></td>
+    <td align="left" class="src "><pre>                     dataGnss_t * dataGnss, frmCback_t cback)</pre></td>
     </tr>
 
     <tr>

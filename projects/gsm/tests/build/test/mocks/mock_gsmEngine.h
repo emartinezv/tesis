@@ -25,64 +25,160 @@ void mock_gsmEngine_Verify(void);
 
 #define gsmInitEngine_IgnoreAndReturn(cmock_retval) gsmInitEngine_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmInitEngine_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+#define gsmInitEngine_ExpectAnyArgsAndReturn(cmock_retval) gsmInitEngine_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmInitEngine_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmInitEngine_ExpectAndReturn(engine, cmock_retval) gsmInitEngine_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmInitEngine_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmInitEngine_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmInitEngine_StubWithCallback(CMOCK_gsmInitEngine_CALLBACK Callback);
+#define gsmInitEngine_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmInitEngine_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmInitEngine_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, _Bool cmock_to_return);
+#define gsmInitEngine_ReturnThruPtr_engine(engine) gsmInitEngine_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmInitEngine_ReturnArrayThruPtr_engine(engine, cmock_len) gsmInitEngine_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmInitEngine_ReturnMemThruPtr_engine(engine, cmock_size) gsmInitEngine_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmInitEngine_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmInitEngine_IgnoreArg_engine() gsmInitEngine_CMockIgnoreArg_engine(__LINE__)
+void gsmInitEngine_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmProcessTkn_IgnoreAndReturn(cmock_retval) gsmProcessTkn_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmProcessTkn_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return);
+#define gsmProcessTkn_ExpectAnyArgsAndReturn(cmock_retval) gsmProcessTkn_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmProcessTkn_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return);
 #define gsmProcessTkn_ExpectAndReturn(engine, cmock_retval) gsmProcessTkn_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmProcessTkn_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, fsmEvent_t cmock_to_return);
 typedef fsmEvent_t (* CMOCK_gsmProcessTkn_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmProcessTkn_StubWithCallback(CMOCK_gsmProcessTkn_CALLBACK Callback);
+#define gsmProcessTkn_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmProcessTkn_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmProcessTkn_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, fsmEvent_t cmock_to_return);
+#define gsmProcessTkn_ReturnThruPtr_engine(engine) gsmProcessTkn_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmProcessTkn_ReturnArrayThruPtr_engine(engine, cmock_len) gsmProcessTkn_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmProcessTkn_ReturnMemThruPtr_engine(engine, cmock_size) gsmProcessTkn_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmProcessTkn_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmProcessTkn_IgnoreArg_engine() gsmProcessTkn_CMockIgnoreArg_engine(__LINE__)
+void gsmProcessTkn_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmToutCntZero_IgnoreAndReturn(cmock_retval) gsmToutCntZero_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmToutCntZero_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+#define gsmToutCntZero_ExpectAnyArgsAndReturn(cmock_retval) gsmToutCntZero_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmToutCntZero_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmToutCntZero_ExpectAndReturn(engine, cmock_retval) gsmToutCntZero_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmToutCntZero_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmToutCntZero_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmToutCntZero_StubWithCallback(CMOCK_gsmToutCntZero_CALLBACK Callback);
+#define gsmToutCntZero_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmToutCntZero_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmToutCntZero_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, _Bool cmock_to_return);
+#define gsmToutCntZero_ReturnThruPtr_engine(engine) gsmToutCntZero_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmToutCntZero_ReturnArrayThruPtr_engine(engine, cmock_len) gsmToutCntZero_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmToutCntZero_ReturnMemThruPtr_engine(engine, cmock_size) gsmToutCntZero_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmToutCntZero_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmToutCntZero_IgnoreArg_engine() gsmToutCntZero_CMockIgnoreArg_engine(__LINE__)
+void gsmToutCntZero_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmDecToutCnt_Ignore() gsmDecToutCnt_CMockIgnore()
 void gsmDecToutCnt_CMockIgnore(void);
+#define gsmDecToutCnt_ExpectAnyArgs() gsmDecToutCnt_CMockExpectAnyArgs(__LINE__)
+void gsmDecToutCnt_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
 #define gsmDecToutCnt_Expect(engine) gsmDecToutCnt_CMockExpect(__LINE__, engine)
 void gsmDecToutCnt_CMockExpect(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine);
 typedef void (* CMOCK_gsmDecToutCnt_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmDecToutCnt_StubWithCallback(CMOCK_gsmDecToutCnt_CALLBACK Callback);
+#define gsmDecToutCnt_ExpectWithArray(engine, engine_Depth) gsmDecToutCnt_CMockExpectWithArray(__LINE__, engine, engine_Depth)
+void gsmDecToutCnt_CMockExpectWithArray(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth);
+#define gsmDecToutCnt_ReturnThruPtr_engine(engine) gsmDecToutCnt_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmDecToutCnt_ReturnArrayThruPtr_engine(engine, cmock_len) gsmDecToutCnt_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmDecToutCnt_ReturnMemThruPtr_engine(engine, cmock_size) gsmDecToutCnt_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmDecToutCnt_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmDecToutCnt_IgnoreArg_engine() gsmDecToutCnt_CMockIgnoreArg_engine(__LINE__)
+void gsmDecToutCnt_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmSendCmd_IgnoreAndReturn(cmock_retval) gsmSendCmd_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmSendCmd_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return);
+#define gsmSendCmd_ExpectAnyArgsAndReturn(cmock_retval) gsmSendCmd_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmSendCmd_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, fsmEvent_t cmock_to_return);
 #define gsmSendCmd_ExpectAndReturn(engine, cmdStr, cmock_retval) gsmSendCmd_CMockExpectAndReturn(__LINE__, engine, cmdStr, cmock_retval)
 void gsmSendCmd_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, const uint8_t* const cmdStr, fsmEvent_t cmock_to_return);
 typedef fsmEvent_t (* CMOCK_gsmSendCmd_CALLBACK)(gsmEngine_t* const engine, const uint8_t* const cmdStr, int cmock_num_calls);
 void gsmSendCmd_StubWithCallback(CMOCK_gsmSendCmd_CALLBACK Callback);
+#define gsmSendCmd_ExpectWithArrayAndReturn(engine, engine_Depth, cmdStr, cmdStr_Depth, cmock_retval) gsmSendCmd_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmdStr, cmdStr_Depth, cmock_retval)
+void gsmSendCmd_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, const uint8_t* const cmdStr, int cmdStr_Depth, fsmEvent_t cmock_to_return);
+#define gsmSendCmd_ReturnThruPtr_engine(engine) gsmSendCmd_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmSendCmd_ReturnArrayThruPtr_engine(engine, cmock_len) gsmSendCmd_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmSendCmd_ReturnMemThruPtr_engine(engine, cmock_size) gsmSendCmd_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmSendCmd_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmSendCmd_IgnoreArg_engine() gsmSendCmd_CMockIgnoreArg_engine(__LINE__)
+void gsmSendCmd_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
+#define gsmSendCmd_IgnoreArg_cmdStr() gsmSendCmd_CMockIgnoreArg_cmdStr(__LINE__)
+void gsmSendCmd_CMockIgnoreArg_cmdStr(UNITY_LINE_TYPE cmock_line);
 #define gsmGetCmdRsp_IgnoreAndReturn(cmock_retval) gsmGetCmdRsp_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return);
+#define gsmGetCmdRsp_ExpectAnyArgsAndReturn(cmock_retval) gsmGetCmdRsp_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetCmdRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return);
 #define gsmGetCmdRsp_ExpectAndReturn(engine, cmock_retval) gsmGetCmdRsp_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmGetCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, rsp_t cmock_to_return);
 typedef rsp_t (* CMOCK_gsmGetCmdRsp_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmGetCmdRsp_StubWithCallback(CMOCK_gsmGetCmdRsp_CALLBACK Callback);
+#define gsmGetCmdRsp_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmGetCmdRsp_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmGetCmdRsp_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, rsp_t cmock_to_return);
+#define gsmGetCmdRsp_ReturnThruPtr_engine(engine) gsmGetCmdRsp_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmGetCmdRsp_ReturnArrayThruPtr_engine(engine, cmock_len) gsmGetCmdRsp_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmGetCmdRsp_ReturnMemThruPtr_engine(engine, cmock_size) gsmGetCmdRsp_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmGetCmdRsp_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmGetCmdRsp_IgnoreArg_engine() gsmGetCmdRsp_CMockIgnoreArg_engine(__LINE__)
+void gsmGetCmdRsp_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmGetNoCmdRsp_IgnoreAndReturn(cmock_retval) gsmGetNoCmdRsp_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetNoCmdRsp_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
+#define gsmGetNoCmdRsp_ExpectAnyArgsAndReturn(cmock_retval) gsmGetNoCmdRsp_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetNoCmdRsp_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
 #define gsmGetNoCmdRsp_ExpectAndReturn(engine, cmock_retval) gsmGetNoCmdRsp_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmGetNoCmdRsp_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, uint8_t cmock_to_return);
 typedef uint8_t (* CMOCK_gsmGetNoCmdRsp_CALLBACK)(const gsmEngine_t* const engine, int cmock_num_calls);
 void gsmGetNoCmdRsp_StubWithCallback(CMOCK_gsmGetNoCmdRsp_CALLBACK Callback);
+#define gsmGetNoCmdRsp_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmGetNoCmdRsp_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmGetNoCmdRsp_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, int engine_Depth, uint8_t cmock_to_return);
+#define gsmGetNoCmdRsp_IgnoreArg_engine() gsmGetNoCmdRsp_CMockIgnoreArg_engine(__LINE__)
+void gsmGetNoCmdRsp_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmGetUrc_IgnoreAndReturn(cmock_retval) gsmGetUrc_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetUrc_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return);
+#define gsmGetUrc_ExpectAnyArgsAndReturn(cmock_retval) gsmGetUrc_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetUrc_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, rsp_t cmock_to_return);
 #define gsmGetUrc_ExpectAndReturn(engine, cmock_retval) gsmGetUrc_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmGetUrc_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, rsp_t cmock_to_return);
 typedef rsp_t (* CMOCK_gsmGetUrc_CALLBACK)(gsmEngine_t* const engine, int cmock_num_calls);
 void gsmGetUrc_StubWithCallback(CMOCK_gsmGetUrc_CALLBACK Callback);
+#define gsmGetUrc_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmGetUrc_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmGetUrc_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, rsp_t cmock_to_return);
+#define gsmGetUrc_ReturnThruPtr_engine(engine) gsmGetUrc_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmGetUrc_ReturnArrayThruPtr_engine(engine, cmock_len) gsmGetUrc_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmGetUrc_ReturnMemThruPtr_engine(engine, cmock_size) gsmGetUrc_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmGetUrc_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmGetUrc_IgnoreArg_engine() gsmGetUrc_CMockIgnoreArg_engine(__LINE__)
+void gsmGetUrc_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmGetSerialMode_IgnoreAndReturn(cmock_retval) gsmGetSerialMode_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmGetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, serialMode_t cmock_to_return);
+#define gsmGetSerialMode_ExpectAnyArgsAndReturn(cmock_retval) gsmGetSerialMode_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmGetSerialMode_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, serialMode_t cmock_to_return);
 #define gsmGetSerialMode_ExpectAndReturn(engine, cmock_retval) gsmGetSerialMode_CMockExpectAndReturn(__LINE__, engine, cmock_retval)
 void gsmGetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, serialMode_t cmock_to_return);
 typedef serialMode_t (* CMOCK_gsmGetSerialMode_CALLBACK)(const gsmEngine_t* const engine, int cmock_num_calls);
 void gsmGetSerialMode_StubWithCallback(CMOCK_gsmGetSerialMode_CALLBACK Callback);
+#define gsmGetSerialMode_ExpectWithArrayAndReturn(engine, engine_Depth, cmock_retval) gsmGetSerialMode_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, cmock_retval)
+void gsmGetSerialMode_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, const gsmEngine_t* const engine, int engine_Depth, serialMode_t cmock_to_return);
+#define gsmGetSerialMode_IgnoreArg_engine() gsmGetSerialMode_CMockIgnoreArg_engine(__LINE__)
+void gsmGetSerialMode_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
 #define gsmSetSerialMode_IgnoreAndReturn(cmock_retval) gsmSetSerialMode_CMockIgnoreAndReturn(__LINE__, cmock_retval)
 void gsmSetSerialMode_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
+#define gsmSetSerialMode_ExpectAnyArgsAndReturn(cmock_retval) gsmSetSerialMode_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void gsmSetSerialMode_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, _Bool cmock_to_return);
 #define gsmSetSerialMode_ExpectAndReturn(engine, mode, cmock_retval) gsmSetSerialMode_CMockExpectAndReturn(__LINE__, engine, mode, cmock_retval)
 void gsmSetSerialMode_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, serialMode_t mode, _Bool cmock_to_return);
 typedef _Bool (* CMOCK_gsmSetSerialMode_CALLBACK)(gsmEngine_t* const engine, serialMode_t mode, int cmock_num_calls);
 void gsmSetSerialMode_StubWithCallback(CMOCK_gsmSetSerialMode_CALLBACK Callback);
+#define gsmSetSerialMode_ExpectWithArrayAndReturn(engine, engine_Depth, mode, cmock_retval) gsmSetSerialMode_CMockExpectWithArrayAndReturn(__LINE__, engine, engine_Depth, mode, cmock_retval)
+void gsmSetSerialMode_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, gsmEngine_t* const engine, int engine_Depth, serialMode_t mode, _Bool cmock_to_return);
+#define gsmSetSerialMode_ReturnThruPtr_engine(engine) gsmSetSerialMode_CMockReturnMemThruPtr_engine(__LINE__, engine, sizeof(*engine))
+#define gsmSetSerialMode_ReturnArrayThruPtr_engine(engine, cmock_len) gsmSetSerialMode_CMockReturnMemThruPtr_engine(__LINE__, engine, (int)(cmock_len * (int)sizeof(*engine)))
+#define gsmSetSerialMode_ReturnMemThruPtr_engine(engine, cmock_size) gsmSetSerialMode_CMockReturnMemThruPtr_engine(__LINE__, engine, cmock_size)
+void gsmSetSerialMode_CMockReturnMemThruPtr_engine(UNITY_LINE_TYPE cmock_line, gsmEngine_t* engine, int cmock_size);
+#define gsmSetSerialMode_IgnoreArg_engine() gsmSetSerialMode_CMockIgnoreArg_engine(__LINE__)
+void gsmSetSerialMode_CMockIgnoreArg_engine(UNITY_LINE_TYPE cmock_line);
+#define gsmSetSerialMode_IgnoreArg_mode() gsmSetSerialMode_CMockIgnoreArg_mode(__LINE__)
+void gsmSetSerialMode_CMockIgnoreArg_mode(UNITY_LINE_TYPE cmock_line);
 
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)
 #if __GNUC__ > 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ > 6 || (__GNUC_MINOR__ == 6 && __GNUC_PATCHLEVEL__ > 0)))

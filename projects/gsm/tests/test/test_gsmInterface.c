@@ -1,5 +1,3 @@
-#ifdef TEST_INTERF
-
 /*******************************************************************************
  *    INCLUDED FILES
  ******************************************************************************/
@@ -34,9 +32,13 @@
  *    PRIVATE DATA
  ******************************************************************************/
 
+/* Formula execution flags */
+
 static bool dataCbackFlag = false;
 static bool frmFlag = false;
 static bool frmCbackFlag = false;
+
+/* DATA_MODE exit commands list */
 
 static uint8_t const * const exitCmds [] = {"OK", "CLOSED"};
 
@@ -59,7 +61,7 @@ void dataCbackTest (gsmInterface_t * interface)
    return;
 }
 
-void * frmCbackTest (errorUser_s error, void * output)
+void * frmCbackTest (errorUser_t error, void * output)
 {
    frmCbackFlag = true;
 }
@@ -112,6 +114,8 @@ void test_gsmInitInterface(void)
 
    result = gsmInitInterface(&interface);
 
+   /* We test all the assignments in gsmInitInterface explicitly */
+
    TEST_ASSERT_TRUE(result);
 
    TEST_ASSERT_TRUE(IDLE == interface.frmState);
@@ -151,6 +155,9 @@ void test_gsmStartUp(void)
    frmCback_t cbackTest;
 
    /* Test sequence */
+
+   /* In this and all following formula-loading functions, we test the
+    * assignments to frmCback, frmInput and frmOutput if any. */
 
    gsmStartUp(&interface, cbackTest);
 
@@ -207,6 +214,9 @@ void test_gsmSysTickHandler(void)
 
    gsmInitInterface(&interface);
 
+   /* Initialize counters, call gsmSysTickHandler and verify that both counters
+    * have decremented by 1 */
+
    interface.procCnt = 100;
    interface.auxCnt = 100;
 
@@ -217,6 +227,8 @@ void test_gsmSysTickHandler(void)
 
    interface.procCnt = 0;
    interface.auxCnt = 0;
+
+   /* Same for counters starting at 0, verify that there are no errors */
 
    gsmSysTickHandler();
 
@@ -238,7 +250,7 @@ void test_gsmProcess(void)
    /* Variables */
 
    gsmInterface_t interface;
-   rsp_t rspTest;
+   rsp_t rspTest = {"CMTI", "abcde"};
 
    /* Initialization */
 
@@ -249,11 +261,6 @@ void test_gsmProcess(void)
    interface.dataCback = dataCbackTest;
    interface.frm = frmTest;
 
-   strncpy(rspTest.cmd, "CMTI", strlen("CMTI"));
-   rspTest.cmd[strlen("CMTI")] = '\0';
-   strncpy(rspTest.par, "abcde", strlen("abcde"));
-   rspTest.par[strlen("abcde")] = '\0';
-
    /* Mocks */
 
    /* Test sequence */
@@ -262,7 +269,7 @@ void test_gsmProcess(void)
 
    interface.procCnt = 100;
 
-   gsmProcess(&interface);
+   gsmProcess(&interface); /* This should just return with no further calls */
 
    /* Branch 1.1.1.2 */
 
@@ -274,6 +281,7 @@ void test_gsmProcess(void)
 
    gsmProcess(&interface);
 
+   /* urcCbackTest checks that rspTest is correctly received */
    TEST_ASSERT_EQUAL_UINT32(DELAY_PROC, interface.procCnt);
 
    /* Branch 1.1.2 */
@@ -285,7 +293,7 @@ void test_gsmProcess(void)
 
    gsmProcess(&interface);
 
-   TEST_ASSERT_TRUE(dataCbackFlag);
+   TEST_ASSERT_TRUE(dataCbackFlag); /* dataCbackTest called */
    TEST_ASSERT_EQUAL_UINT32(DELAY_PROC, interface.procCnt);
 
    return;
@@ -297,7 +305,7 @@ void test_gsmProcess(void)
 
    gsmProcess(&interface);
 
-   TEST_ASSERT_TRUE(frmFlag);
+   TEST_ASSERT_TRUE(frmFlag); /* frmCbackTest called */
    TEST_ASSERT_EQUAL_UINT32(DELAY_PROC, interface.procCnt);
 
    return;
@@ -349,7 +357,7 @@ void test_gsmGetSigQual(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   sigQual_s sigQualTest;
+   sigQual_t sigQualTest;
 
    /* Test sequence */
 
@@ -375,7 +383,7 @@ void test_gsmCheckConn(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   connStatus_s connStateTest;
+   connStatus_t connStateTest;
 
    /* Test sequence */
 
@@ -400,7 +408,7 @@ void test_gsmReadUrc(void)
    /* Variables */
 
    gsmInterface_t interface;
-   urc_s urcTest = {"\0","\0"};
+   urc_t urcTest = {"\0","\0"};
    bool result;
 
    rsp_t rspTest1 = {"\0","\0"};
@@ -581,8 +589,8 @@ void test_gsmSmsSend(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   smsOut_s msgTest;
-   smsConf_s confTest;
+   smsOut_t msgTest;
+   smsConf_t confTest;
 
    /* Test sequence */
 
@@ -609,8 +617,8 @@ void test_gsmSmsRead(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   smsRec_s msgTest;
-   smsReadPars_s parsTest;
+   smsRec_t msgTest;
+   smsReadPars_t parsTest;
 
    /* Test sequence */
 
@@ -637,8 +645,8 @@ void test_gsmSmsList(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   smsRec_s listTest;
-   smsListPars_s parsTest;
+   smsRec_t listTest;
+   smsListPars_t parsTest;
 
    /* Test sequence */
 
@@ -665,7 +673,7 @@ void test_gsmSmsDel(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   smsDelPars_s msgdelTest;
+   smsDelPars_t msgdelTest;
 
    /* Test sequence */
 
@@ -691,7 +699,7 @@ void test_gsmGprsStart(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   apnUserPwd_s apnTest;
+   apnUserPwd_t apnTest;
 
    /* Test sequence */
 
@@ -741,7 +749,7 @@ void test_gsmGprsOpenPort(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   socket_s portTest;
+   socket_t portTest;
 
    /* Test sequence */
 
@@ -791,7 +799,7 @@ void test_gsmGnssPwr(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   pwrGnss_e cmdTest;
+   pwrGnss_t cmdTest;
 
    /* Test sequence */
 
@@ -817,7 +825,7 @@ void test_gsmGnssGetData(void)
 
    gsmInterface_t interface;
    frmCback_t cbackTest;
-   dataGnss_s dataGnssTest;
+   dataGnss_t dataGnssTest;
 
    /* Test sequence */
 
@@ -828,6 +836,12 @@ void test_gsmGnssGetData(void)
    TEST_ASSERT_TRUE(INIT == interface.frmState);
 
 }
+
+/* The following tests address all the formula functions. We initialice an
+   interface variable and mock the gsmSendCmd and gsmProcessTkn functions
+   locally to simulate the evolution of the 2-level FSM in each formula
+   function. We always test for the callback function call at the end, as
+   well as for correct error code forwarding. */
 
 /* test_gsmStartUpF
  *
@@ -1054,8 +1068,7 @@ void test_gsmGetSigQualF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   sigQual_s sigQualTest;
-
+   sigQual_t sigQualTest;
 
    /* Initialization */
 
@@ -1245,23 +1258,13 @@ void test_gsmCheckConnF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   connStatus_s connStateTest;
-   rsp_t rspGsmTest;
-   rsp_t rspGprsTest;
+   connStatus_t connStateTest;
+   rsp_t rspGsmTest = {"CREG", " 0,1"};
+   rsp_t rspGprsTest = {"CGATT", " 1"};
 
    /* Initialization */
 
    frmCbackFlag = false;
-
-   strncpy(rspGsmTest.cmd, "CREG", strlen("CREG"));
-   rspGsmTest.cmd[strlen("CREG")] = '\0';
-   strncpy(rspGsmTest.par, " 0,1", strlen(" 1,0"));
-   rspGsmTest.par[strlen(" 0,1")] = '\0';
-
-   strncpy(rspGprsTest.cmd, "CGATT", strlen("CGATT"));
-   rspGprsTest.cmd[strlen("CGATT")] = '\0';
-   strncpy(rspGprsTest.par, " 1", strlen(" 1"));
-   rspGprsTest.par[strlen(" 1")] = '\0';
 
    /* Test sequence */
 
@@ -1361,11 +1364,10 @@ void test_gsmSmsSendF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   smsOut_s msgTest1 = {"+5491151751809","Hola mundo!\r\n"};
-   smsOut_s msgTest2 = {"+5491151751809","Hola mundo!"};
-   smsConf_s confTest;
-   rsp_t rspTest1 = {"OK",""};
-   rsp_t rspTest2 = {"CMGS"," 5"};
+   smsOut_t msgTest1 = {"+5491151751809","Hola mundo!\r\n"};
+   smsOut_t msgTest2 = {"+5491151751809","Hola mundo!"};
+   smsConf_t confTest;
+   rsp_t rspTest = {"CMGS", " 5"};
 
    /* Initialization */
 
@@ -1409,8 +1411,7 @@ void test_gsmSmsSendF(void)
 
    interface.frm(&interface);
 
-   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
-   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest2);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest);
 
    interface.frm(&interface);
 
@@ -1480,8 +1481,8 @@ void test_gsmSmsReadF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   smsRec_s msgTest;
-   smsReadPars_s parsTest = {1,NOCHANGE};
+   smsRec_t msgTest;
+   smsReadPars_t parsTest = {1,NOCHANGE};
    rsp_t rspTest1 = {"CMGR","meta"};
    rsp_t rspTest2 = {"SMS_BODY","text"};
 
@@ -1581,8 +1582,8 @@ void test_gsmSmsListF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   smsRec_s listTest[3];
-   smsListPars_s parsTest = {REC_UNREAD,NOCHANGE,3};
+   smsRec_t listTest[3];
+   smsListPars_t parsTest = {REC_UNREAD,NOCHANGE,3};
    rsp_t rspTest1 = {"CMGR","meta1"};
    rsp_t rspTest2 = {"SMS_BODY","text1"};
    rsp_t rspTest3 = {"CMGR","meta2"};
@@ -1703,23 +1704,6 @@ void test_gsmSmsListF(void)
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
-   /* Test just for different options in smsListPars_s */
-
-   smsListPars_s parsTest2 = {REC_READ,NOCHANGE,3};
-
-   gsmSmsList(&interface, &listTest[0], &parsTest2, frmCbackTest);
-
-   interface.frm(&interface);
-
-   interface.procState = ATCMD2;
-
-   //gsmSendCmd_ExpectAndReturn(&(interface.engine),
-   //                           "AT+CMGL=\"REC READ\",1\r", OK_CMD_SENT);
-
-   //interface.frm(&interface);
-
-   //return;
-
 }
 
 /* test_gsmSmsDelF
@@ -1739,7 +1723,7 @@ void test_gsmSmsDelF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   smsDelPars_s parsTest = {1,INDEX};
+   smsDelPars_t parsTest = {1,INDEX};
    rsp_t rspTest1 = {"cmd","par"};
 
    /* Initialization */
@@ -1791,7 +1775,7 @@ void test_gsmGprsStartF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   apnUserPwd_s apnTest = {"apn","user","password"};
+   apnUserPwd_t apnTest = {"apn","user","password"};
    rsp_t rspTest1 = {"cmd","par"};
 
    /* Initialization */
@@ -1959,7 +1943,7 @@ void test_gsmGprsOpenPortF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   socket_s socketTest = {TCP, "192.168.0.1", 80};
+   socket_t socketTest = {TCP, "192.168.0.1", 80};
    rsp_t rspTest1 = {"OK",""};
    rsp_t rspTest2 = {"CONNECT OK",""};
 
@@ -2083,7 +2067,7 @@ void test_gsmGnssPwrF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   pwrGnss_e cmdTest;
+   pwrGnss_t cmdTest;
 
    /* Initialization */
 
@@ -2162,7 +2146,7 @@ void test_gsmGnssGetDataF(void)
    /* Variables */
 
    gsmInterface_t interface;
-   dataGnss_s dataGnssTest;
+   dataGnss_t dataGnssTest;
    rsp_t rspTest = {"CGNSINF","data"};
 
    /* Initialization */
@@ -2197,6 +2181,3 @@ void test_gsmGnssGetDataF(void)
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
 }
-
-#endif
-

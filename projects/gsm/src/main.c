@@ -54,13 +54,13 @@ static void initHardware(void);
  */
 static void pausems(uint32_t t);
 
-void * cb (errorUser_s, void *);
+void * cb (errorUser_t, void *);
 
-void * cbempty (errorUser_s, void *);
+void * cbempty (errorUser_t, void *);
 
-void * cbgsmgprs (errorUser_s, void *);
+void * cbgsmgprs (errorUser_t, void *);
 
-void * cbprint (errorUser_s, void *);
+void * cbprint (errorUser_t, void *);
 
 /*==================[internal data definition]===============================*/
 
@@ -96,7 +96,7 @@ static void pausems(uint32_t t)
 /*                             Callback functions                            */
 /*---------------------------------------------------------------------------*/
 
-void * cbempty (errorUser_s error_in, void * input)
+void * cbempty (errorUser_t error_in, void * input)
 {
    dbgPrint("Funcion cbempty ejecutada\r\n");
 
@@ -146,7 +146,7 @@ void * cbempty (errorUser_s error_in, void * input)
    return 0;
 }
 
-void * cbled (errorUser_s error_in, void * input)
+void * cbled (errorUser_t error_in, void * input)
 {
    if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
@@ -194,7 +194,7 @@ void * cbled (errorUser_s error_in, void * input)
    dbgPrint("Actualizando LEDs...\r\n");
 
    uint8_t i = 0;
-   smsRec_s * target = (smsRec_s *)input;
+   smsRec_t * target = (smsRec_t *)input;
 
    for(i = 0; (target+i)->meta[0] != '\0'; i++){
 
@@ -212,7 +212,7 @@ void * cbled (errorUser_s error_in, void * input)
    return;
 }
 
-void * cbprint (errorUser_s error_in, void * input)
+void * cbprint (errorUser_t error_in, void * input)
 {
    if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
@@ -262,8 +262,8 @@ void * cbprint (errorUser_s error_in, void * input)
       dbgPrint("Imprimiendo SMS...\r\n\r\n");
 
       uint8_t i = 0;
-      smsRec_s * target = ((smsListRet_s *)input)->msgs;
-      uint8_t noMsg = ((smsListRet_s *)input)->noMsgs;
+      smsRec_t * target = ((smsListRet_t *)input)->msgs;
+      uint8_t noMsg = ((smsListRet_t *)input)->noMsgs;
 
       uint8_t auxtext[5];
 
@@ -286,7 +286,7 @@ void * cbprint (errorUser_s error_in, void * input)
    return;
 }
 
-void * cbgsmgprs (errorUser_s error_in, void * input)
+void * cbgsmgprs (errorUser_t error_in, void * input)
 {
    if(OK != error_in.errorFrm){
       dbgPrint("Error en la ejecucion de formula: ");
@@ -333,14 +333,14 @@ void * cbgsmgprs (errorUser_s error_in, void * input)
 
    else{
 
-      if(true == ((connStatus_s *)input)->gsm){
+      if(true == ((connStatus_t *)input)->gsm){
          dbgPrint("\r\n Conectado a red GSM\r\n");
       }
       else{
          dbgPrint("\r\n No conectado a red GSM\r\n");
       }
 
-      if(true == ((connStatus_s *)input)->gprs){
+      if(true == ((connStatus_t *)input)->gprs){
          dbgPrint("\r\n Conectado a servicio GPRS\r\n");
       }
       else{
@@ -415,13 +415,13 @@ void console_sms (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   smsOut_s msg = {"1151751809","Hola mundo!"};
-   smsConf_s conf;
-   smsRec_s msgList[SMS_READ_SIZ];
-   smsDelPars_s msgDel = {1, DEL_ALL};
-   smsRec_s recMsg;
-   smsReadPars_s parRead = {1, NOCHANGE};
-   smsListPars_s parList = {ALL_MSG, NOCHANGE, SMS_READ_SIZ};
+   smsOut_t msg = {"1151751809","Hola mundo!"};
+   smsConf_t conf;
+   smsRec_t msgList[SMS_READ_SIZ];
+   smsDelPars_t msgDel = {1, DEL_ALL};
+   smsRec_t recMsg;
+   smsReadPars_t parRead = {1, NOCHANGE};
+   smsListPars_t parList = {ALL_MSG, NOCHANGE, SMS_READ_SIZ};
 
    while ('S' != instruction){
 
@@ -493,9 +493,9 @@ void console_gprs (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   apnUserPwd_s APN = {"datos.personal.com","datos","datos"};
-   socket_s port1 = {TCP, "104.236.225.217",2399};
-   socket_s port2 = {UDP, "104.236.225.217",2399};
+   apnUserPwd_t APN = {"datos.personal.com","datos","datos"};
+   socket_t port1 = {TCP, "104.236.225.217",2399};
+   socket_t port2 = {UDP, "104.236.225.217",2399};
 
    while ('S' != instruction){
 
@@ -581,8 +581,8 @@ void console_gnss (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   dataGnss_s navInfo;
-   pwrGnss_e powerGNSS;
+   dataGnss_t navInfo;
+   pwrGnss_t powerGNSS;
 
    while ('S' != instruction){
 
@@ -650,7 +650,7 @@ void console_urc (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   urc_s urc = {"\0","\0"};
+   urc_t urc = {"\0","\0"};
 
    while ('S' != instruction){
 
@@ -740,8 +740,8 @@ int main(void)
 
    uint8_t instruction;
 
-   sigQual_s sigqual;
-   connStatus_s status;
+   sigQual_t sigqual;
+   connStatus_t status;
 
    gsmInterface_t interface;
    gsmInitInterface(&interface); /* Initializes the GSM interface */

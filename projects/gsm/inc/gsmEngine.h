@@ -78,8 +78,8 @@ extern "C" {
 
 typedef struct _rsp
 {
-   uint8_t cmd[TKN_CMD_SIZE];
-   uint8_t par[TKN_PAR_SIZE];
+   uint8_t cmd[TKN_CMD_SIZE+1]; /* command part as string */
+   uint8_t par[TKN_PAR_SIZE+1]; /* parameter part as string */
 } rsp_t;
 
 /** @brief Modes for the serial port */
@@ -126,8 +126,8 @@ typedef struct _gsmEngine
 
    fsmState_t fsmState;
    serialMode_t serialMode;
-   uint8_t currCmd[TKN_CMD_SIZE]; /* command being currently executed */
-   uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current command */
+   uint8_t currCmd[TKN_CMD_SIZE]; /* cmd being currently executed as string */
+   uint8_t currPar[TKN_PAR_SIZE]; /* parameter of the current cmd as string */
    uint8_t currIdx;               /* save index of current command */
 
    /* Counters */

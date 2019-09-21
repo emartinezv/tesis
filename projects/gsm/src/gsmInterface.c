@@ -1,8 +1,6 @@
 /* Copyright 2019, Ezequiel Martinez Vazquez
  * All rights reserved.
  *
- * This file is part of Workspace.
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -31,7 +29,7 @@
  *
  */
 
-/** @brief This module handles the user interface
+/** @brief This module handles the user interface and formulas.
  */
 
 /** \addtogroup interface interface
@@ -52,11 +50,15 @@
 
 #define UNIT_TESTING
 
+/** @brief Number of commands which return the modem to data mode. See
+           gsmCheckDataMode function for more details */
+#define CMD_MODE_NO 2
+
+/** @brief Max size of the commands which return the modem to data mode. See
+           gsmCheckDataMode function for more details */
+#define CMD_MODE_SIZE 6
+
 /*==================[global data]============================================*/
-
-static uint8_t const * const exitCmds [] = {"OK", "CLOSED"};
-
-static gsmInterface_t * SysTickInterface = NULL;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -126,18 +128,15 @@ int itoa(int val, char* buf, int dummy)
 /*              General GSM library operation formula functions              */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Formula to start up the GSM library
- */
+/** @brief Formula to start up the GSM library */
 
 static void gsmStartUpF (gsmInterface_t * interface);
 
-/** @brief Formula to get signal quality values (RSSI and BER)
- */
+/** @brief Formula to get signal quality values (RSSI and BER) */
 
 static void gsmGetSigQualF (gsmInterface_t * interface);
 
-/** @brief Formula to check status of GSM and GPRS connection
- */
+/** @brief Formula to check status of GSM and GPRS connection */
 
 static void gsmCheckConnF (gsmInterface_t * interface);
 
@@ -145,23 +144,19 @@ static void gsmCheckConnF (gsmInterface_t * interface);
 /*                          SMS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Formula to send an SMS
- */
+/** @brief Formula to send an SMS */
 
 static void gsmSmsSendF (gsmInterface_t * interface);
 
-/** @brief Formula to read a single SMS
- */
+/** @brief Formula to read a single SMS */
 
 static void gsmSmsReadF (gsmInterface_t * interface);
 
-/** @brief Formula to read several received SMSs into a list
- */
+/** @brief Formula to read several received SMSs into a list */
 
 static void gsmSmsListF (gsmInterface_t * interface);
 
-/** @brief Formula to delete a single SMS from memory
- */
+/** @brief Formula to delete a single SMS from memory */
 
 static void gsmSmsDelF (gsmInterface_t * interface);
 
@@ -169,18 +164,15 @@ static void gsmSmsDelF (gsmInterface_t * interface);
 /*                         GPRS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Formula to start the GPRS connection
- */
+/** @brief Formula to start the GPRS connection */
 
 static void gsmGprsStartF (gsmInterface_t * interface);
 
-/** @brief Formula to open a TCP or UDP port
- */
+/** @brief Formula to open a TCP or UDP port */
 
 static void gsmGprsOpenPortF (gsmInterface_t * interface);
 
-/** @brief Formula to close a TCP or UDP port
- */
+/** @brief Formula to close a TCP or UDP port */
 
 static void gsmGprsClosePortF (gsmInterface_t * interface);
 
@@ -188,13 +180,11 @@ static void gsmGprsClosePortF (gsmInterface_t * interface);
 /*                         GNSS formula functions                            */
 /*---------------------------------------------------------------------------*/
 
-/** @brief Formula to turn GNSS power on or off
- */
+/** @brief Formula to turn GNSS power on or off */
 
 static void gsmGnssPwrF (gsmInterface_t * interface);
 
-/** @brief Formula to get GNSS data
- */
+/** @brief Formula to get GNSS data */
 
 static void gsmGnssGetDataF (gsmInterface_t * interface);
 
@@ -221,7 +211,7 @@ static void gsmFrmInit (gsmInterface_t * interface);
 
 static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
                              uint8_t const * const cmd,
-                             procStatus_e nextState);
+                             procStatus_t nextState);
 
 /** @brief Subroutine to process all responses and check for a final result:
  *         either a closing response, error response or timeout. The frm states
@@ -229,16 +219,16 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
 *
 * @param interface    : Pointer to interface
 * @param closingState : Next procstate to go to if final response was closing
-* @param closingWrap  : Go to WRAP formula state after closing response?
+* @param closingWrap  : Go to WRAP after sucessful closing response?
 * @param errorState   : Next procstate to go to if final response was error
-* @param errorWrap    : Go to WRAP formula state after closing response?
+* @param errorWrap    : Go to WRAP after error closing response?
 *
 * @return
 */
 
 static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
-                             procStatus_e closingState, Bool closingWrap,
-                             procStatus_e errorState, Bool errorWrap);
+                             procStatus_t closingState, Bool closingWrap,
+                             procStatus_t errorState, Bool errorWrap);
 
 /** @brief If a GSM error has been detected, it recalls the last response and
  *         extracts the cmd and par portions of the error message into the
@@ -252,6 +242,12 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface);
 
 /*==================[internal data definition]===============================*/
 
+/** @brief List of commands that signal an exit from DATA_MODE */
+static uint8_t const * const exitCmds [] = {"OK", "CLOSED"};
+
+/** @brief Local file-level interface variable for SysTickHandler use */
+static gsmInterface_t * SysTickInterface = NULL;
+
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
@@ -261,29 +257,26 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface);
 /*---------------------------------------------------------------------------*/
 
 /* All formula functions end with F (gsmStartUpF, smsSmsSendF, etc.). Their
- * main purporse is to send a number of AT commands. After sending each
- * command we check that the modem response is valid and continue to the next
- * command until we are finished. If an error occurs in any part of the process
- * we stop and record the specific error. After we've sent all the needed
- * commands and received the appropiate responses, we invoke a user-determined
- * callback function which usually does something with the responses of the
- * commands we sent. The behaviour is rather linear and is therefore
- * implemented in a multi-level FSM.
+ * main purpose is to send a number of AT commands and process the responses.
+ * After sending each command we check that the modem response is valid and
+ * continue to the next command until we are finished. If an error occurs in
+ * any part of the process we stop and record the specific error. After we've
+ * sent all the needed commands and received the appropiate responses, we
+ * invoke a user-determined callback function which usually does something with
+ * the responses of the commands we sent. The behaviour is rather linear and is
+ * therefore implemented in a multi-level FSM.
  *
  * Formula functions are invoked regularly, with the period determined by the
  * DELAY_PROC constant. Each invocation usually gobbles up a single AT token
- * and updates the engine. Thus, we need static variables to remember the
- * states of the different FSM levels. Generally speaking, we have two levels:
+ * and updates the engine. Generally speaking, we have two levels:
  * frmStatus at the highest level and procStatus when actually sending
  * the SMS commands and processing the responses.
  *
  * frmStatus is limited to INIT-PROC-WRAP.
  *
- * INIT is the part of the function in which we initialize the error report
- * structure and declare and initialize any auxiliary variables we need. We
- * also initialize procState (the sub-state variable used for the PROC state)
- * and change frmState to PROC at the end so that at the next invoke we start
- * sending the commands.
+ * INIT is the part of the function in which we initialize all the state and
+ * error variables with the gsmFrmInit function and declare and initialize any
+ * auxiliary variables we need.
  *
  * PROC is the part of the function in which we send the AT commands, check
  * the responses and report errors if any. Each invocation processes a single
@@ -291,19 +284,16 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface);
  * The possible states at ATCMD1, ATCMD1RESP, ATCMD2, ATCMD2RESP,...etc.
  *
  * The general format is simple. Starting with ATCMD1, the first AT command is
- * sent with the gsmSendCmd function; if the result indicates that the command
- * has been received correctly by the modem (OK_CMD_SENT) then procState
- * advances to ATCMD1RESP. There, there is a repeated invocation if the
- * gsmProcessTkn function so that all non-closing responses to the command are
+ * sent with the gsmFrmSendCmdCheckEcho function; if the echo is correct, then
+ * procState advances to ATCMD1RESP. There, the gsmFrmProcRspsGetFinal function
+ * keeps reading tokens so that all non-closing responses to the command are
  * received and stored until we get either a closing response (OK_CLOSE) or
- * an error (ERR_MSG_CLOSE). If we get a closing response procState advances
- * to ATCMD2 and repeats the process. If we get an error, we go directly to
- * the finishing section by updating frmState to WRAP. All deviations from this
- * general format are commented.
+ * an error (ERR_MSG_CLOSE). This is repeated until we finish with all
+ * commands. All deviations from this general format are commented.
  *
  * WRAP is the part of the function when we wrap up, making any further error
- * processing needed, calling the user-defined callback function and finally
- * resetting frmState to IDLE.
+ * processing needed, parsing and formatting the output, calling the
+ * user-defined callback function and finally resetting frmState to IDLE.
  *
  * Regarding errors, there is a distinction between errors during the INIT or
  * WRAP phase and errors reported by the GSM modem itself as a response to a
@@ -319,8 +309,6 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface);
 
 static void gsmStartUpF (gsmInterface_t * interface)
 {
-   fsmEvent_t result;
-
    switch(interface->frmState) {
 
       case INIT:
@@ -415,7 +403,9 @@ static void gsmExitDataModeF (gsmInterface_t * interface)
       case INIT:
 
          /* The "+++" sequence must be preceeded and followed by a 1s no
-          * transmission period. */
+            transmission period. We initialize the auxCnt to 1000 before
+            calling gsmExitDataModeF and let the SysTickHandler routine get
+            it down to zero before sending the '+++' sequence. */
 
          if(interface->auxCnt == 0){
             gsm232UartSend("+++",strlen("+++"));
@@ -426,6 +416,9 @@ static void gsmExitDataModeF (gsmInterface_t * interface)
          break;
 
       case PROC:
+
+         /* If auxCnt is zero it means the 1s we need after the '+++' sequence
+            has passed */
 
          if(interface->auxCnt == 0){
             interface->frmState = WRAP;
@@ -485,31 +478,30 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
 
             rsp_t rsp;
             uint8_t auxStr[2+1];  /* auxiliary string for response parsing of
-                                   * the RSSI and BER values
-                                   * XX\0 --> max string length 3 */
-            int8_t auxVal;   /* auxiliary integer to store the RSSI value and
-                                make all the math below more readable */
-
+                                     the RSSI and BER values
+                                     XX\0 --> max string length 3 */
             auxStr[0] = '\0';
+
+            int8_t auxVal;        /* auxiliary integer to store the RSSI value
+                                     and make the math below more readable */
 
             uint8_t i;
             uint8_t commaPos = 0; /* position of the comma in the response */
 
-            rsp = gsmGetCmdRsp(&(interface->engine));  /* get the signal
-                                                          quality response */
+            /* get the signal quality response */
+            rsp = gsmGetCmdRsp(&(interface->engine));
 
-            /* Search for the comma in the response, which is in the form RSSI,
-             * BER */
-
+            /* Search for the ',' char in the response, which is in the form
+               RSSI, BER */
             for(i = 0; i < (strlen(rsp.par)-1); i++){
                if(',' == rsp.par[i]){commaPos = i; break;}
             }
 
             if(commaPos != 0){
 
-               /* Copy the string of RSSI and convert it into a integer. Then, use
-                * the table in the SIM808 manual to translate this number into an
-                * actual RSSI reading in dBm. The table goes as follows:
+               /* Copy the string of RSSI and convert it into a integer. Then,
+                * use the table in the SIM808 manual to translate this number
+                * into an actual RSSI reading in dBm. The table reads:
                 *
                 * RSSI = 0          -->   -115 dBm
                 * RSSI = 1          -->   -111 dBm
@@ -537,10 +529,10 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
 
                else if(99 == auxVal) {auxVal = 99;}
 
-               ((sigQual_s *)interface->frmOutput)->rssi = auxVal;
+               ((sigQual_t *)interface->frmOutput)->rssi = auxVal;
 
                /* Copy the string of BER and convert it to a number. The module
-                * reports RXQUAL values as per table in GSM 05.08 [20] subclause
+                * reports RXQUAL as per table in GSM 05.08 [20] subclause
                 * 8.2.4
                 *
                 * RXQUAL = 0   -->
@@ -557,13 +549,13 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
                strncpy(auxStr,&rsp.par[commaPos+1],strlen(rsp.par)-commaPos-1);
                auxStr[strlen(rsp.par)-commaPos-1] = '\0';
 
-               ((sigQual_s *)interface->frmOutput)->ber = atoi(auxStr);
+               ((sigQual_t *)interface->frmOutput)->ber = atoi(auxStr);
 
                debug(">>>interf<<<   RSSI: ");
-               itoa(((sigQual_s *)interface->frmOutput)->rssi, auxStr, 10);
+               itoa(((sigQual_t *)interface->frmOutput)->rssi, auxStr, 10);
                debug(auxStr);
                debug(", RXQUAL: ");
-               itoa(((sigQual_s *)interface->frmOutput)->ber, auxStr, 10);
+               itoa(((sigQual_t *)interface->frmOutput)->ber, auxStr, 10);
                debug(auxStr);
                debug(" \r\n");
 
@@ -595,8 +587,6 @@ static void gsmGetSigQualF (gsmInterface_t * interface)
 
 void gsmCheckConnF (gsmInterface_t * interface)
 {
-   fsmEvent_t result;
-
    /* We use two different rsp_t structure variables in this case because we
     * need the result of two successive commands. As the engine flushes the
     * rspVlRb VLRB after each command is closed, we would lose the response
@@ -605,8 +595,8 @@ void gsmCheckConnF (gsmInterface_t * interface)
     * command and therefore the rspVlRb is not yet flushed.
     */
 
-   static rsp_t rspGsm;
-   static rsp_t rspGprs;
+   static rsp_t rspGsm;   /* Variable to save the GSM state response */
+   static rsp_t rspGprs;  /* Variable to save the GPRS state response */
 
    switch(interface->frmState) {
 
@@ -664,26 +654,23 @@ void gsmCheckConnF (gsmInterface_t * interface)
          if(OK == interface->errorOut.errorFrm){
 
             /* The AT+CREG? response is of the form "+CREG: <n>,<stat>" where
-             * both <n> and <stat> are single-digit integers and <stat> is the
-             * actual GSM network status we care about. Therefore, we take char
-             * 3 of the parameter part of the response.
-             * */
+               both <n> and <stat> are single-digit integers and <stat> is the
+               actual GSM network status we care about. Therefore, we take char
+               3 of the parameter part of the response. */
 
-            ((connStatus_s *)interface->frmOutput)->gsm =
+            ((connStatus_t *)interface->frmOutput)->gsm =
             ('1' == rspGsm.par[3]);
-
-            /* Print out the GSM string */
 
             debug(">>>interf<<<   GSM String:");
             debug(&rspGsm.par[0]);
             debug(" \r\n");
 
             /* The AT+CGATT? response is of the form "+CGATT: <state>" where
-             * both <state> is a single-digit integer.Therefore, we take char
-             * 1 of the parameter part of the response.
+             * <state> is a single-digit integer.Therefore, we take char 1 of
+             * the parameter part of the response.
              * */
 
-            ((connStatus_s *)interface->frmOutput)->gprs =
+            ((connStatus_t *)interface->frmOutput)->gprs =
             ('1' == rspGprs.par[1]);
 
             /* Print out the GPRS string */
@@ -708,22 +695,6 @@ void gsmCheckConnF (gsmInterface_t * interface)
 
 }
 
-bool gsmReadUrc (gsmInterface_t * interface, urc_s * urc)
-{
-   rsp_t temp;
-
-   temp = gsmGetUrc(&(interface->engine));
-
-   if('\0' != temp.cmd[0]){
-      strncpy(urc->cmd, temp.cmd, strlen(temp.cmd));
-      strncpy(urc->par, temp.par, strlen(temp.par));
-
-      return true;
-   }
-
-   return false;
-}
-
 /*---------------------------------------------------------------------------*/
 /*                          SMS formula functions                            */
 /*---------------------------------------------------------------------------*/
@@ -737,16 +708,14 @@ static void gsmSmsSendF (gsmInterface_t * interface)
     *
     * AT+CMGS="+(phone number)"\r\0 --> max str length 28 */
 
-   static uint8_t smsCmd[9+1+15+3];
+   static uint8_t smsCmd[9+1+15+3]; /* SMS send command string */
 
    /* Maximum SMS size according to 3GPP standard TS 23.038 is 160 chars using
     * GSM 7-bit alphabet
     *
     * (smstext)\0 --> max str length 161 */
 
-   static uint8_t smsText[160+1];
-
-   fsmEvent_t result;
+   static uint8_t smsText[160+1];  /* SMS text string */
 
    switch(interface->frmState) {
 
@@ -760,9 +729,9 @@ static void gsmSmsSendF (gsmInterface_t * interface)
           * present.
           */
 
-         if ( (strchr(((smsOut_s *)interface->frmInput)->text, '\n') != NULL)
+         if ( (strchr(((smsOut_t *)interface->frmInput)->text, '\n') != NULL)
                ||
-              (strchr(((smsOut_s *)interface->frmInput)->text, '\r') != NULL)){
+              (strchr(((smsOut_t *)interface->frmInput)->text, '\r') != NULL)){
 
             debug(">>>interf<<<   ERROR: The SMS text contains the \\r and/or "
                                          "\\n characters\r\n");
@@ -776,15 +745,15 @@ static void gsmSmsSendF (gsmInterface_t * interface)
          /* We assemble the AT+CMGS command copying the phone number string */
 
          strncat(smsCmd, "AT+CMGS=\"", strlen("AT+CMGS=\""));
-         strncat(smsCmd, ((smsOut_s *)interface->frmInput)->dest,
-                 strlen(((smsOut_s *)interface->frmInput)->dest));
+         strncat(smsCmd, ((smsOut_t *)interface->frmInput)->dest,
+                 strlen(((smsOut_t *)interface->frmInput)->dest));
          strncat(smsCmd, "\"\r", strlen("\"\r"));
 
          /* We assemble the SMS text command */
 
-         strncpy(smsText, ((smsOut_s *)interface->frmInput)->text,
-                 strlen(((smsOut_s *)interface->frmInput)->text));
-         smsText[strlen(((smsOut_s *)interface->frmInput)->text)] = '\0';
+         strncpy(smsText, ((smsOut_t *)interface->frmInput)->text,
+                 strlen(((smsOut_t *)interface->frmInput)->text));
+         smsText[strlen(((smsOut_t *)interface->frmInput)->text)] = '\0';
 
          gsmFrmInit(interface);
 
@@ -843,17 +812,18 @@ static void gsmSmsSendF (gsmInterface_t * interface)
 
                /* If the SMS is successfully sent we are given a <mr> number
                 * which represents the number assigned in the TE to the sent
-                * SMS. We store it in the smsConf_s structure.
+                * SMS. We store it in the smsConf_t structure.
                 */
 
                rsp_t rsp;
 
-               rsp = gsmGetCmdRsp(&(interface->engine)); /* get the "+CMGS:<mr>\r\n" response */
+               /* get the "+CMGS:<mr>\r\n" response */
+               rsp = gsmGetCmdRsp(&(interface->engine));
 
                /* Convert the <mr> number string into an integer type  and
                 * store it for reference */
 
-               ((smsConf_s *)interface->frmOutput)->mr = atoi(rsp.par);
+               ((smsConf_t *)interface->frmOutput)->mr = atoi(rsp.par);
 
                debug(">>>interf<<<   SENT MSG MR: ");
                debug(rsp.par);
@@ -890,14 +860,13 @@ static void gsmSmsReadF (gsmInterface_t * interface)
          strSmsRead[0] = '\0';
 
          /* We assemble the AT+CMGR command copying the idx and mode variables
-          * into the string after converting them from integers to text
-          */
+           into the string after converting them from integers to text */
 
          strncat(strSmsRead, "AT+CMGR=", strlen("AT+CMGR="));
-         itoa(((smsReadPars_s *)interface->frmInput)->idx, auxStr, 10);
+         itoa(((smsReadPars_t *)interface->frmInput)->idx, auxStr, 10);
          strncat(strSmsRead, auxStr, strlen(auxStr));
          strncat(strSmsRead, ",", strlen(","));
-         itoa(((smsReadPars_s *)interface->frmInput)->mode, auxStr, 10);
+         itoa(((smsReadPars_t *)interface->frmInput)->mode, auxStr, 10);
          strncat(strSmsRead, auxStr, strlen(auxStr));
          strncat(strSmsRead, "\r", strlen("\r"));
 
@@ -949,18 +918,17 @@ static void gsmSmsReadF (gsmInterface_t * interface)
             rsp_t rsp;
 
             /* We copy the meta part of the SMS and the actual text into the
-             * corresponding parts of the smsRec structure
-             */
+               corresponding parts of the smsRec structure */
 
             rsp = gsmGetCmdRsp(&(interface->engine));
-            strncpy(((smsRec_s *)interface->frmOutput)->meta, rsp.par,
+            strncpy(((smsRec_t *)interface->frmOutput)->meta, rsp.par,
                     strlen(rsp.par));
-            ((smsRec_s *)interface->frmOutput)->meta[strlen(rsp.par)] = '\0';
+            ((smsRec_t *)interface->frmOutput)->meta[strlen(rsp.par)] = '\0';
 
             rsp = gsmGetCmdRsp(&(interface->engine));
-            strncpy(((smsRec_s *)interface->frmOutput)->text, rsp.par,
+            strncpy(((smsRec_t *)interface->frmOutput)->text, rsp.par,
                     strlen(rsp.par));
-            ((smsRec_s *)interface->frmOutput)->text[strlen(rsp.par)] = '\0';
+            ((smsRec_t *)interface->frmOutput)->text[strlen(rsp.par)] = '\0';
 
          }
 
@@ -968,7 +936,7 @@ static void gsmSmsReadF (gsmInterface_t * interface)
             gsmFrmCopyGsmError(interface);
          }
 
-         smsListRet_s msgVector; /* Message vector includes the actual array
+         smsListRet_t msgVector; /* Message vector includes the actual array
                                     and the number of messages; this is
                                     needed for further processing of the SMSs
                                     and compatibility with gsmSmsList */
@@ -992,16 +960,14 @@ static void gsmSmsListF (gsmInterface_t * interface)
 {
    fsmEvent_t result;
 
-   /* String to assemble the SMS list command
-    *
-    * AT+CMGL="(status)",Y\r\0 --> max string length */
+   /* Maximum status string length is 10 ("REC UNREAD" or "STO UNSENT")
 
-   static uint8_t strSmsList[9+10+3+2];
+      AT+CMGL="(status)",Y\r\0 --> max string length 24 */
 
-   /* Auxiliary string. Longest status string is "REC UNREAD" which is 10
-    * chars long, so the string needs to be 11 chars long including the \0  */
+   static uint8_t strSmsList[9+10+3+2]; /* SMS list command string */
 
-   static uint8_t auxStr[10+1];
+   static uint8_t auxStr[10+1]; /* Aux string, max length = status = 10 as
+                                   per comment above */
 
    switch(interface->frmState) {
 
@@ -1015,7 +981,7 @@ static void gsmSmsListF (gsmInterface_t * interface)
 
          strncat(strSmsList, "AT+CMGL=", strlen("AT+CMGL="));
 
-         switch(((smsListPars_s *)interface->frmInput)->stat){
+         switch(((smsListPars_t *)interface->frmInput)->stat){
 
             case REC_UNREAD:
 
@@ -1051,7 +1017,7 @@ static void gsmSmsListF (gsmInterface_t * interface)
 
          strncat(strSmsList, auxStr, strlen(auxStr));
          strncat(strSmsList, ",", strlen(","));
-         itoa(((smsListPars_s *)interface->frmInput)->mode, auxStr, 10);
+         itoa(((smsListPars_t *)interface->frmInput)->mode, auxStr, 10);
          strncat(strSmsList, auxStr, strlen(auxStr));
          strncat(strSmsList, "\r", strlen("\r"));
 
@@ -1099,7 +1065,7 @@ static void gsmSmsListF (gsmInterface_t * interface)
       case WRAP:
 
          ;
-         uint8_t rspNo;
+         uint8_t rspNo; /* Number of responses to the SMS list command */
          rspNo = gsmGetNoCmdRsp(&(interface->engine));
 
          if(OK == interface->errorOut.errorFrm){
@@ -1107,15 +1073,15 @@ static void gsmSmsListF (gsmInterface_t * interface)
             uint8_t i = 0;
 
             rsp_t rsp;
-            smsRec_s * target = (smsRec_s *)interface->frmOutput;
+            smsRec_t * target = (smsRec_t *)interface->frmOutput;
 
             /* Check that the list vector is big enough to hold all the SMSs.
-             * We need to discard the final OK response and each SMS is split
-             * into two responses: the meta data and the actual text. The
-             * number of SMSs is therefore the number of responses - 1 divided
-             * by two. */
+               We need to discard the final OK response and each SMS is split
+               into two responses: the meta data and the actual text. The
+               number of SMSs is therefore the number of responses - 1 divided
+               by two. */
 
-            if(((smsListPars_s *)interface->frmInput)->listSize
+            if(((smsListPars_t *)interface->frmInput)->listSize
                < ((rspNo-1)/2)){
                interface->errorOut.errorFrm = ERR_WRAP;
                debug(">>>interf<<<   ERROR: Not enough space for available"
@@ -1158,8 +1124,8 @@ static void gsmSmsListF (gsmInterface_t * interface)
             gsmFrmCopyGsmError(interface);
          }
 
-         smsListRet_s msgVector; /* Message vector includes the actual array
-                                    andnthe number of messages */
+         smsListRet_t msgVector; /* Message vector includes the actual array
+                                    and the number of messages */
 
          msgVector.msgs = interface->frmOutput;
          msgVector.noMsgs = (rspNo-1)/2;
@@ -1178,16 +1144,11 @@ static void gsmSmsListF (gsmInterface_t * interface)
 
 static void gsmSmsDelF (gsmInterface_t * interface)
 {
-   uint8_t auxStr[4]; /* auxiliary string */
+   uint8_t auxStr[4]; /* Auxiliary string */
                       /* XXX\0 --> max str length 4 */
 
-   /* String to assemble the SMS delete command
-    *
-    * AT+CMGD=XXX,Y\r\0 --> max string length 15 */
-
-   static uint8_t smsDel[8+3+1+1+2];
-
-   fsmEvent_t result;
+   static uint8_t smsDel[8+3+1+1+2]; /* SMS delete command string */
+                                     /* AT+CMGD=XXX,Y\r\0 --> max length 15 */
 
    switch(interface->frmState) {
 
@@ -1201,10 +1162,10 @@ static void gsmSmsDelF (gsmInterface_t * interface)
           */
 
          strncat(smsDel, "AT+CMGD=", strlen("AT+CMGD="));
-         itoa(((smsDelPars_s *)interface->frmInput)->idx, auxStr, 10);
+         itoa(((smsDelPars_t *)interface->frmInput)->idx, auxStr, 10);
          strncat(smsDel, auxStr, strlen(auxStr));
          strncat(smsDel, ",", strlen(","));
-         itoa(((smsDelPars_s *)interface->frmInput)->mode, auxStr, 10);
+         itoa(((smsDelPars_t *)interface->frmInput)->mode, auxStr, 10);
          strncat(smsDel, auxStr, strlen(auxStr));
          strncat(smsDel, "\r", strlen("\r"));
 
@@ -1257,16 +1218,12 @@ static void gsmSmsDelF (gsmInterface_t * interface)
 
 static void gsmGprsStartF (gsmInterface_t * interface)
 {
-   /* String to assemble the GPRS start command
-    *
-    * apn, user and pwd are arbitrarely assumed to be no longer than 30 chars
-    * each (a reasonable assumption by all practical accounts)
-    *
-    * AT+CSTT="(apn)","(user)","(pwd)"\r\0 --> max string length */
+   /* apn, user and pwd are arbitrarily assumed to be no longer than 30 chars
+      each (a reasonable assumption by all practical accounts)
 
-   static uint8_t APNstring[9+30+3+30+3+30+3];
+      AT+CSTT="(apn)","(user)","(pwd)"\r\0 --> max string length 111 */
 
-   fsmEvent_t result;
+   static uint8_t APNstring[9+30+3+30+3+30+3]; /* Start GPRS command string */
 
    switch(interface->frmState) {
 
@@ -1279,14 +1236,14 @@ static void gsmGprsStartF (gsmInterface_t * interface)
           */
 
          strncat(APNstring, "AT+CSTT=\"", strlen("AT+CSTT=\""));
-         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->apn,
-                             strlen(((apnUserPwd_s *)interface->frmInput)->apn));
+         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->apn,
+                             strlen(((apnUserPwd_t *)interface->frmInput)->apn));
          strncat(APNstring, "\",\"", strlen("\",\""));
-         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->user,
-                             strlen(((apnUserPwd_s *)interface->frmInput)->user));
+         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->user,
+                             strlen(((apnUserPwd_t *)interface->frmInput)->user));
          strncat(APNstring, "\",\"", strlen("\",\""));
-         strncat(APNstring, ((apnUserPwd_s *)interface->frmInput)->pwd,
-                             strlen(((apnUserPwd_s *)interface->frmInput)->pwd));
+         strncat(APNstring, ((apnUserPwd_t *)interface->frmInput)->pwd,
+                             strlen(((apnUserPwd_t *)interface->frmInput)->pwd));
          strncat(APNstring, "\"\r", strlen("\"\r"));
 
          gsmFrmInit(interface);
@@ -1397,8 +1354,6 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
 static void gsmGprsStopF (gsmInterface_t * interface)
 {
-   fsmEvent_t result;
-
    switch(interface->frmState) {
 
       case INIT:
@@ -1451,21 +1406,17 @@ static void gsmGprsStopF (gsmInterface_t * interface)
 
 static void gsmGprsOpenPortF (gsmInterface_t * interface)
 {
-   /* String to assemble the TCP/UDP open port command
-    *
-    * IP/domain is arbitrarely assumed to be no longer than 50 chars
-    *
-    * AT+CIPSTART="XXX","(IP/domain)",(port)\r\0 --> max string length 78 */
+   /* IP/domain is arbitrarely assumed to be no longer than 50 chars
 
-   static uint8_t socketStr[13+3+3+50+2+5+2];
+      AT+CIPSTART="XXX","(IP/domain)",(port)\r\0 --> max string length 78 */
 
-   uint8_t auxStr[6]; /* auxiliary string */
+   static uint8_t socketStr[13+3+3+50+2+5+2]; /* GPRS open port cmd string*/
+
+   uint8_t auxStr[6]; /* Auxiliary string */
                       /* XXXXX\0 --> max str length 6 */
 
    rsp_t rsp; /* auxiliary variable used to analize the response to CIPSTART
               /* and distinguish the open port attempt results */
-
-   fsmEvent_t result;
 
    switch(interface->frmState) {
 
@@ -1479,17 +1430,17 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
 
          strncat(socketStr, "AT+CIPSTART=\"", strlen("AT+CIPSTART=\""));
 
-         if(TCP == ((socket_s *)interface->frmInput)->type){
+         if(TCP == ((socket_t *)interface->frmInput)->type){
             strncat(socketStr, "TCP\",\"", strlen("TCP\",\""));
          }
-         else if(UDP == ((socket_s *)interface->frmInput)->type){
+         else if(UDP == ((socket_t *)interface->frmInput)->type){
             strncat(socketStr, "UDP\",\"", strlen("UDP\",\""));
          }
 
-         strncat(socketStr, ((socket_s *)interface->frmInput)->address,
-                 strlen(((socket_s *)interface->frmInput)->address));
+         strncat(socketStr, ((socket_t *)interface->frmInput)->address,
+                 strlen(((socket_t *)interface->frmInput)->address));
 
-         itoa(((socket_s *)interface->frmInput)->port, auxStr, 10);
+         itoa(((socket_t *)interface->frmInput)->port, auxStr, 10);
          strncat(socketStr, "\",\"", strlen("\",\""));
          strncat(socketStr, auxStr, strlen(auxStr));
          strncat(socketStr, "\"\r", strlen("\"\r"));
@@ -1634,7 +1585,6 @@ static void gsmGprsClosePortF (gsmInterface_t * interface)
          }
 
          /* If the port is closed correctly we return to COMMAND_MODE */
-
          gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
 
          interface->frmCback(interface->errorOut, 0);
@@ -1652,14 +1602,8 @@ static void gsmGprsClosePortF (gsmInterface_t * interface)
 
 static void gsmGnssPwrF (gsmInterface_t * interface)
 {
-   /* String to assemble the GNSS on/off command
-    *
-    *
-    * AT+CGNSPWR=X\r\0 --> max string length 14 */
-
-   static uint8_t cmdStr[14];
-
-   fsmEvent_t result;
+   static uint8_t cmdStr[14]; /* GNSS power on/off command string */
+                              /* AT+CGNSPWR=X\r\0 --> max string length 14 */
 
    switch(interface->frmState) {
 
@@ -1669,10 +1613,10 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
           * input pwrGnss variable
           */
 
-         if(ON == *((pwrGnss_e *)interface->frmInput)){
+         if(ON == *((pwrGnss_t *)interface->frmInput)){
             strncpy(cmdStr,"AT+CGNSPWR=1\r", strlen("AT+CGNSPWR=1\r"));
          }
-         else if(OFF == *((pwrGnss_e *)interface->frmInput)){
+         else if(OFF == *((pwrGnss_t *)interface->frmInput)){
             strncpy(cmdStr,"AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"));
          }
 
@@ -1725,8 +1669,6 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
 
 static void gsmGnssGetDataF (gsmInterface_t * interface)
 {
-   fsmEvent_t result;
-
    switch(interface->frmState) {
 
       case INIT:
@@ -1767,12 +1709,12 @@ static void gsmGnssGetDataF (gsmInterface_t * interface)
              * constant MAX_CGNSINF_SIZE is defined in gsmEngine.h and is
              * taken from the SIM808 manual as being 94 characters max */
 
-            strncpy(((dataGnss_s *)interface->frmOutput)->data,&rsp.par[0],
+            strncpy(((dataGnss_t *)interface->frmOutput)->data,&rsp.par[0],
                     MAX_CGNSINF_SIZE);
             ((uint8_t *)interface->frmOutput)[MAX_CGNSINF_SIZE] = '\0';
 
             debug(">>>interf<<<   NavInfo String:");
-            debug(((dataGnss_s *)interface->frmOutput)->data);
+            debug(((dataGnss_t *)interface->frmOutput)->data);
             debug("\r\n");
 
          }
@@ -1799,6 +1741,9 @@ static void gsmGnssGetDataF (gsmInterface_t * interface)
 
 static void gsmFrmInit (gsmInterface_t * interface)
 {
+   /* We initialize the error vector and the FSM formula-level and
+      command-level state variables. */
+
    interface->errorOut.errorFrm = OK;
    interface->errorOut.errorCmd.cmd[0] = '\0';
    interface->errorOut.errorCmd.par[0] = '\0';
@@ -1810,10 +1755,10 @@ static void gsmFrmInit (gsmInterface_t * interface)
 }
 
 static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
-                             uint8_t const * const cmd, procStatus_e nextState)
+                             uint8_t const * const cmd, procStatus_t nextState)
 {
    fsmEvent_t result;
-   static Bool firstCall = TRUE;
+   static Bool firstCall = TRUE; /* Is this the first call to the function? */
 
    /* If this is the first call of the function for the current cmd we send
     * the str through the serial port; otherwise we pick up and process the
@@ -1828,10 +1773,14 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
 
    if(NO_UPDATE != result){
       if(OK_CMD_SENT == result){;}
+
+      /* If the cmd was acknowledged we progress to nextState*/
       else if(OK_CMD_ACK == result){
          interface-> procState = nextState;
          firstCall = TRUE;
       }
+
+      /* If we received an echo error we go to WRAP directly */
       else{
          interface->errorOut.errorFrm = ERR_PROC;
          interface->frmState = WRAP;
@@ -1844,20 +1793,31 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
 }
 
 static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
-                             procStatus_e closingState, Bool closingWrap,
-                             procStatus_e errorState, Bool errorWrap)
+                             procStatus_t closingState, Bool closingWrap,
+                             procStatus_t errorState, Bool errorWrap)
 {
    fsmEvent_t result;
 
+   /* We process the most recent token */
    result = gsmProcessTkn(&(interface->engine));
 
    if(NO_UPDATE != result){
 
+      /* If we have a non-closing response, we do not take action */
+
       if(OK_RSP <= result && OK_URC >= result){;}
+
+      /* If we have a successful closing response, we advance to closingState
+       * and depending on closingWrap we either stay in PROC or go to WRAP */
+
       else if(OK_CLOSE == result){
          interface->procState = closingState;
          interface->frmState = (closingWrap == TRUE ? WRAP : PROC );
       }
+
+      /* If we have an error closing response, we advance to errorState
+       * and depending on errorWrap we either stay in PROC or go to WRAP */
+
       else if(ERR_MSG_CLOSE == result){
          interface->errorOut.errorFrm = ERR_GSM;
          interface->procState = errorState;
@@ -1887,6 +1847,9 @@ static void gsmFrmCopyGsmError (gsmInterface_t * interface)
 {
    rsp_t rsp;
 
+   /* If we had an error closing response, we get the corresponding response
+    * and copy it to the errorOur vector */
+
    rsp = gsmGetCmdRsp(&(interface->engine));
    strncpy(interface->errorOut.errorCmd.cmd, rsp.cmd, TKN_CMD_SIZE-1);
    interface->errorOut.errorCmd.cmd[TKN_CMD_SIZE] = '\0';
@@ -1909,6 +1872,8 @@ bool gsmInitInterface(gsmInterface_t * interface)
    bool ok = FALSE;
 
    ok = gsmInitEngine(&(interface->engine)); /* Initializes the GSM engine */
+
+   /* We initialize all the elements of the interface */
 
    interface->frmState = IDLE;
    interface->procState = NOCMD;
@@ -1947,10 +1912,15 @@ void gsmSysTickHandler (void)
 {
    if(NULL != SysTickInterface){
 
+      /* Decrement timeout counter */
       gsmDecToutCnt(&(SysTickInterface->engine));
+
+      /* Decrement process counter */
       if((SysTickInterface->procCnt) > 0) {
          (SysTickInterface->procCnt)--;
       }
+
+      /* Decrement auxiliary counter */
       if((SysTickInterface->auxCnt) > 0) {
          (SysTickInterface->auxCnt)--;
       }
@@ -1971,14 +1941,19 @@ void gsmSysTickHandler (void)
  *  procCnt timer is down to zero (this is handled by the prior
  *  gsmSysTickHandler function). The specific tasks executed depend on whether
  *  there is a formula being executed, the current URC handling mode and the
- *  serial mode. The comments below detail the behaviour.
+ *  serial mode. The comments below detail the behavior.
  */
 
 void gsmProcess (gsmInterface_t * interface)
 {
+   /* The function runs only if the process counter is down to zero, which
+      means that the periodic time specified for it's execution has passed. */
+
    if(0 == (interface->procCnt)){
 
-      if (IDLE == interface->frmState){ /* no formula currently being run */
+      /* No formula currently running */
+
+      if (IDLE == interface->frmState){
 
          /* If we are in COMMAND_MODE, we first process a single token. */
 
@@ -2012,8 +1987,9 @@ void gsmProcess (gsmInterface_t * interface)
 
       }
 
-      else {interface->frm(interface);} /* there is a formula being run;
-                                           execute the formula */
+      /* There is a formula running; execute the formula */
+
+      else {interface->frm(interface);}
 
       interface->procCnt = DELAY_PROC; /* reset gsmProcess counter */
 
@@ -2038,7 +2014,7 @@ bool gsmIsIdle (gsmInterface_t * interface)
 
 /*****************************************************************************/
 
-bool gsmSetUrcMode (gsmInterface_t * interface, urcMode_e mode)
+bool gsmSetUrcMode (gsmInterface_t * interface, urcMode_t mode)
 {
    interface->urcMode = mode;
    return true;
@@ -2054,7 +2030,7 @@ bool gsmSetUrcCback (gsmInterface_t * interface, urcCback_t cback)
 
 /*****************************************************************************/
 
-bool gsmSetDataCback (gsmInterface_t * interface, dataCback_t cback)
+bool gsmSetDataCback (gsmInterface_t * interface, frm_t cback)
 {
    interface->dataCback = cback;
    return true;
@@ -2156,6 +2132,23 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
    return nChRet; /* Return the number of chars to be printed out */
 }
 
+bool gsmReadUrc (gsmInterface_t * interface, urc_t * urc)
+{
+   rsp_t temp;
+
+   temp = gsmGetUrc(&(interface->engine));
+
+   if('\0' != temp.cmd[0]){
+      strncpy(urc->cmd, temp.cmd, strlen(temp.cmd));
+      urc->cmd[strlen(temp.cmd)]='\0';
+      strncpy(urc->par, temp.par, strlen(temp.par));
+      urc->par[strlen(temp.par)]='\0';
+      return true;
+   }
+
+   return false;
+}
+
 /*****************************************************************************/
 
 /*---------------------------------------------------------------------------*/
@@ -2204,7 +2197,7 @@ void gsmExitDataMode (gsmInterface_t * interface, frmCback_t cback)
 
 /*****************************************************************************/
 
-void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
+void gsmGetSigQual (gsmInterface_t * interface, sigQual_t * sigQual,
                     frmCback_t cback)
 {
    interface->frm = gsmGetSigQualF;
@@ -2217,7 +2210,7 @@ void gsmGetSigQual (gsmInterface_t * interface, sigQual_s * sigQual,
 
 /*****************************************************************************/
 
-void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
+void gsmCheckConn (gsmInterface_t * interface, connStatus_t * status,
                    frmCback_t cback)
 {
    interface->frm = gsmCheckConnF;
@@ -2232,7 +2225,7 @@ void gsmCheckConn (gsmInterface_t * interface, connStatus_s * status,
 /*                              SMS functions                                */
 /*---------------------------------------------------------------------------*/
 
-void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
+void gsmSmsSend (gsmInterface_t * interface, smsOut_t * msg, smsConf_t * conf,
                  frmCback_t cback)
 {
    interface->frm = gsmSmsSendF;
@@ -2246,8 +2239,8 @@ void gsmSmsSend (gsmInterface_t * interface, smsOut_s * msg, smsConf_s * conf,
 
 /*****************************************************************************/
 
-void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
-                 smsReadPars_s * pars, frmCback_t cback)
+void gsmSmsRead (gsmInterface_t * interface, smsRec_t * msg,
+                 smsReadPars_t * pars, frmCback_t cback)
 {
    interface->frm = gsmSmsReadF;
    interface->frmInput = pars;
@@ -2260,8 +2253,8 @@ void gsmSmsRead (gsmInterface_t * interface, smsRec_s * msg,
 
 /*****************************************************************************/
 
-void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
-                 smsListPars_s * pars, frmCback_t cback)
+void gsmSmsList (gsmInterface_t * interface, smsRec_t * list,
+                 smsListPars_t * pars, frmCback_t cback)
 {
    interface->frm = gsmSmsListF;
    interface->frmInput = pars;
@@ -2274,7 +2267,7 @@ void gsmSmsList (gsmInterface_t * interface, smsRec_s * list,
 
 /*****************************************************************************/
 
-void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
+void gsmSmsDel (gsmInterface_t * interface, smsDelPars_t * msgdel,
                 frmCback_t cback)
 {
    interface->frm = gsmSmsDelF;
@@ -2289,7 +2282,7 @@ void gsmSmsDel (gsmInterface_t * interface, smsDelPars_s * msgdel,
 /*                             GPRS functions                                */
 /*---------------------------------------------------------------------------*/
 
-void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_s * apn,
+void gsmGprsStart (gsmInterface_t * interface, apnUserPwd_t * apn,
                    frmCback_t cback)
 {
    interface->frm = gsmGprsStartF;
@@ -2314,7 +2307,7 @@ void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback)
 
 /*****************************************************************************/
 
-void gsmGprsOpenPort (gsmInterface_t * interface, socket_s * socket,
+void gsmGprsOpenPort (gsmInterface_t * interface, socket_t * socket,
                       frmCback_t cback)
 {
    interface->frm = gsmGprsOpenPortF;
@@ -2341,7 +2334,7 @@ void gsmGprsClosePort (gsmInterface_t * interface, frmCback_t cback)
 /*---------------------------------------------------------------------------*/
 
 void gsmGnssPwr (gsmInterface_t * interface,
-                 pwrGnss_e * cmd, frmCback_t cback)
+                 pwrGnss_t * cmd, frmCback_t cback)
 {
    interface->frm = gsmGnssPwrF;
    interface->frmInput = cmd;
@@ -2354,7 +2347,7 @@ void gsmGnssPwr (gsmInterface_t * interface,
 /*****************************************************************************/
 
 void gsmGnssGetData (gsmInterface_t * interface,
-                     dataGnss_s * dataGnss, frmCback_t cback)
+                     dataGnss_t * dataGnss, frmCback_t cback)
 {
    interface->frm = gsmGnssGetDataF;
    interface->frmOutput = dataGnss;

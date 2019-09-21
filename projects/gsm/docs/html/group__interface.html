@@ -64,7 +64,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Groups</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Groups</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -75,16 +75,69 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">interface</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This module handles the user interface.  
+<p>This module handles the user interface and formulas.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__errorCmd.html">_errorCmd</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for command level error code return.  <a href="struct__errorCmd.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__errorUser.html">_errorUser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for user level error code return.  <a href="struct__errorUser.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__gsmInterface__t.html">_gsmInterface_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__sigQual.html">_sigQual</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for signal quality.  <a href="struct__sigQual.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__connStatus.html">_connStatus</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct for determining the status of the GSM and GPRS connections.  <a href="struct__connStatus.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__urc.html">_urc</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for the private vector of URCs. Stores the name of the URC.  <a href="struct__urc.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsOut.html">_smsOut</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for outgoing SMS message.  <a href="struct__smsOut.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsConf.html">_smsConf</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for outgoing SMS confirmation message.  <a href="struct__smsConf.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsReadPars.html">_smsReadPars</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read parameters.  <a href="struct__smsReadPars.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsRec.html">_smsRec</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for received SMS.  <a href="struct__smsRec.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsListPars.html">_smsListPars</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS list parameters.  <a href="struct__smsListPars.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsListRet.html">_smsListRet</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read/list return.  <a href="struct__smsListRet.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__smsDelPars.html">_smsDelPars</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS delete parameters.  <a href="struct__smsDelPars.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__apnUserPwd.html">_apnUserPwd</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for APN name, user and password.  <a href="struct__apnUserPwd.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__socket.html">_socket</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for address and port.  <a href="struct__socket.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__dataGnss.html">_dataGnss</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct for storing GNSS info.  <a href="struct__dataGnss.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga06818542b3c471ba114965d1526d106d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga06818542b3c471ba114965d1526d106d"></a>
@@ -93,22 +146,1392 @@ Macros</h2></td></tr>
 <tr class="memitem:ga3178042a14309a5af3336234b7b0a9d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga3178042a14309a5af3336234b7b0a9d1"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>UNIT_TESTING</b></td></tr>
 <tr class="separator:ga3178042a14309a5af3336234b7b0a9d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga46c70ffe77e66fc6e648e41b037b82a8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga46c70ffe77e66fc6e648e41b037b82a8"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga46c70ffe77e66fc6e648e41b037b82a8">CMD_MODE_NO</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:ga46c70ffe77e66fc6e648e41b037b82a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of commands which return the modem to data mode. See gsmCheckDataMode function for more details. <br/></td></tr>
+<tr class="separator:ga46c70ffe77e66fc6e648e41b037b82a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9c3d608909eb78b374dfabafb266041b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga9c3d608909eb78b374dfabafb266041b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga9c3d608909eb78b374dfabafb266041b">CMD_MODE_SIZE</a>&#160;&#160;&#160;6</td></tr>
+<tr class="memdesc:ga9c3d608909eb78b374dfabafb266041b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max size of the commands which return the modem to data mode. See gsmCheckDataMode function for more details. <br/></td></tr>
+<tr class="separator:ga9c3d608909eb78b374dfabafb266041b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10b2f3e54e505944b787aee5c5569b43"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga10b2f3e54e505944b787aee5c5569b43"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga10b2f3e54e505944b787aee5c5569b43">DELAY_PROC</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memdesc:ga10b2f3e54e505944b787aee5c5569b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invocation period of gsmProcess in ms. <br/></td></tr>
+<tr class="separator:ga10b2f3e54e505944b787aee5c5569b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga50f4e1a7265aa3e33fe9e18a370e0a37"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga50f4e1a7265aa3e33fe9e18a370e0a37"></a>
+typedef enum <a class="el" href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">_frmStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga50f4e1a7265aa3e33fe9e18a370e0a37">frmStatus_t</a></td></tr>
+<tr class="memdesc:ga50f4e1a7265aa3e33fe9e18a370e0a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">State of the current formula being run. <br/></td></tr>
+<tr class="separator:ga50f4e1a7265aa3e33fe9e18a370e0a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga31770e9f807d5ee665394fab89d1d069"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga31770e9f807d5ee665394fab89d1d069"></a>
+typedef enum <a class="el" href="group__interface.html#ga752d93f9a20ab4b6061cd359323288dd">_procStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga31770e9f807d5ee665394fab89d1d069">procStatus_t</a></td></tr>
+<tr class="memdesc:ga31770e9f807d5ee665394fab89d1d069"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of command or response in the PROC section being processed. <br/></td></tr>
+<tr class="separator:ga31770e9f807d5ee665394fab89d1d069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1dc1553796031046fc3db3d1934a42a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga1dc1553796031046fc3db3d1934a42a6"></a>
+typedef enum <a class="el" href="group__interface.html#gac480156d28884097d4917ee280ba89cc">_errorFrm</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga1dc1553796031046fc3db3d1934a42a6">errorFrm_t</a></td></tr>
+<tr class="memdesc:ga1dc1553796031046fc3db3d1934a42a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for formula level error code return. <br/></td></tr>
+<tr class="separator:ga1dc1553796031046fc3db3d1934a42a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a45c0adb79c70b6128ca1f487a08a69"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga8a45c0adb79c70b6128ca1f487a08a69"></a>
+typedef struct <a class="el" href="struct__errorCmd.html">_errorCmd</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga8a45c0adb79c70b6128ca1f487a08a69">errorCmd_t</a></td></tr>
+<tr class="memdesc:ga8a45c0adb79c70b6128ca1f487a08a69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for command level error code return. <br/></td></tr>
+<tr class="separator:ga8a45c0adb79c70b6128ca1f487a08a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6917edd06c82db0e047d1cda353d4398"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6917edd06c82db0e047d1cda353d4398"></a>
+typedef struct <a class="el" href="struct__errorUser.html">_errorUser</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga6917edd06c82db0e047d1cda353d4398">errorUser_t</a></td></tr>
+<tr class="memdesc:ga6917edd06c82db0e047d1cda353d4398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for user level error code return. <br/></td></tr>
+<tr class="separator:ga6917edd06c82db0e047d1cda353d4398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadbbc811aba6da668014db8245060ee06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gadbbc811aba6da668014db8245060ee06"></a>
+typedef struct <a class="el" href="struct__gsmInterface__t.html">_gsmInterface_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gsmInterface_t</b></td></tr>
+<tr class="separator:gadbbc811aba6da668014db8245060ee06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f39c5bb4589772532861c5d75c26f60"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga2f39c5bb4589772532861c5d75c26f60"></a>
+typedef void *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> )(<a class="el" href="group__interface.html#ga6917edd06c82db0e047d1cda353d4398">errorUser_t</a>, void *)</td></tr>
+<tr class="memdesc:ga2f39c5bb4589772532861c5d75c26f60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for formula callback. <br/></td></tr>
+<tr class="separator:ga2f39c5bb4589772532861c5d75c26f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ba4db4866902fed84f7f52b0527f5c4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6ba4db4866902fed84f7f52b0527f5c4"></a>
+typedef enum <a class="el" href="group__interface.html#ga9a4fcd0b9b76bb510f098fd4467d757f">_urcMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a></td></tr>
+<tr class="memdesc:ga6ba4db4866902fed84f7f52b0527f5c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modes for URC handling. <br/></td></tr>
+<tr class="separator:ga6ba4db4866902fed84f7f52b0527f5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabdaf80f5f0617fd82e429f74e21f8443"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gabdaf80f5f0617fd82e429f74e21f8443"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a> )(uint8_t const *const cmd, uint8_t const *const par)</td></tr>
+<tr class="memdesc:gabdaf80f5f0617fd82e429f74e21f8443"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for URC callback. <br/></td></tr>
+<tr class="separator:gabdaf80f5f0617fd82e429f74e21f8443"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d13b96ff034fa54f913d30a8e84aa84"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6d13b96ff034fa54f913d30a8e84aa84"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a> )(<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *)</td></tr>
+<tr class="memdesc:ga6d13b96ff034fa54f913d30a8e84aa84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for formula function pointer. <br/></td></tr>
+<tr class="separator:ga6d13b96ff034fa54f913d30a8e84aa84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga76d28e5d09b4841c5ef03a55e77ea732"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga76d28e5d09b4841c5ef03a55e77ea732"></a>
+typedef struct <a class="el" href="struct__sigQual.html">_sigQual</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga76d28e5d09b4841c5ef03a55e77ea732">sigQual_t</a></td></tr>
+<tr class="memdesc:ga76d28e5d09b4841c5ef03a55e77ea732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for signal quality. <br/></td></tr>
+<tr class="separator:ga76d28e5d09b4841c5ef03a55e77ea732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga04193c9e01437684c61e0f614aa41884"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga04193c9e01437684c61e0f614aa41884"></a>
+typedef struct <a class="el" href="struct__connStatus.html">_connStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga04193c9e01437684c61e0f614aa41884">connStatus_t</a></td></tr>
+<tr class="memdesc:ga04193c9e01437684c61e0f614aa41884"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct for determining the status of the GSM and GPRS connections. <br/></td></tr>
+<tr class="separator:ga04193c9e01437684c61e0f614aa41884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5ce6d9bc01393cc7194f48c2515a8a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaf5ce6d9bc01393cc7194f48c2515a8a5"></a>
+typedef struct <a class="el" href="struct__urc.html">_urc</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaf5ce6d9bc01393cc7194f48c2515a8a5">urc_t</a></td></tr>
+<tr class="memdesc:gaf5ce6d9bc01393cc7194f48c2515a8a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct for reading URC command and parameters. <br/></td></tr>
+<tr class="separator:gaf5ce6d9bc01393cc7194f48c2515a8a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga74defca0a1ccb7f809f592686b529d14"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga74defca0a1ccb7f809f592686b529d14"></a>
+typedef struct <a class="el" href="struct__smsOut.html">_smsOut</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga74defca0a1ccb7f809f592686b529d14">smsOut_t</a></td></tr>
+<tr class="memdesc:ga74defca0a1ccb7f809f592686b529d14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for outgoing SMS message. <br/></td></tr>
+<tr class="separator:ga74defca0a1ccb7f809f592686b529d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga194fad53a180e12adafed3de45f7063a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga194fad53a180e12adafed3de45f7063a"></a>
+typedef struct <a class="el" href="struct__smsConf.html">_smsConf</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga194fad53a180e12adafed3de45f7063a">smsConf_t</a></td></tr>
+<tr class="memdesc:ga194fad53a180e12adafed3de45f7063a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for outgoing SMS confirmation message. <br/></td></tr>
+<tr class="separator:ga194fad53a180e12adafed3de45f7063a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga85562e153998837cfd6f9f85f7f7daad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga85562e153998837cfd6f9f85f7f7daad"></a>
+typedef enum <a class="el" href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">_smsReadMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga85562e153998837cfd6f9f85f7f7daad">smsReadMode_t</a></td></tr>
+<tr class="memdesc:ga85562e153998837cfd6f9f85f7f7daad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read mode. <br/></td></tr>
+<tr class="separator:ga85562e153998837cfd6f9f85f7f7daad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa123d0ac7758bfc6927dc2c2cdc92c59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa123d0ac7758bfc6927dc2c2cdc92c59"></a>
+typedef struct <a class="el" href="struct__smsReadPars.html">_smsReadPars</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa123d0ac7758bfc6927dc2c2cdc92c59">smsReadPars_t</a></td></tr>
+<tr class="memdesc:gaa123d0ac7758bfc6927dc2c2cdc92c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read parameters. <br/></td></tr>
+<tr class="separator:gaa123d0ac7758bfc6927dc2c2cdc92c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga734654f9b1466196fd5d9ec61e8bc466"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga734654f9b1466196fd5d9ec61e8bc466"></a>
+typedef struct <a class="el" href="struct__smsRec.html">_smsRec</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a></td></tr>
+<tr class="memdesc:ga734654f9b1466196fd5d9ec61e8bc466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for received SMS. <br/></td></tr>
+<tr class="separator:ga734654f9b1466196fd5d9ec61e8bc466"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4400808bd92f3bba02ac3f1139b1f2a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga4400808bd92f3bba02ac3f1139b1f2a7"></a>
+typedef enum <a class="el" href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">_smsListStat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga4400808bd92f3bba02ac3f1139b1f2a7">smsListStat_t</a></td></tr>
+<tr class="memdesc:ga4400808bd92f3bba02ac3f1139b1f2a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS list messages status. <br/></td></tr>
+<tr class="separator:ga4400808bd92f3bba02ac3f1139b1f2a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5b04fc26cfe34137d396eb4b92002a9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga5b04fc26cfe34137d396eb4b92002a9b"></a>
+typedef struct <a class="el" href="struct__smsListPars.html">_smsListPars</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga5b04fc26cfe34137d396eb4b92002a9b">smsListPars_t</a></td></tr>
+<tr class="memdesc:ga5b04fc26cfe34137d396eb4b92002a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS list parameters. <br/></td></tr>
+<tr class="separator:ga5b04fc26cfe34137d396eb4b92002a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga71dc645511316a9f1de36681774669df"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga71dc645511316a9f1de36681774669df"></a>
+typedef struct <a class="el" href="struct__smsListRet.html">_smsListRet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga71dc645511316a9f1de36681774669df">smsListRet_t</a></td></tr>
+<tr class="memdesc:ga71dc645511316a9f1de36681774669df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read/list return. <br/></td></tr>
+<tr class="separator:ga71dc645511316a9f1de36681774669df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad12a0e4bd0bc27d1c00a00d542e37a2c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gad12a0e4bd0bc27d1c00a00d542e37a2c"></a>
+typedef enum <a class="el" href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">_smsDelMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gad12a0e4bd0bc27d1c00a00d542e37a2c">smsDelMode_t</a></td></tr>
+<tr class="memdesc:gad12a0e4bd0bc27d1c00a00d542e37a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS deletion mode. <br/></td></tr>
+<tr class="separator:gad12a0e4bd0bc27d1c00a00d542e37a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79afe616b056c2e1dc8eb84392f9a68a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga79afe616b056c2e1dc8eb84392f9a68a"></a>
+typedef struct <a class="el" href="struct__smsDelPars.html">_smsDelPars</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga79afe616b056c2e1dc8eb84392f9a68a">smsDelPars_t</a></td></tr>
+<tr class="memdesc:ga79afe616b056c2e1dc8eb84392f9a68a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS delete parameters. <br/></td></tr>
+<tr class="separator:ga79afe616b056c2e1dc8eb84392f9a68a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b3e3f9b1b432389404457261ba7f8ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga9b3e3f9b1b432389404457261ba7f8ef"></a>
+typedef struct <a class="el" href="struct__apnUserPwd.html">_apnUserPwd</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga9b3e3f9b1b432389404457261ba7f8ef">apnUserPwd_t</a></td></tr>
+<tr class="memdesc:ga9b3e3f9b1b432389404457261ba7f8ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for APN name, user and password. <br/></td></tr>
+<tr class="separator:ga9b3e3f9b1b432389404457261ba7f8ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa2aa4780302ba19f505afda164550c4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa2aa4780302ba19f505afda164550c4d"></a>
+typedef enum <a class="el" href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">_portType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa2aa4780302ba19f505afda164550c4d">portType_t</a></td></tr>
+<tr class="memdesc:gaa2aa4780302ba19f505afda164550c4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for port protocol (TCP or UDP) <br/></td></tr>
+<tr class="separator:gaa2aa4780302ba19f505afda164550c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab32e5f2ec7bb0d6de79b084e15b661d5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gab32e5f2ec7bb0d6de79b084e15b661d5"></a>
+typedef struct <a class="el" href="struct__socket.html">_socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gab32e5f2ec7bb0d6de79b084e15b661d5">socket_t</a></td></tr>
+<tr class="memdesc:gab32e5f2ec7bb0d6de79b084e15b661d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for address and port. <br/></td></tr>
+<tr class="separator:gab32e5f2ec7bb0d6de79b084e15b661d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa56bf5b39c992bd3eacb49c27d985a28"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa56bf5b39c992bd3eacb49c27d985a28"></a>
+typedef enum <a class="el" href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">_pwrGnss</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a></td></tr>
+<tr class="memdesc:gaa56bf5b39c992bd3eacb49c27d985a28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum for turning GNSS module on or off. <br/></td></tr>
+<tr class="separator:gaa56bf5b39c992bd3eacb49c27d985a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7066baf53d5f21a47d9dbb6a1401c18f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga7066baf53d5f21a47d9dbb6a1401c18f"></a>
+typedef struct <a class="el" href="struct__dataGnss.html">_dataGnss</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga7066baf53d5f21a47d9dbb6a1401c18f">dataGnss_t</a></td></tr>
+<tr class="memdesc:ga7066baf53d5f21a47d9dbb6a1401c18f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct for storing GNSS info. <br/></td></tr>
+<tr class="separator:ga7066baf53d5f21a47d9dbb6a1401c18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gaee17f59c7ada755681f8708b12b181f1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">_frmStatus</a> { <a class="el" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18">IDLE</a> = 0, 
+<a class="el" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36">INIT</a> = 1, 
+<a class="el" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33">PROC</a> = 2, 
+<a class="el" href="group__interface.html#ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd">WRAP</a> = 3
+ }</td></tr>
+<tr class="memdesc:gaee17f59c7ada755681f8708b12b181f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">State of the current formula being run.  <a href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">More...</a><br/></td></tr>
+<tr class="separator:gaee17f59c7ada755681f8708b12b181f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga752d93f9a20ab4b6061cd359323288dd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga752d93f9a20ab4b6061cd359323288dd">_procStatus</a> { <br/>
+&#160;&#160;<b>NOCMD</b>, 
+<b>ATCMD1</b>, 
+<b>ATCMD1RESP</b>, 
+<b>ATCMD2</b>, 
+<br/>
+&#160;&#160;<b>ATCMD2RESP</b>, 
+<b>ATCMD3</b>, 
+<b>ATCMD3RESP</b>, 
+<b>ATCMD4</b>, 
+<br/>
+&#160;&#160;<b>ATCMD4RESP</b>, 
+<b>ATCMD5</b>, 
+<b>ATCMD5RESP</b>, 
+<b>ATCMD6</b>, 
+<br/>
+&#160;&#160;<b>ATCMD6RESP</b>, 
+<b>ATCMD7</b>, 
+<b>ATCMD7RESP</b>, 
+<b>ATCMD8</b>, 
+<br/>
+&#160;&#160;<b>ATCMD8RESP</b>, 
+<b>ATCMD9</b>, 
+<b>ATCMD9RESP</b>, 
+<b>ATCMD10</b>, 
+<br/>
+&#160;&#160;<b>ATCMD10RESP</b>
+<br/>
+ }</td></tr>
+<tr class="memdesc:ga752d93f9a20ab4b6061cd359323288dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of command or response in the PROC section being processed. <br/></td></tr>
+<tr class="separator:ga752d93f9a20ab4b6061cd359323288dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac480156d28884097d4917ee280ba89cc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gac480156d28884097d4917ee280ba89cc">_errorFrm</a> { <br/>
+&#160;&#160;<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59">OK</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46">ERR_INIT</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e">ERR_PROC</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36">ERR_GSM</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8">ERR_TOUT</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06">ERR_FSM</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6">ERR_WRAP</a>, 
+<a class="el" href="group__interface.html#ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0">ERR_UNK</a>
+<br/>
+ }</td></tr>
+<tr class="memdesc:gac480156d28884097d4917ee280ba89cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for formula level error code return.  <a href="group__interface.html#gac480156d28884097d4917ee280ba89cc">More...</a><br/></td></tr>
+<tr class="separator:gac480156d28884097d4917ee280ba89cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9a4fcd0b9b76bb510f098fd4467d757f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga9a4fcd0b9b76bb510f098fd4467d757f">_urcMode</a> { <b>MANUAL_MODE</b>, 
+<b>CBACK_MODE</b>
+ }</td></tr>
+<tr class="memdesc:ga9a4fcd0b9b76bb510f098fd4467d757f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Modes for URC handling. <br/></td></tr>
+<tr class="separator:ga9a4fcd0b9b76bb510f098fd4467d757f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa22a089af17a58f4a94ed81c622a8c4a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">_smsReadMode</a> { <a class="el" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7">NORMAL</a> = 0, 
+<a class="el" href="group__interface.html#ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39">NOCHANGE</a> = 1
+ }</td></tr>
+<tr class="memdesc:gaa22a089af17a58f4a94ed81c622a8c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS read mode.  <a href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">More...</a><br/></td></tr>
+<tr class="separator:gaa22a089af17a58f4a94ed81c622a8c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63512e17a0436fe452dcb6269ffdefae"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">_smsListStat</a> { <br/>
+&#160;&#160;<a class="el" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f">REC_UNREAD</a>, 
+<a class="el" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a">REC_READ</a>, 
+<a class="el" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d">STO_UNSENT</a>, 
+<a class="el" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82">STO_SENT</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__interface.html#gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709">ALL_MSG</a>
+<br/>
+ }</td></tr>
+<tr class="memdesc:ga63512e17a0436fe452dcb6269ffdefae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS list messages status.  <a href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">More...</a><br/></td></tr>
+<tr class="separator:ga63512e17a0436fe452dcb6269ffdefae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bba33b12b3e7e38efd620782d892854"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">_smsDelMode</a> { <br/>
+&#160;&#160;<a class="el" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579">INDEX</a> = 0, 
+<a class="el" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6">READ</a> = 1, 
+<a class="el" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429">READ_SENT</a> = 2, 
+<a class="el" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b">READ_SENT_UNSENT</a> = 3, 
+<br/>
+&#160;&#160;<a class="el" href="group__interface.html#gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb">DEL_ALL</a> = 4
+<br/>
+ }</td></tr>
+<tr class="memdesc:ga1bba33b12b3e7e38efd620782d892854"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for SMS deletion mode.  <a href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">More...</a><br/></td></tr>
+<tr class="separator:ga1bba33b12b3e7e38efd620782d892854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga97489b9aa4324c72124ac72e389dc9b6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">_portType</a> { <a class="el" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c">TCP</a>, 
+<a class="el" href="group__interface.html#gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6">UDP</a>
+ }</td></tr>
+<tr class="memdesc:ga97489b9aa4324c72124ac72e389dc9b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for port protocol (TCP or UDP)  <a href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">More...</a><br/></td></tr>
+<tr class="separator:ga97489b9aa4324c72124ac72e389dc9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga649c1a42e99f8fd6042d29a817cfa9f6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">_pwrGnss</a> { <a class="el" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03">ON</a>, 
+<a class="el" href="group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75">OFF</a>
+ }</td></tr>
+<tr class="memdesc:ga649c1a42e99f8fd6042d29a817cfa9f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum for turning GNSS module on or off.  <a href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">More...</a><br/></td></tr>
+<tr class="separator:ga649c1a42e99f8fd6042d29a817cfa9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gae01e7cbb1d5b80cb1f4955bc28381c2d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae01e7cbb1d5b80cb1f4955bc28381c2d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>itoa</b> (int val, char *buf, int dummy)</td></tr>
 <tr class="separator:gae01e7cbb1d5b80cb1f4955bc28381c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae9f040a1c50e8f3e8eb90a5dcc06d7e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gae9f040a1c50e8f3e8eb90a5dcc06d7e1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>gsmReadUrc</b> (gsmInterface_t *interface, urc_s *urc)</td></tr>
-<tr class="separator:gae9f040a1c50e8f3e8eb90a5dcc06d7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac111d887da1aa4106fdc62fb26b3a61c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gac111d887da1aa4106fdc62fb26b3a61c">gsmInitInterface</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface)</td></tr>
+<tr class="memdesc:gac111d887da1aa4106fdc62fb26b3a61c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formula to initialize up the GSM interface.  <a href="#gac111d887da1aa4106fdc62fb26b3a61c">More...</a><br/></td></tr>
+<tr class="separator:gac111d887da1aa4106fdc62fb26b3a61c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga144541900b09069bc5beda72aa6e0181"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga144541900b09069bc5beda72aa6e0181">gsmStartUp</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga144541900b09069bc5beda72aa6e0181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts up the GSM engine.  <a href="#ga144541900b09069bc5beda72aa6e0181">More...</a><br/></td></tr>
+<tr class="separator:ga144541900b09069bc5beda72aa6e0181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga343041c1c8e97f97641a551c6442fbdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga343041c1c8e97f97641a551c6442fbdd">gsmExitDataMode</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga343041c1c8e97f97641a551c6442fbdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends the '+++' timed sequence to exit DATA MODE.  <a href="#ga343041c1c8e97f97641a551c6442fbdd">More...</a><br/></td></tr>
+<tr class="separator:ga343041c1c8e97f97641a551c6442fbdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf71e50dd68f0f93320574faad2009d54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaf71e50dd68f0f93320574faad2009d54">gsmSysTickHandler</a> (void)</td></tr>
+<tr class="memdesc:gaf71e50dd68f0f93320574faad2009d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles AT command timeout and gsmProcess function timing.  <a href="#gaf71e50dd68f0f93320574faad2009d54">More...</a><br/></td></tr>
+<tr class="separator:gaf71e50dd68f0f93320574faad2009d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac18fcac3c81c8005ceaa8f38a3a65475"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gac18fcac3c81c8005ceaa8f38a3a65475">gsmProcess</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface)</td></tr>
+<tr class="memdesc:gac18fcac3c81c8005ceaa8f38a3a65475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes commands, responses and URCs at the rate of one token per invocation.  <a href="#gac18fcac3c81c8005ceaa8f38a3a65475">More...</a><br/></td></tr>
+<tr class="separator:gac18fcac3c81c8005ceaa8f38a3a65475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6bf245767dccdef6b903214196a66150"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga6bf245767dccdef6b903214196a66150">gsmIsIdle</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface)</td></tr>
+<tr class="memdesc:ga6bf245767dccdef6b903214196a66150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if the GSM interface is currently idle.  <a href="#ga6bf245767dccdef6b903214196a66150">More...</a><br/></td></tr>
+<tr class="separator:ga6bf245767dccdef6b903214196a66150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67cc73afafba8db5ba3b39a3a907f357"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga67cc73afafba8db5ba3b39a3a907f357">gsmGetSigQual</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga76d28e5d09b4841c5ef03a55e77ea732">sigQual_t</a> *sigQual, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga67cc73afafba8db5ba3b39a3a907f357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets signal quality values (RSSI and BER)  <a href="#ga67cc73afafba8db5ba3b39a3a907f357">More...</a><br/></td></tr>
+<tr class="separator:ga67cc73afafba8db5ba3b39a3a907f357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga919ec3878d57b51f45331adbdb7f9149"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga919ec3878d57b51f45331adbdb7f9149">gsmCheckConn</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga04193c9e01437684c61e0f614aa41884">connStatus_t</a> *status, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga919ec3878d57b51f45331adbdb7f9149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check status of GSM and GPRS connection.  <a href="#ga919ec3878d57b51f45331adbdb7f9149">More...</a><br/></td></tr>
+<tr class="separator:ga919ec3878d57b51f45331adbdb7f9149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa1aecb8a0b6eec444607ce5ca1be0002"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa1aecb8a0b6eec444607ce5ca1be0002">gsmReadUrc</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__commands.html#gaf5ce6d9bc01393cc7194f48c2515a8a5">urc_t</a> *urc)</td></tr>
+<tr class="memdesc:gaa1aecb8a0b6eec444607ce5ca1be0002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read latest URC received.  <a href="#gaa1aecb8a0b6eec444607ce5ca1be0002">More...</a><br/></td></tr>
+<tr class="separator:gaa1aecb8a0b6eec444607ce5ca1be0002"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68e3d360484c20ca6d98167c82a4baf4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga68e3d360484c20ca6d98167c82a4baf4">gsmSetUrcMode</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a> mode)</td></tr>
+<tr class="memdesc:ga68e3d360484c20ca6d98167c82a4baf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets URC handling to either callback mode or manual mode.  <a href="#ga68e3d360484c20ca6d98167c82a4baf4">More...</a><br/></td></tr>
+<tr class="separator:ga68e3d360484c20ca6d98167c82a4baf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga214bfbbaa3b9cb4a63c700e083373422"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga214bfbbaa3b9cb4a63c700e083373422">gsmSetUrcCback</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga214bfbbaa3b9cb4a63c700e083373422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets URC cback function.  <a href="#ga214bfbbaa3b9cb4a63c700e083373422">More...</a><br/></td></tr>
+<tr class="separator:ga214bfbbaa3b9cb4a63c700e083373422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52d344af2e08a11fed2a68b31728007d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga52d344af2e08a11fed2a68b31728007d">gsmSetDataCback</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a> cback)</td></tr>
+<tr class="memdesc:ga52d344af2e08a11fed2a68b31728007d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets DATA_MODE callback.  <a href="#ga52d344af2e08a11fed2a68b31728007d">More...</a><br/></td></tr>
+<tr class="separator:ga52d344af2e08a11fed2a68b31728007d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga442c775e3c9ba6695fa9f6e3c8565b00"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga442c775e3c9ba6695fa9f6e3c8565b00">gsmCheckDataMode</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, uint8_t const *const buf, uint8_t const *const nch)</td></tr>
+<tr class="memdesc:ga442c775e3c9ba6695fa9f6e3c8565b00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects tokens from the modem which indicate that we have left DATA_MODE and goes back to COMMAND_MODE if it finds any.  <a href="#ga442c775e3c9ba6695fa9f6e3c8565b00">More...</a><br/></td></tr>
+<tr class="separator:ga442c775e3c9ba6695fa9f6e3c8565b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67d11650027da8bc12a1aa8e29dc6713"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga67d11650027da8bc12a1aa8e29dc6713">gsmSmsSend</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga74defca0a1ccb7f809f592686b529d14">smsOut_t</a> *msg, <a class="el" href="group__interface.html#ga194fad53a180e12adafed3de45f7063a">smsConf_t</a> *conf, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga67d11650027da8bc12a1aa8e29dc6713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an SMS.  <a href="#ga67d11650027da8bc12a1aa8e29dc6713">More...</a><br/></td></tr>
+<tr class="separator:ga67d11650027da8bc12a1aa8e29dc6713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga374d63406870472e5815c49c9eb1c9cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga374d63406870472e5815c49c9eb1c9cd">gsmSmsRead</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a> *msg, <a class="el" href="group__interface.html#gaa123d0ac7758bfc6927dc2c2cdc92c59">smsReadPars_t</a> *pars, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga374d63406870472e5815c49c9eb1c9cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a single received SMS.  <a href="#ga374d63406870472e5815c49c9eb1c9cd">More...</a><br/></td></tr>
+<tr class="separator:ga374d63406870472e5815c49c9eb1c9cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa33300fc0f02c4c6de4358ec666e240a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gaa33300fc0f02c4c6de4358ec666e240a">gsmSmsList</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a> *list, <a class="el" href="group__interface.html#ga5b04fc26cfe34137d396eb4b92002a9b">smsListPars_t</a> *pars, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:gaa33300fc0f02c4c6de4358ec666e240a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lists received SMSs in a vector.  <a href="#gaa33300fc0f02c4c6de4358ec666e240a">More...</a><br/></td></tr>
+<tr class="separator:gaa33300fc0f02c4c6de4358ec666e240a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7adbe9890a4727844b507bdcb6857295"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga7adbe9890a4727844b507bdcb6857295">gsmSmsDel</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga79afe616b056c2e1dc8eb84392f9a68a">smsDelPars_t</a> *msgdel, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga7adbe9890a4727844b507bdcb6857295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes a single SMS from memory.  <a href="#ga7adbe9890a4727844b507bdcb6857295">More...</a><br/></td></tr>
+<tr class="separator:ga7adbe9890a4727844b507bdcb6857295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga16934eae26b90c1e294cda1ca42056d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga16934eae26b90c1e294cda1ca42056d8">gsmGprsStart</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga9b3e3f9b1b432389404457261ba7f8ef">apnUserPwd_t</a> *apn, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga16934eae26b90c1e294cda1ca42056d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts up GPRS connection in the modem.  <a href="#ga16934eae26b90c1e294cda1ca42056d8">More...</a><br/></td></tr>
+<tr class="separator:ga16934eae26b90c1e294cda1ca42056d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade7d952df59965a0f00eae71126e771d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#gade7d952df59965a0f00eae71126e771d">gsmGprsStop</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:gade7d952df59965a0f00eae71126e771d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops GPRS connection in the modem.  <a href="#gade7d952df59965a0f00eae71126e771d">More...</a><br/></td></tr>
+<tr class="separator:gade7d952df59965a0f00eae71126e771d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7de35b1e9cdf386358fd1186d67ba798"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga7de35b1e9cdf386358fd1186d67ba798">gsmGprsOpenPort</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#gab32e5f2ec7bb0d6de79b084e15b661d5">socket_t</a> *port, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga7de35b1e9cdf386358fd1186d67ba798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens TCP or UDP port.  <a href="#ga7de35b1e9cdf386358fd1186d67ba798">More...</a><br/></td></tr>
+<tr class="separator:ga7de35b1e9cdf386358fd1186d67ba798"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83c34ec1022355e5d131af877d6a38a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga83c34ec1022355e5d131af877d6a38a0">gsmGprsClosePort</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga83c34ec1022355e5d131af877d6a38a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes open TCP or UDP port.  <a href="#ga83c34ec1022355e5d131af877d6a38a0">More...</a><br/></td></tr>
+<tr class="separator:ga83c34ec1022355e5d131af877d6a38a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ccfae60f8d5e2e0afc2a9f0d69ab03f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga7ccfae60f8d5e2e0afc2a9f0d69ab03f">gsmGnssPwr</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a> *cmd, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga7ccfae60f8d5e2e0afc2a9f0d69ab03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns GNSS on or off.  <a href="#ga7ccfae60f8d5e2e0afc2a9f0d69ab03f">More...</a><br/></td></tr>
+<tr class="separator:ga7ccfae60f8d5e2e0afc2a9f0d69ab03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0a63759a1348c088e42370fb2faa013f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__interface.html#ga0a63759a1348c088e42370fb2faa013f">gsmGnssGetData</a> (<a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *interface, <a class="el" href="group__interface.html#ga7066baf53d5f21a47d9dbb6a1401c18f">dataGnss_t</a> *dataGnss, <a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a> cback)</td></tr>
+<tr class="memdesc:ga0a63759a1348c088e42370fb2faa013f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get GNSS data.  <a href="#ga0a63759a1348c088e42370fb2faa013f">More...</a><br/></td></tr>
+<tr class="separator:ga0a63759a1348c088e42370fb2faa013f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>This module handles the user interface. </p>
+<p>This module handles the user interface and formulas. </p>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="gac480156d28884097d4917ee280ba89cc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#gac480156d28884097d4917ee280ba89cc">_errorFrm</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for formula level error code return. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59"></a>OK</em>&#160;</td><td class="fielddoc">
+<p>no errors </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89ccad64d9c982833860d10f54b846f9c5e46"></a>ERR_INIT</em>&#160;</td><td class="fielddoc">
+<p>error during initialization </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca2b1d3d0b472191b10538049004bcab1e"></a>ERR_PROC</em>&#160;</td><td class="fielddoc">
+<p>error during command processing </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca78d7253d41aea3cf9b021bdb9bebea36"></a>ERR_GSM</em>&#160;</td><td class="fielddoc">
+<p>error from the GSM engine </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca4cdb06f420dff52caa493200a9ba6ee8"></a>ERR_TOUT</em>&#160;</td><td class="fielddoc">
+<p>error due to timeout </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89ccac5ddd6d10da39a2c14f84e4e8fe98e06"></a>ERR_FSM</em>&#160;</td><td class="fielddoc">
+<p>error due to cmd FSM being out of range </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca647709fea90662d9e66405f63e306cb6"></a>ERR_WRAP</em>&#160;</td><td class="fielddoc">
+<p>error during wrap process </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggac480156d28884097d4917ee280ba89cca00e036f6febb0618044470ec281e7df0"></a>ERR_UNK</em>&#160;</td><td class="fielddoc">
+<p>error of type unknown </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="gaee17f59c7ada755681f8708b12b181f1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#gaee17f59c7ada755681f8708b12b181f1">_frmStatus</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>State of the current formula being run. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggaee17f59c7ada755681f8708b12b181f1afd6a0e4343048b10646dd2976cc5ad18"></a>IDLE</em>&#160;</td><td class="fielddoc">
+<p>no formula currently running </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaee17f59c7ada755681f8708b12b181f1a0cb1b2c6a7db1f1084886c98909a3f36"></a>INIT</em>&#160;</td><td class="fielddoc">
+<p>initializing formula </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaee17f59c7ada755681f8708b12b181f1a616db68dab196835059ff976d67fac33"></a>PROC</em>&#160;</td><td class="fielddoc">
+<p>processing commands </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaee17f59c7ada755681f8708b12b181f1a8e7838b96be55048186754b37db105dd"></a>WRAP</em>&#160;</td><td class="fielddoc">
+<p>wrapping up formula and callback </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="ga97489b9aa4324c72124ac72e389dc9b6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#ga97489b9aa4324c72124ac72e389dc9b6">_portType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for port protocol (TCP or UDP) </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga97489b9aa4324c72124ac72e389dc9b6aa040cd7feeb588104634cdadf35abf1c"></a>TCP</em>&#160;</td><td class="fielddoc">
+<p>TCP port </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga97489b9aa4324c72124ac72e389dc9b6adb542475cf9d0636e4225e216cee9ae6"></a>UDP</em>&#160;</td><td class="fielddoc">
+<p>UDP port </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="ga649c1a42e99f8fd6042d29a817cfa9f6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#ga649c1a42e99f8fd6042d29a817cfa9f6">_pwrGnss</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enum for turning GNSS module on or off. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03"></a>ON</em>&#160;</td><td class="fielddoc">
+<p>Power GNSS module on </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75"></a>OFF</em>&#160;</td><td class="fielddoc">
+<p>Power GNSS module off </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="ga1bba33b12b3e7e38efd620782d892854"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#ga1bba33b12b3e7e38efd620782d892854">_smsDelMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for SMS deletion mode. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga1bba33b12b3e7e38efd620782d892854a5f0c05bad71a7b0dd266aae7ce4b3579"></a>INDEX</em>&#160;</td><td class="fielddoc">
+<p>del the message indicated by index </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga1bba33b12b3e7e38efd620782d892854acb9be765f361bb7efb9073730aac92c6"></a>READ</em>&#160;</td><td class="fielddoc">
+<p>del all read messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga1bba33b12b3e7e38efd620782d892854a341e3e13ab388c730cfb324d57463429"></a>READ_SENT</em>&#160;</td><td class="fielddoc">
+<p>del all read and sent messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga1bba33b12b3e7e38efd620782d892854aa84804c90710d15cfa1acb718668285b"></a>READ_SENT_UNSENT</em>&#160;</td><td class="fielddoc">
+<p>del all read, sent and unsent messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga1bba33b12b3e7e38efd620782d892854a8dc7236acaf4a98098ae602e634eedeb"></a>DEL_ALL</em>&#160;</td><td class="fielddoc">
+<p>del all messages </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="ga63512e17a0436fe452dcb6269ffdefae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#ga63512e17a0436fe452dcb6269ffdefae">_smsListStat</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for SMS list messages status. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga63512e17a0436fe452dcb6269ffdefaea909b475479905b719d31bee16647276f"></a>REC_UNREAD</em>&#160;</td><td class="fielddoc">
+<p>Received unread messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga63512e17a0436fe452dcb6269ffdefaea0eb066d0a2c8228a17a24591d569ab1a"></a>REC_READ</em>&#160;</td><td class="fielddoc">
+<p>Received read messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga63512e17a0436fe452dcb6269ffdefaeaed531a4f84da39ca6eeb7105e166293d"></a>STO_UNSENT</em>&#160;</td><td class="fielddoc">
+<p>Stored unsent messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga63512e17a0436fe452dcb6269ffdefaea858c8973f828e65385a5e14422949e82"></a>STO_SENT</em>&#160;</td><td class="fielddoc">
+<p>Stored sent messages </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga63512e17a0436fe452dcb6269ffdefaea4aec87a782ab6f25ac2b288aca631709"></a>ALL_MSG</em>&#160;</td><td class="fielddoc">
+<p>All messages </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="gaa22a089af17a58f4a94ed81c622a8c4a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__interface.html#gaa22a089af17a58f4a94ed81c622a8c4a">_smsReadMode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for SMS read mode. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggaa22a089af17a58f4a94ed81c622a8c4aa50d1448013c6f17125caee18aa418af7"></a>NORMAL</em>&#160;</td><td class="fielddoc">
+<p>change status to read if message unread </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaa22a089af17a58f4a94ed81c622a8c4aaae1a7b9e394a561ef834ac578d0b9c39"></a>NOCHANGE</em>&#160;</td><td class="fielddoc">
+<p>do not change status of message </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ga919ec3878d57b51f45331adbdb7f9149"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmCheckConn </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga04193c9e01437684c61e0f614aa41884">connStatus_t</a> *&#160;</td>
+          <td class="paramname"><em>status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check status of GSM and GPRS connection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">status</td><td>: Pointer to GSM &amp; GPRS status struct </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga442c775e3c9ba6695fa9f6e3c8565b00"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t gsmCheckDataMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t const *const&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t const *const&#160;</td>
+          <td class="paramname"><em>nch</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Detects tokens from the modem which indicate that we have left DATA_MODE and goes back to COMMAND_MODE if it finds any. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>: Read buffer with most recent chars from 232 UART </td></tr>
+    <tr><td class="paramname">nch</td><td>: Pointer to integer indicating number of characters in the read buffer</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of chars that should be printed (everything up to the exit tokens if any) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga343041c1c8e97f97641a551c6442fbdd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmExitDataMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends the '+++' timed sequence to exit DATA MODE. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function </td></tr>
+    <tr><td class="paramname">interface</td><td>: Pointer to interface</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga67cc73afafba8db5ba3b39a3a907f357"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGetSigQual </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga76d28e5d09b4841c5ef03a55e77ea732">sigQual_t</a> *&#160;</td>
+          <td class="paramname"><em>sigQual</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets signal quality values (RSSI and BER) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">sigQual</td><td>: Pointer to signal quality struct </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0a63759a1348c088e42370fb2faa013f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGnssGetData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga7066baf53d5f21a47d9dbb6a1401c18f">dataGnss_t</a> *&#160;</td>
+          <td class="paramname"><em>dataGnss</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get GNSS data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">dataGnss</td><td>: GNSS data vector </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7ccfae60f8d5e2e0afc2a9f0d69ab03f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGnssPwr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#gaa56bf5b39c992bd3eacb49c27d985a28">pwrGnss_t</a> *&#160;</td>
+          <td class="paramname"><em>cmd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Turns GNSS on or off. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">cmd</td><td>: ON or OFF command </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga83c34ec1022355e5d131af877d6a38a0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGprsClosePort </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Closes open TCP or UDP port. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7de35b1e9cdf386358fd1186d67ba798"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGprsOpenPort </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#gab32e5f2ec7bb0d6de79b084e15b661d5">socket_t</a> *&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Opens TCP or UDP port. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">port</td><td>: Pointer to struct containing the type of port, IP address and port number </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga16934eae26b90c1e294cda1ca42056d8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGprsStart </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga9b3e3f9b1b432389404457261ba7f8ef">apnUserPwd_t</a> *&#160;</td>
+          <td class="paramname"><em>apn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Starts up GPRS connection in the modem. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">apn</td><td>: Pointer to struct containing APN, user and password </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gade7d952df59965a0f00eae71126e771d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmGprsStop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stops GPRS connection in the modem. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gac111d887da1aa4106fdc62fb26b3a61c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmInitInterface </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Formula to initialize up the GSM interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if initialization successful </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga6bf245767dccdef6b903214196a66150"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmIsIdle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicates if the GSM interface is currently idle. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if no formula is being run </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gac18fcac3c81c8005ceaa8f38a3a65475"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmProcess </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes commands, responses and URCs at the rate of one token per invocation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gaa1aecb8a0b6eec444607ce5ca1be0002"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmReadUrc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__commands.html#gaf5ce6d9bc01393cc7194f48c2515a8a5">urc_t</a> *&#160;</td>
+          <td class="paramname"><em>urc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read latest URC received. </p>
+<p>Reads URC from urc VLRB.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">urc</td><td>: Pointer to URC struct</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if URC read</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">urc</td><td>: Pointer to URC variable</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if URC available </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga52d344af2e08a11fed2a68b31728007d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmSetDataCback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga6d13b96ff034fa54f913d30a8e84aa84">frm_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets DATA_MODE callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga214bfbbaa3b9cb4a63c700e083373422"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmSetUrcCback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#gabdaf80f5f0617fd82e429f74e21f8443">urcCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets URC cback function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga68e3d360484c20ca6d98167c82a4baf4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool gsmSetUrcMode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga6ba4db4866902fed84f7f52b0527f5c4">urcMode_t</a>&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets URC handling to either callback mode or manual mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">mode</td><td>: URC handling mode</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga7adbe9890a4727844b507bdcb6857295"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmSmsDel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga79afe616b056c2e1dc8eb84392f9a68a">smsDelPars_t</a> *&#160;</td>
+          <td class="paramname"><em>msgdel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Deletes a single SMS from memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">msgdel</td><td>: Pointer to SMS delete structure (indicated index and mode) </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaa33300fc0f02c4c6de4358ec666e240a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmSmsList </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a> *&#160;</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga5b04fc26cfe34137d396eb4b92002a9b">smsListPars_t</a> *&#160;</td>
+          <td class="paramname"><em>pars</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Lists received SMSs in a vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">list</td><td>: Pointer to storage vector for SMSs to be read </td></tr>
+    <tr><td class="paramname">pars</td><td>: SMS list parameters (status, mode and number of messages) </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga374d63406870472e5815c49c9eb1c9cd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmSmsRead </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga734654f9b1466196fd5d9ec61e8bc466">smsRec_t</a> *&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#gaa123d0ac7758bfc6927dc2c2cdc92c59">smsReadPars_t</a> *&#160;</td>
+          <td class="paramname"><em>pars</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reads a single received SMS. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">msg</td><td>: Pointer to storage variable for SMS to be read </td></tr>
+    <tr><td class="paramname">pars</td><td>: SMS read parameters (index and mode) </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga67d11650027da8bc12a1aa8e29dc6713"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmSmsSend </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga74defca0a1ccb7f809f592686b529d14">smsOut_t</a> *&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga194fad53a180e12adafed3de45f7063a">smsConf_t</a> *&#160;</td>
+          <td class="paramname"><em>conf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends an SMS. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>: Pointer to interface </td></tr>
+    <tr><td class="paramname">msg</td><td>: Pointer to SMS message to be sent </td></tr>
+    <tr><td class="paramname">conf</td><td>: Pointer to confirmation of SMS being sent </td></tr>
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga144541900b09069bc5beda72aa6e0181"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmStartUp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__gsmInterface__t.html">gsmInterface_t</a> *&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__interface.html#ga2f39c5bb4589772532861c5d75c26f60">frmCback_t</a>&#160;</td>
+          <td class="paramname"><em>cback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Starts up the GSM engine. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cback</td><td>: Function pointer to callback function </td></tr>
+    <tr><td class="paramname">interface</td><td>: Pointer to interface</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf71e50dd68f0f93320574faad2009d54"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void gsmSysTickHandler </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handles AT command timeout and gsmProcess function timing. </p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 15 2019 11:59:49 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 21 2019 17:55:55 for gsm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['unknown_5fcmd',['UNKNOWN_CMD',['../group__commands.html#ga743af2f0cf7fc1ef170b7f38f788d2e1',1,'gsmCommands.h']]],
-  ['urc_5fbuf_5fsize',['URC_BUF_SIZE',['../group__engine.html#ga98de0d06859a21dd5792cc75d6ecc5d9',1,'gsmEngine.h']]],
-  ['urc_5ft',['urc_t',['../structurc__t.html',1,'']]]
+  ['off',['OFF',['../group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6aac132f2982b98bcaa3445e535a03ff75',1,'gsmInterface.h']]],
+  ['ok',['OK',['../group__interface.html#ggac480156d28884097d4917ee280ba89cca2bc49ec37d6a5715dd23e85f1ff5bb59',1,'gsmInterface.h']]],
+  ['on',['ON',['../group__interface.html#gga649c1a42e99f8fd6042d29a817cfa9f6a977d478dacaae531f95695750d1e9d03',1,'gsmInterface.h']]]
 ];
