@@ -10,31 +10,31 @@
   :line: 354
   :message: ''
 - :test: test_gsmToutCntZero
-  :line: 640
+  :line: 642
   :message: ''
 - :test: test_gsmDecToutCnt
-  :line: 667
+  :line: 673
   :message: ''
 - :test: test_gsmSendCmd
-  :line: 706
+  :line: 718
   :message: ''
 - :test: test_gsmGetCmdRsp
-  :line: 766
+  :line: 778
   :message: ''
 - :test: test_gsmGetNoCmdRsp
-  :line: 834
+  :line: 846
   :message: ''
 - :test: test_gsmGetUrc
-  :line: 862
+  :line: 876
   :message: ''
 - :test: test_gsmGetSerialMode
-  :line: 923
+  :line: 937
   :message: ''
 - :test: test_gsmSetSerialMode
-  :line: 954
+  :line: 968
   :message: ''
 - :test: test_gsmRecordUrc
-  :line: 985
+  :line: 999
   :message: ''
 :failures: []
 :ignores: []
@@ -44,4 +44,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.00306601
+:time: 0.0023016

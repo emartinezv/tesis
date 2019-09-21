@@ -138,6 +138,7 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                uint8_t equalPos = 0; /* position of the '=' char in tkn */
                uint8_t intPos = 0;   /* position of the '?' char in tkn */
 
+               /* Search for the '=' char */
                for (i = 3; i < tknLen; i++){
                   if ('=' == tkn[i]){
                      equalPos = i;
@@ -145,6 +146,7 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                   }
                }
 
+               /* Search for the '?' char */
                for (i = 3; i < tknLen; i++){
                   if ('?' == tkn[i]){
                      intPos = i;
@@ -196,7 +198,6 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                 * READ extended command */
                else if((tknLen-2) == intPos){
 
-                  /* Copy the part between '+' and '?' to cmd*/
                   strncpy(cmd,&tkn[3],(intPos - 3));
                   cmd[intPos -3] = '\0';
 
@@ -235,6 +236,8 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                   debug(">>>parser<<<   AT COMMAND W/&: ");
                   debug(cmd);
 
+                  /* If the tkn has characters beyond the cmd char, these are
+                   * parameters */
                   if('\r' != tkn[4]){
                      strncpy(par,&tkn[4],tknLen-5);
                      par[tknLen-5] = '\0';
@@ -274,6 +277,8 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
                debug(">>>parser<<<   AT COMMAND: ");
                debug(cmd);
 
+               /* If the tkn has characters beyond the cmd char, these are
+                * parameters */
                if('\r' != tkn[3]){
                   strncpy(par,&tkn[3],tknLen-4);
                   par[tknLen-4] = '\0';
@@ -308,6 +313,7 @@ tknTypeParser_t gsmParseTkn(uint8_t const * const tkn, uint8_t * cmd,
 
             uint8_t colonPos = 0; /* position of the ':' char in tkn */
 
+            /* Search for the ':' char */
             for(i = 3; i < (tknLen-2); i++){
                if(':' == tkn[i]){
                   colonPos = i;

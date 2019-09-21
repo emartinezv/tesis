@@ -78,6 +78,9 @@ uint16_t gsmNoChTokenizer(void)
 
    tknRbFree = RingBuffer_GetFree(&currTknRb);
 
+   /* The maximum no of chars the tokenizer can handle at the moment is either
+      the free space in the tkn rb or the swap buffer size, whichever is
+      smaller */
    return ((tknRbFree < SWAP_BUF_SIZ) ? tknRbFree : SWAP_BUF_SIZ);
 }
 
@@ -155,7 +158,7 @@ void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
       } /* SMS send prompt */
       else { currTkn = NONE; }
 
-      /* if a valid token is detected empty the current token RB into
+      /* If a valid token is detected empty the current token RB into
        * the swap buffer, add the current token type as a trailer and insert
        * the whole thing in the token VLRB */
 
@@ -163,8 +166,15 @@ void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
 
          if(SMS_BODY != currTkn){ crLf = 0;}
          empty = 1;
+
+         /* Both ECHO and SMS_BODY require characters from the following tkn
+            to arrive before they can be confirmed (1 char for ECHO, 2 chars
+            for SMS_BODY). We do not retrieve these from the tkn RB as they are
+            part of the following tkn. */
+
          int length = RingBuffer_GetCount(&currTknRb)
                       - (ECHO == currTkn) - (SMS_BODY == currTkn)*2;
+
          RingBuffer_PopMult(&currTknRb, &swapBuf, length);
 
          /* Add the token type as a trailer*/

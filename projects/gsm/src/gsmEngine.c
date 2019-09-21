@@ -82,6 +82,28 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
 static bool gsmRecordUrc (gsmEngine_t * engine , uint8_t const * const cmd,
                           uint8_t const * const par);
 
+/** @brief Records a new rsp in the rsp VLRB
+*
+*  @param cmd : Command part of the rsp
+*  @param par : Parameter part of the rsp
+*
+*  @return True if successful
+*/
+
+static bool gsmRecordRsp (gsmEngine_t * engine , uint8_t const * const cmd,
+                          uint8_t const * const par);
+
+/** @brief Compares rsp with a closing response list
+*
+*  @param crsp : List of closing responses separated by '-'
+*  @param cmd  : Command part of the rsp
+*
+*  @return True if rsp foud in closing response list
+*/
+
+static bool gsmCompCloRsp (uint8_t const * const cRsp,
+                           uint8_t const * const cmd);
+
 /*==================[internal data definition]===============================*/
 
 /*==================[external data definition]===============================*/
@@ -103,7 +125,7 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
                                 uint8_t const * const cmd,
                                 uint8_t const * const par, uint8_t idx)
 {
-   uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1];
+   uint8_t rspAux[TKN_CMD_SIZE+TKN_PAR_SIZE+1]; /* aux buffer for responses */
 
    switch(engine->fsmState){
 
@@ -118,8 +140,9 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
-            engine->toutCnt = gsmGetCmdTimeout(idx);
+            /* Save timeout and index of the sent command */
 
+            engine->toutCnt = gsmGetCmdTimeout(idx);
             engine->currIdx = idx;
 
             debug(">>>engine<<<   TIMEOUT COUNTER UPDATED\r\n");
@@ -185,7 +208,8 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
       case CMD_SENT:
 
          /* We check the echo from the modem and verify that it agrees with the
-            command that was sent. */
+            command that was sent, comparing the received and saved cmd and par
+            parts. */
 
          if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
 
@@ -296,37 +320,13 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
 
             else{
 
-               rspAux[0] = '\0';
+               gsmRecordRsp(engine, cmd, par);
 
-               /* We store responses as a single string, with a dot separating
-                  the cmd and par parts */
+               /* Compare current response with the string of valid error
+                  closing responses for the current command. If a match is
+                  detected, close command and report ERR_MSG_CLOSE  */
 
-               strncat(rspAux, cmd, strlen(cmd));
-               strncat(rspAux, ".", 1);
-               strncat(rspAux, par, strlen(par));
-
-               VLRingBuffer_Insert(&(engine->rspVlRb), rspAux,
-                                   (uint16_t) (strlen(rspAux)));
-
-               debug(">>>engine<<<   rspAux: ");
-               debug(rspAux);
-               debug("\r\n");
-
-               uint8_t auxCmd[22];
-
-               /* We alter the cmd in an aux variable so that it includes the
-                * closing response separator characters '-'  */
-
-               auxCmd[0]='-';
-               auxCmd[1]='\0';
-               strncat(auxCmd, cmd, strlen(cmd));
-               strncat(auxCmd, "-", strlen("-"));
-
-               /* Compare current response with the string of valid error    */
-               /* end responses for the current command. If a match is       */
-               /* detected, close command and report ERR_MSG_CLOSE           */
-
-               if(NULL != strstr(gsmGetCmdErrRsp(engine->currIdx),auxCmd)){
+               if(gsmCompCloRsp(gsmGetCmdErrRsp(engine->currIdx),cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED IN ERROR\r\n");
 
@@ -334,11 +334,11 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
                   return ERR_MSG_CLOSE; /* return 3.2 */
                }
 
-               /* Compare current response with the string of valid          */
-               /* successful end responses for the current command. If a     */
-               /* match is detected, close command and report OK_CLOSE.      */
+               /* Compare current response with the string of valid successful
+                  closing responses for the current command. If a match is
+                  detected, close command and report OK_CLOSE. */
 
-               else if(NULL != strstr(gsmGetCmdSucRsp(engine->currIdx),auxCmd)){
+               else if(gsmCompCloRsp(gsmGetCmdSucRsp(engine->currIdx),cmd)){
 
                   debug(">>>engine<<<   COMMAND CLOSED SUCCESSFULLY\r\n");
 
@@ -347,13 +347,12 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
                }
 
                /* CORNER CASE: AT+CIFSR does not return an OK after
-                * reporting its response. To handle this and other commands
-                * with this non-standard behavior, we make the sucRsp string
-                * in it's command definition empty and we check for that here.
-                * If the sucRsp string is empty, we consider that the single
-                * response of the command (already saved in rspVlRb) to also
-                * be a closing response.
-                */
+                  reporting its response. To handle this and other commands
+                  with this non-standard behavior, we make the sucRsp string
+                  in it's command definition empty and we check for that here.
+                  If the sucRsp string is empty, we consider that the single
+                  response of the command (already saved in rspVlRb) to also
+                  be a closing response. */
 
                else if(0 == strlen(gsmGetCmdSucRsp(engine->currIdx))){
 
@@ -364,7 +363,7 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
                }
 
                /* If the response is not an end response, just report
-                * OK_RESP */
+                  OK_RESP */
 
                else{
 
@@ -375,7 +374,7 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
          }
 
          /* If we get a command-type token, we report an out-of-order error and
-          * go back to the WAITING state */
+            go back to the WAITING state */
 
          else if ((AUTOBAUD <= tknType) && (SMS_BODY_P >= tknType)){
             engine->fsmState = WAITING;
@@ -427,22 +426,20 @@ static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,
 
 }
 
-static bool gsmRecordUrc (gsmEngine_t * engine,
-                             uint8_t const * const command,
-                             uint8_t const * const parameter)
+static bool gsmRecordUrc (gsmEngine_t * engine, uint8_t const * const cmd,
+                          uint8_t const * const par)
 {
    if(0 == VLRingBuffer_IsFull(&(engine->urcVlRb))){
 
-     uint8_t urcAux[TKN_LEN];
-
+     uint8_t urcAux[TKN_LEN+1];
      urcAux[0] = '\0';
 
      /* We store URCs as a single string, with a dot separating the cmd and par
         parts */
 
-     strncat(urcAux, command, strlen(command));
+     strncat(urcAux, cmd, strlen(cmd));
      strncat(urcAux, ".", 1);
-     strncat(urcAux, parameter, strlen(parameter));
+     strncat(urcAux, par, strlen(par));
 
      VLRingBuffer_Insert(&(engine->urcVlRb), urcAux,
                          (uint16_t) (strlen(urcAux)));
@@ -461,6 +458,63 @@ static bool gsmRecordUrc (gsmEngine_t * engine,
      return false;
   }
 
+}
+
+static bool gsmRecordRsp (gsmEngine_t * engine,uint8_t const * const cmd,
+                          uint8_t const * const par)
+{
+   if(0 == VLRingBuffer_IsFull(&(engine->rspVlRb))){
+
+     uint8_t rspAux[TKN_LEN+1];
+     rspAux[0] = '\0';
+
+     /* We store response as a single string, with a dot separating the cmd and
+        par parts. */
+
+     strncat(rspAux, cmd, strlen(cmd));
+     strncat(rspAux, ".", 1);
+     strncat(rspAux, par, strlen(par));
+
+     VLRingBuffer_Insert(&(engine->rspVlRb), rspAux,
+                         (uint16_t) (strlen(rspAux)));
+
+     debug(">>>engine<<<   rspAux: ");
+     debug(rspAux);
+     debug("\r\n");
+
+     return true;
+  }
+
+  else{
+
+     debug(">>>engine<<<   rsp VLRB lleno!\r\n");
+
+     return false;
+  }
+
+}
+
+static bool gsmCompCloRsp (uint8_t const * const cRsp,
+                           uint8_t const * const cmd)
+{
+   bool result;
+
+   uint8_t auxCmd[TKN_CMD_SIZE+3];
+
+   /* We alter the cmd in an aux variable so that it includes the closing
+      response separator characters '-' for the comparison */
+
+   auxCmd[0]='-';
+   auxCmd[1]='\0';
+   strncat(auxCmd, cmd, strlen(cmd));
+   strncat(auxCmd, "-", strlen("-"));
+
+   /* Compare current response with the string of closing responses for the
+    * current command. If a match detected, return true. */
+
+   result = ((NULL == strstr(cRsp,auxCmd)) ? false : true);
+
+   return result;
 }
 
 /*==================[external functions definition]==========================*/
@@ -499,8 +553,10 @@ bool gsmInitEngine(gsmEngine_t * const engine){
 
 fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine)
 {
-   uint16_t nch;
-   uint8_t buffer[RD_BUF_SIZ];
+   uint16_t nch;                 /* number of chars read from 232 UART */
+   uint8_t buffer[RD_BUF_SIZ];   /* local read buffer */
+
+   /* Read from 232 UART and detect any tokens */
 
    nch = gsm232UartRecv(buffer, gsmNoChTokenizer());
 
@@ -509,10 +565,13 @@ fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine)
    tknTypeParser_t received;
    fsmEvent_t result = NO_UPDATE;
 
-   uint8_t tkn[TKN_LEN];
+   uint8_t tkn[TKN_LEN];         /* token buffer */
    int tknSize;
-   uint8_t cmd[TKN_CMD_SIZE+1];
-   uint8_t par[TKN_PAR_SIZE+1];
+   uint8_t cmd[TKN_CMD_SIZE+1];  /* token cmd part determined by gsmParser */
+   uint8_t par[TKN_PAR_SIZE+1];  /* token par part determined by gsmParser*/
+
+   /* If there are tokens in the tkn VLRB, pop a token, parse it and update the
+      FSM with it */
 
    if(0 == VLRingBuffer_IsEmpty(&(engine->tknVlRb))){
 
@@ -524,6 +583,8 @@ fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine)
    }
 
    #ifndef DEBUG_NOTIMEOUT
+
+   /* Timeout condition */
 
    else if((engine->fsmState != WAITING) && (0 == engine->toutCnt)){
 
@@ -560,18 +621,20 @@ void gsmDecToutCnt(gsmEngine_t * const engine){
 fsmEvent_t gsmSendCmd (gsmEngine_t * const engine,
                        const uint8_t * const cmdStr)
 {
-   tknTypeParser_t sending;
+   tknTypeParser_t sending; /* Type of token being sent */
    fsmEvent_t result;
-   uint16_t idx;
-
+   uint16_t idx;            /* Command index */
 
    uint8_t aux = 0;
-   uint8_t cmdStrCla[TKN_LEN];
+   uint8_t cmdStrCla[TKN_LEN]; /* Auxiliary buffer to add token terminaion */
    cmdStrCla[0] = '\0';
+
+   /* Load base command string in auxiliary buffer */
+
    strncat(cmdStrCla, cmdStr, strlen(cmdStr));
 
-   /* Add ECHO (if tkn finishes with '\r') or SMS_BODY to the end of the
-    * expanded cmd string (needed for the parser) */
+   /* Add ECHO (if tkn finishes with '\r') or SMS_BODY to the end of the aux
+    * buffer (needed for the parser) */
 
    if('\r' == cmdStr[strlen(cmdStr)-1]){
       aux = (uint8_t)ECHO;
@@ -582,8 +645,8 @@ fsmEvent_t gsmSendCmd (gsmEngine_t * const engine,
 
    strncat(cmdStrCla, &aux, 1);
 
-   uint8_t cmd[TKN_CMD_SIZE];
-   uint8_t par[TKN_PAR_SIZE];
+   uint8_t cmd[TKN_CMD_SIZE]; /* token cmd part determined by gsmParser */
+   uint8_t par[TKN_PAR_SIZE]; /* token par part determined by gsmParser */
 
    /* Parse AT cmd and check if it is valid. */
 
@@ -649,6 +712,7 @@ rsp_t gsmGetCmdRsp (gsmEngine_t * const engine)
    uint8_t dotPos = 0;
    uint8_t i;
 
+   /* Search for '.' character */
    for (i = 0; i < (TKN_CMD_SIZE+TKN_PAR_SIZE); i++){
       if ('.' == rspAux[i]){
          dotPos = i;
@@ -698,6 +762,7 @@ rsp_t gsmGetUrc (gsmEngine_t * const engine)
       uint8_t dotPos = 0;
       uint8_t i;
 
+      /* Search for '.' character */
       for (i = 0; i < TKN_LEN+20; i++){
          if ('.' == urcAux[i]){
             dotPos = i;

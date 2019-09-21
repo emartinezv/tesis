@@ -357,7 +357,9 @@ void test_gsmInitEngine(void)
  *
  * - gsmProcessTkn
  * - gsmUpdateFsm (all return points except 1.1)
- *
+ * - gsmRecordUrc
+ * - gsmRecordRsp
+ * - gsmCompCloRsp
  *
  * */
 

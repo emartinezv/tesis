@@ -39,7 +39,7 @@
 
 /*==================[macros and definitions]=================================*/
 
-#define DEBUG_COMMS
+//#define DEBUG_COMMS
 #ifdef DEBUG_COMMS
    #define debug(msg) dbgPrint(msg)
 #else
