@@ -76,9 +76,9 @@ int main(void)
   UnityBegin("test_gsmCommands.c");
   RUN_TEST(test_gsmCmdSearch, 46);
   RUN_TEST(test_gsmGetCmdSucRsp, 90);
-  RUN_TEST(test_gsmGetCmdErrRsp, 126);
-  RUN_TEST(test_gsmGetCmdTimeout, 156);
-  RUN_TEST(test_gsmUrcSearch, 192);
+  RUN_TEST(test_gsmGetCmdErrRsp, 133);
+  RUN_TEST(test_gsmGetCmdTimeout, 169);
+  RUN_TEST(test_gsmUrcSearch, 211);
 
   return suite_teardown(UnityEnd());
 }

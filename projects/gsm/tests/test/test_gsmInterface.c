@@ -297,12 +297,11 @@ void test_gsmProcess(void)
    TEST_ASSERT_TRUE(dataCbackFlag); /* dataCbackTest called */
    TEST_ASSERT_EQUAL_UINT32(DELAY_PROC, interface.procCnt);
 
-   return;
-
    /* Branch 1.2 */
 
    interface.procCnt = 0;
    interface.frmState = INIT;
+   frmFlag = false;
 
    gsmProcess(&interface);
 
@@ -536,7 +535,7 @@ void test_gsmCheckDataMode(void)
    uint8_t nchTest;
    uint8_t nchInput;
 
-   uint8_t const * const testBuf1 = "blablabla123123123";
+   uint8_t const * const testBuf1 = "blabla\r\nbla123123123\r\n";
    uint8_t const * const testBuf2 = "blablabla\r\nOK\r\n123123123";
    uint8_t const * const testBuf3 = "bla\r\nCLOSED\r\n123123123";
 
@@ -2317,6 +2316,103 @@ void test_gsmGprsOpenPortF(void)
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
+   /* Testing CONNECT FAIL case */
+
+   rsp_t rspTest3 = {"CONNECT FAIL",""};
+
+   gsmGprsOpenPort(&interface, &socketTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSTART=\"TCP\",\"192.168.0.1"
+                                       "\",\"80\"\r",
+                                       strlen("AT+CIPSTART=\"TCP\",\"192.168"
+                                       ".0.1\",\"80\"\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 2);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest3);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_PROC, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmGprsOpenPort(&interface, &socketTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSTART=\"TCP\",\"192.168.0.1"
+                                       "\",\"80\"\r",
+                                       strlen("AT+CIPSTART=\"TCP\",\"192.168"
+                                       ".0.1\",\"80\"\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+
 }
 
 /* test_gsmGprsClosePortF
@@ -2349,8 +2445,10 @@ void test_gsmGprsClosePortF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE=0\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE=0\r",
+                                       strlen("AT+CIPCLOSE=0\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -2366,6 +2464,37 @@ void test_gsmGprsClosePortF(void)
 
    interface.frm(&interface);
 
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmGprsClosePort(&interface, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE=0\r",
+                                       strlen("AT+CIPCLOSE=0\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -2404,8 +2533,10 @@ void test_gsmGnssPwrF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSPWR=1\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=1\r",
+                                       strlen("AT+CGNSPWR=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -2430,8 +2561,11 @@ void test_gsmGnssPwrF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSPWR=0\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=0\r",
+                                       strlen("AT+CGNSPWR=0\r"),
+                                       OK_CMD_SENT);
+
 
    interface.frm(&interface);
 
@@ -2447,6 +2581,129 @@ void test_gsmGnssPwrF(void)
 
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   cmdTest = OFF;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=0\r",
+                                       strlen("AT+CGNSPWR=0\r"),
+                                       OK_CMD_SENT);
+
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error timeout */
+
+   cmdTest = OFF;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=0\r",
+                                       strlen("AT+CGNSPWR=0\r"),
+                                       OK_CMD_SENT);
+
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_TIMEOUT);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_TOUT, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error FSM OOR */
+
+   cmdTest = OFF;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=0\r",
+                                       strlen("AT+CGNSPWR=0\r"),
+                                       OK_CMD_SENT);
+
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_FSM_OOR);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_FSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error unknown */
+
+   cmdTest = OFF;
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSPWR=0\r",
+                                       strlen("AT+CGNSPWR=0\r"),
+                                       OK_CMD_SENT);
+
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_FSM_OOR+1);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_UNK, interface.errorOut.errorFrm);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+
 
 }
 
@@ -2480,8 +2737,10 @@ void test_gsmGnssGetDataF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CGNSINF\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSINF\r",
+                                       strlen("AT+CGNSINF\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -2498,6 +2757,37 @@ void test_gsmGnssGetDataF(void)
    interface.frm(&interface);
 
    TEST_ASSERT_EQUAL_STRING("data", dataGnssTest.data);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmGnssGetData(&interface, &dataGnssTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGNSINF\r",
+                                       strlen("AT+CGNSINF\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 

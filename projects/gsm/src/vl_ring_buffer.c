@@ -2,7 +2,7 @@
  * All rights reserved.
  */
 
-/** \addtogroup vl_ring_buffer
+/** \addtogroup
  ** @{ */
 
 /*==================[inclusions]=============================================*/

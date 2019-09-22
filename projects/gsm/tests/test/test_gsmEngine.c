@@ -45,6 +45,7 @@ typedef enum _vlBufType {
 gsmEngine_t engine;
 
 vlBufType_t bufSel;
+bool vlIsFull = false;
 
 /* Gloval variables used for test_gsmProcessTkn */
 
@@ -95,6 +96,11 @@ void loadProcessTkn(const uint8_t * const tkn,
 /* All callbacks try to check the input variables (unless they are private
    variables from the calling function) and mimic the effect of the original
    function up to the needs of the test. */
+
+int VLRingBuffer_IsFull_Callback(VLRINGBUFF_T * vlrb, int Numcalls)
+{
+   return vlIsFull;
+}
 
 uint16_t gsmNoChTokenizer_Callback(int NumCalls)
 {
@@ -377,12 +383,12 @@ void test_gsmProcessTkn(void)
    /* Mocks */
 
    gsmTermUartSend_IgnoreAndReturn(0);
-   VLRingBuffer_IsFull_IgnoreAndReturn(0);
    VLRingBuffer_Insert_IgnoreAndReturn(0);
    VLRingBuffer_Flush_Ignore();
 
    //gsm232UartSend_Ignore();
 
+   VLRingBuffer_IsFull_StubWithCallback(VLRingBuffer_IsFull_Callback);
    gsmNoChTokenizer_StubWithCallback(gsmNoChTokenizer_Callback);
    gsm232UartRecv_StubWithCallback(gsm232UartRecv_Callback);
    gsmDetectTkns_StubWithCallback(gsmDetectTkns_Callback);
@@ -405,6 +411,16 @@ void test_gsmProcessTkn(void)
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_URC, event);
+
+   /* URC (1.2) with full URC VLRB */
+
+   loadProcessTkn("\r\n+CMTI:abcde\r\n", "CMTI", "abcde", EXT_RSP);
+
+   vlIsFull = true;
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_URC, event);
+   vlIsFull = false;
 
    /* ooo rsp (1.3) */
 
@@ -576,6 +592,27 @@ void test_gsmProcessTkn(void)
    event = gsmProcessTkn(&engine);
 
    TEST_ASSERT_EQUAL_INT(OK_RSP, event);
+
+   loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
+
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_CLOSE, event);
+
+   /* AT sent and echoed + rsp + OK (3.5, 3.3) with full rsp VLRB*/
+
+   engine.fsmState = CMD_ACK;
+   strncpy(engine.currCmd, "AT", strlen("AT")+1);
+   engine.currPar[0]='\0';
+   engine.currIdx = 0;
+
+   loadProcessTkn("\r\nresponse\r\n", "response", "", BASIC_RSP);
+
+   vlIsFull = true;
+   event = gsmProcessTkn(&engine);
+
+   TEST_ASSERT_EQUAL_INT(OK_RSP, event);
+   vlIsFull = false;
 
    loadProcessTkn("\r\nOK\r\n", "OK", "", BASIC_RSP);
 

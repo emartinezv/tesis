@@ -1589,8 +1589,12 @@ static void gsmGprsClosePortF (gsmInterface_t * interface)
 
          }
 
-         /* If the port is closed correctly we return to COMMAND_MODE */
-         gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
+         else{
+
+            /* If the port is closed correctly we return to COMMAND_MODE */
+            gsmSetSerialMode(&(interface->engine), COMMAND_MODE);
+
+         }
 
          interface->frmCback(interface->errorOut, 0);
          interface->frmState = IDLE;
@@ -1995,7 +1999,9 @@ void gsmProcess (gsmInterface_t * interface)
 
       /* There is a formula running; execute the formula */
 
-      else {interface->frm(interface);}
+      else {
+         interface->frm(interface);
+      }
 
       interface->procCnt = DELAY_PROC; /* reset gsmProcess counter */
 
@@ -2115,7 +2121,9 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
             /* If the number of chars is too large for this to be an exit cmd,
              * we reset the char count and crLf flag */
 
-            else{cmdChCnt = 0; crLf = FALSE;}
+            else{
+               cmdChCnt = 0; crLf = FALSE;
+            }
 
          }
 

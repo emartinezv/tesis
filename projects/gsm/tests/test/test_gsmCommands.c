@@ -121,6 +121,13 @@ void test_gsmGetCmdSucRsp(void)
    rsp = gsmGetCmdSucRsp(17);
 
    TEST_ASSERT_EQUAL_STRING("-CLOSE OK-", rsp);
+
+   /* Test idx overflow */
+
+   rsp = gsmGetCmdSucRsp(100);
+
+   TEST_ASSERT_NULL(rsp);
+
 }
 
 /* test_gsmGetCmdErrRsp
@@ -150,6 +157,12 @@ void test_gsmGetCmdErrRsp(void)
    rsp = gsmGetCmdErrRsp(11);
 
    TEST_ASSERT_EQUAL_STRING("-ERROR-", rsp);
+
+   /* Test idx overflow */
+
+   rsp = gsmGetCmdErrRsp(100);
+
+   TEST_ASSERT_NULL(rsp);
 
 }
 
@@ -186,6 +199,12 @@ void test_gsmGetCmdTimeout(void)
    timeout = gsmGetCmdTimeout(12);
 
    TEST_ASSERT_EQUAL_UINT32(25000, timeout);
+
+   /* Test idx overflow */
+
+   timeout = gsmGetCmdTimeout(100);
+
+   TEST_ASSERT_EQUAL_UINT16(0, timeout);
 
 }
 

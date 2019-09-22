@@ -155,6 +155,20 @@ void test_gsmGetCmdSucRsp(void)
 
    UnityAssertEqualString((const char*)(("-CLOSE OK-")), (const char*)((rsp)), (((void *)0)), (UNITY_UINT)(123));
 
+
+
+
+
+
+
+   rsp = gsmGetCmdSucRsp(100);
+
+
+
+   if ((((rsp)) == ((void *)0))) {} else {UnityFail( (((" Expected NULL"))), (UNITY_UINT)((UNITY_UINT)((UNITY_UINT)(129))));};
+
+
+
 }
 
 void test_gsmGetCmdErrRsp(void)
@@ -181,7 +195,7 @@ void test_gsmGetCmdErrRsp(void)
 
 
 
-   UnityAssertEqualString((const char*)(("-ERROR-CME ERROR-CMS ERROR-")), (const char*)((rsp)), (((void *)0)), (UNITY_UINT)(146));
+   UnityAssertEqualString((const char*)(("-ERROR-CME ERROR-CMS ERROR-")), (const char*)((rsp)), (((void *)0)), (UNITY_UINT)(153));
 
 
 
@@ -193,7 +207,19 @@ void test_gsmGetCmdErrRsp(void)
 
 
 
-   UnityAssertEqualString((const char*)(("-ERROR-")), (const char*)((rsp)), (((void *)0)), (UNITY_UINT)(152));
+   UnityAssertEqualString((const char*)(("-ERROR-")), (const char*)((rsp)), (((void *)0)), (UNITY_UINT)(159));
+
+
+
+
+
+
+
+   rsp = gsmGetCmdErrRsp(100);
+
+
+
+   if ((((rsp)) == ((void *)0))) {} else {UnityFail( (((" Expected NULL"))), (UNITY_UINT)((UNITY_UINT)((UNITY_UINT)(165))));};
 
 
 
@@ -223,7 +249,7 @@ void test_gsmGetCmdTimeout(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((100)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(176), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((100)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(189), UNITY_DISPLAY_STYLE_UINT32);
 
 
 
@@ -235,7 +261,7 @@ void test_gsmGetCmdTimeout(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((85000)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(182), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((85000)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(195), UNITY_DISPLAY_STYLE_UINT32);
 
 
 
@@ -247,7 +273,19 @@ void test_gsmGetCmdTimeout(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((25000)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(188), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((25000)), (UNITY_INT)(UNITY_UINT32)((timeout)), (((void *)0)), (UNITY_UINT)(201), UNITY_DISPLAY_STYLE_UINT32);
+
+
+
+
+
+
+
+   timeout = gsmGetCmdTimeout(100);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0)), (UNITY_INT)(UNITY_UINT16)((timeout)), (((void *)0)), (UNITY_UINT)(207), UNITY_DISPLAY_STYLE_UINT16);
 
 
 
@@ -273,7 +311,7 @@ void test_gsmUrcSearch(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((1)), (UNITY_INT)(UNITY_INT8 )((idx)), (((void *)0)), (UNITY_UINT)(210), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((1)), (UNITY_INT)(UNITY_INT8 )((idx)), (((void *)0)), (UNITY_UINT)(229), UNITY_DISPLAY_STYLE_INT8);
 
 
 
@@ -285,7 +323,7 @@ void test_gsmUrcSearch(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((0)), (UNITY_INT)(UNITY_INT8 )((idx)), (((void *)0)), (UNITY_UINT)(216), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((0)), (UNITY_INT)(UNITY_INT8 )((idx)), (((void *)0)), (UNITY_UINT)(235), UNITY_DISPLAY_STYLE_INT8);
 
 
 

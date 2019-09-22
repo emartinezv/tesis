@@ -275,7 +275,7 @@
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-09-22 14:21:08</td>
+            <td class="headerValue">2019-09-22 15:27:30</td>
             <td></td>
             <td class="headerName">Branches:</td>
             <td class="headerTableEntry">46</td>
@@ -785,7 +785,7 @@
     <tr>
     <td align="right" class="lineno"><pre>70</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>69</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>120</pre></td>
     <td align="left" class="src coveredLine"><pre>bool gsmInitTokenizer(void)</pre></td>
     </tr>
 
@@ -799,7 +799,7 @@
     <tr>
     <td align="right" class="lineno"><pre>72</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>69</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>120</pre></td>
     <td align="left" class="src coveredLine"><pre>   return RingBuffer_Init(&amp;currTknRb, &amp;currTknBuf, 1, CURR_TKN_BUF_SIZ);</pre></td>
     </tr>
 
@@ -820,7 +820,7 @@
     <tr>
     <td align="right" class="lineno"><pre>75</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>uint16_t gsmNoChTokenizer(void)</pre></td>
     </tr>
 
@@ -848,7 +848,7 @@
     <tr>
     <td align="right" class="lineno"><pre>79</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>   tknRbFree = RingBuffer_GetFree(&amp;currTknRb);</pre></td>
     </tr>
 
@@ -883,7 +883,7 @@
     <tr>
     <td align="right" class="lineno"><pre>84</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>   return ((tknRbFree &lt; SWAP_BUF_SIZ) ? tknRbFree : SWAP_BUF_SIZ);</pre></td>
     </tr>
 
@@ -1037,7 +1037,7 @@
     <tr>
     <td align="right" class="lineno"><pre>106</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,</pre></td>
     </tr>
 
@@ -1072,7 +1072,7 @@
     <tr>
     <td align="right" class="lineno"><pre>111</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>   tknTypeTknzer_t currTkn = NONE; /* Classification of the current token */</pre></td>
     </tr>
 
@@ -1135,14 +1135,14 @@
     <tr>
     <td align="right" class="lineno"><pre>120</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>   uint16_t i = 0;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>121</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>   uint8_t ch = '\0';               /* character being read */</pre></td>
     </tr>
 
@@ -1183,8 +1183,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>127</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 621 times">&check;</span><span class="takenBranch" title="Branch 1 taken 115 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>736</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 1080 times">&check;</span><span class="takenBranch" title="Branch 1 taken 200 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>1280</pre></td>
     <td align="left" class="src coveredLine"><pre>   for(i = 0; i &lt; nch; i++){</pre></td>
     </tr>
 
@@ -1198,7 +1198,7 @@
     <tr>
     <td align="right" class="lineno"><pre>129</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      ch = buffer[i];</pre></td>
     </tr>
 
@@ -1212,7 +1212,7 @@
     <tr>
     <td align="right" class="lineno"><pre>131</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      RingBuffer_Insert(&amp;currTknRb, &amp;ch);</pre></td>
     </tr>
 
@@ -1226,7 +1226,7 @@
     <tr>
     <td align="right" class="lineno"><pre>133</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(RingBuffer_IsFull(&amp;currTknRb)){</pre></td>
     </tr>
 
@@ -1253,8 +1253,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>137</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 368 times">&check;</span><span class="takenBranch" title="Branch 1 taken 253 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 640 times">&check;</span><span class="takenBranch" title="Branch 1 taken 440 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(!iscntrl(ch)){empty = 0;}</pre></td>
     </tr>
 
@@ -1267,15 +1267,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>139</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 138 times">&check;</span><span class="takenBranch" title="Branch 1 taken 483 times">&check;</span><span class="takenBranch" title="Branch 2 taken 23 times">&check;</span><span class="takenBranch" title="Branch 3 taken 115 times">&check;</span><br/><span class="takenBranch" title="Branch 4 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 240 times">&check;</span><span class="takenBranch" title="Branch 1 taken 840 times">&check;</span><span class="takenBranch" title="Branch 2 taken 40 times">&check;</span><span class="takenBranch" title="Branch 3 taken 200 times">&check;</span><br/><span class="takenBranch" title="Branch 4 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(('\r' == pCh) &amp;&amp; ('\n' != ch) &amp;&amp; !crLf &amp;&amp; !empty){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>140</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>         currTkn = ECHO; smsIn = 0;</pre></td>
     </tr>
 
@@ -1295,15 +1295,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>143</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 115 times">&check;</span><span class="takenBranch" title="Branch 1 taken 483 times">&check;</span><span class="takenBranch" title="Branch 2 taken 115 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 23 times">&check;</span><span class="takenBranch" title="Branch 5 taken 92 times">&check;</span><span class="takenBranch" title="Branch 6 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>598</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 200 times">&check;</span><span class="takenBranch" title="Branch 1 taken 840 times">&check;</span><span class="takenBranch" title="Branch 2 taken 200 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 40 times">&check;</span><span class="takenBranch" title="Branch 5 taken 160 times">&check;</span><span class="takenBranch" title="Branch 6 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>1040</pre></td>
     <td align="left" class="src coveredLine"><pre>      else if(('\r' == pCh) &amp;&amp; ('\n' == ch) &amp;&amp; crLf &amp;&amp; !empty){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>144</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>         currTkn = RSP; smsIn = 0;</pre></td>
     </tr>
 
@@ -1323,15 +1323,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>147</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 92 times">&check;</span><span class="takenBranch" title="Branch 1 taken 483 times">&check;</span><span class="takenBranch" title="Branch 2 taken 92 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 92 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 46 times">&check;</span><span class="takenBranch" title="Branch 7 taken 46 times">&check;</span><br/><span class="takenBranch" title="Branch 8 taken 23 times">&check;</span><span class="takenBranch" title="Branch 9 taken 23 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>575</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 160 times">&check;</span><span class="takenBranch" title="Branch 1 taken 840 times">&check;</span><span class="takenBranch" title="Branch 2 taken 160 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 160 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 80 times">&check;</span><span class="takenBranch" title="Branch 7 taken 80 times">&check;</span><br/><span class="takenBranch" title="Branch 8 taken 40 times">&check;</span><span class="takenBranch" title="Branch 9 taken 40 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>1000</pre></td>
     <td align="left" class="src coveredLine"><pre>      else if(('\r' == pCh) &amp;&amp; ('\n' == ch) &amp;&amp; !crLf &amp;&amp; !empty &amp;&amp; !smsIn){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>148</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>         currTkn = DATA_BLOCK; smsIn = 0;</pre></td>
     </tr>
 
@@ -1351,15 +1351,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>151</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 69 times">&check;</span><span class="takenBranch" title="Branch 1 taken 483 times">&check;</span><span class="takenBranch" title="Branch 2 taken 69 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 69 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 23 times">&check;</span><span class="takenBranch" title="Branch 7 taken 46 times">&check;</span><br/><span class="takenBranch" title="Branch 8 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 9 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>552</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 120 times">&check;</span><span class="takenBranch" title="Branch 1 taken 840 times">&check;</span><span class="takenBranch" title="Branch 2 taken 120 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 120 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 40 times">&check;</span><span class="takenBranch" title="Branch 7 taken 80 times">&check;</span><br/><span class="takenBranch" title="Branch 8 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 9 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>960</pre></td>
     <td align="left" class="src coveredLine"><pre>      else if(('\r' == pCh) &amp;&amp; ('\n' == ch) &amp;&amp; !crLf &amp;&amp; !empty &amp;&amp; smsIn) {</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>152</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>         currTkn = SMS_BODY; smsIn = 0; crLf = 1;</pre></td>
     </tr>
 
@@ -1379,15 +1379,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>155</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 23 times">&check;</span><span class="takenBranch" title="Branch 1 taken 506 times">&check;</span><span class="takenBranch" title="Branch 2 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 23 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>529</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 40 times">&check;</span><span class="takenBranch" title="Branch 1 taken 880 times">&check;</span><span class="takenBranch" title="Branch 2 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 40 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>920</pre></td>
     <td align="left" class="src coveredLine"><pre>      else if(('>' == pCh) &amp;&amp; (' ' == ch) &amp;&amp; crLf) {</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>156</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>23</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>40</pre></td>
     <td align="left" class="src coveredLine"><pre>         currTkn = SMS_PROMPT; smsIn = 1;</pre></td>
     </tr>
 
@@ -1408,7 +1408,7 @@
     <tr>
     <td align="right" class="lineno"><pre>159</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>506</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>880</pre></td>
     <td align="left" class="src coveredLine"><pre>      else { currTkn = NONE; }</pre></td>
     </tr>
 
@@ -1449,8 +1449,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>165</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 115 times">&check;</span><span class="takenBranch" title="Branch 1 taken 506 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 200 times">&check;</span><span class="takenBranch" title="Branch 1 taken 880 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(NONE != currTkn){</pre></td>
     </tr>
 
@@ -1463,15 +1463,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>167</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 92 times">&check;</span><span class="takenBranch" title="Branch 1 taken 23 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 160 times">&check;</span><span class="takenBranch" title="Branch 1 taken 40 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>         if(SMS_BODY != currTkn){ crLf = 0;}</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>168</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>         empty = 1;</pre></td>
     </tr>
 
@@ -1520,14 +1520,14 @@
     <tr>
     <td align="right" class="lineno"><pre>175</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>230</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>400</pre></td>
     <td align="left" class="src coveredLine"><pre>         int length = RingBuffer_GetCount(&amp;currTknRb)</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>176</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 23 times">&check;</span><span class="takenBranch" title="Branch 1 taken 92 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 40 times">&check;</span><span class="takenBranch" title="Branch 1 taken 160 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>                      - (ECHO == currTkn) - (SMS_BODY == currTkn)*2;</pre></td>
     </tr>
 
@@ -1541,7 +1541,7 @@
     <tr>
     <td align="right" class="lineno"><pre>178</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>         RingBuffer_PopMult(&amp;currTknRb, &amp;swapBuf, length);</pre></td>
     </tr>
 
@@ -1562,7 +1562,7 @@
     <tr>
     <td align="right" class="lineno"><pre>181</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>         swapBuf[length]=(uint8_t)currTkn;</pre></td>
     </tr>
 
@@ -1576,7 +1576,7 @@
     <tr>
     <td align="right" class="lineno"><pre>183</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>         VLRingBuffer_Insert(tknVlRb, &amp;swapBuf, length+1);</pre></td>
     </tr>
 
@@ -1596,15 +1596,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>186</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 46 times">&check;</span><span class="takenBranch" title="Branch 1 taken 460 times">&check;</span><span class="takenBranch" title="Branch 2 taken 46 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 46 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 46 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>506</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 80 times">&check;</span><span class="takenBranch" title="Branch 1 taken 800 times">&check;</span><span class="takenBranch" title="Branch 2 taken 80 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 80 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span><span class="takenBranch" title="Branch 6 taken 80 times">&check;</span><span class="notTakenBranch" title="Branch 7 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>880</pre></td>
     <td align="left" class="src coveredLine"><pre>      else if(('\r' == pCh) &amp;&amp; ('\n' == ch) &amp;&amp; !crLf &amp;&amp; empty){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>187</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>46</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>80</pre></td>
     <td align="left" class="src coveredLine"><pre>         crLf = 1;</pre></td>
     </tr>
 
@@ -1625,7 +1625,7 @@
     <tr>
     <td align="right" class="lineno"><pre>190</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>621</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1080</pre></td>
     <td align="left" class="src coveredLine"><pre>      pCh = ch;</pre></td>
     </tr>
 
@@ -1646,7 +1646,7 @@
     <tr>
     <td align="right" class="lineno"><pre>193</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>115</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>200</pre></td>
     <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 

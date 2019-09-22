@@ -269,18 +269,18 @@
             <td class="headerValue">../src/gsmEngine.c</td>
             <td></td>
             <td class="headerName">Lines:</td>
-            <td class="headerTableEntry">176</td>
             <td class="headerTableEntry">178</td>
-            <td class="headerTableEntry" style="background-color:LightGreen">98.9 %</td>
+            <td class="headerTableEntry">178</td>
+            <td class="headerTableEntry" style="background-color:LightGreen">100.0 %</td>
           </tr>
           <tr>
             <td class="headerName">Date:</td>
-            <td class="headerValue">2019-09-22 14:21:08</td>
+            <td class="headerValue">2019-09-22 15:27:30</td>
             <td></td>
             <td class="headerName">Branches:</td>
-            <td class="headerTableEntry">78</td>
+            <td class="headerTableEntry">80</td>
             <td class="headerTableEntry">94</td>
-            <td class="headerTableEntry" style="background-color:#FFFF55">83.0 %</td>
+            <td class="headerTableEntry" style="background-color:#FFFF55">85.1 %</td>
           </tr>
         </table>
       </td>
@@ -1156,7 +1156,7 @@
     <tr>
     <td align="right" class="lineno"><pre>123</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>696</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1135</pre></td>
     <td align="left" class="src coveredLine"><pre>static fsmEvent_t gsmUpdateFsm (gsmEngine_t * const engine,</pre></td>
     </tr>
 
@@ -1204,8 +1204,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>130</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 174 times">&check;</span><span class="takenBranch" title="Branch 1 taken 203 times">&check;</span><span class="takenBranch" title="Branch 2 taken 290 times">&check;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>696</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 285 times">&check;</span><span class="takenBranch" title="Branch 1 taken 329 times">&check;</span><span class="takenBranch" title="Branch 2 taken 474 times">&check;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>1135</pre></td>
     <td align="left" class="src coveredLine"><pre>   switch(engine->fsmState){</pre></td>
     </tr>
 
@@ -1281,8 +1281,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>141</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 174 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span><span class="takenBranch" title="Branch 3 taken 116 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 285 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span><span class="takenBranch" title="Branch 3 taken 191 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>285</pre></td>
     <td align="left" class="src coveredLine"><pre>         if ((AUTOBAUD &lt;= tknType) &amp;&amp; (SMS_BODY_P >= tknType)){</pre></td>
     </tr>
 
@@ -1310,14 +1310,14 @@
     <tr>
     <td align="right" class="lineno"><pre>145</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->toutCnt = gsmGetCmdTimeout(idx);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>146</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->currIdx = idx;</pre></td>
     </tr>
 
@@ -1366,28 +1366,28 @@
     <tr>
     <td align="right" class="lineno"><pre>153</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            strncpy(engine->currCmd,cmd,strlen(cmd));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>154</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->currCmd[strlen(cmd)] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>155</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            strncpy(engine->currPar,par,strlen(par));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>156</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->currPar[strlen(par)] = '\0';</pre></td>
     </tr>
 
@@ -1401,7 +1401,7 @@
     <tr>
     <td align="right" class="lineno"><pre>158</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->fsmState = CMD_SENT;</pre></td>
     </tr>
 
@@ -1457,7 +1457,7 @@
     <tr>
     <td align="right" class="lineno"><pre>166</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            return OK_CMD_SENT; /* return 1.1 */</pre></td>
     </tr>
 
@@ -1519,8 +1519,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>175</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 87 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 144 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 97 times">&check;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>191</pre></td>
     <td align="left" class="src coveredLine"><pre>         else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){</pre></td>
     </tr>
 
@@ -1533,8 +1533,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>177</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 58 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 97 times">&check;</span><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>144</pre></td>
     <td align="left" class="src coveredLine"><pre>            if(true == gsmUrcSearch(cmd)){</pre></td>
     </tr>
 
@@ -1555,7 +1555,7 @@
     <tr>
     <td align="right" class="lineno"><pre>180</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>97</pre></td>
     <td align="left" class="src coveredLine"><pre>               gsmRecordUrc (engine, cmd, par);</pre></td>
     </tr>
 
@@ -1569,7 +1569,7 @@
     <tr>
     <td align="right" class="lineno"><pre>182</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>97</pre></td>
     <td align="left" class="src coveredLine"><pre>               return OK_URC; /* return 1.2 */</pre></td>
     </tr>
 
@@ -1611,7 +1611,7 @@
     <tr>
     <td align="right" class="lineno"><pre>188</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return ERR_OOO; /* return 1.3 */</pre></td>
     </tr>
 
@@ -1681,7 +1681,7 @@
     <tr>
     <td align="right" class="lineno"><pre>198</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            return ERR_TKN_INV; /* return 1.4 */</pre></td>
     </tr>
 
@@ -1792,8 +1792,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>214</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 174 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 87 times">&check;</span><span class="takenBranch" title="Branch 3 taken 87 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>203</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 282 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 141 times">&check;</span><span class="takenBranch" title="Branch 3 taken 141 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>329</pre></td>
     <td align="left" class="src coveredLine"><pre>         if ((AUTOBAUD &lt;= tknType) &amp;&amp; (SMS_BODY_P >= tknType)){</pre></td>
     </tr>
 
@@ -1807,14 +1807,14 @@
     <tr>
     <td align="right" class="lineno"><pre>216</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>            uint8_t eqCmd = 1;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>217</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>            uint8_t eqPar = 1;</pre></td>
     </tr>
 
@@ -1828,14 +1828,14 @@
     <tr>
     <td align="right" class="lineno"><pre>219</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>            eqCmd = strncmp(cmd, engine->currCmd, strlen(engine->currCmd));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>220</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>            eqPar = strncmp(par, engine->currPar, strlen(engine->currPar));</pre></td>
     </tr>
 
@@ -1869,22 +1869,22 @@
 
     <tr>
     <td align="right" class="lineno"><pre>225</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>            if ((0 == eqCmd) &amp;&amp; (0 == eqPar)){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>226</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>               VLRingBuffer_Flush(&amp;(engine->rspVlRb));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>227</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>               engine->fsmState = CMD_ACK;</pre></td>
     </tr>
 
@@ -1912,7 +1912,7 @@
     <tr>
     <td align="right" class="lineno"><pre>231</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>               return OK_CMD_ACK; /* return 2.1 */</pre></td>
     </tr>
 
@@ -1961,7 +1961,7 @@
     <tr>
     <td align="right" class="lineno"><pre>238</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -1989,7 +1989,7 @@
     <tr>
     <td align="right" class="lineno"><pre>242</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return ERR_CMD_ECHO; /* return 2.2 */</pre></td>
     </tr>
 
@@ -2051,8 +2051,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>251</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 87 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span><span class="takenBranch" title="Branch 3 taken 58 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 141 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span><span class="takenBranch" title="Branch 3 taken 94 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>         else if ((BASIC_RSP == tknType) || (EXT_RSP == tknType)){</pre></td>
     </tr>
 
@@ -2065,8 +2065,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>253</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            if(true == gsmUrcSearch(cmd)){</pre></td>
     </tr>
 
@@ -2080,7 +2080,7 @@
     <tr>
     <td align="right" class="lineno"><pre>255</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               gsmRecordUrc(engine, cmd, par);</pre></td>
     </tr>
 
@@ -2094,7 +2094,7 @@
     <tr>
     <td align="right" class="lineno"><pre>257</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return OK_URC; /* return 2.3 */</pre></td>
     </tr>
 
@@ -2122,7 +2122,7 @@
     <tr>
     <td align="right" class="lineno"><pre>261</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -2157,7 +2157,7 @@
     <tr>
     <td align="right" class="lineno"><pre>266</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return ERR_CMD_ECHO; /* return 2.4 */</pre></td>
     </tr>
 
@@ -2219,15 +2219,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>275</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         else if (TIMEOUT == tknType){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>276</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -2255,7 +2255,7 @@
     <tr>
     <td align="right" class="lineno"><pre>280</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return ERR_TIMEOUT; /* return 2.5 */</pre></td>
     </tr>
 
@@ -2297,7 +2297,7 @@
     <tr>
     <td align="right" class="lineno"><pre>286</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -2353,7 +2353,7 @@
     <tr>
     <td align="right" class="lineno"><pre>294</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            return ERR_TKN_INV; /* return 2.6 */</pre></td>
     </tr>
 
@@ -2478,8 +2478,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>312</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 232 times">&check;</span><span class="takenBranch" title="Branch 1 taken 58 times">&check;</span><span class="takenBranch" title="Branch 2 taken 203 times">&check;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>290</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 380 times">&check;</span><span class="takenBranch" title="Branch 1 taken 94 times">&check;</span><span class="takenBranch" title="Branch 2 taken 333 times">&check;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>474</pre></td>
     <td align="left" class="src coveredLine"><pre>         if ((BASIC_RSP &lt;= tknType) &amp;&amp; (EXT_RSP >= tknType)){</pre></td>
     </tr>
 
@@ -2492,8 +2492,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>314</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 174 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>203</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 286 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>333</pre></td>
     <td align="left" class="src coveredLine"><pre>            if(true == gsmUrcSearch(cmd)){</pre></td>
     </tr>
 
@@ -2507,7 +2507,7 @@
     <tr>
     <td align="right" class="lineno"><pre>316</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               gsmRecordUrc(engine, cmd, par);</pre></td>
     </tr>
 
@@ -2521,7 +2521,7 @@
     <tr>
     <td align="right" class="lineno"><pre>318</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return OK_URC; /* return 3.1 */</pre></td>
     </tr>
 
@@ -2556,7 +2556,7 @@
     <tr>
     <td align="right" class="lineno"><pre>323</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>286</pre></td>
     <td align="left" class="src coveredLine"><pre>               gsmRecordRsp(engine, cmd, par);</pre></td>
     </tr>
 
@@ -2597,8 +2597,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>329</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span><span class="takenBranch" title="Branch 3 taken 145 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span><span class="takenBranch" title="Branch 3 taken 239 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>286</pre></td>
     <td align="left" class="src coveredLine"><pre>               if(gsmCompCloRsp(gsmGetCmdErrRsp(engine->currIdx),cmd)){</pre></td>
     </tr>
 
@@ -2626,14 +2626,14 @@
     <tr>
     <td align="right" class="lineno"><pre>333</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                  engine->fsmState = WAITING;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>334</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                  return ERR_MSG_CLOSE; /* return 3.2 */</pre></td>
     </tr>
 
@@ -2681,8 +2681,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>341</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 2 taken 87 times">&check;</span><span class="takenBranch" title="Branch 3 taken 58 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>145</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 2 taken 143 times">&check;</span><span class="takenBranch" title="Branch 3 taken 96 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>239</pre></td>
     <td align="left" class="src coveredLine"><pre>               else if(gsmCompCloRsp(gsmGetCmdSucRsp(engine->currIdx),cmd)){</pre></td>
     </tr>
 
@@ -2710,14 +2710,14 @@
     <tr>
     <td align="right" class="lineno"><pre>345</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>143</pre></td>
     <td align="left" class="src coveredLine"><pre>                  engine->fsmState = WAITING;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>346</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>143</pre></td>
     <td align="left" class="src coveredLine"><pre>                  return OK_CLOSE; /* return 3.3 */</pre></td>
     </tr>
 
@@ -2793,8 +2793,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>357</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 49 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>96</pre></td>
     <td align="left" class="src coveredLine"><pre>               else if(0 == strlen(gsmGetCmdSucRsp(engine->currIdx))){</pre></td>
     </tr>
 
@@ -2822,14 +2822,14 @@
     <tr>
     <td align="right" class="lineno"><pre>361</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                  engine->fsmState = WAITING;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>362</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                  return OK_CLOSE; /* return 3.4 */</pre></td>
     </tr>
 
@@ -2885,7 +2885,7 @@
     <tr>
     <td align="right" class="lineno"><pre>370</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>49</pre></td>
     <td align="left" class="src coveredLine"><pre>                  return OK_RSP; /* return 3.5 */</pre></td>
     </tr>
 
@@ -2947,15 +2947,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>379</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>         else if ((AUTOBAUD &lt;= tknType) &amp;&amp; (SMS_BODY_P >= tknType)){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>380</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -2983,7 +2983,7 @@
     <tr>
     <td align="right" class="lineno"><pre>384</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            return ERR_OOO; /* return 3.6 */</pre></td>
     </tr>
 
@@ -3031,15 +3031,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>391</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         else if (TIMEOUT == tknType){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>392</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -3067,7 +3067,7 @@
     <tr>
     <td align="right" class="lineno"><pre>396</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>               return ERR_TIMEOUT; /* return 3.7 */</pre></td>
     </tr>
 
@@ -3158,7 +3158,7 @@
     <tr>
     <td align="right" class="lineno"><pre>409</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>            return ERR_TKN_INV; /* return 3.8 */</pre></td>
     </tr>
 
@@ -3242,14 +3242,14 @@
     <tr>
     <td align="right" class="lineno"><pre>421</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>         engine->fsmState = WAITING;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>422</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>         return ERR_FSM_OOR; /* return 3.9 */</pre></td>
     </tr>
 
@@ -3298,7 +3298,7 @@
     <tr>
     <td align="right" class="lineno"><pre>429</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>191</pre></td>
     <td align="left" class="src coveredLine"><pre>static bool gsmRecordUrc (gsmEngine_t * engine, uint8_t const * const cmd,</pre></td>
     </tr>
 
@@ -3318,8 +3318,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>432</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 116 times">&check;</span><span class="notTakenBranch" title="Branch 2 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 188 times">&check;</span><span class="takenBranch" title="Branch 2 taken 3 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>191</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 == VLRingBuffer_IsFull(&amp;(engine->urcVlRb))){</pre></td>
     </tr>
 
@@ -3340,7 +3340,7 @@
     <tr>
     <td align="right" class="lineno"><pre>435</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     urcAux[0] = '\0';</pre></td>
     </tr>
 
@@ -3375,21 +3375,21 @@
     <tr>
     <td align="right" class="lineno"><pre>440</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(urcAux, cmd, strlen(cmd));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>441</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(urcAux, ".", 1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>442</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(urcAux, par, strlen(par));</pre></td>
     </tr>
 
@@ -3403,14 +3403,14 @@
     <tr>
     <td align="right" class="lineno"><pre>444</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     VLRingBuffer_Insert(&amp;(engine->urcVlRb), urcAux,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>445</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>                         (uint16_t) (strlen(urcAux)));</pre></td>
     </tr>
 
@@ -3452,7 +3452,7 @@
     <tr>
     <td align="right" class="lineno"><pre>451</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>116</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>188</pre></td>
     <td align="left" class="src coveredLine"><pre>     return true;</pre></td>
     </tr>
 
@@ -3501,8 +3501,8 @@
     <tr>
     <td align="right" class="lineno"><pre>458</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>     return false;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>3</pre></td>
+    <td align="left" class="src coveredLine"><pre>     return false;</pre></td>
     </tr>
 
     <tr>
@@ -3536,7 +3536,7 @@
     <tr>
     <td align="right" class="lineno"><pre>463</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>286</pre></td>
     <td align="left" class="src coveredLine"><pre>static bool gsmRecordRsp (gsmEngine_t * engine,uint8_t const * const cmd,</pre></td>
     </tr>
 
@@ -3556,8 +3556,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>466</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 174 times">&check;</span><span class="notTakenBranch" title="Branch 2 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 284 times">&check;</span><span class="takenBranch" title="Branch 2 taken 2 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>286</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 == VLRingBuffer_IsFull(&amp;(engine->rspVlRb))){</pre></td>
     </tr>
 
@@ -3578,7 +3578,7 @@
     <tr>
     <td align="right" class="lineno"><pre>469</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     rspAux[0] = '\0';</pre></td>
     </tr>
 
@@ -3613,21 +3613,21 @@
     <tr>
     <td align="right" class="lineno"><pre>474</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(rspAux, cmd, strlen(cmd));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>475</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(rspAux, ".", 1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>476</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     strncat(rspAux, par, strlen(par));</pre></td>
     </tr>
 
@@ -3641,14 +3641,14 @@
     <tr>
     <td align="right" class="lineno"><pre>478</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     VLRingBuffer_Insert(&amp;(engine->rspVlRb), rspAux,</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>479</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>                         (uint16_t) (strlen(rspAux)));</pre></td>
     </tr>
 
@@ -3690,7 +3690,7 @@
     <tr>
     <td align="right" class="lineno"><pre>485</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>174</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>284</pre></td>
     <td align="left" class="src coveredLine"><pre>     return true;</pre></td>
     </tr>
 
@@ -3739,8 +3739,8 @@
     <tr>
     <td align="right" class="lineno"><pre>492</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount uncoveredLine"><pre></pre></td>
-    <td align="left" class="src uncoveredLine"><pre>     return false;</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>2</pre></td>
+    <td align="left" class="src coveredLine"><pre>     return false;</pre></td>
     </tr>
 
     <tr>
@@ -3774,7 +3774,7 @@
     <tr>
     <td align="right" class="lineno"><pre>497</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>static bool gsmCompCloRsp (uint8_t const * const cRsp,</pre></td>
     </tr>
 
@@ -3844,28 +3844,28 @@
     <tr>
     <td align="right" class="lineno"><pre>507</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   auxCmd[0]='-';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>508</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   auxCmd[1]='\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>509</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   strncat(auxCmd, cmd, strlen(cmd));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>510</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   strncat(auxCmd, "-", strlen("-"));</pre></td>
     </tr>
 
@@ -3900,7 +3900,7 @@
     <tr>
     <td align="right" class="lineno"><pre>515</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   result = ((NULL == strstr(cRsp,auxCmd)) ? false : true);</pre></td>
     </tr>
 
@@ -3914,7 +3914,7 @@
     <tr>
     <td align="right" class="lineno"><pre>517</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>525</pre></td>
     <td align="left" class="src coveredLine"><pre>   return result;</pre></td>
     </tr>
 
@@ -3977,7 +3977,7 @@
     <tr>
     <td align="right" class="lineno"><pre>526</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>bool gsmInitEngine(gsmEngine_t * const engine){</pre></td>
     </tr>
 
@@ -3991,7 +3991,7 @@
     <tr>
     <td align="right" class="lineno"><pre>528</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>   bool ok = FALSE;</pre></td>
     </tr>
 
@@ -4005,7 +4005,7 @@
     <tr>
     <td align="right" class="lineno"><pre>530</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>   ok = gsmInitTokenizer();</pre></td>
     </tr>
 
@@ -4019,7 +4019,7 @@
     <tr>
     <td align="right" class="lineno"><pre>532</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>   engine->fsmState = WAITING;</pre></td>
     </tr>
 
@@ -4033,7 +4033,7 @@
     <tr>
     <td align="right" class="lineno"><pre>534</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>   engine->serialMode = COMMAND_MODE;</pre></td>
     </tr>
 
@@ -4046,43 +4046,43 @@
 
     <tr>
     <td align="right" class="lineno"><pre>536</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   ok = ok &amp;&amp; VLRingBuffer_Init(&amp;(engine->tknVlRb), &amp;(engine->tknRb),</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>537</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                                &amp;(engine->tknRbBuf), 1, TKN_BUF_SIZE);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>538</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   ok = ok &amp;&amp; VLRingBuffer_Init(&amp;(engine->rspVlRb), &amp;(engine->rspRb),</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>539</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                                &amp;(engine->rspRbBuf), 1, RSP_BUF_SIZE);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>540</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 29 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 3 taken 47 times">&check;</span><span class="notTakenBranch" title="Branch 4 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   ok = ok &amp;&amp; VLRingBuffer_Init(&amp;(engine->urcVlRb), &amp;(engine->urcRb),</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>541</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>                                &amp;(engine->urcRbBuf), 1, URC_BUF_SIZE);</pre></td>
     </tr>
 
@@ -4096,7 +4096,7 @@
     <tr>
     <td align="right" class="lineno"><pre>543</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>   return ok;</pre></td>
     </tr>
 
@@ -4173,7 +4173,7 @@
     <tr>
     <td align="right" class="lineno"><pre>554</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>fsmEvent_t gsmProcessTkn(gsmEngine_t * const engine)</pre></td>
     </tr>
 
@@ -4222,7 +4222,7 @@
     <tr>
     <td align="right" class="lineno"><pre>561</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>   nch = gsm232UartRecv(buffer, gsmNoChTokenizer());</pre></td>
     </tr>
 
@@ -4236,7 +4236,7 @@
     <tr>
     <td align="right" class="lineno"><pre>563</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>   gsmDetectTkns(&amp;(engine->tknVlRb), nch, buffer);</pre></td>
     </tr>
 
@@ -4257,7 +4257,7 @@
     <tr>
     <td align="right" class="lineno"><pre>566</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>   fsmEvent_t result = NO_UPDATE;</pre></td>
     </tr>
 
@@ -4326,8 +4326,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>576</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 580 times">&check;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 947 times">&check;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 == VLRingBuffer_IsEmpty(&amp;(engine->tknVlRb))){</pre></td>
     </tr>
 
@@ -4341,7 +4341,7 @@
     <tr>
     <td align="right" class="lineno"><pre>578</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>580</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>947</pre></td>
     <td align="left" class="src coveredLine"><pre>      tknSize = VLRingBuffer_Pop(&amp;(engine->tknVlRb),</pre></td>
     </tr>
 
@@ -4355,14 +4355,14 @@
     <tr>
     <td align="right" class="lineno"><pre>580</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>580</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>947</pre></td>
     <td align="left" class="src coveredLine"><pre>      received = gsmParseTkn(tkn, cmd, par, tknSize);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>581</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>580</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>947</pre></td>
     <td align="left" class="src coveredLine"><pre>      result = gsmUpdateFsm(engine, received, cmd, par, 0);</pre></td>
     </tr>
 
@@ -4417,8 +4417,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>589</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   else if((engine->fsmState != WAITING) &amp;&amp; (0 == engine->toutCnt)){</pre></td>
     </tr>
 
@@ -4432,7 +4432,7 @@
     <tr>
     <td align="right" class="lineno"><pre>591</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      result = gsmUpdateFsm(engine, TIMEOUT, 0, 0, 0);</pre></td>
     </tr>
 
@@ -4474,7 +4474,7 @@
     <tr>
     <td align="right" class="lineno"><pre>597</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>638</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>1041</pre></td>
     <td align="left" class="src coveredLine"><pre>   return result;</pre></td>
     </tr>
 
@@ -4502,7 +4502,7 @@
     <tr>
     <td align="right" class="lineno"><pre>601</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>bool gsmToutCntZero(gsmEngine_t * const engine){</pre></td>
     </tr>
 
@@ -4516,7 +4516,7 @@
     <tr>
     <td align="right" class="lineno"><pre>603</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   return(engine->toutCnt == 0);</pre></td>
     </tr>
 
@@ -4544,7 +4544,7 @@
     <tr>
     <td align="right" class="lineno"><pre>607</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>void gsmDecToutCnt(gsmEngine_t * const engine){</pre></td>
     </tr>
 
@@ -4557,15 +4557,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>609</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 319 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 517 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(engine->toutCnt > 0){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>610</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>319</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>517</pre></td>
     <td align="left" class="src coveredLine"><pre>      engine->toutCnt--;</pre></td>
     </tr>
 
@@ -4586,7 +4586,7 @@
     <tr>
     <td align="right" class="lineno"><pre>613</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>   return;</pre></td>
     </tr>
 
@@ -4642,7 +4642,7 @@
     <tr>
     <td align="right" class="lineno"><pre>621</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>fsmEvent_t gsmSendCmd (gsmEngine_t * const engine,</pre></td>
     </tr>
 
@@ -4691,7 +4691,7 @@
     <tr>
     <td align="right" class="lineno"><pre>628</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   uint8_t aux = 0;</pre></td>
     </tr>
 
@@ -4705,7 +4705,7 @@
     <tr>
     <td align="right" class="lineno"><pre>630</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   cmdStrCla[0] = '\0';</pre></td>
     </tr>
 
@@ -4733,7 +4733,7 @@
     <tr>
     <td align="right" class="lineno"><pre>634</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   strncat(cmdStrCla, cmdStr, strlen(cmdStr));</pre></td>
     </tr>
 
@@ -4767,15 +4767,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>639</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   if('\r' == cmdStr[strlen(cmdStr)-1]){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>640</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      aux = (uint8_t)ECHO;</pre></td>
     </tr>
 
@@ -4796,7 +4796,7 @@
     <tr>
     <td align="right" class="lineno"><pre>643</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>      aux = (uint8_t)SMS_BODY;</pre></td>
     </tr>
 
@@ -4817,7 +4817,7 @@
     <tr>
     <td align="right" class="lineno"><pre>646</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   strncat(cmdStrCla, &amp;aux, 1);</pre></td>
     </tr>
 
@@ -4866,14 +4866,14 @@
     <tr>
     <td align="right" class="lineno"><pre>653</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   sending = gsmParseTkn(cmdStrCla, cmd, par, strlen(cmdStrCla));</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>654</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   idx = gsmCmdSearch(cmd);</pre></td>
     </tr>
 
@@ -4907,8 +4907,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>659</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 3 not taken">&cross;</span><br/><span class="takenBranch" title="Branch 4 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 5 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   if((UNKNOWN_CMD != idx) &amp;&amp; ((sending >= AUTOBAUD) &amp;&amp;</pre></td>
     </tr>
 
@@ -4929,7 +4929,7 @@
     <tr>
     <td align="right" class="lineno"><pre>662</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      gsm232UartSend(cmdStr, strlen(cmdStr));</pre></td>
     </tr>
 
@@ -4942,8 +4942,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>664</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 29 times">&check;</span><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 47 times">&check;</span><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(SMS_BODY_P == sending){</pre></td>
     </tr>
 
@@ -4964,7 +4964,7 @@
     <tr>
     <td align="right" class="lineno"><pre>667</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>         gsm232UartSend("\x1A", strlen("\x1A"));</pre></td>
     </tr>
 
@@ -5027,7 +5027,7 @@
     <tr>
     <td align="right" class="lineno"><pre>676</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      result = gsmUpdateFsm(engine, sending, cmd, par, idx);</pre></td>
     </tr>
 
@@ -5083,7 +5083,7 @@
     <tr>
     <td align="right" class="lineno"><pre>684</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>      result = ERR_CMD_UKN;</pre></td>
     </tr>
 
@@ -5111,7 +5111,7 @@
     <tr>
     <td align="right" class="lineno"><pre>688</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   return result;</pre></td>
     </tr>
 
@@ -5139,7 +5139,7 @@
     <tr>
     <td align="right" class="lineno"><pre>692</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>rsp_t gsmGetCmdRsp (gsmEngine_t * const engine)</pre></td>
     </tr>
 
@@ -5181,14 +5181,14 @@
     <tr>
     <td align="right" class="lineno"><pre>698</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   dummy.cmd[0] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>699</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   dummy.par[0] = '\0';</pre></td>
     </tr>
 
@@ -5229,15 +5229,15 @@
 
     <tr>
     <td align="right" class="lineno"><pre>705</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 29 times">&check;</span><span class="takenBranch" title="Branch 2 taken 58 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 47 times">&check;</span><span class="takenBranch" title="Branch 2 taken 94 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 != VLRingBuffer_IsEmpty(&amp;(engine->rspVlRb))){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>706</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>29</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>47</pre></td>
     <td align="left" class="src coveredLine"><pre>      return dummy;</pre></td>
     </tr>
 
@@ -5258,7 +5258,7 @@
     <tr>
     <td align="right" class="lineno"><pre>709</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   rspSiz = VLRingBuffer_Pop(&amp;(engine->rspVlRb), (void *) rspAux,</pre></td>
     </tr>
 
@@ -5279,7 +5279,7 @@
     <tr>
     <td align="right" class="lineno"><pre>712</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   uint8_t dotPos = 0;</pre></td>
     </tr>
 
@@ -5307,28 +5307,28 @@
     <tr>
     <td align="right" class="lineno"><pre>716</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>   for (i = 0; i &lt; (TKN_CMD_SIZE+TKN_PAR_SIZE); i++){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>717</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 290 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 470 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>      if ('.' == rspAux[i]){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>718</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         dotPos = i;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>719</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         break;</pre></td>
     </tr>
 
@@ -5342,7 +5342,7 @@
     <tr>
     <td align="right" class="lineno"><pre>721</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>290</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>470</pre></td>
     <td align="left" class="src coveredLine"><pre>   }</pre></td>
     </tr>
 
@@ -5383,8 +5383,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>727</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 != dotPos){</pre></td>
     </tr>
 
@@ -5398,28 +5398,28 @@
     <tr>
     <td align="right" class="lineno"><pre>729</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      strncpy(dummy.cmd, rspAux, dotPos);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>730</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      dummy.cmd[dotPos] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>731</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      strncpy(dummy.par, &amp;rspAux[dotPos+1], rspSiz-dotPos-1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>732</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      dummy.par[rspSiz-dotPos-1] = '\0';</pre></td>
     </tr>
 
@@ -5447,7 +5447,7 @@
     <tr>
     <td align="right" class="lineno"><pre>736</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   return dummy;</pre></td>
     </tr>
 
@@ -5468,7 +5468,7 @@
     <tr>
     <td align="right" class="lineno"><pre>739</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>uint8_t gsmGetNoCmdRsp (const gsmEngine_t * const engine)</pre></td>
     </tr>
 
@@ -5482,7 +5482,7 @@
     <tr>
     <td align="right" class="lineno"><pre>741</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   return (VLRingBuffer_GetCount(&amp;(engine->rspVlRb)));</pre></td>
     </tr>
 
@@ -5503,7 +5503,7 @@
     <tr>
     <td align="right" class="lineno"><pre>744</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>rsp_t gsmGetUrc (gsmEngine_t * const engine)</pre></td>
     </tr>
 
@@ -5545,14 +5545,14 @@
     <tr>
     <td align="right" class="lineno"><pre>750</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   dummy.cmd[0] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>751</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   dummy.par[0] = '\0';</pre></td>
     </tr>
 
@@ -5593,8 +5593,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>757</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 58 times">&check;</span><span class="takenBranch" title="Branch 2 taken 29 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 1 taken 94 times">&check;</span><span class="takenBranch" title="Branch 2 taken 47 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   if(0 == VLRingBuffer_IsEmpty(&amp;(engine->urcVlRb))){</pre></td>
     </tr>
 
@@ -5608,7 +5608,7 @@
     <tr>
     <td align="right" class="lineno"><pre>759</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      urcSiz = VLRingBuffer_Pop(&amp;(engine->urcVlRb),</pre></td>
     </tr>
 
@@ -5629,7 +5629,7 @@
     <tr>
     <td align="right" class="lineno"><pre>762</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      uint8_t dotPos = 0;</pre></td>
     </tr>
 
@@ -5657,28 +5657,28 @@
     <tr>
     <td align="right" class="lineno"><pre>766</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>      for (i = 0; i &lt; TKN_LEN+20; i++){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>767</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="takenBranch" title="Branch 1 taken 290 times">&check;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>348</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="takenBranch" title="Branch 1 taken 470 times">&check;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>564</pre></td>
     <td align="left" class="src coveredLine"><pre>         if ('.' == urcAux[i]){</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>768</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            dotPos = i;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>769</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>            break;</pre></td>
     </tr>
 
@@ -5692,7 +5692,7 @@
     <tr>
     <td align="right" class="lineno"><pre>771</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>290</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>470</pre></td>
     <td align="left" class="src coveredLine"><pre>      }</pre></td>
     </tr>
 
@@ -5733,8 +5733,8 @@
 
     <tr>
     <td align="right" class="lineno"><pre>777</pre></td>
-    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 58 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linebranch"><span class="takenBranch" title="Branch 0 taken 94 times">&check;</span><span class="notTakenBranch" title="Branch 1 not taken">&cross;</span></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>      if(0 != dotPos){</pre></td>
     </tr>
 
@@ -5748,28 +5748,28 @@
     <tr>
     <td align="right" class="lineno"><pre>779</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         strncpy(dummy.cmd, urcAux, dotPos);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>780</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         dummy.cmd[dotPos] = '\0';</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>781</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         strncpy(dummy.par, &amp;urcAux[dotPos+1], urcSiz-dotPos-1);</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>782</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>         dummy.par[urcSiz-dotPos-1] = '\0';</pre></td>
     </tr>
 
@@ -5811,7 +5811,7 @@
     <tr>
     <td align="right" class="lineno"><pre>788</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>87</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>141</pre></td>
     <td align="left" class="src coveredLine"><pre>   return dummy;</pre></td>
     </tr>
 
@@ -5832,7 +5832,7 @@
     <tr>
     <td align="right" class="lineno"><pre>791</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>serialMode_t gsmGetSerialMode(const gsmEngine_t * const engine)</pre></td>
     </tr>
 
@@ -5846,7 +5846,7 @@
     <tr>
     <td align="right" class="lineno"><pre>793</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   return engine->serialMode;</pre></td>
     </tr>
 
@@ -5867,7 +5867,7 @@
     <tr>
     <td align="right" class="lineno"><pre>796</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>bool gsmSetSerialMode(gsmEngine_t * const engine, serialMode_t mode)</pre></td>
     </tr>
 
@@ -5881,14 +5881,14 @@
     <tr>
     <td align="right" class="lineno"><pre>798</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   engine->serialMode = mode;</pre></td>
     </tr>
 
     <tr>
     <td align="right" class="lineno"><pre>799</pre></td>
     <td align="right" class="linebranch"></td>
-    <td align="right" class="linecount coveredLine"><pre>58</pre></td>
+    <td align="right" class="linecount coveredLine"><pre>94</pre></td>
     <td align="left" class="src coveredLine"><pre>   return (mode == engine->serialMode);</pre></td>
     </tr>
 

@@ -7,7 +7,7 @@
 #ifndef _VL_RING_BUFFER_H_
 #define _VL_RING_BUFFER_H_
 
-/** \addtogroup vl_ring_buffer
+/** \addtogroup
  ** @{ */
 
 /*==================[inclusions]=============================================*/

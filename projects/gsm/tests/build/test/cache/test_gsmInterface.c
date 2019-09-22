@@ -454,10 +454,6 @@ void test_gsmProcess(void)
 
 
 
-   return;
-
-
-
 
 
 
@@ -466,15 +462,17 @@ void test_gsmProcess(void)
 
    interface.frmState = INIT;
 
+   frmFlag = 0;
+
 
 
    gsmProcess(&interface);
 
 
 
-   if ((frmFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(309)));};
+   if ((frmFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(308)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((10)), (UNITY_INT)(UNITY_UINT32)((interface.procCnt)), (((void *)0)), (UNITY_UINT)(310), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((10)), (UNITY_INT)(UNITY_UINT32)((interface.procCnt)), (((void *)0)), (UNITY_UINT)(309), UNITY_DISPLAY_STYLE_UINT32);
 
 
 
@@ -510,7 +508,7 @@ void test_gsmIsIdle(void)
 
 
 
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(337)));};
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(336)));};
 
 
 
@@ -522,7 +520,7 @@ void test_gsmIsIdle(void)
 
 
 
-   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(343)));};
+   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(342)));};
 
 
 
@@ -552,11 +550,11 @@ void test_gsmGetSigQual(void)
 
 
 
-   if ((&sigQualTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(367)));};
+   if ((&sigQualTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(366)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(368)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(367)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(369)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(368)));};
 
 
 
@@ -586,11 +584,11 @@ void test_gsmCheckConn(void)
 
 
 
-   if ((&connStateTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(393)));};
+   if ((&connStateTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(392)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(394)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(393)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(395)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(394)));};
 
 
 
@@ -628,7 +626,7 @@ void test_gsmReadUrc(void)
 
 
 
-   gsmGetUrc_CMockExpectAndReturn(423, &(interface.engine), rspTest1);
+   gsmGetUrc_CMockExpectAndReturn(422, &(interface.engine), rspTest1);
 
 
 
@@ -636,31 +634,11 @@ void test_gsmReadUrc(void)
 
 
 
-   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(427)));};
+   if (!(result)) {} else {UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((UNITY_UINT)(426)));};
 
-   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(428));
+   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(427));
 
-   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(429));
-
-
-
-
-
-
-
-   gsmGetUrc_CMockExpectAndReturn(433, &(interface.engine), rspTest2);
-
-
-
-   result = gsmReadUrc(&interface, &urcTest);
-
-
-
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(437)));};
-
-   UnityAssertEqualString((const char*)(("command")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(438));
-
-   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(439));
+   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(428));
 
 
 
@@ -668,7 +646,7 @@ void test_gsmReadUrc(void)
 
 
 
-   gsmGetUrc_CMockExpectAndReturn(443, &(interface.engine), rspTest3);
+   gsmGetUrc_CMockExpectAndReturn(432, &(interface.engine), rspTest2);
 
 
 
@@ -676,11 +654,31 @@ void test_gsmReadUrc(void)
 
 
 
-   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(447)));};
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(436)));};
 
-   UnityAssertEqualString((const char*)(("command")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(448));
+   UnityAssertEqualString((const char*)(("command")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(437));
 
-   UnityAssertEqualString((const char*)(("parameters")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(449));
+   UnityAssertEqualString((const char*)(("\0")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(438));
+
+
+
+
+
+
+
+   gsmGetUrc_CMockExpectAndReturn(442, &(interface.engine), rspTest3);
+
+
+
+   result = gsmReadUrc(&interface, &urcTest);
+
+
+
+   if ((result)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(446)));};
+
+   UnityAssertEqualString((const char*)(("command")), (const char*)((urcTest.cmd)), (((void *)0)), (UNITY_UINT)(447));
+
+   UnityAssertEqualString((const char*)(("parameters")), (const char*)((urcTest.par)), (((void *)0)), (UNITY_UINT)(448));
 
 
 
@@ -706,7 +704,7 @@ void test_gsmSetUrcMode(void)
 
 
 
-   if ((MANUAL_MODE == interface.urcMode)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(471)));};
+   if ((MANUAL_MODE == interface.urcMode)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(470)));};
 
 
 
@@ -714,7 +712,7 @@ void test_gsmSetUrcMode(void)
 
 
 
-   if ((CBACK_MODE == interface.urcMode)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(475)));};
+   if ((CBACK_MODE == interface.urcMode)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(474)));};
 
 
 
@@ -740,7 +738,7 @@ void test_gsmSetUrcCback(void)
 
 
 
-   if ((urcCbackTest == interface.urcCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(497)));};
+   if ((urcCbackTest == interface.urcCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(496)));};
 
 
 
@@ -766,7 +764,7 @@ void test_gsmSetDataCback(void)
 
 
 
-   if ((dataCbackTest == interface.dataCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(519)));};
+   if ((dataCbackTest == interface.dataCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(518)));};
 
 
 
@@ -788,7 +786,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   uint8_t const * const testBuf1 = "blablabla123123123";
+   uint8_t const * const testBuf1 = "blabla\r\nbla123123123\r\n";
 
    uint8_t const * const testBuf2 = "blablabla\r\nOK\r\n123123123";
 
@@ -820,7 +818,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((nchInput)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(555), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((nchInput)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(554), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -832,7 +830,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   gsmSetSerialMode_CMockExpectAndReturn(561, &(interface.engine), COMMAND_MODE, 1);
+   gsmSetSerialMode_CMockExpectAndReturn(560, &(interface.engine), COMMAND_MODE, 1);
 
 
 
@@ -840,7 +838,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((15)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(565), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((15)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(564), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -852,7 +850,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   gsmSetSerialMode_CMockExpectAndReturn(571, &(interface.engine), COMMAND_MODE, 1);
+   gsmSetSerialMode_CMockExpectAndReturn(570, &(interface.engine), COMMAND_MODE, 1);
 
 
 
@@ -860,7 +858,7 @@ void test_gsmCheckDataMode(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((13)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(575), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((13)), (UNITY_INT)(UNITY_UINT8 )((nchTest)), (((void *)0)), (UNITY_UINT)(574), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -892,13 +890,13 @@ void test_gsmSmsSend(void)
 
 
 
-   if ((&msgTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(600)));};
+   if ((&msgTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(599)));};
 
-   if ((&confTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(601)));};
+   if ((&confTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(600)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(602)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(601)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(603)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(602)));};
 
 
 
@@ -930,13 +928,13 @@ void test_gsmSmsRead(void)
 
 
 
-   if ((&parsTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(628)));};
+   if ((&parsTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(627)));};
 
-   if ((&msgTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(629)));};
+   if ((&msgTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(628)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(630)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(629)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(631)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(630)));};
 
 
 
@@ -968,13 +966,13 @@ void test_gsmSmsList(void)
 
 
 
-   if ((&parsTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(656)));};
+   if ((&parsTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(655)));};
 
-   if ((&listTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(657)));};
+   if ((&listTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(656)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(658)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(657)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(659)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(658)));};
 
 
 
@@ -1004,11 +1002,11 @@ void test_gsmSmsDel(void)
 
 
 
-   if ((&msgdelTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(683)));};
+   if ((&msgdelTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(682)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(684)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(683)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(685)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(684)));};
 
 
 
@@ -1038,11 +1036,11 @@ void test_gsmGprsStart(void)
 
 
 
-   if ((&apnTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(709)));};
+   if ((&apnTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(708)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(710)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(709)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(711)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(710)));};
 
 
 
@@ -1070,9 +1068,9 @@ void test_gsmGprsStop(void)
 
 
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(734)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(733)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(735)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(734)));};
 
 
 
@@ -1102,11 +1100,11 @@ void test_gsmGprsOpenPort(void)
 
 
 
-   if ((&portTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(759)));};
+   if ((&portTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(758)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(760)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(759)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(761)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(760)));};
 
 
 
@@ -1134,9 +1132,9 @@ void test_gsmGprsClosePort(void)
 
 
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(784)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(783)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(785)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(784)));};
 
 
 
@@ -1166,11 +1164,11 @@ void test_gsmGnssPwr(void)
 
 
 
-   if ((&cmdTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(809)));};
+   if ((&cmdTest == interface.frmInput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(808)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(810)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(809)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(811)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(810)));};
 
 
 
@@ -1200,11 +1198,11 @@ void test_gsmGnssGetData(void)
 
 
 
-   if ((&dataGnssTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(835)));};
+   if ((&dataGnssTest == interface.frmOutput)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(834)));};
 
-   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(836)));};
+   if ((cbackTest == interface.frmCback)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(835)));};
 
-   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(837)));};
+   if ((INIT == interface.frmState)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(836)));};
 
 
 
@@ -1248,15 +1246,15 @@ void test_gsmStartUpF(void)
 
 
 
-   if ((OK == interface.errorOut.errorFrm)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(879)));};
+   if ((OK == interface.errorOut.errorFrm)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(878)));};
 
-   if (('\0' == interface.errorOut.errorCmd.cmd[0])) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(880)));};
+   if (('\0' == interface.errorOut.errorCmd.cmd[0])) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(879)));};
 
-   if (('\0' == interface.errorOut.errorCmd.par[0])) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(881)));};
+   if (('\0' == interface.errorOut.errorCmd.par[0])) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(880)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ATCMD1)), (UNITY_INT)(UNITY_UINT8 )((interface.procState)), (((void *)0)), (UNITY_UINT)(882), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ATCMD1)), (UNITY_INT)(UNITY_UINT8 )((interface.procState)), (((void *)0)), (UNITY_UINT)(881), UNITY_DISPLAY_STYLE_UINT8);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(883), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(882), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1264,7 +1262,7 @@ void test_gsmStartUpF(void)
 
 
 
- 887
+ 886
 
    , &(interface.engine), 1, "AT\r", strlen("AT\r"), OK_CMD_SENT)
 
@@ -1278,7 +1276,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(891, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(890, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1286,7 +1284,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(895, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(894, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1298,7 +1296,7 @@ void test_gsmStartUpF(void)
 
 
 
- 901
+ 900
 
    , &(interface.engine), 1, "AT+CMEE=2\r", strlen("AT+CMEE=2\r"), OK_CMD_SENT)
 
@@ -1312,7 +1310,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(905, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(904, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1320,7 +1318,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(909, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(908, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1334,7 +1332,7 @@ void test_gsmStartUpF(void)
 
 
 
- 916
+ 915
 
    , &(interface.engine), 1, "AT+CSCS=\"GSM\"\r", strlen("AT+CSCS=\"GSM\"\r"), OK_CMD_SENT)
 
@@ -1350,7 +1348,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(920, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(919, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1358,7 +1356,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(924, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(923, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1370,7 +1368,7 @@ void test_gsmStartUpF(void)
 
 
 
- 930
+ 929
 
    , &(interface.engine), 1, "AT+CMGF=1\r", strlen("AT+CMGF=1\r"), OK_CMD_SENT)
 
@@ -1384,7 +1382,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(934, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(933, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1392,7 +1390,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(938, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(937, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1404,9 +1402,9 @@ void test_gsmStartUpF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(944)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(943)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(945), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(944), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1430,7 +1428,7 @@ void test_gsmStartUpF(void)
 
 
 
- 957
+ 956
 
    , &(interface.engine), 1, "AT\r", strlen("AT\r"), OK_CMD_SENT)
 
@@ -1444,7 +1442,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(961, &(interface.engine), ERR_CMD_ECHO);
+   gsmProcessTkn_CMockExpectAndReturn(960, &(interface.engine), ERR_CMD_ECHO);
 
 
 
@@ -1456,9 +1454,9 @@ void test_gsmStartUpF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(967)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(966)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(968), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(967), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1486,7 +1484,7 @@ void test_gsmStartUpF(void)
 
 
 
- 982
+ 981
 
    , &(interface.engine), 1, "AT\r", strlen("AT\r"), OK_CMD_SENT)
 
@@ -1500,7 +1498,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(986, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(985, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1508,7 +1506,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(990, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(989, &(interface.engine), ERR_MSG_CLOSE);
 
 
 
@@ -1516,7 +1514,7 @@ void test_gsmStartUpF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(994, &(interface.engine), rspTest);
+   gsmGetCmdRsp_CMockExpectAndReturn(993, &(interface.engine), rspTest);
 
 
 
@@ -1524,13 +1522,13 @@ void test_gsmStartUpF(void)
 
 
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(998));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(997));
 
-   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(999));
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(998));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1000)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(999)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1001), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1000), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1572,7 +1570,7 @@ void test_gsmExitDataModeF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((INIT)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1032), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((INIT)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1031), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1582,7 +1580,7 @@ void test_gsmExitDataModeF(void)
 
    gsm232UartSend_CMockExpectWithArrayAndReturn(
 
- 1037
+ 1036
 
    , "+++", strlen("+++"), strlen("+++"), 3)
 
@@ -1594,9 +1592,9 @@ void test_gsmExitDataModeF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((1000)), (UNITY_INT)(UNITY_UINT32)((interface.auxCnt)), (((void *)0)), (UNITY_UINT)(1041), UNITY_DISPLAY_STYLE_UINT32);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((1000)), (UNITY_INT)(UNITY_UINT32)((interface.auxCnt)), (((void *)0)), (UNITY_UINT)(1040), UNITY_DISPLAY_STYLE_UINT32);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1042), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1041), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1606,7 +1604,7 @@ void test_gsmExitDataModeF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1047), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1046), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1618,7 +1616,7 @@ void test_gsmExitDataModeF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((WRAP)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1053), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((WRAP)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1052), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1626,9 +1624,9 @@ void test_gsmExitDataModeF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1057)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1056)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1058), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1057), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1676,7 +1674,7 @@ void test_gsmGetSigQualF(void)
 
 
 
- 1095
+ 1094
 
    , &(interface.engine), 1, "AT+CSQ\r", strlen("AT+CSQ\r"), OK_CMD_SENT)
 
@@ -1690,7 +1688,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1099, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1098, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1698,7 +1696,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1103, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1102, &(interface.engine), OK_RSP);
 
 
 
@@ -1706,7 +1704,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1107, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1106, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1718,7 +1716,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1113, &(interface.engine), rspTest1);
+   gsmGetCmdRsp_CMockExpectAndReturn(1112, &(interface.engine), rspTest1);
 
 
 
@@ -1726,13 +1724,13 @@ void test_gsmGetSigQualF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-110)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1117), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-110)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1116), UNITY_DISPLAY_STYLE_INT8);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1118), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1117), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1119)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1118)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1120), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1119), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1752,7 +1750,7 @@ void test_gsmGetSigQualF(void)
 
 
 
- 1130
+ 1129
 
    , &(interface.engine), 1, "AT+CSQ\r", strlen("AT+CSQ\r"), OK_CMD_SENT)
 
@@ -1766,7 +1764,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1134, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1133, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1774,7 +1772,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1138, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1137, &(interface.engine), OK_RSP);
 
 
 
@@ -1782,7 +1780,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1142, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1141, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1794,7 +1792,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1148, &(interface.engine), rspTest2);
+   gsmGetCmdRsp_CMockExpectAndReturn(1147, &(interface.engine), rspTest2);
 
 
 
@@ -1802,13 +1800,13 @@ void test_gsmGetSigQualF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((99)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1152), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((99)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1151), UNITY_DISPLAY_STYLE_INT8);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((7)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1153), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((7)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1152), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1154)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1153)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1155), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1154), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1828,7 +1826,7 @@ void test_gsmGetSigQualF(void)
 
 
 
- 1165
+ 1164
 
    , &(interface.engine), 1, "AT+CSQ\r", strlen("AT+CSQ\r"), OK_CMD_SENT)
 
@@ -1842,7 +1840,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1169, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1168, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1850,7 +1848,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1173, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1172, &(interface.engine), OK_RSP);
 
 
 
@@ -1858,7 +1856,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1177, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1176, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1870,7 +1868,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1183, &(interface.engine), rspTest3);
+   gsmGetCmdRsp_CMockExpectAndReturn(1182, &(interface.engine), rspTest3);
 
 
 
@@ -1878,13 +1876,13 @@ void test_gsmGetSigQualF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-52)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1187), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-52)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1186), UNITY_DISPLAY_STYLE_INT8);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1188), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1187), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1189)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1188)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1190), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1189), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1904,7 +1902,7 @@ void test_gsmGetSigQualF(void)
 
 
 
- 1200
+ 1199
 
    , &(interface.engine), 1, "AT+CSQ\r", strlen("AT+CSQ\r"), OK_CMD_SENT)
 
@@ -1918,7 +1916,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1204, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1203, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -1926,7 +1924,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1208, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1207, &(interface.engine), OK_RSP);
 
 
 
@@ -1934,7 +1932,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1212, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1211, &(interface.engine), OK_CLOSE);
 
 
 
@@ -1946,7 +1944,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1218, &(interface.engine), rspTest4);
+   gsmGetCmdRsp_CMockExpectAndReturn(1217, &(interface.engine), rspTest4);
 
 
 
@@ -1954,15 +1952,15 @@ void test_gsmGetSigQualF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_WRAP)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1222), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_WRAP)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1221), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-52)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1223), UNITY_DISPLAY_STYLE_INT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_INT8 )((-52)), (UNITY_INT)(UNITY_INT8 )((sigQualTest.rssi)), (((void *)0)), (UNITY_UINT)(1222), UNITY_DISPLAY_STYLE_INT8);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1224), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1)), (UNITY_INT)(UNITY_UINT8 )((sigQualTest.ber)), (((void *)0)), (UNITY_UINT)(1223), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1225)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1224)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1226), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1225), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -1982,7 +1980,7 @@ void test_gsmGetSigQualF(void)
 
 
 
- 1236
+ 1235
 
    , &(interface.engine), 1, "AT+CSQ\r", strlen("AT+CSQ\r"), OK_CMD_SENT)
 
@@ -1996,7 +1994,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1240, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1239, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2004,7 +2002,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1244, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1243, &(interface.engine), ERR_MSG_CLOSE);
 
 
 
@@ -2016,7 +2014,7 @@ void test_gsmGetSigQualF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1250, &(interface.engine), rspTest5);
+   gsmGetCmdRsp_CMockExpectAndReturn(1249, &(interface.engine), rspTest5);
 
 
 
@@ -2024,15 +2022,15 @@ void test_gsmGetSigQualF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1254), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1253), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1255));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1254));
 
-   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1256));
+   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1255));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1257)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1256)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1258), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1257), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2084,7 +2082,7 @@ void test_gsmCheckConnF(void)
 
 
 
- 1297
+ 1296
 
    , &(interface.engine), 1, "AT+CREG?\r", strlen("AT+CREG?\r"), OK_CMD_SENT)
 
@@ -2098,7 +2096,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1301, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1300, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2106,7 +2104,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1305, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1304, &(interface.engine), OK_RSP);
 
 
 
@@ -2114,9 +2112,9 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1309, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1308, &(interface.engine), OK_CLOSE);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1310, &(interface.engine), rspGsmTest);
+   gsmGetCmdRsp_CMockExpectAndReturn(1309, &(interface.engine), rspGsmTest);
 
 
 
@@ -2128,7 +2126,7 @@ void test_gsmCheckConnF(void)
 
 
 
- 1316
+ 1315
 
    , &(interface.engine), 1, "AT+CGATT?\r", strlen("AT+CGATT?\r"), OK_CMD_SENT)
 
@@ -2142,7 +2140,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1320, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1319, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2150,7 +2148,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1324, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1323, &(interface.engine), OK_RSP);
 
 
 
@@ -2158,13 +2156,9 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1328, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1327, &(interface.engine), OK_CLOSE);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1329, &(interface.engine), rspGprsTest);
-
-
-
-   interface.frm(&interface);
+   gsmGetCmdRsp_CMockExpectAndReturn(1328, &(interface.engine), rspGprsTest);
 
 
 
@@ -2172,13 +2166,17 @@ void test_gsmCheckConnF(void)
 
 
 
-   if ((connStateTest.gprs)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1335)));};
+   interface.frm(&interface);
 
-   if ((connStateTest.gsm)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1336)));};
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1337)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1338), UNITY_DISPLAY_STYLE_UINT8);
+   if ((connStateTest.gprs)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1334)));};
+
+   if ((connStateTest.gsm)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1335)));};
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1336)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1337), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2198,7 +2196,7 @@ void test_gsmCheckConnF(void)
 
 
 
- 1348
+ 1347
 
    , &(interface.engine), 1, "AT+CREG?\r", strlen("AT+CREG?\r"), OK_CMD_SENT)
 
@@ -2212,7 +2210,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1352, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1351, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2220,7 +2218,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1356, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1355, &(interface.engine), ERR_MSG_CLOSE);
 
 
 
@@ -2232,7 +2230,7 @@ void test_gsmCheckConnF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1362, &(interface.engine), rspTest5);
+   gsmGetCmdRsp_CMockExpectAndReturn(1361, &(interface.engine), rspTest5);
 
 
 
@@ -2240,15 +2238,15 @@ void test_gsmCheckConnF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1366), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1365), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1367));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1366));
 
-   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1368));
+   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1367));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1369)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1368)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1370), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1369), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2304,7 +2302,7 @@ void test_gsmSmsSendF(void)
 
 
 
- 1411
+ 1410
 
    , &(interface.engine), 1, "AT+CMGS=\"+5491151751809\"\r", strlen("AT+CMGS=\"+5491151751809\"\r"), OK_CMD_SENT)
 
@@ -2320,7 +2318,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1415, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1414, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2328,7 +2326,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1419, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1418, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2338,7 +2336,7 @@ void test_gsmSmsSendF(void)
 
    gsmSendCmd_CMockExpectWithArrayAndReturn(
 
- 1424
+ 1423
 
    , &(interface.engine), 1, "Hola mundo!", strlen("Hola mundo!"), OK_CMD_SENT)
 
@@ -2350,7 +2348,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1428, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1427, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2358,7 +2356,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1432, &(interface.engine), OK_RSP);
+   gsmProcessTkn_CMockExpectAndReturn(1431, &(interface.engine), OK_RSP);
 
 
 
@@ -2366,7 +2364,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1436, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1435, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2374,7 +2372,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1440, &(interface.engine), rspTest);
+   gsmGetCmdRsp_CMockExpectAndReturn(1439, &(interface.engine), rspTest);
 
 
 
@@ -2382,11 +2380,11 @@ void test_gsmSmsSendF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((5)), (UNITY_INT)(UNITY_UINT8 )((confTest.mr)), (((void *)0)), (UNITY_UINT)(1444), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((5)), (UNITY_INT)(UNITY_UINT8 )((confTest.mr)), (((void *)0)), (UNITY_UINT)(1443), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1445)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1444)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1446), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1445), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2406,11 +2404,11 @@ void test_gsmSmsSendF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_INIT)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1456), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_INIT)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1455), UNITY_DISPLAY_STYLE_INT);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1457)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1456)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1458), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1457), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2432,7 +2430,7 @@ void test_gsmSmsSendF(void)
 
 
 
- 1469
+ 1468
 
    , &(interface.engine), 1, "AT+CMGS=\"+5491151751809\"\r", strlen("AT+CMGS=\"+5491151751809\"\r"), OK_CMD_SENT)
 
@@ -2448,7 +2446,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1473, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1472, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2456,7 +2454,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1477, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1476, &(interface.engine), ERR_MSG_CLOSE);
 
 
 
@@ -2468,7 +2466,7 @@ void test_gsmSmsSendF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1483, &(interface.engine), rspTest5);
+   gsmGetCmdRsp_CMockExpectAndReturn(1482, &(interface.engine), rspTest5);
 
 
 
@@ -2476,15 +2474,15 @@ void test_gsmSmsSendF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1487), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1486), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1488));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1487));
 
-   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1489));
+   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1488));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1490)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1489)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1491), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1490), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2538,7 +2536,7 @@ void test_gsmSmsReadF(void)
 
 
 
- 1531
+ 1530
 
    , &(interface.engine), 1, "AT+CSDH=1\r", strlen("AT+CSDH=1\r"), OK_CMD_SENT)
 
@@ -2552,7 +2550,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1535, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1534, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2560,7 +2558,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1539, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1538, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2572,7 +2570,7 @@ void test_gsmSmsReadF(void)
 
 
 
- 1545
+ 1544
 
    , &(interface.engine), 1, "AT+CMGR=1,1\r", strlen("AT+CMGR=1,1\r"), OK_CMD_SENT)
 
@@ -2586,7 +2584,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1549, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1548, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2594,7 +2592,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1553, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1552, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2602,9 +2600,9 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1557, &(interface.engine), rspTest1);
+   gsmGetCmdRsp_CMockExpectAndReturn(1556, &(interface.engine), rspTest1);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1558, &(interface.engine), rspTest2);
+   gsmGetCmdRsp_CMockExpectAndReturn(1557, &(interface.engine), rspTest2);
 
 
 
@@ -2612,13 +2610,13 @@ void test_gsmSmsReadF(void)
 
 
 
-   UnityAssertEqualString((const char*)(("meta")), (const char*)((msgTest.meta)), (((void *)0)), (UNITY_UINT)(1562));
+   UnityAssertEqualString((const char*)(("meta")), (const char*)((msgTest.meta)), (((void *)0)), (UNITY_UINT)(1561));
 
-   UnityAssertEqualString((const char*)(("text")), (const char*)((msgTest.text)), (((void *)0)), (UNITY_UINT)(1563));
+   UnityAssertEqualString((const char*)(("text")), (const char*)((msgTest.text)), (((void *)0)), (UNITY_UINT)(1562));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1564)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1563)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1565), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1564), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2638,7 +2636,7 @@ void test_gsmSmsReadF(void)
 
 
 
- 1575
+ 1574
 
    , &(interface.engine), 1, "AT+CSDH=1\r", strlen("AT+CSDH=1\r"), OK_CMD_SENT)
 
@@ -2652,7 +2650,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1579, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1578, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2660,7 +2658,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1583, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1582, &(interface.engine), ERR_MSG_CLOSE);
 
 
 
@@ -2672,7 +2670,7 @@ void test_gsmSmsReadF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1589, &(interface.engine), rspTest5);
+   gsmGetCmdRsp_CMockExpectAndReturn(1588, &(interface.engine), rspTest5);
 
 
 
@@ -2680,15 +2678,15 @@ void test_gsmSmsReadF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1593), UNITY_DISPLAY_STYLE_INT);
+   UnityAssertEqualNumber((UNITY_INT)((ERR_GSM)), (UNITY_INT)((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1592), UNITY_DISPLAY_STYLE_INT);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1594));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1593));
 
-   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1595));
+   UnityAssertEqualString((const char*)(("params")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1594));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1596)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1595)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1597), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1596), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2752,7 +2750,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1642
+ 1641
 
    , &(interface.engine), 1, "AT+CSDH=1\r", strlen("AT+CSDH=1\r"), OK_CMD_SENT)
 
@@ -2768,7 +2766,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1646, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1645, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2776,7 +2774,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1650, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1649, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2790,7 +2788,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1657
+ 1656
 
    , &(interface.engine), 1, "AT+CMGL=\"REC UNREAD\",1\r", strlen("AT+CMGL=\"REC UNREAD\",1\r"), OK_CMD_SENT)
 
@@ -2806,7 +2804,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1661, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1660, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2822,7 +2820,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1669, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1668, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2836,19 +2834,19 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmGetNoCmdRsp_CMockExpectAndReturn(1676, &(interface.engine), 7);
+   gsmGetNoCmdRsp_CMockExpectAndReturn(1675, &(interface.engine), 7);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1677, &(interface.engine), rspTest1);
+   gsmGetCmdRsp_CMockExpectAndReturn(1676, &(interface.engine), rspTest1);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1678, &(interface.engine), rspTest2);
+   gsmGetCmdRsp_CMockExpectAndReturn(1677, &(interface.engine), rspTest2);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1679, &(interface.engine), rspTest3);
+   gsmGetCmdRsp_CMockExpectAndReturn(1678, &(interface.engine), rspTest3);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1680, &(interface.engine), rspTest4);
+   gsmGetCmdRsp_CMockExpectAndReturn(1679, &(interface.engine), rspTest4);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1681, &(interface.engine), rspTest5);
+   gsmGetCmdRsp_CMockExpectAndReturn(1680, &(interface.engine), rspTest5);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1682, &(interface.engine), rspTest6);
+   gsmGetCmdRsp_CMockExpectAndReturn(1681, &(interface.engine), rspTest6);
 
 
 
@@ -2856,21 +2854,21 @@ void test_gsmSmsListF(void)
 
 
 
-   UnityAssertEqualString((const char*)(("meta1")), (const char*)((listTest[0].meta)), (((void *)0)), (UNITY_UINT)(1686));
+   UnityAssertEqualString((const char*)(("meta1")), (const char*)((listTest[0].meta)), (((void *)0)), (UNITY_UINT)(1685));
 
-   UnityAssertEqualString((const char*)(("text1")), (const char*)((listTest[0].text)), (((void *)0)), (UNITY_UINT)(1687));
+   UnityAssertEqualString((const char*)(("text1")), (const char*)((listTest[0].text)), (((void *)0)), (UNITY_UINT)(1686));
 
-   UnityAssertEqualString((const char*)(("meta2")), (const char*)((listTest[1].meta)), (((void *)0)), (UNITY_UINT)(1688));
+   UnityAssertEqualString((const char*)(("meta2")), (const char*)((listTest[1].meta)), (((void *)0)), (UNITY_UINT)(1687));
 
-   UnityAssertEqualString((const char*)(("text2")), (const char*)((listTest[1].text)), (((void *)0)), (UNITY_UINT)(1689));
+   UnityAssertEqualString((const char*)(("text2")), (const char*)((listTest[1].text)), (((void *)0)), (UNITY_UINT)(1688));
 
-   UnityAssertEqualString((const char*)(("meta3")), (const char*)((listTest[2].meta)), (((void *)0)), (UNITY_UINT)(1690));
+   UnityAssertEqualString((const char*)(("meta3")), (const char*)((listTest[2].meta)), (((void *)0)), (UNITY_UINT)(1689));
 
-   UnityAssertEqualString((const char*)(("text3")), (const char*)((listTest[2].text)), (((void *)0)), (UNITY_UINT)(1691));
+   UnityAssertEqualString((const char*)(("text3")), (const char*)((listTest[2].text)), (((void *)0)), (UNITY_UINT)(1690));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1692)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1691)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1693), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1692), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -2896,7 +2894,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1706
+ 1705
 
    , &(interface.engine), 1, "AT+CSDH=1\r", strlen("AT+CSDH=1\r"), OK_CMD_SENT)
 
@@ -2912,7 +2910,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1710, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1709, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2920,7 +2918,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1714, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1713, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2934,7 +2932,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1721
+ 1720
 
    , &(interface.engine), 1, "AT+CMGL=\"REC UNREAD\",1\r", strlen("AT+CMGL=\"REC UNREAD\",1\r"), OK_CMD_SENT)
 
@@ -2950,7 +2948,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1725, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1724, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -2966,7 +2964,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1733, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1732, &(interface.engine), OK_CLOSE);
 
 
 
@@ -2984,7 +2982,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmGetNoCmdRsp_CMockExpectAndReturn(1742, &(interface.engine), 9);
+   gsmGetNoCmdRsp_CMockExpectAndReturn(1741, &(interface.engine), 9);
 
 
 
@@ -2992,11 +2990,11 @@ void test_gsmSmsListF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_WRAP)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1746), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_WRAP)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1745), UNITY_DISPLAY_STYLE_UINT8);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1747)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1746)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1748), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1747), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3022,7 +3020,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1761
+ 1760
 
    , &(interface.engine), 1, "AT+CSDH=1\r", strlen("AT+CSDH=1\r"), OK_CMD_SENT)
 
@@ -3038,7 +3036,7 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1765, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1764, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3046,11 +3044,11 @@ void test_gsmSmsListF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1769, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1768, &(interface.engine), ERR_MSG_CLOSE);
 
-   gsmGetNoCmdRsp_CMockExpectAndReturn(1770, &(interface.engine), 1);
+   gsmGetNoCmdRsp_CMockExpectAndReturn(1769, &(interface.engine), 1);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1771, &(interface.engine), rspError);
+   gsmGetCmdRsp_CMockExpectAndReturn(1770, &(interface.engine), rspError);
 
 
 
@@ -3060,15 +3058,15 @@ void test_gsmSmsListF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1776), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1775), UNITY_DISPLAY_STYLE_UINT8);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1777));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1776));
 
-   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1778));
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1777));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1779)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1778)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1780), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1779), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3102,7 +3100,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1797
+ 1796
 
    , &(interface.engine), 1, "AT+CMGL=\"REC READ\",1\r", strlen("AT+CMGL=\"REC READ\",1\r"), OK_CMD_SENT)
 
@@ -3144,7 +3142,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1814
+ 1813
 
    , &(interface.engine), 1, "AT+CMGL=\"STO UNSENT\",1\r", strlen("AT+CMGL=\"STO UNSENT\",1\r"), OK_CMD_SENT)
 
@@ -3186,7 +3184,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1831
+ 1830
 
    , &(interface.engine), 1, "AT+CMGL=\"STO SENT\",1\r", strlen("AT+CMGL=\"STO SENT\",1\r"), OK_CMD_SENT)
 
@@ -3228,7 +3226,7 @@ void test_gsmSmsListF(void)
 
 
 
- 1848
+ 1847
 
    , &(interface.engine), 1, "AT+CMGL=\"ALL\",1\r", strlen("AT+CMGL=\"ALL\",1\r"), OK_CMD_SENT)
 
@@ -3292,7 +3290,7 @@ void test_gsmSmsDelF(void)
 
    gsmSendCmd_CMockExpectWithArrayAndReturn(
 
- 1889
+ 1888
 
    , &(interface.engine), 1, "AT+CMGD=1,0\r", strlen("AT+CMGD=1,0\r"), OK_CMD_SENT)
 
@@ -3304,7 +3302,7 @@ void test_gsmSmsDelF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1893, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1892, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3312,7 +3310,7 @@ void test_gsmSmsDelF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1897, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1896, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3324,9 +3322,9 @@ void test_gsmSmsDelF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1903)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1902)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1904), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1903), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3348,7 +3346,7 @@ void test_gsmSmsDelF(void)
 
    gsmSendCmd_CMockExpectWithArrayAndReturn(
 
- 1915
+ 1914
 
    , &(interface.engine), 1, "AT+CMGD=1,0\r", strlen("AT+CMGD=1,0\r"), OK_CMD_SENT)
 
@@ -3360,7 +3358,7 @@ void test_gsmSmsDelF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1919, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1918, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3368,9 +3366,9 @@ void test_gsmSmsDelF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1923, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1922, &(interface.engine), ERR_MSG_CLOSE);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(1924, &(interface.engine), rspError);
+   gsmGetCmdRsp_CMockExpectAndReturn(1923, &(interface.engine), rspError);
 
 
 
@@ -3380,15 +3378,15 @@ void test_gsmSmsDelF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1929), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(1928), UNITY_DISPLAY_STYLE_UINT8);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1930));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(1929));
 
-   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1931));
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(1930));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1932)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(1931)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1933), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(1932), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3440,7 +3438,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 1972
+ 1971
 
    , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
 
@@ -3456,7 +3454,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1976, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1975, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3464,7 +3462,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1980, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1979, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3478,7 +3476,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 1987
+ 1986
 
    , &(interface.engine), 1, "AT+CIPSHUT\r", strlen("AT+CIPSHUT\r"), OK_CMD_SENT)
 
@@ -3494,7 +3492,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1991, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(1990, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3502,7 +3500,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(1995, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(1994, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3516,7 +3514,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 2002
+ 2001
 
    , &(interface.engine), 1, "AT+CIPMODE=1\r", strlen("AT+CIPMODE=1\r"), OK_CMD_SENT)
 
@@ -3532,7 +3530,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2006, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2005, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3540,7 +3538,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2010, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2009, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3558,7 +3556,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 2019
+ 2018
 
    , &(interface.engine), 1, "AT+CSTT=\"apn\",\"user\"," "\"password\"\r", strlen("AT+CSTT=\"apn\",\"user\"," "\"password\"\r"), OK_CMD_SENT)
 
@@ -3578,7 +3576,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2023, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2022, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3586,7 +3584,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2027, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2026, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3596,7 +3594,7 @@ void test_gsmGprsStartF(void)
 
    gsmSendCmd_CMockExpectAndReturn(
 
- 2032
+ 2031
 
    , &(interface.engine), "AT+CIICR\r", OK_CMD_SENT)
 
@@ -3608,7 +3606,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2036, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2035, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3616,7 +3614,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2040, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2039, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3630,7 +3628,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 2047
+ 2046
 
    , &(interface.engine), 1, "AT+CIFSR\r", strlen("AT+CIFSR\r"), OK_CMD_SENT)
 
@@ -3646,7 +3644,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2051, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2050, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3654,7 +3652,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2055, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2054, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3666,9 +3664,9 @@ void test_gsmGprsStartF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2061)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2060)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2062), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2061), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3694,7 +3692,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 2075
+ 2074
 
    , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
 
@@ -3710,7 +3708,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2079, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2078, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3718,7 +3716,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2083, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2082, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3732,7 +3730,7 @@ void test_gsmGprsStartF(void)
 
 
 
- 2090
+ 2089
 
    , &(interface.engine), 1, "AT+CIPSHUT\r", strlen("AT+CIPSHUT\r"), OK_CMD_SENT)
 
@@ -3748,7 +3746,7 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2094, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2093, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3756,9 +3754,9 @@ void test_gsmGprsStartF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2098, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2097, &(interface.engine), ERR_MSG_CLOSE);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2099, &(interface.engine), rspError);
+   gsmGetCmdRsp_CMockExpectAndReturn(2098, &(interface.engine), rspError);
 
 
 
@@ -3768,15 +3766,15 @@ void test_gsmGprsStartF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2104), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2103), UNITY_DISPLAY_STYLE_UINT8);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2105));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2104));
 
-   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2106));
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2105));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2107)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2106)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2108), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2107), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3824,7 +3822,7 @@ void test_gsmGprsStopF(void)
 
 
 
- 2145
+ 2144
 
    , &(interface.engine), 1, "AT+CIPSHUT\r", strlen("AT+CIPSHUT\r"), OK_CMD_SENT)
 
@@ -3840,7 +3838,7 @@ void test_gsmGprsStopF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2149, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2148, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3848,7 +3846,7 @@ void test_gsmGprsStopF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2153, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2152, &(interface.engine), OK_CLOSE);
 
 
 
@@ -3860,9 +3858,9 @@ void test_gsmGprsStopF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2159)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2158)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2160), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2159), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3888,7 +3886,7 @@ void test_gsmGprsStopF(void)
 
 
 
- 2173
+ 2172
 
    , &(interface.engine), 1, "AT+CIPSHUT\r", strlen("AT+CIPSHUT\r"), OK_CMD_SENT)
 
@@ -3904,7 +3902,7 @@ void test_gsmGprsStopF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2177, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2176, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -3912,9 +3910,9 @@ void test_gsmGprsStopF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2181, &(interface.engine), ERR_MSG_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2180, &(interface.engine), ERR_MSG_CLOSE);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2182, &(interface.engine), rspError);
+   gsmGetCmdRsp_CMockExpectAndReturn(2181, &(interface.engine), rspError);
 
 
 
@@ -3924,15 +3922,15 @@ void test_gsmGprsStopF(void)
 
 
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2187), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2186), UNITY_DISPLAY_STYLE_UINT8);
 
-   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2188));
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2187));
 
-   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2189));
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2188));
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2190)));};
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2189)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2191), UNITY_DISPLAY_STYLE_UINT8);
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2190), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -3986,7 +3984,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
- 2231
+ 2230
 
    , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
 
@@ -4002,7 +4000,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2235, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2234, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4010,7 +4008,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2239, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2238, &(interface.engine), OK_CLOSE);
 
 
 
@@ -4028,7 +4026,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
- 2248
+ 2247
 
    , &(interface.engine), 1, "AT+CIPSTART=\"TCP\",\"192.168.0.1" "\",\"80\"\r", strlen("AT+CIPSTART=\"TCP\",\"192.168" ".0.1\",\"80\"\r"), OK_CMD_SENT)
 
@@ -4048,7 +4046,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2252, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2251, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4056,21 +4054,13 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2256, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2255, &(interface.engine), OK_CLOSE);
 
-   gsmGetNoCmdRsp_CMockExpectAndReturn(2257, &(interface.engine), 2);
+   gsmGetNoCmdRsp_CMockExpectAndReturn(2256, &(interface.engine), 2);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2258, &(interface.engine), rspTest1);
+   gsmGetCmdRsp_CMockExpectAndReturn(2257, &(interface.engine), rspTest1);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2259, &(interface.engine), rspTest2);
-
-
-
-   interface.frm(&interface);
-
-
-
-   gsmSetSerialMode_CMockExpectAndReturn(2263, &(interface.engine), DATA_MODE, 1);
+   gsmGetCmdRsp_CMockExpectAndReturn(2258, &(interface.engine), rspTest2);
 
 
 
@@ -4078,9 +4068,17 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2267)));};
+   gsmSetSerialMode_CMockExpectAndReturn(2262, &(interface.engine), DATA_MODE, 1);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2268), UNITY_DISPLAY_STYLE_UINT8);
+
+
+   interface.frm(&interface);
+
+
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2266)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2267), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -4106,7 +4104,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
- 2281
+ 2280
 
    , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
 
@@ -4122,7 +4120,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2285, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2284, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4130,7 +4128,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2289, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2288, &(interface.engine), OK_CLOSE);
 
 
 
@@ -4148,7 +4146,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
- 2298
+ 2297
 
    , &(interface.engine), 1, "AT+CIPSTART=\"UDP\",\"192.168.0.1" "\",\"80\"\r", strlen("AT+CIPSTART=\"UDP\",\"192.168" ".0.1\",\"80\"\r"), OK_CMD_SENT)
 
@@ -4168,7 +4166,7 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2302, &(interface.engine), OK_CMD_ACK);
+   gsmProcessTkn_CMockExpectAndReturn(2301, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4176,21 +4174,13 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2306, &(interface.engine), OK_CLOSE);
+   gsmProcessTkn_CMockExpectAndReturn(2305, &(interface.engine), OK_CLOSE);
 
-   gsmGetNoCmdRsp_CMockExpectAndReturn(2307, &(interface.engine), 2);
+   gsmGetNoCmdRsp_CMockExpectAndReturn(2306, &(interface.engine), 2);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2308, &(interface.engine), rspTest1);
+   gsmGetCmdRsp_CMockExpectAndReturn(2307, &(interface.engine), rspTest1);
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2309, &(interface.engine), rspTest2);
-
-
-
-   interface.frm(&interface);
-
-
-
-   gsmSetSerialMode_CMockExpectAndReturn(2313, &(interface.engine), DATA_MODE, 1);
+   gsmGetCmdRsp_CMockExpectAndReturn(2308, &(interface.engine), rspTest2);
 
 
 
@@ -4198,9 +4188,251 @@ void test_gsmGprsOpenPortF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2317)));};
+   gsmSetSerialMode_CMockExpectAndReturn(2312, &(interface.engine), DATA_MODE, 1);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2318), UNITY_DISPLAY_STYLE_UINT8);
+
+
+   interface.frm(&interface);
+
+
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2316)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2317), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   rsp_t rspTest3 = {"CONNECT FAIL",""};
+
+
+
+   gsmGprsOpenPort(&interface, &socketTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2330
+
+   , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2334, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2338, &(interface.engine), OK_CLOSE);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+
+
+
+
+ 2347
+
+   , &(interface.engine), 1, "AT+CIPSTART=\"TCP\",\"192.168.0.1" "\",\"80\"\r", strlen("AT+CIPSTART=\"TCP\",\"192.168" ".0.1\",\"80\"\r"), OK_CMD_SENT)
+
+
+
+
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2351, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2355, &(interface.engine), OK_CLOSE);
+
+   gsmGetNoCmdRsp_CMockExpectAndReturn(2356, &(interface.engine), 2);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2357, &(interface.engine), rspTest1);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2358, &(interface.engine), rspTest3);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_PROC)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2363), UNITY_DISPLAY_STYLE_UINT8);
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2364)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2365), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+
+
+   gsmGprsOpenPort(&interface, &socketTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2378
+
+   , &(interface.engine), 1, "AT+CIPCLOSE\r", strlen("AT+CIPCLOSE\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2382, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2386, &(interface.engine), OK_CLOSE);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+
+
+
+
+ 2395
+
+   , &(interface.engine), 1, "AT+CIPSTART=\"TCP\",\"192.168.0.1" "\",\"80\"\r", strlen("AT+CIPSTART=\"TCP\",\"192.168" ".0.1\",\"80\"\r"), OK_CMD_SENT)
+
+
+
+
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2399, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2403, &(interface.engine), ERR_MSG_CLOSE);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2404, &(interface.engine), rspError);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2409), UNITY_DISPLAY_STYLE_UINT8);
+
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2410));
+
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2411));
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2412)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2413), UNITY_DISPLAY_STYLE_UINT8);
+
+
 
 
 
@@ -4242,29 +4474,21 @@ void test_gsmGprsClosePortF(void)
 
 
 
-   gsmSendCmd_CMockExpectAndReturn(
-
- 2353
-
-   , &(interface.engine), "AT+CIPCLOSE=0\r", OK_CMD_SENT)
-
-                                          ;
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
 
 
 
-   interface.frm(&interface);
+
+
+ 2451
+
+   , &(interface.engine), 1, "AT+CIPCLOSE=0\r", strlen("AT+CIPCLOSE=0\r"), OK_CMD_SENT)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2357, &(interface.engine), OK_CMD_ACK);
 
 
-
-   interface.frm(&interface);
-
-
-
-   gsmProcessTkn_CMockExpectAndReturn(2361, &(interface.engine), OK_CLOSE);
+                                                   ;
 
 
 
@@ -4272,7 +4496,7 @@ void test_gsmGprsClosePortF(void)
 
 
 
-   gsmSetSerialMode_CMockExpectAndReturn(2365, &(interface.engine), COMMAND_MODE, 1);
+   gsmProcessTkn_CMockExpectAndReturn(2455, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4280,9 +4504,95 @@ void test_gsmGprsClosePortF(void)
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2369)));};
+   gsmProcessTkn_CMockExpectAndReturn(2459, &(interface.engine), OK_CLOSE);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2370), UNITY_DISPLAY_STYLE_UINT8);
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSetSerialMode_CMockExpectAndReturn(2463, &(interface.engine), COMMAND_MODE, 1);
+
+
+
+   interface.frm(&interface);
+
+
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2467)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2468), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+
+
+   gsmGprsClosePort(&interface, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2481
+
+   , &(interface.engine), 1, "AT+CIPCLOSE=0\r", strlen("AT+CIPCLOSE=0\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2485, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2489, &(interface.engine), ERR_MSG_CLOSE);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2490, &(interface.engine), rspError);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2495), UNITY_DISPLAY_STYLE_UINT8);
+
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2496));
+
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2497));
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2498)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2499), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -4330,29 +4640,21 @@ void test_gsmGnssPwrF(void)
 
 
 
-   gsmSendCmd_CMockExpectAndReturn(
-
- 2408
-
-   , &(interface.engine), "AT+CGNSPWR=1\r", OK_CMD_SENT)
-
-                                          ;
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
 
 
 
-   interface.frm(&interface);
+
+
+ 2539
+
+   , &(interface.engine), 1, "AT+CGNSPWR=1\r", strlen("AT+CGNSPWR=1\r"), OK_CMD_SENT)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2412, &(interface.engine), OK_CMD_ACK);
 
 
-
-   interface.frm(&interface);
-
-
-
-   gsmProcessTkn_CMockExpectAndReturn(2416, &(interface.engine), OK_CLOSE);
+                                                   ;
 
 
 
@@ -4360,13 +4662,29 @@ void test_gsmGnssPwrF(void)
 
 
 
+   gsmProcessTkn_CMockExpectAndReturn(2543, &(interface.engine), OK_CMD_ACK);
+
+
+
    interface.frm(&interface);
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2422)));};
+   gsmProcessTkn_CMockExpectAndReturn(2547, &(interface.engine), OK_CLOSE);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2423), UNITY_DISPLAY_STYLE_UINT8);
+
+
+   interface.frm(&interface);
+
+
+
+   interface.frm(&interface);
+
+
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2553)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2554), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
@@ -4386,29 +4704,23 @@ void test_gsmGnssPwrF(void)
 
 
 
-   gsmSendCmd_CMockExpectAndReturn(
-
- 2434
-
-   , &(interface.engine), "AT+CGNSPWR=0\r", OK_CMD_SENT)
-
-                                          ;
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
 
 
 
-   interface.frm(&interface);
+
+
+ 2567
+
+   , &(interface.engine), 1, "AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"), OK_CMD_SENT)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2438, &(interface.engine), OK_CMD_ACK);
 
 
-
-   interface.frm(&interface);
-
+                                                   ;
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2442, &(interface.engine), OK_CLOSE);
 
 
 
@@ -4416,13 +4728,307 @@ void test_gsmGnssPwrF(void)
 
 
 
+   gsmProcessTkn_CMockExpectAndReturn(2572, &(interface.engine), OK_CMD_ACK);
+
+
+
    interface.frm(&interface);
 
 
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2448)));};
+   gsmProcessTkn_CMockExpectAndReturn(2576, &(interface.engine), OK_CLOSE);
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2449), UNITY_DISPLAY_STYLE_UINT8);
+
+
+   interface.frm(&interface);
+
+
+
+   interface.frm(&interface);
+
+
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2582)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2583), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+
+
+   cmdTest = OFF;
+
+
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2598
+
+   , &(interface.engine), 1, "AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2603, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2607, &(interface.engine), ERR_MSG_CLOSE);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2608, &(interface.engine), rspError);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2613), UNITY_DISPLAY_STYLE_UINT8);
+
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2614));
+
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2615));
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2616)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2617), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   cmdTest = OFF;
+
+
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2630
+
+   , &(interface.engine), 1, "AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2635, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2639, &(interface.engine), ERR_TIMEOUT);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_TOUT)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2644), UNITY_DISPLAY_STYLE_UINT8);
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2645)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2646), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   cmdTest = OFF;
+
+
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2659
+
+   , &(interface.engine), 1, "AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2664, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2668, &(interface.engine), ERR_FSM_OOR);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_FSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2673), UNITY_DISPLAY_STYLE_UINT8);
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2674)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2675), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   cmdTest = OFF;
+
+
+
+   gsmGnssPwr(&interface, &cmdTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2688
+
+   , &(interface.engine), 1, "AT+CGNSPWR=0\r", strlen("AT+CGNSPWR=0\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2693, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2697, &(interface.engine), ERR_FSM_OOR+1);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_UNK)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2702), UNITY_DISPLAY_STYLE_UINT8);
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2703)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2704), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
 
 
 
@@ -4464,29 +5070,21 @@ void test_gsmGnssGetDataF(void)
 
 
 
-   gsmSendCmd_CMockExpectAndReturn(
-
- 2484
-
-   , &(interface.engine), "AT+CGNSINF\r", OK_CMD_SENT)
-
-                                          ;
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
 
 
 
-   interface.frm(&interface);
+
+
+ 2743
+
+   , &(interface.engine), 1, "AT+CGNSINF\r", strlen("AT+CGNSINF\r"), OK_CMD_SENT)
 
 
 
-   gsmProcessTkn_CMockExpectAndReturn(2488, &(interface.engine), OK_CMD_ACK);
 
 
-
-   interface.frm(&interface);
-
-
-
-   gsmProcessTkn_CMockExpectAndReturn(2492, &(interface.engine), OK_CLOSE);
+                                                   ;
 
 
 
@@ -4494,7 +5092,7 @@ void test_gsmGnssGetDataF(void)
 
 
 
-   gsmGetCmdRsp_CMockExpectAndReturn(2496, &(interface.engine), rspTest);
+   gsmProcessTkn_CMockExpectAndReturn(2747, &(interface.engine), OK_CMD_ACK);
 
 
 
@@ -4502,11 +5100,97 @@ void test_gsmGnssGetDataF(void)
 
 
 
-   UnityAssertEqualString((const char*)(("data")), (const char*)((dataGnssTest.data)), (((void *)0)), (UNITY_UINT)(2500));
+   gsmProcessTkn_CMockExpectAndReturn(2751, &(interface.engine), OK_CLOSE);
 
-   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2501)));};
 
-   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2502), UNITY_DISPLAY_STYLE_UINT8);
+
+   interface.frm(&interface);
+
+
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2755, &(interface.engine), rspTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualString((const char*)(("data")), (const char*)((dataGnssTest.data)), (((void *)0)), (UNITY_UINT)(2759));
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2760)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2761), UNITY_DISPLAY_STYLE_UINT8);
+
+
+
+
+
+
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+
+
+   gsmGnssGetData(&interface, &dataGnssTest, frmCbackTest);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmSendCmd_CMockExpectWithArrayAndReturn(
+
+
+
+
+
+ 2774
+
+   , &(interface.engine), 1, "AT+CGNSINF\r", strlen("AT+CGNSINF\r"), OK_CMD_SENT)
+
+
+
+
+
+                                                   ;
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2778, &(interface.engine), OK_CMD_ACK);
+
+
+
+   interface.frm(&interface);
+
+
+
+   gsmProcessTkn_CMockExpectAndReturn(2782, &(interface.engine), ERR_MSG_CLOSE);
+
+   gsmGetCmdRsp_CMockExpectAndReturn(2783, &(interface.engine), rspError);
+
+
+
+   interface.frm(&interface);
+
+   interface.frm(&interface);
+
+
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((ERR_GSM)), (UNITY_INT)(UNITY_UINT8 )((interface.errorOut.errorFrm)), (((void *)0)), (UNITY_UINT)(2788), UNITY_DISPLAY_STYLE_UINT8);
+
+   UnityAssertEqualString((const char*)(("ERROR")), (const char*)((interface.errorOut.errorCmd.cmd)), (((void *)0)), (UNITY_UINT)(2789));
+
+   UnityAssertEqualString((const char*)(("abcde")), (const char*)((interface.errorOut.errorCmd.par)), (((void *)0)), (UNITY_UINT)(2790));
+
+   if ((frmCbackFlag)) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(2791)));};
+
+   UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((IDLE)), (UNITY_INT)(UNITY_UINT8 )((interface.frmState)), (((void *)0)), (UNITY_UINT)(2792), UNITY_DISPLAY_STYLE_UINT8);
 
 
 
