@@ -161,6 +161,7 @@ typedef struct _gsmInterface_t
 
    frmStatus_t frmState;   /* formula-level state */
    procStatus_t procState; /* command-level state */
+   bool cmdSent;           /* command sent flag */
 
    /* Counters */
 

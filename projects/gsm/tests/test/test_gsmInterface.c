@@ -120,6 +120,7 @@ void test_gsmInitInterface(void)
 
    TEST_ASSERT_TRUE(IDLE == interface.frmState);
    TEST_ASSERT_TRUE(NOCMD == interface.procState);
+   TEST_ASSERT_FALSE(interface.cmdSent);
 
    TEST_ASSERT_TRUE(DELAY_PROC == interface.procCnt);
    TEST_ASSERT_TRUE(0 == interface.auxCnt);
@@ -881,7 +882,9 @@ void test_gsmStartUpF(void)
    TEST_ASSERT_EQUAL_UINT8(ATCMD1, interface.procState);
    TEST_ASSERT_EQUAL_UINT8(PROC, interface.frmState);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT\r", strlen("AT\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -893,7 +896,9 @@ void test_gsmStartUpF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CMEE=2\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMEE=2\r", strlen("AT+CMEE=2\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -905,8 +910,10 @@ void test_gsmStartUpF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSCS=\"GSM\"\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSCS=\"GSM\"\r",
+                                       strlen("AT+CSCS=\"GSM\"\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -918,8 +925,9 @@ void test_gsmStartUpF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CMGF=1\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGF=1\r", strlen("AT+CMGF=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -944,7 +952,9 @@ void test_gsmStartUpF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT\r", strlen("AT\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -959,12 +969,7 @@ void test_gsmStartUpF(void)
 
    /* ERROR message after AT\r+echo */
 
-   rsp_t rspTest;
-
-   strncpy(rspTest.cmd, "ERROR", strlen("ERROR"));
-   rspTest.cmd[strlen("ERROR")] = '\0';
-   strncpy(rspTest.par, "abcde", strlen("abcde"));
-   rspTest.par[strlen("abcde")] = '\0';
+   rsp_t rspTest = {"ERROR", "abcde"};
 
    frmCbackFlag = false;
 
@@ -972,7 +977,9 @@ void test_gsmStartUpF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT\r", strlen("AT\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1026,7 +1033,8 @@ void test_gsmExitDataModeF(void)
 
    interface.auxCnt = 0;
 
-   gsm232UartSend_ExpectAndReturn("+++",strlen("+++"),3);
+   gsm232UartSend_ExpectWithArrayAndReturn("+++",strlen("+++"),
+                                           strlen("+++"),3);
 
    interface.frm(&interface); /* Sends +++ and reloads auxCnt */
 
@@ -1082,7 +1090,9 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSQ\r", strlen("AT+CSQ\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1115,7 +1125,9 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSQ\r", strlen("AT+CSQ\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1148,7 +1160,9 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSQ\r", strlen("AT+CSQ\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1181,7 +1195,9 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSQ\r", strlen("AT+CSQ\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1215,7 +1231,9 @@ void test_gsmGetSigQualF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CSQ\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSQ\r", strlen("AT+CSQ\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1274,7 +1292,9 @@ void test_gsmCheckConnF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CREG?\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CREG?\r", strlen("AT+CREG?\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1291,7 +1311,9 @@ void test_gsmCheckConnF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CGATT?\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CGATT?\r", strlen("AT+CGATT?\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1321,7 +1343,9 @@ void test_gsmCheckConnF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),"AT+CREG?\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CREG?\r", strlen("AT+CREG?\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1381,8 +1405,10 @@ void test_gsmSmsSendF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CMGS=\"+5491151751809\"\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGS=\"+5491151751809\"\r",
+                                       strlen("AT+CMGS=\"+5491151751809\"\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1394,8 +1420,8 @@ void test_gsmSmsSendF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "Hola mundo!", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1, "Hola mundo!",
+                                       strlen("Hola mundo!"), OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1437,8 +1463,10 @@ void test_gsmSmsSendF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CMGS=\"+5491151751809\"\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGS=\"+5491151751809\"\r",
+                                       strlen("AT+CMGS=\"+5491151751809\"\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1498,7 +1526,9 @@ void test_gsmSmsReadF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSDH=1\r", strlen("AT+CSDH=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1510,8 +1540,9 @@ void test_gsmSmsReadF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CMGR=1,1\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGR=1,1\r",
+                                       strlen("AT+CMGR=1,1\r"), OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1539,7 +1570,9 @@ void test_gsmSmsReadF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSDH=1\r", strlen("AT+CSDH=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1603,7 +1636,10 @@ void test_gsmSmsListF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSDH=1\r",
+                                       strlen("AT+CSDH=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1615,8 +1651,10 @@ void test_gsmSmsListF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CMGL=\"REC_UNREAD\",1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"REC UNREAD\",1\r",
+                                       strlen("AT+CMGL=\"REC UNREAD\",1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1662,7 +1700,10 @@ void test_gsmSmsListF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CSDH=1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSDH=1\r",
+                                       strlen("AT+CSDH=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1674,8 +1715,10 @@ void test_gsmSmsListF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CMGL=\"REC_UNREAD\",1\r", OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"REC UNREAD\",1\r",
+                                       strlen("AT+CMGL=\"REC UNREAD\",1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1703,6 +1746,110 @@ void test_gsmSmsListF(void)
    TEST_ASSERT_EQUAL_UINT8(ERR_WRAP, interface.errorOut.errorFrm);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSDH=1\r",
+                                       strlen("AT+CSDH=1\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 1);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Tests for other options of starting parameters */
+
+   /* REC_READ */
+
+   smsListPars_t parsTest2 = {REC_READ,NOCHANGE,3};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest2, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.procState = ATCMD2;
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"REC READ\",1\r",
+                                       strlen("AT+CMGL=\"REC READ\",1\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   /* STO_UNSENT */
+
+   smsListPars_t parsTest3 = {STO_UNSENT,NOCHANGE,3};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest3, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.procState = ATCMD2;
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"STO UNSENT\",1\r",
+                                       strlen("AT+CMGL=\"STO UNSENT\",1\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   /* STO_SENT */
+
+   smsListPars_t parsTest4 = {STO_SENT,NOCHANGE,3};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest4, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.procState = ATCMD2;
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"STO SENT\",1\r",
+                                       strlen("AT+CMGL=\"STO SENT\",1\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   /* ALL_MSG */
+
+   smsListPars_t parsTest5 = {ALL_MSG,NOCHANGE,3};
+
+   gsmSmsList(&interface, &listTest[0], &parsTest5, frmCbackTest);
+
+   interface.frm(&interface);
+
+   interface.procState = ATCMD2;
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CMGL=\"ALL\",1\r",
+                                       strlen("AT+CMGL=\"ALL\",1\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   return;
 
 }
 
@@ -1738,8 +1885,8 @@ void test_gsmSmsDelF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CMGD=1,0\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1, "AT+CMGD=1,0\r",
+                                       strlen("AT+CMGD=1,0\r"), OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1753,6 +1900,35 @@ void test_gsmSmsDelF(void)
 
    interface.frm(&interface);
 
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmSmsDel(&interface, &parsTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1, "AT+CMGD=1,0\r",
+                                       strlen("AT+CMGD=1,0\r"), OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -1790,8 +1966,10 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1803,8 +1981,10 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPSHUT\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSHUT\r",
+                                       strlen("AT+CIPSHUT\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1816,8 +1996,10 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPMODE=1\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPMODE=1\r",
+                                       strlen("AT+CIPMODE=1\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1829,9 +2011,12 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CSTT=\"apn\",\"user\",\"password\"\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CSTT=\"apn\",\"user\","
+                                       "\"password\"\r",
+                                       strlen("AT+CSTT=\"apn\",\"user\","
+                                       "\"password\"\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1856,8 +2041,10 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIFSR\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIFSR\r",
+                                       strlen("AT+CIFSR\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1871,6 +2058,52 @@ void test_gsmGprsStartF(void)
 
    interface.frm(&interface);
 
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmGprsStart(&interface, &apnTest, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSHUT\r",
+                                       strlen("AT+CIPSHUT\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -1906,8 +2139,10 @@ void test_gsmGprsStopF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPSHUT\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSHUT\r",
+                                       strlen("AT+CIPSHUT\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1921,6 +2156,37 @@ void test_gsmGprsStopF(void)
 
    interface.frm(&interface);
 
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Error message from modem */
+
+   rsp_t rspError = {"ERROR","abcde"};
+
+   gsmGprsStop(&interface, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSHUT\r",
+                                       strlen("AT+CIPSHUT\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), ERR_MSG_CLOSE);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspError);
+
+   interface.frm(&interface);
+   interface.frm(&interface);
+
+   TEST_ASSERT_EQUAL_UINT8(ERR_GSM, interface.errorOut.errorFrm);
+   TEST_ASSERT_EQUAL_STRING("ERROR", interface.errorOut.errorCmd.cmd);
+   TEST_ASSERT_EQUAL_STRING("abcde", interface.errorOut.errorCmd.par);
    TEST_ASSERT_TRUE(frmCbackFlag);
    TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
 
@@ -1959,8 +2225,10 @@ void test_gsmGprsOpenPortF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine), "AT+CIPCLOSE\r",
-                              OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 
@@ -1972,9 +2240,62 @@ void test_gsmGprsOpenPortF(void)
 
    interface.frm(&interface);
 
-   gsmSendCmd_ExpectAndReturn(&(interface.engine),
-                              "AT+CIPSTART=\"TCP\",\"192.168.0.1\",\"80\"\r",
-                             OK_CMD_SENT);
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSTART=\"TCP\",\"192.168.0.1"
+                                       "\",\"80\"\r",
+                                       strlen("AT+CIPSTART=\"TCP\",\"192.168"
+                                       ".0.1\",\"80\"\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+   gsmGetNoCmdRsp_ExpectAndReturn(&(interface.engine), 2);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest1);
+   gsmGetCmdRsp_ExpectAndReturn(&(interface.engine), rspTest2);
+
+   interface.frm(&interface);
+
+   gsmSetSerialMode_ExpectAndReturn(&(interface.engine), DATA_MODE, true);
+
+   interface.frm(&interface);
+
+   TEST_ASSERT_TRUE(frmCbackFlag);
+   TEST_ASSERT_EQUAL_UINT8(IDLE, interface.frmState);
+
+   /* Testing UDP option */
+
+   socket_t socketTest2 = {UDP, "192.168.0.1", 80};
+
+   gsmGprsOpenPort(&interface, &socketTest2, frmCbackTest);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPCLOSE\r",
+                                       strlen("AT+CIPCLOSE\r"),
+                                       OK_CMD_SENT);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CMD_ACK);
+
+   interface.frm(&interface);
+
+   gsmProcessTkn_ExpectAndReturn(&(interface.engine), OK_CLOSE);
+
+   interface.frm(&interface);
+
+   gsmSendCmd_ExpectWithArrayAndReturn(&(interface.engine), 1,
+                                       "AT+CIPSTART=\"UDP\",\"192.168.0.1"
+                                       "\",\"80\"\r",
+                                       strlen("AT+CIPSTART=\"UDP\",\"192.168"
+                                       ".0.1\",\"80\"\r"),
+                                       OK_CMD_SENT);
 
    interface.frm(&interface);
 

@@ -7,112 +7,112 @@
   :line: 94
   :message: ''
 - :test: test_gsmStartUp
-  :line: 142
+  :line: 143
   :message: ''
 - :test: test_gsmExitDataMode
-  :line: 169
+  :line: 170
   :message: ''
 - :test: test_gsmSysTickHandler
-  :line: 193
+  :line: 194
   :message: ''
 - :test: test_gsmProcess
-  :line: 240
+  :line: 241
   :message: ''
 - :test: test_gsmIsIdle
-  :line: 315
+  :line: 316
   :message: ''
 - :test: test_gsmGetSigQual
-  :line: 346
+  :line: 347
   :message: ''
 - :test: test_gsmCheckConn
-  :line: 372
+  :line: 373
   :message: ''
 - :test: test_gsmReadUrc
-  :line: 398
+  :line: 399
   :message: ''
 - :test: test_gsmSetUrcMode
-  :line: 452
+  :line: 453
   :message: ''
 - :test: test_gsmSetUrcCback
-  :line: 478
+  :line: 479
   :message: ''
 - :test: test_gsmSetDataCback
-  :line: 500
+  :line: 501
   :message: ''
 - :test: test_gsmCheckDataMode
-  :line: 522
+  :line: 523
   :message: ''
 - :test: test_gsmSmsSend
-  :line: 578
+  :line: 579
   :message: ''
 - :test: test_gsmSmsRead
-  :line: 606
+  :line: 607
   :message: ''
 - :test: test_gsmSmsList
-  :line: 634
+  :line: 635
   :message: ''
 - :test: test_gsmSmsDel
-  :line: 662
+  :line: 663
   :message: ''
 - :test: test_gsmGprsStart
-  :line: 688
+  :line: 689
   :message: ''
 - :test: test_gsmGprsStop
-  :line: 714
+  :line: 715
   :message: ''
 - :test: test_gsmGprsOpenPort
-  :line: 738
+  :line: 739
   :message: ''
 - :test: test_gsmGprsClosePort
-  :line: 764
+  :line: 765
   :message: ''
 - :test: test_gsmGnssPwr
-  :line: 788
+  :line: 789
   :message: ''
 - :test: test_gsmGnssGetData
-  :line: 814
+  :line: 815
   :message: ''
 - :test: test_gsmStartUpF
-  :line: 846
+  :line: 847
   :message: ''
 - :test: test_gsmExitDataModeF
-  :line: 999
+  :line: 1006
   :message: ''
 - :test: test_gsmGetSigQualF
-  :line: 1054
+  :line: 1062
   :message: ''
 - :test: test_gsmCheckConnF
-  :line: 1244
+  :line: 1262
   :message: ''
 - :test: test_gsmSmsSendF
-  :line: 1350
+  :line: 1374
   :message: ''
 - :test: test_gsmSmsReadF
-  :line: 1467
+  :line: 1495
   :message: ''
 - :test: test_gsmSmsListF
-  :line: 1568
+  :line: 1601
   :message: ''
 - :test: test_gsmSmsDelF
-  :line: 1709
+  :line: 1807
   :message: ''
 - :test: test_gsmGprsStartF
-  :line: 1761
+  :line: 1859
   :message: ''
 - :test: test_gsmGprsStopF
-  :line: 1879
+  :line: 1977
   :message: ''
 - :test: test_gsmGprsOpenPortF
-  :line: 1929
+  :line: 2027
   :message: ''
 - :test: test_gsmGprsClosePortF
-  :line: 2001
+  :line: 2099
   :message: ''
 - :test: test_gsmGnssPwrF
-  :line: 2053
+  :line: 2151
   :message: ''
 - :test: test_gsmGnssGetDataF
-  :line: 2132
+  :line: 2230
   :message: ''
 :failures: []
 :ignores: []
@@ -122,4 +122,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.002542168
+:time: 0.002975551

@@ -6,15 +6,24 @@
 - :test: test_gsmCmdSearch
   :line: 46
   :message: ''
+- :test: test_gsmGetCmdSucRsp
+  :line: 90
+  :message: ''
+- :test: test_gsmGetCmdErrRsp
+  :line: 126
+  :message: ''
+- :test: test_gsmGetCmdTimeout
+  :line: 156
+  :message: ''
 - :test: test_gsmUrcSearch
-  :line: 78
+  :line: 192
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 2
-  :passed: 2
+  :total: 5
+  :passed: 5
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.003595369
+:time: 0.002403676

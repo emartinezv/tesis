@@ -986,30 +986,35 @@ static void gsmSmsListF (gsmInterface_t * interface)
             case REC_UNREAD:
 
                strncpy(auxStr,"\"REC UNREAD\"",strlen("\"REC UNREAD\""));
+               auxStr[strlen("\"REC UNREAD\"")] = '\0';
 
                break;
 
             case REC_READ:
 
                strncpy(auxStr,"\"REC READ\"",strlen("\"REC READ\""));
+               auxStr[strlen("\"REC READ\"")] = '\0';
 
                break;
 
             case STO_UNSENT:
 
                strncpy(auxStr,"\"STO UNSENT\"",strlen("\"STO UNSENT\""));
+               auxStr[strlen("\"STO UNSENT\"")] = '\0';
 
                break;
 
             case STO_SENT:
 
                strncpy(auxStr,"\"STO SENT\"",strlen("\"STO SENT\""));
+               auxStr[strlen("\"STO SENT\"")] = '\0';
 
                break;
 
             case ALL_MSG:
 
                strncpy(auxStr,"\"ALL\"",strlen("\"ALL\""));
+               auxStr[strlen("\"ALL\"")] = '\0';
 
                break;
 
@@ -1750,6 +1755,7 @@ static void gsmFrmInit (gsmInterface_t * interface)
 
    interface->procState = ATCMD1;
    interface->frmState = PROC;
+   interface->cmdSent = false;
 
    return;
 }
@@ -1758,16 +1764,15 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
                              uint8_t const * const cmd, procStatus_t nextState)
 {
    fsmEvent_t result;
-   static Bool firstCall = TRUE; /* Is this the first call to the function? */
 
    /* If this is the first call of the function for the current cmd we send
     * the str through the serial port; otherwise we pick up and process the
     * response tokens.
     */
 
-   if(firstCall){
+   if(! interface->cmdSent){
       result = gsmSendCmd(&(interface->engine), cmd);
-      firstCall = FALSE;
+      interface->cmdSent = TRUE;
    }
    else{result = gsmProcessTkn(&(interface->engine));}
 
@@ -1777,14 +1782,14 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
       /* If the cmd was acknowledged we progress to nextState*/
       else if(OK_CMD_ACK == result){
          interface-> procState = nextState;
-         firstCall = TRUE;
+         interface->cmdSent = FALSE;
       }
 
       /* If we received an echo error we go to WRAP directly */
       else{
          interface->errorOut.errorFrm = ERR_PROC;
          interface->frmState = WRAP;
-         firstCall = TRUE;
+         interface->cmdSent = FALSE;
          debug(">>>interf<<< Echo error");
       }
    }
@@ -1877,6 +1882,7 @@ bool gsmInitInterface(gsmInterface_t * interface)
 
    interface->frmState = IDLE;
    interface->procState = NOCMD;
+   interface->cmdSent = false;
 
    interface->procCnt = DELAY_PROC;
    interface->auxCnt = 0;
