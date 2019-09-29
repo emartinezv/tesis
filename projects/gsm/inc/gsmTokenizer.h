@@ -56,9 +56,7 @@ extern "C" {
 
 /** @brief Max size of an AT token command part */
 
-#define TKN_CMD_SIZE 20  /* Max size is based on all the commands of the SIM808
-                            (largest are 11 chars), plus an extra for any
-                            future expansions */
+#define TKN_CMD_SIZE 16  /* V.250 states 16 chars as the maximum cmd length */
 
 /** @brief Max size of an AT token parameter part */
 
@@ -115,12 +113,12 @@ uint16_t gsmNoChTokenizer(void);
  *         ring buffer
  *
  *  @param tknVlRb : Pointer to the output token VL ring buffer
- *  @param nch     : Number of characters in input buffer
+ *  @param nCh     : Number of characters in input buffer
  *  @param buffer  : Pointer to input buffer
  *
  */
 
-void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
+void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nCh,
                    uint8_t const * const buffer);
 
 /*==================[cplusplus]=============================================*/

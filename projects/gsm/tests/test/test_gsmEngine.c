@@ -383,10 +383,8 @@ void test_gsmProcessTkn(void)
    /* Mocks */
 
    gsmTermUartSend_IgnoreAndReturn(0);
-   VLRingBuffer_Insert_IgnoreAndReturn(0);
+   VLRingBuffer_Insert_IgnoreAndReturn(0  );
    VLRingBuffer_Flush_Ignore();
-
-   //gsm232UartSend_Ignore();
 
    VLRingBuffer_IsFull_StubWithCallback(VLRingBuffer_IsFull_Callback);
    gsmNoChTokenizer_StubWithCallback(gsmNoChTokenizer_Callback);

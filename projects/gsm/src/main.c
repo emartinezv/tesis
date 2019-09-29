@@ -56,7 +56,7 @@ static void pausems(uint32_t t);
 
 void * cb (errorUser_t, void *);
 
-void * cbempty (errorUser_t, void *);
+void * cbEmpty (errorUser_t, void *);
 
 void * cbgsmgprs (errorUser_t, void *);
 
@@ -93,118 +93,97 @@ static void pausems(uint32_t t)
 }
 
 /*---------------------------------------------------------------------------*/
-/*                             Callback functions                            */
+/*                            Auxiliary functions                            */
 /*---------------------------------------------------------------------------*/
 
-void * cbempty (errorUser_t error_in, void * input)
+static bool errorCheck (errorUser_t * error)
 {
-   dbgPrint("Funcion cbempty ejecutada\r\n");
+   if(OK != error->errorFrm){
 
-   if(OK != error_in.errorFrm){
-      dbgPrint("Error en la ejecucion de formula: ");
-
-      switch(error_in.errorFrm){
+      switch(error->errorFrm){
 
          case ERR_INIT:
 
-            dbgPrint("Error en inicializacion\r\n");
+            dbgPrint("\r\nINIT Error\r\n");
 
             break;
 
          case ERR_PROC:
 
-            dbgPrint("Error en proceso\r\n");
+            dbgPrint("\r\nPROC Error\r\n");
 
             break;
 
          case ERR_GSM:
 
-            dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.errorCmd.cmd);
+            dbgPrint("\r\nGPRS modem Error: ");
+            dbgPrint(error->errorCmd.cmd);
             dbgPrint("(");
-            dbgPrint(error_in.errorCmd.par);
-            dbgPrint(") ---\r\n");
+            dbgPrint(error->errorCmd.par);
+            dbgPrint(")\r\n");
 
             break;
 
          case ERR_WRAP:
 
-            dbgPrint("Error en cierre\r\n");
+            dbgPrint("\r\nWRAP Error\r\n");
 
             break;
 
          default:
 
-            dbgPrint("Error no reconocido\r\n");
+            dbgPrint("\r\nEUnknown Error\r\n");
 
             break;
 
       }
 
+   return true;
+
    }
+
+   return false;
+}
+
+/*---------------------------------------------------------------------------*/
+/*                             Callback functions                            */
+/*---------------------------------------------------------------------------*/
+
+void * cbEmpty (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbEmpty\r\n");
+
+   errorCheck(&error_in);
+
+   dbgPrint("\r\nFunción ");
+   dbgPrint((char *)input);
+   dbgPrint(" ejecutada\r\n");
 
    return 0;
 }
 
-void * cbled (errorUser_t error_in, void * input)
+void * cbLed (errorUser_t error_in, void * input)
 {
-   if(OK != error_in.errorFrm){
-      dbgPrint("Error en la ejecucion de formula: ");
+   dbgPrint("\r\ncbLed\r\n");
 
-      switch(error_in.errorFrm){
+   if(false == errorCheck(&error_in)){
 
-         case ERR_INIT:
+      dbgPrint("Updating LEDs...\r\n");
 
-            dbgPrint("Error en inicializacion\r\n");
+      uint8_t i = 0;
+      smsRec_t * target = (smsRec_t *)input;
 
-            break;
+      for(i = 0; (target+i)->meta[0] != '\0'; i++){
 
-         case ERR_PROC:
+         if(0 != strstr((target+i)->text,"greenledon")){
+            Board_LED_Set(LED_VERDE,1);
+            dbgPrint("Turning on LED...\r\n");
+         }
+         if(0 != strstr((target+i)->text,"greenledoff")){
+            Board_LED_Set(LED_VERDE,0);
+            dbgPrint("Turning off LED...\r\n");
+         }
 
-            dbgPrint("Error en proceso\r\n");
-
-            break;
-
-         case ERR_GSM:
-
-            dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.errorCmd.cmd);
-            dbgPrint("(");
-            dbgPrint(error_in.errorCmd.par);
-            dbgPrint(") ---\r\n");
-
-            break;
-
-         case ERR_WRAP:
-
-            dbgPrint("Error en cierre\r\n");
-
-            break;
-
-         default:
-
-            dbgPrint("Error no reconocido\r\n");
-
-            break;
-
-      }
-
-   }
-
-   dbgPrint("Actualizando LEDs...\r\n");
-
-   uint8_t i = 0;
-   smsRec_t * target = (smsRec_t *)input;
-
-   for(i = 0; (target+i)->meta[0] != '\0'; i++){
-
-      if(0 != strstr((target+i)->text,"ledverdeon")){
-         Board_LED_Set(LED_VERDE,1);
-         dbgPrint("Enciendo LED...\r\n");
-      }
-      if(0 != strstr((target+i)->text,"ledverdeoff")){
-         Board_LED_Set(LED_VERDE,0);
-         dbgPrint("Apago LED...\r\n");
       }
 
    }
@@ -212,54 +191,31 @@ void * cbled (errorUser_t error_in, void * input)
    return;
 }
 
-void * cbprint (errorUser_t error_in, void * input)
+void * cbSmsSend (errorUser_t error_in, void * input)
 {
-   if(OK != error_in.errorFrm){
-      dbgPrint("Error en la ejecucion de formula: ");
+   dbgPrint("\r\ncbSmsSend\r\n");
 
-      switch(error_in.errorFrm){
+   if(false == errorCheck(&error_in)){
 
-         case ERR_INIT:
+      uint8_t auxStr[4]; /* used to print out sent SMS confirmation number */
 
-            dbgPrint("Error en inicializacion\r\n");
-
-            break;
-
-         case ERR_PROC:
-
-            dbgPrint("Error en proceso\r\n");
-
-            break;
-
-         case ERR_GSM:
-
-            dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.errorCmd.cmd);
-            dbgPrint("(");
-            dbgPrint(error_in.errorCmd.par);
-            dbgPrint(") ---\r\n");
-
-            break;
-
-         case ERR_WRAP:
-
-            dbgPrint("Error en cierre\r\n");
-
-            break;
-
-         default:
-
-            dbgPrint("Error no reconocido\r\n");
-
-            break;
-
-      }
+      dbgPrint("\r\nSMS sent. MR value ");
+      itoa(((smsConf_t *)input)->mr, auxStr, 10);
+      dbgPrint(auxStr);
+      dbgPrint("\r\n");
 
    }
 
-   else{
+   return;
+}
 
-      dbgPrint("Imprimiendo SMS...\r\n\r\n");
+void * cbSmsPrint (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbSmsPrint\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      dbgPrint("\r\nPrinting SMSs...\r\n");
 
       uint8_t i = 0;
       smsRec_t * target = ((smsListRet_t *)input)->msgs;
@@ -267,63 +223,68 @@ void * cbprint (errorUser_t error_in, void * input)
 
       uint8_t auxtext[5];
 
-      dbgPrint("Nro de mensajes: ");
+      dbgPrint("\r\nNo. of messages: ");
       itoa(noMsg, auxtext, 10);
       dbgPrint(auxtext);
-      dbgPrint("\r\n");
+      dbgPrint("\r\n\r\n");
 
       for(i = 0; i < noMsg; i++){
 
          dbgPrint((target+i)->text);
-         dbgPrint("\r\n");
+         dbgPrint("\r\n\r\n");
 
       }
-
-      dbgPrint("\r\nFin de los mensajes\r\n");
 
    }
 
    return;
 }
 
-void * cbgsmgprs (errorUser_t error_in, void * input)
+void * cbSmsDel (errorUser_t error_in, void * input)
 {
-   if(OK != error_in.errorFrm){
-      dbgPrint("Error en la ejecucion de formula: ");
+   dbgPrint("\r\ncbSmsDel\r\n");
 
-      switch(error_in.errorFrm){
+   if(false == errorCheck(&error_in)){
 
-         case ERR_INIT:
+      switch(((smsDelPars_t *)input)->mode){
 
-            dbgPrint("Error en inicializacion\r\n");
+         case INDEX:
 
-            break;
+            ;
+            uint8_t auxStr[4]; /* used to print out deleted SMS index */
 
-         case ERR_PROC:
-
-            dbgPrint("Error en proceso\r\n");
-
-            break;
-
-         case ERR_GSM:
-
-            dbgPrint("Error del engine GSM --- ");
-            dbgPrint(error_in.errorCmd.cmd);
-            dbgPrint("(");
-            dbgPrint(error_in.errorCmd.par);
-            dbgPrint(") ---\r\n");
+            dbgPrint("\r\nSMS index no. ");
+            itoa(((smsDelPars_t *)input)->idx, auxStr, 10);
+            dbgPrint(auxStr);
+            dbgPrint(" deleted\r\n");
 
             break;
 
-         case ERR_WRAP:
+         case READ:
 
-            dbgPrint("Error en cierre\r\n");
+            dbgPrint("\r\nAll read SMSs deleted\r\n");
+
+            break;
+
+         case READ_SENT:
+
+            dbgPrint("\r\nAll read SMSs and sent SMSs deleted\r\n");
+
+            break;
+
+         case READ_SENT_UNSENT:
+
+            dbgPrint("\r\nAll read SMSs, sent and unsent SMSs deleted\r\n");
+
+            break;
+
+         case DEL_ALL:
+
+            dbgPrint("\r\nAll SMSs deleted\r\n");
 
             break;
 
          default:
-
-            dbgPrint("Error no reconocido\r\n");
 
             break;
 
@@ -331,21 +292,33 @@ void * cbgsmgprs (errorUser_t error_in, void * input)
 
    }
 
-   else{
+   return;
+}
 
-      if(true == ((connStatus_t *)input)->gsm){
-         dbgPrint("\r\n Conectado a red GSM\r\n");
+void * cbGprsOpenPort (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbGprsOpenPort\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      dbgPrint("\r\nConnection established through ");
+
+      if(TCP == ((socket_t *)input)->type){
+         dbgPrint("TCP ");
       }
       else{
-         dbgPrint("\r\n No conectado a red GSM\r\n");
+         dbgPrint("UDP ");
       }
 
-      if(true == ((connStatus_t *)input)->gprs){
-         dbgPrint("\r\n Conectado a servicio GPRS\r\n");
-      }
-      else{
-         dbgPrint("\r\n No conectado a servicio GPRS\r\n");
-      }
+      dbgPrint("protocol to IP ");
+      dbgPrint(((socket_t *)input)->address);
+      dbgPrint(" at port ");
+
+      uint8_t auxStr[6]; /* used to print out port number */
+
+      itoa(((socket_t *)input)->port, auxStr, 10);
+      dbgPrint(auxStr);
+      dbgPrint("\r\n");
 
    }
 
@@ -354,12 +327,15 @@ void * cbgsmgprs (errorUser_t error_in, void * input)
 
 void cbUrc (uint8_t const * const cmd, uint8_t const * const par)
 {
-   dbgPrint("\r\nURC received!\r\n");
-   dbgPrint("CMD: ");
+   dbgPrint("\r\ncbUrc\r\n");
+
+   dbgPrint("\r\nURC received\r\n");
+   dbgPrint("\r\nCMD: ");
    dbgPrint(cmd);
-   dbgPrint(" PAR: ");
+   dbgPrint("\r\n");
+   dbgPrint("\r\nPAR: ");
    dbgPrint(par);
-   dbgPrint("\r\n\r\n");
+   dbgPrint("\r\n");
 
    return;
 }
@@ -388,7 +364,7 @@ void cbData (gsmInterface_t * interface)
    /* If we type an uppercase X, call the gsmExitDataMode function */
 
    if(strstr(usbReadBuf,"X")){
-      gsmExitDataMode(interface, cbempty);
+      gsmExitDataMode(interface, cbEmpty);
    }
 
    /* Write USB UART data to serial port and read from serial port */
@@ -407,6 +383,91 @@ void cbData (gsmInterface_t * interface)
    return;
 }
 
+void * cbGnssOnOff (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbGnssOnOff\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      if(ON == *(pwrGnss_t *)input){
+
+         dbgPrint("\r\nGPS/GNSS on\r\n");
+
+      }
+
+      else{
+
+         dbgPrint("\r\nGPS/GNSS off\r\n");
+
+      }
+
+   }
+
+   return;
+}
+
+void * cbGnssData (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbGnssData\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      dbgPrint("\r\nNAVINFO: ");
+      dbgPrint(((dataGnss_t *)input)->data);
+      dbgPrint("\r\n");
+
+   }
+
+   return;
+}
+
+void * cbSigQual (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbSigQual\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      uint8_t auxStr[4]; /* used to print out RSSI and BER */
+
+      dbgPrint("\r\nRSSI: ");
+      itoa(((sigQual_t *)input)->rssi, auxStr, 10);
+      dbgPrint(auxStr);
+      dbgPrint("\r\n");
+      dbgPrint("\r\nBER: ");
+      itoa(((sigQual_t *)input)->ber, auxStr, 10);
+      dbgPrint(auxStr);
+      dbgPrint("\r\n");
+
+   }
+
+   return 0;
+}
+
+void * cbCheckConn (errorUser_t error_in, void * input)
+{
+   dbgPrint("\r\ncbCheckConn\r\n");
+
+   if(false == errorCheck(&error_in)){
+
+      if(true == ((connStatus_t *)input)->gsm){
+         dbgPrint("\r\nConnected to GSM network\r\n");
+      }
+      else{
+         dbgPrint("\r\nNot connected to GSM network\r\n");
+      }
+
+      if(true == ((connStatus_t *)input)->gprs){
+         dbgPrint("\r\nConnected to GPRS service\r\n");
+      }
+      else{
+         dbgPrint("\r\nNot connected to GPRS service\r\n");
+      }
+
+   }
+
+   return;
+}
+
 /*---------------------------------------------------------------------------*/
 /*                         Testing console functions                         */
 /*---------------------------------------------------------------------------*/
@@ -415,7 +476,7 @@ void console_sms (gsmInterface_t * interface)
 {
    uint8_t instruction = 0;
 
-   smsOut_t msg = {"1151751809","Hola mundo!"};
+   smsOut_t msg = {"1151751809","Hello world!"};
    smsConf_t conf;
    smsRec_t msgList[SMS_READ_SIZ];
    smsDelPars_t msgDel = {1, DEL_ALL};
@@ -427,42 +488,46 @@ void console_sms (gsmInterface_t * interface)
 
       if(gsmIsIdle(interface)){
 
-         dbgPrint("\r\n\r\n>>> CONSOLA SMS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> SMS CONSOLE <<< \r\n\r\n");
 
-         dbgPrint("1) Mandar SMS \r\n");
-         dbgPrint("2) Leer todos los SMSs \r\n");
-         dbgPrint("3) Borrar todos los SMSs \r\n");
-         dbgPrint("4) Leer el primer SMS \r\n\r\n");
+         dbgPrint("1) Send SMS \r\n");
+         dbgPrint("2) Read all SMSs \r\n");
+         dbgPrint("3) Erase all SMSs \r\n");
+         dbgPrint("4) Read oldest SMS \r\n\r\n");
 
-         dbgPrint("S) Salir a la consola principal \r\n");
+         dbgPrint("S) Return to main console \r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
             gsmProcess(interface);
          }
 
+         dbgPrint("\r\n");
+         uartSend(CIAA_UART_USB, &instruction, 1);
+         dbgPrint("\r\n");
+
          switch (instruction) {
 
             case '1':
 
-            gsmSmsSend(interface, &msg, &conf, cbempty);
+            gsmSmsSend(interface, &msg, &conf, cbSmsSend);
 
             break;
 
             case '2':
 
-            gsmSmsList(interface, &msgList[0], &parList, cbprint);
+            gsmSmsList(interface, &msgList[0], &parList, cbSmsPrint);
 
             break;
 
             case '3':
 
-            gsmSmsDel(interface, &msgDel, cbempty);
+            gsmSmsDel(interface, &msgDel, cbSmsDel);
 
             break;
 
             case '4':
 
-            gsmSmsRead(interface, &recMsg, &parRead, cbprint);
+            gsmSmsRead(interface, &recMsg, &parRead, cbSmsPrint);
 
             break;
 
@@ -472,7 +537,7 @@ void console_sms (gsmInterface_t * interface)
 
             default:
 
-            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            dbgPrint("\r\nUnknown instruction \r\n\r\n");
             break;
 
          }
@@ -501,49 +566,53 @@ void console_gprs (gsmInterface_t * interface)
 
       if(gsmIsIdle(interface)){
 
-         dbgPrint("\r\n\r\n>>> CONSOLA GPRS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> GPRS CONSOLE <<< \r\n\r\n");
 
-         dbgPrint("1) Prender GPRS \r\n");
-         dbgPrint("2) Abrir puerto TCP \r\n");
-         dbgPrint("3) Abrir puerto UDP \r\n");
-         dbgPrint("4) Cerrar puerto TCP o UDP \r\n");
-         dbgPrint("5) Apagar GPRS \r\n\r\n");
+         dbgPrint("1) Turn on GPRS \r\n");
+         dbgPrint("2) Open TCP port \r\n");
+         dbgPrint("3) Open UDP port \r\n");
+         dbgPrint("4) Close UDP or TCP port \r\n");
+         dbgPrint("5) Turn off GPRS \r\n\r\n");
 
-         dbgPrint("S) Salir a la consola principal \r\n");
+         dbgPrint("S) Return to main console \r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
             gsmProcess(interface);
          }
 
+         dbgPrint("\r\n");
+         uartSend(CIAA_UART_USB, &instruction, 1);
+         dbgPrint("\r\n");
+
          switch (instruction) {
 
             case '1':
 
-            gsmGprsStart(interface, &APN, cbempty);
+            gsmGprsStart(interface, &APN, cbEmpty);
 
             break;
 
             case '2':
 
-            gsmGprsOpenPort(interface, &port1, cbempty);
+            gsmGprsOpenPort(interface, &port1, cbGprsOpenPort);
 
             break;
 
             case '3':
 
-            gsmGprsOpenPort(interface, &port2, cbempty);
+            gsmGprsOpenPort(interface, &port2, cbGprsOpenPort);
 
             break;
 
             case '4':
 
-            gsmGprsClosePort(interface, cbempty);
+            gsmGprsClosePort(interface, cbEmpty);
 
             break;
 
             case '5':
 
-            gsmGprsStop(interface, cbempty);
+            gsmGprsStop(interface, cbEmpty);
 
             break;
 
@@ -553,7 +622,7 @@ void console_gprs (gsmInterface_t * interface)
 
             default:
 
-            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            dbgPrint("\r\nUnknown instruction \r\n\r\n");
             break;
 
          }
@@ -588,17 +657,21 @@ void console_gnss (gsmInterface_t * interface)
 
       if(gsmIsIdle(interface)){
 
-         dbgPrint("\r\n\r\n>>> CONSOLA GNSS <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> GPS/GNSS CONSOLE <<< \r\n\r\n");
 
-         dbgPrint("1) Prender GNSS \r\n");
-         dbgPrint("2) Apagar GNSS \r\n");
-         dbgPrint("3) Obtener informacion de navegacion GNSS \r\n\r\n");
+         dbgPrint("1) Turn on GPS/GNSS \r\n");
+         dbgPrint("2) Turn off GPS/GNSS \r\n");
+         dbgPrint("3) Get GPS/GNSS navigation information \r\n\r\n");
 
-         dbgPrint("S) Salir a la consola principal \r\n");
+         dbgPrint("S) Return to main console\r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
             gsmProcess(interface);
          }
+
+         dbgPrint("\r\n");
+         uartSend(CIAA_UART_USB, &instruction, 1);
+         dbgPrint("\r\n");
 
          switch (instruction) {
 
@@ -606,7 +679,7 @@ void console_gnss (gsmInterface_t * interface)
 
             powerGNSS = ON;
 
-            gsmGnssPwr(interface, &powerGNSS, cbempty);
+            gsmGnssPwr(interface, &powerGNSS, cbGnssOnOff);
 
             break;
 
@@ -614,13 +687,13 @@ void console_gnss (gsmInterface_t * interface)
 
             powerGNSS = OFF;
 
-            gsmGnssPwr(interface, &powerGNSS, cbempty);
+            gsmGnssPwr(interface, &powerGNSS, cbGnssOnOff);
 
             break;
 
             case '3':
 
-            gsmGnssGetData(interface, &navInfo, cbempty);
+            gsmGnssGetData(interface, &navInfo, cbGnssData);
 
             break;
 
@@ -630,7 +703,7 @@ void console_gnss (gsmInterface_t * interface)
 
             default:
 
-            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            dbgPrint("\r\nUnknown instruction \r\n\r\n");
             break;
 
          }
@@ -656,17 +729,21 @@ void console_urc (gsmInterface_t * interface)
 
       if(gsmIsIdle(interface)){
 
-         dbgPrint("\r\n\r\n>>> CONSOLA URC <<< \r\n\r\n");
+         dbgPrint("\r\n\r\n>>> URC CONSOLE <<< \r\n\r\n");
 
-         dbgPrint("1) Leer URC mas reciente\r\n");
-         dbgPrint("2) Poner URC handling en modo callback\r\n");
-         dbgPrint("3) Poner URC handling en modo manual\r\n\r\n");
+         dbgPrint("1) Read oldest URC\r\n");
+         dbgPrint("2) Set URC handling mode to callback\r\n");
+         dbgPrint("3) Set URC handling mode to manual\r\n\r\n");
 
-         dbgPrint("S) Salir a la consola principal \r\n");
+         dbgPrint("S) Return to main console \r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){
             gsmProcess(interface);
          }
+
+         dbgPrint("\r\n");
+         uartSend(CIAA_UART_USB, &instruction, 1);
+         dbgPrint("\r\n");
 
          switch (instruction) {
 
@@ -683,7 +760,7 @@ void console_urc (gsmInterface_t * interface)
             }
 
             else{
-               dbgPrint("\r\nNo hay URCs pendientes\r\n");
+               dbgPrint("\r\nNo pending URCs\r\n");
             }
 
             break;
@@ -706,7 +783,7 @@ void console_urc (gsmInterface_t * interface)
 
             default:
 
-            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
+            dbgPrint("\r\nUnknown instruction \r\n\r\n");
             break;
 
          }
@@ -749,29 +826,33 @@ int main(void)
    gsmSetUrcCback(&interface, cbUrc);
    gsmSetDataCback(&interface, cbData);
 
-   gsmStartUp(&interface, cbempty);
+   gsmStartUp(&interface, cbEmpty);
 
    while(!gsmIsIdle(&interface)){
       gsmProcess(&interface);
    }
 
-   dbgPrint("\r\n>>> INICIALIZANDO MODEM CELULAR <<< \r\n\r\n");
+   dbgPrint("\r\n>>> INITIALIZING... <<< \r\n\r\n");
 
    while (1){
 
       if(gsmIsIdle(&interface)){
 
-         dbgPrint("\r\n>>> CONSOLA PRINCIPAL <<< \r\n\r\n");
+         dbgPrint("\r\n>>> MAIN CONSOLE <<< \r\n\r\n");
 
-         dbgPrint("1) CONSOLA SMS \r\n");
-         dbgPrint("2) CONSOLA GPRS \r\n");
-         dbgPrint("3) CONSOLA GNSS \r\n");
-         dbgPrint("4) CONSOLA URC \r\n\r\n");
+         dbgPrint("1) SMS CONSOLE \r\n");
+         dbgPrint("2) GPRS CONSOLE \r\n");
+         dbgPrint("3) GPS/GNSS CONSOLE \r\n");
+         dbgPrint("4) URC CONSOLE \r\n\r\n");
 
-         dbgPrint("5) Ver calidad de señal \r\n");
-         dbgPrint("6) Estado red GSM y GPRS \r\n\r\n");
+         dbgPrint("5) Get signal quality levels\r\n");
+         dbgPrint("6) Get GSM & GPRS network status\r\n\r\n");
 
          while(0 == uartRecv(CIAA_UART_USB, &instruction, 1)){;}
+
+         dbgPrint("\r\n");
+         uartSend(CIAA_UART_USB, &instruction, 1);
+         dbgPrint("\r\n");
 
          switch (instruction) {
 
@@ -801,20 +882,19 @@ int main(void)
 
             case '5':
 
-            gsmGetSigQual (&interface, &sigqual, cbempty);
+            gsmGetSigQual(&interface, &sigqual, cbSigQual);
 
             break;
 
             case '6':
 
-            gsmCheckConn(&interface, &status, cbgsmgprs);
+            gsmCheckConn(&interface, &status, cbCheckConn);
 
             break;
 
             default:
 
-            dbgPrint("INSTRUCCION DESCONOCIDA \r\n\r\n");
-
+            dbgPrint("\r\nUnknown instruction \r\n\r\n");
             break;
 
          }

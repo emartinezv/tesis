@@ -384,7 +384,7 @@ static void gsmStartUpF (gsmInterface_t * interface)
             }
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, "gsmStartUp");
          interface->frmState = IDLE;
 
          break;
@@ -1209,7 +1209,7 @@ static void gsmSmsDelF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, interface->frmInput);
          interface->frmState = IDLE;
          break;
    }
@@ -1268,6 +1268,12 @@ static void gsmGprsStartF (gsmInterface_t * interface)
             case ATCMD1RESP:
 
                gsmFrmProcRspsGetFinal(interface, ATCMD2, FALSE, ATCMD2, FALSE);
+
+               /* AT+CIPCLOSE is called just in case a TCP or UDP port is open,
+                  so it may give an error response in many cases. We dismiss
+                  this error. */
+
+               interface->errorOut.errorFrm = OK;
 
                break;
 
@@ -1346,7 +1352,7 @@ static void gsmGprsStartF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, "gsmGprsStart");
          interface->frmState = IDLE;
 
          break;
@@ -1398,7 +1404,7 @@ static void gsmGprsStopF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, "gsmGprsStop");
          interface->frmState = IDLE;
 
          break;
@@ -1534,7 +1540,7 @@ static void gsmGprsOpenPortF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, interface->frmInput);
          interface->frmState = IDLE;
 
          break;
@@ -1596,7 +1602,7 @@ static void gsmGprsClosePortF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, "gsmGprsClosePort");
          interface->frmState = IDLE;
 
          break;
@@ -1664,7 +1670,7 @@ static void gsmGnssPwrF (gsmInterface_t * interface)
 
          }
 
-         interface->frmCback(interface->errorOut, 0);
+         interface->frmCback(interface->errorOut, interface->frmInput);
          interface->frmState = IDLE;
 
          break;
@@ -1765,7 +1771,8 @@ static void gsmFrmInit (gsmInterface_t * interface)
 }
 
 static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
-                             uint8_t const * const cmd, procStatus_t nextState)
+                                    uint8_t const * const cmd,
+                                    procStatus_t nextState)
 {
    fsmEvent_t result;
 
@@ -1802,8 +1809,10 @@ static void gsmFrmSendCmdCheckEcho (gsmInterface_t * interface,
 }
 
 static void gsmFrmProcRspsGetFinal (gsmInterface_t * interface,
-                             procStatus_t closingState, Bool closingWrap,
-                             procStatus_t errorState, Bool errorWrap)
+                                    procStatus_t closingState,
+                                    Bool closingWrap,
+                                    procStatus_t errorState,
+                                    Bool errorWrap)
 {
    fsmEvent_t result;
 
@@ -2059,7 +2068,7 @@ bool gsmSetDataCback (gsmInterface_t * interface, frm_t cback)
 
 uint8_t gsmCheckDataMode (gsmInterface_t * interface,
                           uint8_t const * const buf,
-                          uint8_t const * const nch){
+                          uint8_t const * const nCh){
 
    uint8_t ch = '\0';               /* character just read */
    static uint8_t pCh = '\0';       /* previous character read */
@@ -2077,7 +2086,7 @@ uint8_t gsmCheckDataMode (gsmInterface_t * interface,
 
    /* Start cycling through the characters in the buffer */
 
-   for(i = 0; i < *nch; i++){
+   for(i = 0; i < *nCh; i++){
 
       pCh = ch;
       ch = buf[i];

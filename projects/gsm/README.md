@@ -1,8 +1,8 @@
 # gsm
 
-Library for the interfacing of GSM modems to the CIAA platform. 
+Library for the interfacing of GSM modems to the CIAA platform. Based on Workspace by Pablo Ridolfi.
 
-Based on SIMCOM's SIM808 module and the EDU-CIAA-NXP board, though implementation remains generic in most aspects.
+Designed for SIMCOM's SIM808 module and the EDU-CIAA-NXP board, though implementation remains generic in most aspects.
 
 ## General description
 

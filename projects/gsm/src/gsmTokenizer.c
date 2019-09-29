@@ -103,7 +103,7 @@ uint16_t gsmNoChTokenizer(void)
  *
  */
 
-void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
+void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nCh,
                    uint8_t const * const buffer)
 {
    /* State-machine variables and flags */
@@ -124,7 +124,7 @@ void gsmDetectTkns(VLRINGBUFF_T * const tknVlRb, uint16_t nch,
    /* Cycles through each char in buffer, inserts chars in local RB, detects
     * all tokens and inserts them in the token VLRB */
 
-   for(i = 0; i < nch; i++){
+   for(i = 0; i < nCh; i++){
 
       ch = buffer[i];
 

@@ -1,0 +1,13 @@
+./tests/test/test_gsmComms.c
+./tests/test/test_gsmCommands.c
+./tests/test/test_gsmTokenizer.c
+./tests/test/test_gsmParser.c
+./tests/test/test_gsmEngine.c
+./tests/test/test_gsmInterface.c
+./src/main.c
+
+
+
+
+
+

@@ -453,16 +453,6 @@ void gsmGetSigQual (gsmInterface_t * interface, sigQual_t * sigQual,
 void gsmCheckConn (gsmInterface_t * interface, connStatus_t * status,
                    frmCback_t cback);
 
-/** @brief Read latest URC received
-*
-* @param interface : Pointer to interface
-* @param urc       : Pointer to URC struct
-*
-* @return True if URC read
-*/
-
-bool gsmReadUrc (gsmInterface_t * interface, urc_t * urc);
-
 /** @brief Sets URC handling to either callback mode or manual mode
 *
 * @param interface : Pointer to interface
@@ -609,7 +599,8 @@ void gsmGprsStop (gsmInterface_t * interface, frmCback_t cback);
 * @return
 */
 
-void gsmGprsOpenPort (gsmInterface_t * interface, socket_t * port, frmCback_t cback);
+void gsmGprsOpenPort (gsmInterface_t * interface, socket_t * port,
+                      frmCback_t cback);
 
 /** @brief Closes open TCP or UDP port
 *
